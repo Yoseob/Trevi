@@ -1,0 +1,16 @@
+//
+//  Require.swift
+//  IWas
+//
+//  Created by LeeYoseob on 2015. 11. 23..
+//  Copyright © 2015년 LeeYoseob. All rights reserved.
+//
+
+import Foundation
+
+
+public class Require{
+    public class func use (name : RequireAble) -> Int {
+        return name.hi(10)
+    }
+}
