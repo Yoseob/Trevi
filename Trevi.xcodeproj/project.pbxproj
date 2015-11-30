@@ -19,6 +19,12 @@
 		239412001C0C2E81001B9B07 /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F91C0C2E81001B9B07 /* PreparedData.swift */; };
 		239412011C0C2E81001B9B07 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411FA1C0C2E81001B9B07 /* Server.swift */; };
 		239412021C0C2E81001B9B07 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411FB1C0C2E81001B9B07 /* Socket.swift */; };
+		239412061C0C45D5001B9B07 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412051C0C45D5001B9B07 /* Route.swift */; };
+		239412081C0C45DF001B9B07 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412071C0C45DF001B9B07 /* Router.swift */; };
+		2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
+		2394120D1C0C4A5C001B9B07 /* RouteAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120C1C0C4A5C001B9B07 /* RouteAble.swift */; };
+		239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120F1C0C4FEB001B9B07 /* Middleware.swift */; };
+		239412121C0C513C001B9B07 /* BodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412111C0C513C001B9B07 /* BodyParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +44,12 @@
 		239411F91C0C2E81001B9B07 /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
 		239411FA1C0C2E81001B9B07 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		239411FB1C0C2E81001B9B07 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
+		239412051C0C45D5001B9B07 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		239412071C0C45DF001B9B07 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		2394120C1C0C4A5C001B9B07 /* RouteAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteAble.swift; sourceTree = "<group>"; };
+		2394120F1C0C4FEB001B9B07 /* Middleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
+		239412111C0C513C001B9B07 /* BodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +91,9 @@
 		239411D51C0C2DA3001B9B07 /* Trevi */ = {
 			isa = PBXGroup;
 			children = (
+				2394120E1C0C4FDA001B9B07 /* Middleware */,
+				239412091C0C46CE001B9B07 /* Utility */,
+				239412031C0C45CA001B9B07 /* Router */,
 				239411F11C0C2E81001B9B07 /* Request */,
 				239411F31C0C2E81001B9B07 /* Require */,
 				239411F61C0C2E81001B9B07 /* Response */,
@@ -134,6 +149,41 @@
 				239411FB1C0C2E81001B9B07 /* Socket.swift */,
 			);
 			path = Socket;
+			sourceTree = "<group>";
+		};
+		239412031C0C45CA001B9B07 /* Router */ = {
+			isa = PBXGroup;
+			children = (
+				239412041C0C45CA001B9B07 /* Route */,
+				239412071C0C45DF001B9B07 /* Router.swift */,
+				2394120C1C0C4A5C001B9B07 /* RouteAble.swift */,
+			);
+			path = Router;
+			sourceTree = "<group>";
+		};
+		239412041C0C45CA001B9B07 /* Route */ = {
+			isa = PBXGroup;
+			children = (
+				239412051C0C45D5001B9B07 /* Route.swift */,
+			);
+			path = Route;
+			sourceTree = "<group>";
+		};
+		239412091C0C46CE001B9B07 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				2394120A1C0C46EF001B9B07 /* Utility.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
+		2394120E1C0C4FDA001B9B07 /* Middleware */ = {
+			isa = PBXGroup;
+			children = (
+				2394120F1C0C4FEB001B9B07 /* Middleware.swift */,
+				239412111C0C513C001B9B07 /* BodyParser.swift */,
+			);
+			path = Middleware;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,13 +296,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */,
 				239411FF1C0C2E81001B9B07 /* Response.swift in Sources */,
 				239412021C0C2E81001B9B07 /* Socket.swift in Sources */,
+				239412121C0C513C001B9B07 /* BodyParser.swift in Sources */,
 				239411FC1C0C2E81001B9B07 /* Request.swift in Sources */,
 				239412001C0C2E81001B9B07 /* PreparedData.swift in Sources */,
+				239412081C0C45DF001B9B07 /* Router.swift in Sources */,
 				239411FE1C0C2E81001B9B07 /* RequireAble.swift in Sources */,
+				239412061C0C45D5001B9B07 /* Route.swift in Sources */,
 				239412011C0C2E81001B9B07 /* Server.swift in Sources */,
+				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,
 				239411FD1C0C2E81001B9B07 /* Require.swift in Sources */,
+				2394120D1C0C4A5C001B9B07 /* RouteAble.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

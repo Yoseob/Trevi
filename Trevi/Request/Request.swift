@@ -7,13 +7,6 @@
 //
 
 import Foundation
-public enum HTTPMethodType: String {
-    case GET = "GET"
-    case POST = "POST"
-    case PUT = "PUT"
-    case HEAD = "HEAD"
-    case UNDEFINED = "UNDEFINED"
-}
 
 public class Request{
     private var requestData : NSData?

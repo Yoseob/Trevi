@@ -15,14 +15,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
         let server = Server()
-//        server.get("/:name", hello())
-//        
-//        server.get("/callback") { (Request, Response) -> Handler in
-//            return .Next
-//        }
-//        server.post("/yoseob") { Request, Response in
-//            return .Send
-//        }
+
+        //use func call for use middleware 
+        
+        server.use(BodyParser())
+        
+        
+        server.get("/callback") { req, res  in
+            let msg = "hello iwas"
+            print(req.path)
+            res.sender(msg)
+
+        }
+        server.post("/yoseob") { Request, Response in
+
+        }
         
         do {
             try server.serveHTTP(port: 8080)

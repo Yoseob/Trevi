@@ -13,16 +13,10 @@ let CurrentSocket: Void -> SocketServer = {
     return SwiftSocketServer()
 }
 
-public enum Handler{
-    case Send
-    case Next
-}
-
-public typealias CallBack = (Request , Response) -> Handler
-
 public class Server {
     
     private var socket: SocketServer = CurrentSocket()
+    private var router = Router()
 
     
     public init(){
@@ -47,33 +41,30 @@ public class Server {
     }
     
     private func handleRequest(socket:Socket, _ req : Request , _ res : Response){
-        
-        let msg = "hello iwas"
-        print(req.path)
-        res.sender(msg)
-
+        router.handleRequest(req,response:res)
     }
-    
-    
-    
-    
+
     public func stopListening() {
-        
         socket.disconnect()
     }
     
-    public func get(path : String , _ callback : CallBack){
-        
+    public func use(middleware : Middleware){
+        router.appendMiddleWare(middleware)
     }
-    public func get(path : String , _ module : RequireAble){
+    
+    public func get(path : String , _ callback : CallBack ...){
+        router.appendRoute(Route(method: .GET, path: path, callback: callback.first!))
+    }
+    public func get(path : String , _ module : RouteAble ...){
 //
 //        val callbacks = module.setSuperPath(path);
 //        callBacks[path]
     }
-    public func post(path : String , _ callback : CallBack){
-        
+    public func post(path : String , _ callback : CallBack ...){
+        router.appendRoute(Route(method: .GET, path: path, callback: callback.first!))
     }
-    public func post(path : String , _ module : RequireAble){
+    
+    public func post(path : String , _ module : RouteAble ...){
         
     }
     
