@@ -27,28 +27,35 @@ public class Response{
     }
     
     //like send func
-    public func sender(data : Any){
-        bodyString =  String(data)
-        defualtSet()
-        let sendData: NSData = makeResponse(prepareHeader(), body: prepareBody())
-        socket?.sendData(sendData)
+    public func send(data : Any){
+        bodyString += String(data);
+        implSend()
+
+    }
+    public func send(){
+        implSend()
     }
     
     public func render(obj: AnyObject ...){
-        defualtSet()
-        let sendData: NSData = makeResponse(prepareHeader(), body: prepareBody())
-        socket?.sendData(sendData)
+       implSend()
     }
     
     public func template(){
-        defualtSet()
+        implSend()
     }
 
+    
+    private func implSend(){
+        defualtSet()
+        let sendData: NSData = makeResponse(prepareHeader(), body: prepareBody())
+        socket?.sendData(sendData)
+
+    }
 
     private func defualtSet(){
         let fristLine = "HTTP/1.1 \(statusCode) OK"
         header[fristLine] = ""
-        header["Content-Length"] = "\(bodyString.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))" // replace bodyString length
+        header["Content-Length"] = "\(bodyString.length())" // replace bodyString length
         header["Content-Type"] = "text/html;charset=utf-8"
         
         
@@ -66,11 +73,8 @@ public class Response{
 
     }
     private func prepareBody()->NSData{
-        if bodyString.characters.count > 0 {
-            bodyString += dictionaryToString(body);
-        }else{
-            bodyString = dictionaryToString(body);
-        }
+
+        bodyString += dictionaryToString(body);
         return bodyString.dataUsingEncoding(NSUTF8StringEncoding)!
     }
     
@@ -80,7 +84,7 @@ public class Response{
             if value.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) == 0 {
                 resultString += "\(key)\r\n"
             }else{
-                resultString += "\(key):\(value) \r\n"
+                resultString += "\(key):\(value)\r\n"
             }
         }
         resultString += "\r\n"

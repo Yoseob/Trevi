@@ -51,7 +51,10 @@ public class Server {
     public func use(middleware : Middleware){
         router.appendMiddleWare(middleware)
     }
-    
+    public func use(module : CallBack){
+        router.appendRoute(Route(method:.UNDEFINED, path: "err", callback: module))
+    }
+
     public func get(path : String , _ callback : CallBack ...){
         router.appendRoute(Route(method: .GET, path: path, callback: callback.first!))
     }
@@ -67,6 +70,8 @@ public class Server {
     public func post(path : String , _ module : RouteAble ...){
         
     }
+    
+
     
  
     

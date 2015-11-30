@@ -9,6 +9,8 @@
 import Foundation
 
 public enum MiddlewareName: String {
+    
+    case Err = "Error"
     case Undifind = "Undifind"
     case BodyParser = "bodyParser"
     case Logger = "logger"

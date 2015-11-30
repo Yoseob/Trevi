@@ -13,7 +13,9 @@ public enum Handler{
     case Next
 }
 
-public typealias CallBack = (Request , Response) -> Void
+public typealias Next = (Bool) ->()
+public typealias CallBack = (Request , Response , Next) -> Void
+
 
 public enum HTTPMethodType: String {
     case GET = "GET"
@@ -21,4 +23,14 @@ public enum HTTPMethodType: String {
     case PUT = "PUT"
     case HEAD = "HEAD"
     case UNDEFINED = "UNDEFINED"
+}
+
+
+
+extension String{
+    func length() -> Int{
+        return self.characters.count;
+    }
+    
+
 }

@@ -17,10 +17,19 @@ public class Router {
         for (_,middleware) in enabledMiddlwareTable{
             if let targetRoute = routeTable[request.path]{
                 middleware.operateCommand(request,targetRoute)
-                targetRoute.callback[0](request, response)
+                targetRoute.callback[0](request, response){
+                    isNext in
+                    
+                }
             }else{
                 //error
                 //404 response
+                if let targetRoute = routeTable["err"]{
+                    targetRoute.callback[0](request, response){
+                        isNext in
+                        
+                    }
+                }
             }
         }
     }

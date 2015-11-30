@@ -21,15 +21,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         server.use(BodyParser())
         
         
-        server.get("/callback") { req, res  in
+        server.get("/callback") { req, res, next in
             let msg = "hello iwas"
-            print(req.path)
-            res.sender(msg)
-
+            res.send(msg)
+            next(true)
         }
-        server.post("/yoseob") { Request, Response in
-
+        server.post("/yoseob") { request, response , _ in
+            
         }
+        
+        server.use({ req , res , _ in
+            res.statusCode = 404;
+            res.bodyString = "not Found"
+            res.send("hahah")
+        })
         
         do {
             try server.serveHTTP(port: 8080)

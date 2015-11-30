@@ -21,7 +21,7 @@ class PreparedData {
     }
     
     private func setupRequest() -> Request{
-        var resultRequest : Request = requestFactory(requestdata)
+        let resultRequest : Request = requestFactory(requestdata)
     
 //        let contentLengthString = resultRequest.header["Content-Length"]!
 //        if let contentLengthInt(contentLengthString) > 0 where{
