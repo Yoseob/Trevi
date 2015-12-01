@@ -8,10 +8,7 @@
 
 import Foundation
 
-public enum Handler{
-    case Send
-    case Next
-}
+
 
 public typealias Next = (Bool) ->()
 public typealias CallBack = (Request , Response , Next) -> Void

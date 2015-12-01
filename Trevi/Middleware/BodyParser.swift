@@ -15,7 +15,7 @@ public class BodyParser : Middleware{
     
     public override init(){
         super.init()
-        self.name = .BodyParser
+        name = .BodyParser
     }
     
     public override func operateCommand(obj: AnyObject...) {

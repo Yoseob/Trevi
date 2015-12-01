@@ -10,7 +10,5 @@ import Foundation
 
 
 public class Require{
-    public class func use (name : RequireAble) -> Int {
-        return name.hi(10)
-    }
+
 }

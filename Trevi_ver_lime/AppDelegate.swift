@@ -8,6 +8,9 @@
 
 import Cocoa
 import Trevi
+
+
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -17,27 +20,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let server = Server()
 
         //use func call for use middleware 
+        let lime = Lime()
         
-        server.use(BodyParser())
+        lime.use(BodyParser())
         
         
-        server.get("/callback") { req, res, next in
+        lime.get("/callback") { req, res, next in
             let msg = "hello iwas"
             res.send(msg)
             next(true)
         }
-        server.post("/yoseob") { request, response , _ in
+        lime.post("/yoseob") { request, response , _ in
             
         }
         
-        server.use({ req , res , _ in
+        lime.use({ req , res , _ in
             res.statusCode = 404;
             res.bodyString = "not Found"
             res.send("hahah")
         })
         
         do {
-            try server.serveHTTP(port: 8080)
+            try server.createServer(lime)
         }catch {
             
         }

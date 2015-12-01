@@ -11,7 +11,7 @@ import Foundation
 public enum MiddlewareName: String {
     
     case Err = "Error"
-    case Undifind = "Undifind"
+    case Undefind = "Undefind"
     case BodyParser = "bodyParser"
     case Logger = "logger"
     case Json = "json"
@@ -20,15 +20,12 @@ public enum MiddlewareName: String {
     // else...
 }
 
-
-public class Middleware{
-    public var name : MiddlewareName!
-    init(){
-        name = .Undifind
-    }
+public class Middleware : RequireAble{
     
-    public func operateCommand( obj : AnyObject ...){
+    override init(){
         
+        super.init()
+        name = .Undefind
     }
     
 }
