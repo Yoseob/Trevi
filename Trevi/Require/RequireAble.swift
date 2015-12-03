@@ -22,14 +22,9 @@ public enum NameSpace: String {
 }
 
 typealias requiredHander = (Int) -> (Int)
-public class RequireAble{
-    
-    public var name : MiddlewareName!
-    public init(){
-        
-    }
-    public func operateCommand( obj : AnyObject ...){
-        
-    }
 
+public protocol RequireAble{
+
+    var name : MiddlewareName! { get }
+    func operateCommand( obj : AnyObject ...)
 }

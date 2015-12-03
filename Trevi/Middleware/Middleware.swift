@@ -11,22 +11,15 @@ import Foundation
 public enum MiddlewareName: String {
     
     case Err = "Error"
-    case Undefind = "Undefind"
+    case Undefined = "Undefined"
     case BodyParser = "bodyParser"
     case Logger = "logger"
     case Json = "json"
     case CookieParser = "cookieParser"
     case Session = "session"
+    case SwiftServerPage = "swiftServerPage"
     // else...
 }
 
-public class Middleware : RequireAble{
-    
-    override init(){
-        
-        super.init()
-        name = .Undefind
-    }
-    
+public protocol Middleware : RequireAble {
 }
-    

@@ -9,8 +9,6 @@
 import Cocoa
 import Trevi
 
-
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 

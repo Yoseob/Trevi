@@ -21,13 +21,3 @@ public enum HTTPMethodType: String {
     case HEAD = "HEAD"
     case UNDEFINED = "UNDEFINED"
 }
-
-
-
-extension String{
-    func length() -> Int{
-        return self.characters.count;
-    }
-    
-
-}
