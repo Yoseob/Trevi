@@ -11,7 +11,7 @@ import Foundation
 
 
 public typealias Next = (Bool) ->()
-public typealias CallBack = (Request , Response , Next) -> Void
+public typealias CallBack = (Request , Response , Next) -> Void // will remove next 
 
 
 public enum HTTPMethodType: String {
@@ -28,6 +28,9 @@ extension String{
     func length() -> Int{
         return self.characters.count;
     }
+    
+
+    
     
 
 }

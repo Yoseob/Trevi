@@ -8,38 +8,47 @@
 
 import Foundation
 
-public class Router {
-    private var routeTable = [String : Route]()
-    private var enabledMiddlwareTable = [MiddlewareName : Middleware]()
-    public required init(){}
+public class Router : Middleware{
+    private var enabledMiddlwareList = [Any]()
+    public required override init(){}
    
     func handleRequest(request:Request , response:Response){
-        for (_,middleware) in enabledMiddlwareTable{
-            if let targetRoute = routeTable[request.path]{
-                middleware.operateCommand(request,targetRoute)
-                targetRoute.callback[0](request, response){
-                    isNext in
-                    
-                }
-            }else{
-                //error
-                //404 response
-                if let targetRoute = routeTable["err"]{
-                    targetRoute.callback[0](request, response){
-                        isNext in
-                        
-                    }
-                }
+        for middleware in enabledMiddlwareList
+        {
+            print(middleware)
+            let isNextMd = matchType(middleware, params: request,response)
+            if isNextMd == false
+            {
+                break
             }
         }
     }
     
-    func appendMiddleWare(md : Middleware){
-        enabledMiddlwareTable[md.name] = md
+    private func matchType(obj : Any , params : Any...) -> Bool{
+        let req = params[0] as! Request
+
+        let res = params[1] as! Response
+        var ret : Bool = true;
+        switch obj{
+        case let mw as Middleware:
+            mw.operateCommand(req,res)
+        case let cb as CallBack:
+            cb(req,res){ b in
+                ret = true
+            }
+        case let ra as RouteAble:
+            ra.executeRequestCallback(req,res)
+            
+        default:
+            break
+           
+        }
+        return ret
     }
     
-    func appendRoute(route : Route){
-        routeTable[route.path] = route
+    func appendMiddleWare(md : Any){
+        enabledMiddlwareList.append(md)
     }
+    
     
 }

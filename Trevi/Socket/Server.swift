@@ -23,14 +23,33 @@ public class Server {
     }
     
 
-    public func createServer(module:RouteAble) throws {
+    public func createServer(requireModule:Any...) -> Server{
         
         socket.receivedRequestCallback = {
             request,response,socket in
-            module.handleRequest(request , response)
-            return true
+            for rm in requireModule{
+                switch rm {
+                case let module as RouteAble :
+                    
+                    module.handleRequest(request , response)
+                    
+                case let cb as CallBack :
+                    
+                    cb(request,response){ next in
+                        if !next {
+                            return
+                        }
+                    }
+                default: break
+                }
+            }
+            return false
         }
-        try socket.startOnPort(module.port)
+        return self
+    }
+
+    public func listen(port : Int)throws{
+        try socket.startOnPort(port)
         
         if true {
             
@@ -45,7 +64,7 @@ public class Server {
         socket.disconnect()
     }
     
-      
+
 
     
  

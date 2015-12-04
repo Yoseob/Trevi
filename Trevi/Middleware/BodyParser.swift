@@ -21,8 +21,8 @@ public class BodyParser : Middleware{
     public override func operateCommand(obj: AnyObject...) {
         
         var req : Request = obj[0] as! Request;
-        let r : Route = obj[1] as! Route
-        parserBody(&req,r)
+//        let r : Route = obj[1] as! Route
+//        parserBody(&req,r)
     }
     public func parserBody(inout req : Request , _ route : Route){
         // fill request.params use route.regExp and Params
