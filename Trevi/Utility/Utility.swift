@@ -11,7 +11,7 @@ import Foundation
 
 
 public typealias Next = (Bool) ->()
-public typealias CallBack = (Request , Response , Next) -> Void // will remove next 
+public typealias CallBack = (Request , Response) -> Bool // will remove next
 
 
 public enum HTTPMethodType: String {
@@ -22,7 +22,12 @@ public enum HTTPMethodType: String {
     case UNDEFINED = "UNDEFINED"
 }
 
-
+public enum HTTPMethod {
+    case Get(CallBack)
+    case Post(CallBack)
+    case Put(CallBack)
+    case Delte(CallBack)
+}
 
 extension String{
     func length() -> Int{

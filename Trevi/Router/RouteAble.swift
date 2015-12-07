@@ -14,16 +14,27 @@
 */
 import Foundation
 
-public class RouteAble {
-    public var routeTable = [String : Route]()
-    private var router = Router()
-    public var port : Int
+
+public class RouteAble : Require{
+    public var superPath : String?
     
-     public  init(){
+    public var routeTable = [String : Route]()
+    
+    public var trevi = Trevi.sharedInstance()
+    
+    //danger this property. i think should be changed private or access controll
+    public var middlewareList = [Any]()
+    public var port : Int
+    public init(){
+        self.superPath = ""
         self.port = 8080
     }
-
     
+    public func prepare() {
+        //if you want use user custom RouteAble Class for Routing
+        // fill prepare func like this
+    }
+
     /**
      * Handle for the given path.
      *
@@ -33,67 +44,107 @@ public class RouteAble {
      * @return
      * @public
      */
-    public func handleRequest(req : Request , _ res : Response){
+    public func handleRequest(req : Request , _ res : Response) ->Bool{
         if let route = routeTable[req.path]{
             print(route)
-            router.handleRequest(req,response:res)
+
         }
+        return false
     }
     
-    public func executeRequestCallback(req : Request , _ res : Response){
-        for cb in (routeTable[req.path]?.callbacks)!{
-            print(cb)
+    public func executeRequestCallback(req : Request , _ res : Response) -> Bool{
+        if let rout = routeTable[req.path]{
+            for cb in rout.callbacks{
+                
+                print(cb)
+                if cb(req,res) == false{
+                    return false
+                }
+            }
         }
+        return true
     }
     
     /**
-     * Set MiddleWares.
+     * Set Any Type MiddleWares .
      *
      *
-     * @param {Middleware | Callback} middleware
+     * @param {Middleware | RouteAble} middleware
      * @return
      * @public
      */
     public func use(middleware : Any...){
         for md in middleware{
-            router.appendMiddleWare(md)
+            middlewareList.append(md)
         }
+    }
+    /**
+     * Set Function Type MiddleWares.
+     *
+     *
+     * @param {Callback} middleware
+     * @return
+     * @public
+     */
+    public func use(middleware : CallBack){
+        middlewareList.append(middleware)
+    }
+
+    /**
+    *@deprecate
+    */
+    public func use(middleware : Method){
+        middlewareList.append(middleware)
+    }
+    
+    /**
+     * setup static path or url
+     * @param {String} sPath
+     * @return
+     * @public
+     */
+    public func set(sPath : String){
+        
+    }
+
+    /**
+     * make routing path use preRoutePath
+     * @param {String} sPath
+     * @return
+     * @public
+     */
+    public func setSuperRoutePath(sPath : String){
+        
     }
     
     
-//    public func use(middleware : Middleware){
-//        router.appendMiddleWare(middleware)
-//    }
-//    public func use(module : CallBack){
-//        router.appendRoute(Route(method:.UNDEFINED, path: "err", callback: module))
-//        //make empty middleware that undefind name, and use empty middleware for error handle or any.
-//    }
-//  
-    
-    
     public func all(path : String , _ callback : CallBack ...) -> RouteAble{
+        trevi.router.routeTable[superPath! + path] = Route(method:.GET,path,callback)
         return self
     }
     
     public func get(path : String , _ callback : CallBack ...) -> RouteAble{
-        
-
-        routeTable[path] = Route(method: .GET,path,callback)
-        
+        trevi.router.routeTable[superPath! + path] = Route(method:.GET,path,callback)
         return self
     }
-    public func get(path : String , _ module : RouteAble ...){
-        //
-        //        val callbacks = module.setSuperPath(path);
-        //        callBacks[path]
+    public func get(path : String , _ module : RouteAble ...)-> RouteAble{
+        for ra in module{
+            ra.superPath = (self.superPath)!
+            ra.prepare()
+        }
+        return self
     }
     public func post(path : String , _ callback : CallBack ...){
-        routeTable[path] = Route(method: .POST,path,callback)
+        trevi.router.routeTable[superPath! + path] = Route(method:.GET,path,callback)
 
     }
-    
-    public func post(path : String , _ module : RouteAble ...){
-        
+    public func post(path : String , _ module : RouteAble ...)-> RouteAble{
+        for ma in module{
+            ma.superPath = (self.superPath)! + path
+            ma.prepare()
+        }
+        return self
+
     }
 
     

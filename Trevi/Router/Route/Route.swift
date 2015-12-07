@@ -17,7 +17,7 @@ public class Route{
     var method : HTTPMethodType!
     var regExp : String!
     var keys = [String]();
-    var callbacks = [CallBack]()
+    var callbacks = [CallBack]!()
     var params = [String : String]();
     
     

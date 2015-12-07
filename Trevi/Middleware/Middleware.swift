@@ -10,22 +10,27 @@ import Foundation
 
 public enum MiddlewareName: String {
     
-    case Err = "Error"
-    case Undefind = "Undefind"
+    case Err = "error"
+    case Undefind = "undefind"
+    case Favicon = "favicon"
     case BodyParser = "bodyParser"
     case Logger = "logger"
     case Json = "json"
     case CookieParser = "cookieParser"
     case Session = "session"
+    case Trevi = "trevi"
     // else...
 }
 
-public class Middleware : RequireAble{
-    
-    override init(){
+public class Middleware {
+    public var name : MiddlewareName!
+    public init(){
         
-        super.init()
+        
         name = .Undefind
+    }
+    public func operateCommand( obj : AnyObject ...)->Bool{
+        return true
     }
     
 }

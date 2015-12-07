@@ -9,15 +9,6 @@
 import Cocoa
 import Trevi
 
-public enum Meothd: String {
-    case GET = "GET"
-    case POST = "POST"
-    case PUT = "PUT"
-    case HEAD = "HEAD"
-    case UNDEFINED = "UNDEFINED"
-}
-
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -25,42 +16,51 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
         let server = Server()
-
+        let trevi = Trevi.sharedInstance()
+        
+        //main
         let lime = Lime()
-        //use func call for use middleware
-        lime.use(BodyParser())
+        //routeAble 
+
+
+        //'use' func call for use middleware
+        lime.use(BodyParser)
+        lime.use(Favicon)
+        // it's very important used kind of RouteAble
+        lime.use(lime);
+        lime.use(trevi)
         
-        
-        lime.all("/",{ req, res, next in
+        lime.get("/callback") { req, res in
             let msg = "hello iwas"
             res.send(msg)
-            next(true)
-            },
-            { req, res, next in
-                let msg = "hello iwas"
-                res.send(msg)
-                next(true)
+            return false
+        }
+        
+        lime.get("/",{ req, res in
+            print("first root");
+            return true
+        },{ req, res in
+            let msg = "im root"
+            res.send(msg)
+            print("second root");
+            return false
         })
         
+        lime.get("/yoseob" ,Index())
 
-        lime.get("/callback") { req, res, next in
-            let msg = "hello iwas"
-            res.send(msg)
-            next(true)
-        }.post("/") { req , res , _ -> Void in
-            
+        
+        for r in trevi.router.routeTable.keys{
+            print(r)
         }
         
         
-        lime.post("/yoseob") { request, response , _ in
-            
-        }
-        
-        lime.use({ req , res , next in
+        lime.use({ req , res in
             res.statusCode = 404;
-            res.bodyString = "not Found"
-            res.send("hahah")
-        } as CallBack)
+            res.bodyString = "404 Pages Not Found"
+            res.send()
+            return true
+            
+        })
         
         
         
