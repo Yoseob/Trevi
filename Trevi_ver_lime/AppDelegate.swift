@@ -43,7 +43,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.get("/",{ req, res in
             return true
         },{ req, res in
-            
             let msg = "im root"
             res.send(msg)
             return false

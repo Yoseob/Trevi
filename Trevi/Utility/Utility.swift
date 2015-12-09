@@ -18,6 +18,8 @@ public enum HTTPMethodType: String {
     case UNDEFINED = "UNDEFINED"
 }
 
+
+
 public enum HTTPMethod {
     case Get(CallBack)
     case Post(CallBack)

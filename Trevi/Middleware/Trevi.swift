@@ -39,10 +39,10 @@ public class Trevi : Middleware{
     public func operateCommand( obj : AnyObject ...)->Bool{
         let req : Request = obj[0] as! Request
         let res : Response = obj[1] as! Response
-
-        if let rout = router.route(req.path){
-            print(rout)
-            for cb in rout.callbacks{
+//        let route : Route  = obj[2] as! Route
+        
+        if let target = router.route(req.path) where target.method == req.method{
+            for cb in target.callbacks{
                 
                 if cb(req,res) == false{
                     return false
