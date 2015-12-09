@@ -46,7 +46,7 @@ public class MiddlewareManager{
         var ret : Bool = true;
         switch obj{
         case let mw as Middleware:
-            ret = mw.operateCommand(req,res,route)
+            ret = mw.operateCommand(req, res, route)
         case let cb as CallBack:
             ret = cb(req,res)
 //        case let ra as RouteAble: break

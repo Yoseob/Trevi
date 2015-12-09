@@ -8,72 +8,90 @@
 
 import Foundation
 
-public class SwiftServerPage : Middleware {
+public protocol Renderer {
+    func render(filename: String) -> String
+    func render(filename: String, args: [String: String]) -> String
+}
+
+public class SwiftServerPage : Middleware, Renderer {
     
     public var name : MiddlewareName;
-    private var filepath: String = ""
     
     public init(){
         name = .SwiftServerPage
     }
     
     public func operateCommand(obj: AnyObject...) -> Bool {
-        let req : Request = obj[0] as! Request;
         let res : Response = obj[1] as! Response
-        let route : Route = obj[2] as! Route
-        
-        filepath = "/Users/dragonznet/Documents/index.ssp"
-        let compiled = compileConvertedSwift(convertSSPtoSwift(loadFile(filepath)))
-        res.bodyString = compiled;
+        res.renderer = self
+        print(res.renderer)
         return true
     }
     
-    func loadFile(filepath: String) -> String {
-        return FileIO.read(filepath, encoding: NSUTF8StringEncoding)
+    public func render(filename: String) -> String {
+        return compileConvertedSwift(filename, swiftCode: convertSSPtoSwift(loadFile(filename), args: [:]))!
     }
     
-    func convertSSPtoSwift(data: String) -> String {
+    public func render(filename: String, args: [String: String]) -> String {
+        return compileConvertedSwift(filename, swiftCode: convertSSPtoSwift(loadFile(filename), args: args))!
+    }
+    
+    func loadFile(filepath: String) -> String {
+        // TODO: error handling..
+        let data = try! File.read(filepath, encoding: NSUTF8StringEncoding)
+        return data
+    }
+    
+    func convertSSPtoSwift(data: String, args: [String: String]) -> String {
+        guard let regex: NSRegularExpression = try? NSRegularExpression(pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [.CaseInsensitive]) else {
+            print("Error parsing data.")
+            return ""
+        }
+        
         var swiftCode: String = ""
         
-        if let regex: NSRegularExpression = try? NSRegularExpression(pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [.CaseInsensitive]) {
-            var startIdx = data.startIndex
+        for key in args.keys {
+            swiftCode += "var \(key) = \"\(args[key]!)\"\n"
+        }
+        
+        var startIdx = data.startIndex
+        
+        for match in regex.matchesInString(data, options: [], range: NSMakeRange(0, data.length())) {
+            let tagRange = match.rangeAtIndex(0)
+            let contentsRange = match.rangeAtIndex(2)
+            let swiftTag, htmlTag: String
             
-            for match in regex.matchesInString(data, options: [], range: NSMakeRange(0, data.length())) {
-                let tagRange = match.rangeAtIndex(0)
-                let contentsRange = match.rangeAtIndex(2)
-                let swiftTag, htmlTag: String
-                
-                if data.substring(match.rangeAtIndex(1).location, length: match.rangeAtIndex(1).length) == "<%=" {
-                    swiftTag = "print(\(data.substring(contentsRange.location, length: contentsRange.length)), terminator:\"\")"
-                } else {
-                    swiftTag = data.substring(contentsRange.location, length: contentsRange.length)
-                }
-                htmlTag = data[startIdx ..< data.startIndex.advancedBy(tagRange.location)]
-                    .stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
-                    .stringByReplacingOccurrencesOfString("\t", withString: "{@t}")
-                    .stringByReplacingOccurrencesOfString("\n", withString: "{@n}")
-                
-                swiftCode += "print(\"\(htmlTag)\", terminator:\"\")\n\(swiftTag)\n"
-                
-                startIdx = data.startIndex.advancedBy(tagRange.location + tagRange.length)
+            if data.substring(match.rangeAtIndex(1).location, length: match.rangeAtIndex(1).length) == "<%=" {
+                swiftTag = "print(\(data.substring(contentsRange.location, length: contentsRange.length)), terminator:\"\")"
+            } else {
+                swiftTag = data.substring(contentsRange.location, length: contentsRange.length)
             }
-            let htmlTag = data[startIdx ..< data.endIndex]
+            
+            htmlTag = data[startIdx ..< data.startIndex.advancedBy(tagRange.location)]
                 .stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
                 .stringByReplacingOccurrencesOfString("\t", withString: "{@t}")
                 .stringByReplacingOccurrencesOfString("\n", withString: "{@n}")
-            swiftCode += "print(\"\(htmlTag)\")\n"
-        } else {
-            print("Error parsing data.")
+            
+            swiftCode += "print(\"\(htmlTag)\", terminator:\"\")\n\(swiftTag)\n"
+            
+            startIdx = data.startIndex.advancedBy(tagRange.location + tagRange.length)
         }
         
-        return swiftCode
+        let htmlTag = data[startIdx ..< data.endIndex]
+            .stringByReplacingOccurrencesOfString("\"", withString: "\\\"")
+            .stringByReplacingOccurrencesOfString("\t", withString: "{@t}")
+            .stringByReplacingOccurrencesOfString("\n", withString: "{@n}")
+        
+        return (swiftCode + "print(\"\(htmlTag)\")\n")
     }
     
-    func compileConvertedSwift(swiftCode: String) -> String {
-        FileIO.write("\(filepath).swift", data: swiftCode, encoding: NSUTF8StringEncoding)
-        let complied = System.executeCmd("/usr/bin/swift", args: ["\(filepath).swift"])
+    func compileConvertedSwift(filename: String, swiftCode: String) -> String? {
+        // TODO: error handling..
+        try! File.write("\(filename).swift", data: swiftCode, encoding: NSUTF8StringEncoding)
+        
+        let compiled: String? = System.executeCmd("/usr/bin/swift", args: ["\(filename).swift"])
             .stringByReplacingOccurrencesOfString("{@t}", withString: "\t")
             .stringByReplacingOccurrencesOfString("{@n}", withString: "\n")
-        return complied
+        return compiled
     }
 }

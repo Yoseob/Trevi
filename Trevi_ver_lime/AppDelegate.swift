@@ -27,14 +27,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use(BodyParser())
         lime.use(Favicon())
         
-        // it's very important used kind of RouteAble
-        //register for main modle
+        lime.use(SwiftServerPage())
+        
+        // It's very important used kind of RouteAble
+        // Register for main modle
         lime.use(lime);
         
         lime.use(router)
         
         lime.get("/callback") { req, res in
-            let msg = "hello iwas"
+            let msg = "Hello Trevi!"
             res.statusCode = 200
             res.send(msg)
             return false
@@ -50,6 +52,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         })
         
         lime.use("/yoseob", Index())
+        
+        // Register SSP(Swift Server Page) on '/ssp'
+        if let index = NSBundle.mainBundle().pathForResource("index", ofType:"ssp") {
+            lime.get("/ssp") { req, res in
+                res.statusCode = 200
+                res.render(index)
+                return false
+            }
+        }
+        
+        // Register SSP(Swift Server Page) on '/ssp' with arguments
+        // Only string arguments allowed now.. 
+        if let arg_test = NSBundle.mainBundle().pathForResource("arg_test", ofType:"ssp") {
+            lime.get("/ssp/var") { req, res in
+                res.statusCode = 200
+                res.render(arg_test, ["title":"Hello World", "number":"77"])
+                return false
+            }
+        }
         
         lime.use({ req , res in
             res.statusCode = 404;

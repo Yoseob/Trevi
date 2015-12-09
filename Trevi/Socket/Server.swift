@@ -1,6 +1,6 @@
 //
 //  Server.swift
-//  IWAS
+//  Trevi
 //
 //  Created by LeeYoseob on 2015. 11. 20..
 //  Copyright © 2015년 LeeYoseob. All rights reserved.

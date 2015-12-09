@@ -1,0 +1,33 @@
+<%
+	let name = "SeungHyun Lee"
+	var number: Int = 3
+%>
+
+<html>
+<head>
+	<title>Test</title>
+	<script>
+		window.onload = function() {
+			var name = "<%=name%>";
+			alert("Welcome, this is " + name);
+		}
+	</script>
+</head>
+<body>
+	<h1>Hello World!</h1>
+	<% if number > 2 { %>
+	<p>This is test page <% print("for swift server page!") %></p>
+	<%
+		print("This is only start...")
+		}
+	%>
+
+	<% for var i=10; i>0; i-- { %>
+	<p><% print("count down... \(i)") %></p>
+	<% } %>
+
+	<% for var i=0; i<5; i++ { %>
+	<p>hi</p>
+	<% } %>
+</body>
+</html>
