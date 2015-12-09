@@ -36,9 +36,10 @@ public class Trevi : Middleware{
         return routeable
     }
     
-    public func operateCommand( obj : AnyObject ...)->Bool{
-        let req : Request = obj[0] as! Request
-        let res : Response = obj[1] as! Response
+    public func operateCommand(params : MiddlewareParams)->Bool{
+        
+        let req : Request = params.req
+        let res : Response = params.res
 //        let route : Route  = obj[2] as! Route
         
         if let target = router.route(req.path) where target.method == req.method{

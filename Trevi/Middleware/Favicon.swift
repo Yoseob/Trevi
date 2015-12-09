@@ -16,7 +16,7 @@ public class Favicon : Middleware{
         name = .Favicon
     }
     
-    public func operateCommand(obj: AnyObject...) ->Bool {
+    public func operateCommand(params : MiddlewareParams) ->Bool {
         return true
     }
 }

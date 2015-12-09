@@ -17,10 +17,10 @@ public class SwiftServerPage : Middleware {
         name = .SwiftServerPage
     }
     
-    public func operateCommand(obj: AnyObject...) -> Bool {
-        let req : Request = obj[0] as! Request;
-        let res : Response = obj[1] as! Response
-        let route : Route = obj[2] as! Route
+    public func operateCommand(params : MiddlewareParams) -> Bool {
+        let req : Request = params.req
+        let res : Response = params.res
+        let route : Route = params.route
         
         filepath = "/Users/dragonznet/Documents/index.ssp"
         let compiled = compileConvertedSwift(convertSSPtoSwift(loadFile(filepath)))

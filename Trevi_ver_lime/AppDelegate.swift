@@ -35,7 +35,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.get("/callback") { req, res in
             let msg = "hello iwas"
-            res.statusCode = 200
             res.send(msg)
             return false
         }
@@ -51,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use("/yoseob", Index())
         
         lime.use({ req , res in
-            res.statusCode = 404;
+            res.status = 404
             res.bodyString = "404 Pages Not Found"
             res.send()
             return true

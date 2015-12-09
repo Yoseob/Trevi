@@ -19,19 +19,16 @@ public class Index : RouteAble{
         let index = trevi.store(self)
         
         index.get("/") { (req, res) -> Bool in
-            res.statusCode = 200;
             res.bodyString = "im " + req.path
             res.send()
             return false
         }
         index.get("/lee") { req ,res in
-            res.statusCode = 200;
             res.bodyString = "im " + req.params["yoseob"]!
             res.send()
             return false
         }
         index.get("/hi") { req ,res in
-            res.statusCode = 200;
             res.bodyString = "im " + req.path
             res.send()
             return false

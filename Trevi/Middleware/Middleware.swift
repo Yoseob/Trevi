@@ -9,6 +9,7 @@
 import Foundation
 
 
+public typealias MiddlewareParams = (req : Request, res : Response, route : Route)
 
 public enum MiddlewareName: String {
     case Err = "error"
@@ -27,5 +28,5 @@ public enum MiddlewareName: String {
 
 public protocol Middleware {
     var name : MiddlewareName {get set} 
-    func operateCommand( obj : AnyObject ...)->Bool
+    func operateCommand(params : MiddlewareParams)->Bool
 }

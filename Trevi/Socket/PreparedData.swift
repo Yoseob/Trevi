@@ -22,11 +22,6 @@ class PreparedData {
     
     private func setupRequest() -> Request{
         let resultRequest : Request = requestFactory(requestdata)
-    
-//        let contentLengthString = resultRequest.header["Content-Length"]!
-//        if let contentLengthInt(contentLengthString) > 0 where{
-//            
-//        }
         return resultRequest
     }
     
@@ -37,7 +32,6 @@ class PreparedData {
     
     private func setupResponse(socket:SwiftSocket) ->Response{
         let res = Response(socket: socket)
-        res.statusCode = 200
         return res
     }
     
