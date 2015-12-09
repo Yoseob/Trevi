@@ -19,7 +19,6 @@ public class Response{
     private var socket : SwiftSocket?
     
     public init(){
-
         statusCode = 0
         bodyString = ""
     }

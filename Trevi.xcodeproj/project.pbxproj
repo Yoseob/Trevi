@@ -24,7 +24,7 @@
 		239411FE1C0C2E81001B9B07 /* RequireAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F51C0C2E81001B9B07 /* RequireAble.swift */; };
 		239411FF1C0C2E81001B9B07 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F71C0C2E81001B9B07 /* Response.swift */; };
 		239412001C0C2E81001B9B07 /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F91C0C2E81001B9B07 /* PreparedData.swift */; };
-		239412011C0C2E81001B9B07 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411FA1C0C2E81001B9B07 /* Server.swift */; };
+		239412011C0C2E81001B9B07 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411FA1C0C2E81001B9B07 /* Http.swift */; };
 		239412021C0C2E81001B9B07 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411FB1C0C2E81001B9B07 /* Socket.swift */; };
 		2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
 		2394120D1C0C4A5C001B9B07 /* RouteAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120C1C0C4A5C001B9B07 /* RouteAble.swift */; };
@@ -32,6 +32,7 @@
 		239412121C0C513C001B9B07 /* BodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412111C0C513C001B9B07 /* BodyParser.swift */; };
 		239412141C0DECC2001B9B07 /* Lime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412131C0DECC2001B9B07 /* Lime.swift */; };
 		239412161C0DF99A001B9B07 /* Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412151C0DF99A001B9B07 /* Index.swift */; };
+		23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 		906E50B11C11DB9A005937A8 /* FileIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* FileIO.swift */; };
 		906E50B51C121202005937A8 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B41C121202005937A8 /* System.swift */; };
 		906E50B71C121225005937A8 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
@@ -87,7 +88,7 @@
 		239411F51C0C2E81001B9B07 /* RequireAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequireAble.swift; sourceTree = "<group>"; };
 		239411F71C0C2E81001B9B07 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		239411F91C0C2E81001B9B07 /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
-		239411FA1C0C2E81001B9B07 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		239411FA1C0C2E81001B9B07 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		239411FB1C0C2E81001B9B07 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		2394120C1C0C4A5C001B9B07 /* RouteAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteAble.swift; sourceTree = "<group>"; };
@@ -117,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				239411F91C0C2E81001B9B07 /* PreparedData.swift */,
-				239411FA1C0C2E81001B9B07 /* Server.swift */,
+				239411FA1C0C2E81001B9B07 /* Http.swift */,
 				239411FB1C0C2E81001B9B07 /* Socket.swift */,
 			);
 			path = Socket;
@@ -431,7 +433,7 @@
 				236E53E21C1726450076ED36 /* Router.swift in Sources */,
 				239411FE1C0C2E81001B9B07 /* RequireAble.swift in Sources */,
 				906E50B51C121202005937A8 /* System.swift in Sources */,
-				239412011C0C2E81001B9B07 /* Server.swift in Sources */,
+				239412011C0C2E81001B9B07 /* Http.swift in Sources */,
 				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,
 				906E50B71C121225005937A8 /* String.swift in Sources */,
 				236E53D91C1235130076ED36 /* Favicon.swift in Sources */,

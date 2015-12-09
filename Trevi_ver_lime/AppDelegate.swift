@@ -15,7 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
-        let server = Server()
+        let server = Http()
         
         //Trevi is used routor like nodejs express
         let router = Trevi.sharedInstance()
