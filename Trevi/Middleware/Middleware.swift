@@ -9,17 +9,21 @@
 import Foundation
 
 public enum MiddlewareName: String {
-    
-    case Err = "Error"
-    case Undefined = "Undefined"
+    case Err = "error"
+    case Undefined = "undefined"
+    case Favicon = "favicon"
     case BodyParser = "bodyParser"
     case Logger = "logger"
     case Json = "json"
     case CookieParser = "cookieParser"
     case Session = "session"
     case SwiftServerPage = "swiftServerPage"
+    case Trevi = "trevi"
+    case Router = "router"
     // else...
 }
 
-public protocol Middleware : RequireAble {
+public protocol Middleware {
+    var name : MiddlewareName {get set} 
+    func operateCommand( obj : AnyObject ...)->Bool
 }

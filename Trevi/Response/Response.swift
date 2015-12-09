@@ -18,7 +18,11 @@ public class Response{
     
     private var socket : SwiftSocket?
     
-    
+    public init(){
+
+        statusCode = 0
+        bodyString = ""
+    }
     public init(socket : SwiftSocket){
         self.socket = socket   // if render , send , template func is called call self.socket.send(AnyOnject)
         statusCode = 0

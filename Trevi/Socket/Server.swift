@@ -16,21 +16,39 @@ let CurrentSocket: Void -> SocketServer = {
 public class Server {
     
     private var socket: SocketServer = CurrentSocket()
-
+    private var mwManager = MiddlewareManager.sharedInstance()
+    private var router = Router()
 
     
     public init(){
     }
     
 
-    public func createServer(module:RouteAble) throws {
+    public func createServer(requireModule:Any...) -> Server{
+        
+        for rm in requireModule{
+            switch rm {
+            case let module as RouteAble :
+                makeRoutPath(module)
+                mwManager.enabledMiddlwareList = module.middlewareList;
+            case let callback as CallBack :
+                mwManager.enabledMiddlwareList.append(callback)
+            default: break
+            }
+        }
         
         socket.receivedRequestCallback = {
-            request,response,socket in
-            module.handleRequest(request , response)
-            return true
+            req,res,sock in
+            self.mwManager.handleRequest(req,res)
+//            whill change this func
+//            self.mwManager.handleRequest(req,res,router)
+            return false
         }
-        try socket.startOnPort(module.port)
+        return self
+    }
+
+    public func listen(port : Int)throws{
+        try socket.startOnPort(port)
         
         if true {
             
@@ -45,7 +63,11 @@ public class Server {
         socket.disconnect()
     }
     
-      
+    
+    //for make full Routing Path, use iterating method save Router????????
+    private func makeRoutPath(module : RouteAble){
+
+    }
 
     
  

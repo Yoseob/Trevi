@@ -9,6 +9,6 @@
 import Foundation
 
 
-public class Require{
-
+public protocol Require{
+    func prepare()
 }

@@ -16,30 +16,56 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
         let server = Server()
-
-        //use func call for use middleware 
+        
+        //Trevi is used routor like nodejs express
+        let router = Trevi.sharedInstance()
+        
+        //main Module
         let lime = Lime()
-        
+
+        //'use' func call for use middleware
         lime.use(BodyParser())
+        lime.use(Favicon())
         
+        // it's very important used kind of RouteAble
+        //register for main modle
+        lime.use(lime);
         
-        lime.get("/callback") { req, res, next in
+        lime.use(router)
+        
+        lime.get("/callback") { req, res in
             let msg = "hello iwas"
+            res.statusCode = 200
             res.send(msg)
-            next(true)
-        }
-        lime.post("/yoseob") { request, response , _ in
-            
+            return false
         }
         
-        lime.use({ req , res , _ in
-            res.statusCode = 404;
-            res.bodyString = "not Found"
-            res.send("hahah")
+        lime.get("/",{ req, res in
+            return true
+        },{ req, res in
+            
+            let msg = "im root"
+            res.send(msg)
+            return false
         })
         
+        lime.use("/yoseob", Index())
+
+
+        
+        lime.use({ req , res in
+            res.statusCode = 404;
+            res.bodyString = "404 Pages Not Found"
+            res.send()
+            return true
+            
+        })
+        
+        
+        
+        
         do {
-            try server.createServer(lime)
+            try server.createServer(lime).listen(8080);
         }catch {
             
         }

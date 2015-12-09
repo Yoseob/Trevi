@@ -14,41 +14,147 @@
 */
 import Foundation
 
-public class RouteAble{
-    private var router = Router()
-    public var port : Int
+
+public class RouteAble : Require{
+    public var superPath : String?
     
-     public init(){
+    public var routeTable = [String : Route]()
+    
+    public var trevi = Trevi.sharedInstance()
+    
+    //danger this property. i think should be changed private or access controll
+    public var middlewareList = [Any]()
+    public var port : Int
+    public init(){
+        self.superPath = ""
         self.port = 8080
     }
+    
+    public func prepare() {
+        //if you want use user custom RouteAble Class for Routing
+        // fill prepare func like this
+    }
 
-    public func handleRequest(req : Request , _ res : Response){
-        router.handleRequest(req,response:res)
+  
+    
+    /**
+     * Set middlewares type of function or middleware.
+     *
+     * if first argument type is string, this function use routing module
+     * and then other arguments is RouteAble type.
+     * except in this case, anytime use function arguments are Middleware or function(Callback)
+     *
+     *
+     *
+     *
+     * @param {Middleware | RouteAble | String} middleware
+     * @return
+     * @public
+     */
+    public func use(middleware : Any...){
+        var temp = middleware
+        
+        /*
+         * i have no idea which case is better
+         * which one is batter? why?
+         */
+        if true{
+            if case let path as String = temp.first {
+                temp.removeFirst()
+                let routeList = [RouteAble](temp)
+                makeChildRoute(path, module:routeList)
+                return
+            }
+            for md in middleware{
+                middlewareList.append(md)
+            }
+        }else{
+            
+            /*
+            switch temp.first{
+            case let path as String:
+                temp.removeFirst()
+                let routeList = [RouteAble](temp)
+                makeChildRoute(path, module:routeList)
+            default:
+                for md in middleware{
+                    middlewareList.append(md)
+                }
+                break
+            }
+            */
+
+        }
+        
+        
+}
+    
+    /**
+     * Set Function Type MiddleWares.
+     *
+     *
+     * @param {Callback} middleware
+     * @return
+     * @public
+     */
+    public func use(middleware : CallBack){
+        middlewareList.append(middleware)
     }
     
-    public func use(middleware : Middleware){
-        router.appendMiddleWare(middleware)
-    }
-    public func use(module : CallBack){
-        router.appendRoute(Route(method:.UNDEFINED, path: "err", callback: module))
-        //make empty middleware that undefind name, and use empty middleware for error handle or any.
-    }
-    
-    public func get(path : String , _ callback : CallBack ...){
-        router.appendRoute(Route(method: .GET, path: path, callback: callback.first!))
-    }
-    public func get(path : String , _ module : RouteAble ...){
-        //
-        //        val callbacks = module.setSuperPath(path);
-        //        callBacks[path]
-    }
-    public func post(path : String , _ callback : CallBack ...){
-        router.appendRoute(Route(method: .GET, path: path, callback: callback.first!))
-    }
-    
-    public func post(path : String , _ module : RouteAble ...){
+   
+    /**
+     * setup static path or url
+     * @param {String} sPath
+     * @return
+     * @public
+     */
+    public func set(sPath : String){
         
     }
 
+    /**
+     * make routing path use preRoutePath
+     * @param {String} sPath
+     * @return
+     * @public
+     */
+    public func setSuperRoutePath(sPath : String){
+        
+    }
+    
+    
+    public func all(path : String , _ callback : CallBack ...) -> RouteAble{
+        registerCompleteRoutePath(.GET, path: path, callback: callback)
+        return registerCompleteRoutePath(.POST, path: path, callback: callback)
+    }
+    
+    public func get(path : String , _ callback : CallBack ...) -> RouteAble{
+        return registerCompleteRoutePath(.GET, path: path, callback: callback)
+    }
+
+    public func post(path : String , _ callback : CallBack ...) ->RouteAble{
+        return registerCompleteRoutePath(.POST, path: path, callback: callback)
+    }
+    
+    
+    
+
+    private func makeChildRoute(path:String , module:[RouteAble])->RouteAble{
+        for ma in module{
+            ma.superPath = (self.superPath)! + path
+            ma.prepare()
+        }
+        return self
+    }
+    
+    private func registerCompleteRoutePath(type:HTTPMethodType, path:String, callback:[CallBack]) -> RouteAble{
+        var completePath = superPath!+path;
+        if superPath != "" && path == "/"{
+            completePath = superPath!
+        }
+        trevi.router.appendRoute(completePath,Route(method:type,completePath,callback));
+        return self
+    }
+    
     
 }
