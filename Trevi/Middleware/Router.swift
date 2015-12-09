@@ -17,7 +17,7 @@ public class Router : Middleware{
         name = .Router
     }
    
-    public func operateCommand(obj: AnyObject...) -> Bool {
+    public func operateCommand(params : MiddlewareParams) -> Bool {
         return true
     }
     

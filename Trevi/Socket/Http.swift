@@ -13,7 +13,7 @@ let CurrentSocket: Void -> SocketServer = {
     return SwiftSocketServer()
 }
 
-public class Server {
+public class Http {
     
     private var socket: SocketServer = CurrentSocket()
     private var mwManager = MiddlewareManager.sharedInstance()
@@ -23,7 +23,7 @@ public class Server {
         
     }
 
-    public func createServer(requireModule:Any...) -> Server{
+    public func createServer(requireModule:Any...) -> Http{
         
         for rm in requireModule{
             switch rm {

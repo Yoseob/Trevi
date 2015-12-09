@@ -16,9 +16,9 @@ public class BodyParser : Middleware{
         name = .BodyParser
     }
     
-    public func operateCommand(obj: AnyObject...) ->Bool {
-        var req : Request = obj[0] as! Request;
-        let r : Route = obj[2] as! Route
+    public func operateCommand(params : MiddlewareParams) ->Bool {
+        var req : Request = params.req
+        let r : Route = params.route
         parserBody(&req,r)
         return true
     }

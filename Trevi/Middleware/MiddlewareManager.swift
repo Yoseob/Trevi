@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 public class MiddlewareManager{
     
     public var enabledMiddlwareList = [Any]()
@@ -32,28 +34,20 @@ public class MiddlewareManager{
         let containerRoute = Route()
         for middleware in enabledMiddlwareList
         {
-            let isNextMd = matchType(middleware, params: request,response,containerRoute)
+            let isNextMd = matchType(middleware, params: MiddlewareParams(request,response,containerRoute))
             if isNextMd == false{
                 return
             }
         }
     }
     
-    private func matchType(obj : Any , params : Any...) -> Bool{
-        let req = params[0] as! Request
-        let res = params[1] as! Response
-        let route = params[2] as! Route
+    private func matchType(obj : Any , params : MiddlewareParams) -> Bool{
         var ret : Bool = true;
         switch obj{
         case let mw as Middleware:
-            ret = mw.operateCommand(req,res,route)
+            ret = mw.operateCommand(params)
         case let cb as CallBack:
-            ret = cb(req,res)
-//        case let ra as RouteAble: break
-            //@Todo - create Router and execute route.handler
-            //@Todo - RouteAble is unuseful - building time make routing path 
-//            ret = ra.executeRequestCallback(req,res)
-            
+            ret = cb(params.req,params.res)
         default:
             break
             

@@ -15,9 +15,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
-        
-        
-        let server = Server()
+
+        let server = Http()
+
         
         //Trevi is used routor like nodejs express
         let router = Trevi.sharedInstance()
@@ -36,8 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use(router)
         
         lime.get("/callback") { req, res in
-            let msg = "im callback"
-            res.statusCode = 200
+            let msg = "hello iwas"
             res.send(msg)
             return false
         }
@@ -53,7 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use("/yoseob", Index())
         
         lime.use({ req , res in
-            res.statusCode = 404;
+            res.status = 404
             res.bodyString = "404 Pages Not Found"
             res.send()
             return true
