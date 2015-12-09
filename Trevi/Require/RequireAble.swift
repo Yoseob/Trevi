@@ -10,7 +10,6 @@ import Foundation
 
 
 public enum NameSpace: String {
-    
     case Err = "Error"
     case Undifind = "Undefind"
     case BodyParser = "bodyParser"
@@ -24,7 +23,6 @@ public enum NameSpace: String {
 typealias requiredHander = (Int) -> (Int)
 
 public protocol RequireAble{
-
     var name : MiddlewareName! { get }
     func operateCommand( obj : AnyObject ...)
 }

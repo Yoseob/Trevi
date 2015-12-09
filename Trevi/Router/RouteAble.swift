@@ -16,10 +16,9 @@ import Foundation
 
 
 public class RouteAble : Require{
+    
     public var superPath : String?
-    
     public var routeTable = [String : Route]()
-    
     public var trevi = Trevi.sharedInstance()
     
     //danger this property. i think should be changed private or access controll
@@ -34,8 +33,6 @@ public class RouteAble : Require{
         //if you want use user custom RouteAble Class for Routing
         // fill prepare func like this
     }
-
-  
     
     /**
      * Set middlewares type of function or middleware.
@@ -69,7 +66,6 @@ public class RouteAble : Require{
                 middlewareList.append(md)
             }
         }else{
-            
             /*
             switch temp.first{
             case let path as String:
@@ -83,11 +79,8 @@ public class RouteAble : Require{
                 break
             }
             */
-
         }
-        
-        
-}
+    }
     
     /**
      * Set Function Type MiddleWares.
@@ -101,7 +94,6 @@ public class RouteAble : Require{
         middlewareList.append(middleware)
     }
     
-   
     /**
      * setup static path or url
      * @param {String} sPath
@@ -122,7 +114,6 @@ public class RouteAble : Require{
         
     }
     
-    
     public func all(path : String , _ callback : CallBack ...) -> RouteAble{
         registerCompleteRoutePath(.GET, path: path, callback: callback)
         return registerCompleteRoutePath(.POST, path: path, callback: callback)
@@ -136,9 +127,6 @@ public class RouteAble : Require{
         return registerCompleteRoutePath(.POST, path: path, callback: callback)
     }
     
-    
-    
-
     private func makeChildRoute(path:String , module:[RouteAble])->RouteAble{
         for ma in module{
             ma.superPath = (self.superPath)! + path
@@ -155,6 +143,4 @@ public class RouteAble : Require{
         trevi.router.appendRoute(completePath,Route(method:type,completePath,callback));
         return self
     }
-    
-    
 }

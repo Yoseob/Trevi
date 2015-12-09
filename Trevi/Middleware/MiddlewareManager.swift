@@ -23,11 +23,11 @@ public class MiddlewareManager{
         static var dispatchToken: dispatch_once_t = 0
         static var instance: MiddlewareManager?
     }
-    private init(){
+    
+    private init() {
         
     }
-    
-    
+
     public func handleRequest(request:Request , _ response:Response){
         let containerRoute = Route()
         for middleware in enabledMiddlwareList

@@ -10,12 +10,15 @@ import Foundation
 
 
 public class Trevi : Middleware{
+    
     public var usedModuleList = [RouteAble]()
     public var router = Router()
     public var name : MiddlewareName
+    
     private init(){
         name = .Trevi
     }
+    
     struct StaticInstance {
         static var dispatchToken: dispatch_once_t = 0
         static var instance: Trevi?
@@ -48,7 +51,4 @@ public class Trevi : Middleware{
         }
         return true
     }
-    
-    
-
 }

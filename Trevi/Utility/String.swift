@@ -8,24 +8,29 @@
 
 import Foundation
 
+public enum StringError : ErrorType {
+    case UnsupportedEncodingError
+}
+
 extension String {
     func length() -> Int {
         return self.characters.count
     }
     
     func substring(start: Int, length: Int) -> String {
-        return (self as NSString).substringWithRange(NSRange(location: start, length: length))
+        return self[self.startIndex.advancedBy(start) ..< self.startIndex.advancedBy(start + length)]
     }
     
-    func substring(range: NSRange) -> String {
-        let fromUTF16 = self.utf16.startIndex.advancedBy(range.location, limit: self.utf16.endIndex)
-        let toUTF16 = fromUTF16.advancedBy(range.length, limit: self.utf16.endIndex)
-        if let from = String.Index(fromUTF16, within: self),
-            let to = String.Index(toUTF16, within: self) {
-                return self[from ..< to]
-        } else {
-            // TODO: return exception
-            return ""
+    func getIndex(location: Int, encoding: UInt = NSUnicodeStringEncoding) throws -> String.Index {
+        switch(encoding) {
+        case NSUTF8StringEncoding:
+            return String.Index(utf8.startIndex.advancedBy(location, limit: utf8.endIndex), within: self)!
+        case NSUTF16StringEncoding:
+            return String.Index(utf16.startIndex.advancedBy(location, limit: utf16.endIndex), within: self)!
+        case NSUnicodeStringEncoding:
+            return startIndex.advancedBy(location)
+        default:
+            throw StringError.UnsupportedEncodingError
         }
     }
 }

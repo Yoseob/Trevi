@@ -8,12 +8,7 @@
 
 import Foundation
 
-
-
-
-
 public typealias CallBack = (Request , Response) -> Bool // will remove next
-
 
 public enum HTTPMethodType: String {
     case GET = "GET"

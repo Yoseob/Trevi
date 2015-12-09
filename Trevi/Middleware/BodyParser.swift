@@ -42,7 +42,6 @@ public class BodyParser : Middleware{
         }
         
         if firstLineArr.count > 1 {
-            
             let url = firstLineArr[1]
             var urlElements: [String] = url.componentsSeparatedByString("?") as [String]
             req.path = urlElements[0]
@@ -60,7 +59,6 @@ public class BodyParser : Middleware{
             }
         }
 
-        
         //        self.method  = HTTPMethodType(rawValue: headerComp.first!)!
         for seg in headerComp{
             let segSet : [String] = seg.componentsSeparatedByString(": ");
@@ -77,7 +75,6 @@ public class BodyParser : Middleware{
     
     private func wrap(json :[String:AnyObject]!){
 
-    
     }
     
     private func convertStringToDictionary(text: String) -> [String:AnyObject!]! {

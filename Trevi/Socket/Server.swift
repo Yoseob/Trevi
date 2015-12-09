@@ -19,10 +19,9 @@ public class Server {
     private var mwManager = MiddlewareManager.sharedInstance()
     private var router = Router()
 
-    
     public init(){
+        
     }
-    
 
     public func createServer(requireModule:Any...) -> Server{
         
@@ -63,14 +62,8 @@ public class Server {
         socket.disconnect()
     }
     
-    
     //for make full Routing Path, use iterating method save Router????????
     private func makeRoutPath(module : RouteAble){
 
     }
-
-    
- 
-    
-    
 }

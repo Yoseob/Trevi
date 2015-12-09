@@ -21,7 +21,6 @@ protocol Socket {
 
 // Mark: SwiftSocket Implementation of the Socket and SocketServer protocol
 
-
 import SwiftSockets
 
 public struct SwiftSocket: Socket {

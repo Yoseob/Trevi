@@ -50,8 +50,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         })
         
         lime.use("/yoseob", Index())
-
-
         
         lime.use({ req , res in
             res.statusCode = 404;
@@ -61,20 +59,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
         })
         
-        
-        
-        
         do {
             try server.createServer(lime).listen(8080);
         }catch {
             
         }
-        
     }
     
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
     }
-
 }
 
