@@ -29,10 +29,10 @@ public class MiddlewareManager{
     
     
     public func handleRequest(request:Request , _ response:Response){
+        let containerRoute = Route()
         for middleware in enabledMiddlwareList
         {
-            print(middleware)
-            let isNextMd = matchType(middleware, params: request,response)
+            let isNextMd = matchType(middleware, params: request,response,containerRoute)
             if isNextMd == false{
                 return
             }
@@ -42,19 +42,19 @@ public class MiddlewareManager{
     private func matchType(obj : Any , params : Any...) -> Bool{
         let req = params[0] as! Request
         let res = params[1] as! Response
+        let route = params[2] as! Route
         var ret : Bool = true;
         switch obj{
         case let mw as Middleware:
-            ret = mw.operateCommand(req,res)
+            ret = mw.operateCommand(req,res,route)
         case let cb as CallBack:
             ret = cb(req,res)
-        case let ra as RouteAble: break
+//        case let ra as RouteAble: break
             //@Todo - create Router and execute route.handler
             //@Todo - RouteAble is unuseful - building time make routing path 
 //            ret = ra.executeRequestCallback(req,res)
             
         default:
-            print("matchType default")
             break
             
         }

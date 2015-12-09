@@ -16,43 +16,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
         let server = Server()
-        let trevi = Trevi.sharedInstance()
         
-        //main
+        //Trevi is used routor like nodejs express
+        let router = Trevi.sharedInstance()
+        
+        //main Module
         let lime = Lime()
-        //routeAble 
-
 
         //'use' func call for use middleware
-        lime.use(BodyParser)
-        lime.use(Favicon)
+        lime.use(BodyParser())
+        lime.use(Favicon())
+        
         // it's very important used kind of RouteAble
+        //register for main modle
         lime.use(lime);
-        lime.use(trevi)
+        
+        lime.use(router)
         
         lime.get("/callback") { req, res in
             let msg = "hello iwas"
+            res.statusCode = 200
             res.send(msg)
             return false
         }
         
         lime.get("/",{ req, res in
-            print("first root");
             return true
         },{ req, res in
+            
             let msg = "im root"
             res.send(msg)
-            print("second root");
             return false
         })
         
-        lime.get("/yoseob" ,Index())
+        lime.use("/yoseob", Index())
 
-        
-        for r in trevi.router.routeTable.keys{
-            print(r)
-        }
-        
+
         
         lime.use({ req , res in
             res.statusCode = 404;

@@ -12,9 +12,8 @@ import Foundation
 public class Trevi : Middleware{
     public var usedModuleList = [RouteAble]()
     public var router = Router()
-    
-    private override init(){
-        super.init()
+    public var name : MiddlewareName
+    private init(){
         name = .Trevi
     }
     struct StaticInstance {
@@ -29,19 +28,19 @@ public class Trevi : Middleware{
         return StaticInstance.instance!
     }
     
-    public func trevi(routeable : RouteAble) -> RouteAble{
+    public func store(routeable : RouteAble) -> RouteAble{
         Trevi.sharedInstance().usedModuleList.append(routeable)
         return routeable
     }
     
-    public override func operateCommand( obj : AnyObject ...)->Bool{
+    public func operateCommand( obj : AnyObject ...)->Bool{
         let req : Request = obj[0] as! Request
         let res : Response = obj[1] as! Response
-        router.routeTable[req.path]?.callbacks
-        if let rout = router.routeTable[req.path]{
+
+        if let rout = router.route(req.path){
+            print(rout)
             for cb in rout.callbacks{
                 
-                print(cb)
                 if cb(req,res) == false{
                     return false
                 }

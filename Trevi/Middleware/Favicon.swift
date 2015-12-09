@@ -10,15 +10,13 @@ import Foundation
 
 public class Favicon : Middleware{
     
+    public var name : MiddlewareName;
     
-    
-    public override init(){
-        super.init()
+    public init(){
         name = .Favicon
     }
     
-    public override func operateCommand(obj: AnyObject...) ->Bool {
-    
+    public func operateCommand(obj: AnyObject...) ->Bool {
         return true
     }
 }

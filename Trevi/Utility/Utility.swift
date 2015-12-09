@@ -10,7 +10,8 @@ import Foundation
 
 
 
-public typealias Next = (Bool) ->()
+
+
 public typealias CallBack = (Request , Response) -> Bool // will remove next
 
 
@@ -28,6 +29,8 @@ public enum HTTPMethod {
     case Put(CallBack)
     case Delte(CallBack)
 }
+
+
 
 extension String{
     func length() -> Int{

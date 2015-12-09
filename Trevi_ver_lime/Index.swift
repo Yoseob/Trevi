@@ -16,15 +16,27 @@ public class Index : RouteAble{
         
     }
     public override func prepare() {
-        let index = trevi.trevi(self)
+        let index = trevi.store(self)
+        
+        index.get("/") { (req, res) -> Bool in
+            res.statusCode = 200;
+            res.bodyString = "im " + req.path
+            res.send()
+            return false
+        }
+        index.get("/lee") { req ,res in
+            res.statusCode = 200;
+            res.bodyString = "im " + req.params["yoseob"]!
+            res.send()
+            return false
+        }
         index.get("/hi") { req ,res in
-            print("index.hi")
-            return true
+            res.statusCode = 200;
+            res.bodyString = "im " + req.path
+            res.send()
+            return false
         }
-        index.get("/hi123") { req ,res in
-            print("index.hi")
-            return true
-        }
-        index.get("/end",End())
+
+        index.use("/end",End())
     }
 }

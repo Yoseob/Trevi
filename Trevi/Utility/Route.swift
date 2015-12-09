@@ -12,7 +12,7 @@ public class Route{
     
     //origin Path
     var path:String!
-    //be used Routing
+    //used Routing
     var routePath:String!
     var method : HTTPMethodType!
     var regExp : String!
@@ -20,7 +20,9 @@ public class Route{
     var callbacks = [CallBack]!()
     var params = [String : String]();
     
-    
+    init(){
+        self.method = .UNDEFINED
+    }
     init(method : HTTPMethodType , _ path : String ,  _ callback : [CallBack]){
         self.method = method
         self.path = path

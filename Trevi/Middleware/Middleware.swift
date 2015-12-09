@@ -19,19 +19,12 @@ public enum MiddlewareName: String {
     case CookieParser = "cookieParser"
     case Session = "session"
     case Trevi = "trevi"
+    case Router = "router"
     // else...
 }
 
-public class Middleware {
-    public var name : MiddlewareName!
-    public init(){
-        
-        
-        name = .Undefind
-    }
-    public func operateCommand( obj : AnyObject ...)->Bool{
-        return true
-    }
-    
+public protocol Middleware {
+    var name : MiddlewareName {get set} 
+    func operateCommand( obj : AnyObject ...)->Bool
 }
     

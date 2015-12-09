@@ -35,49 +35,60 @@ public class RouteAble : Require{
         // fill prepare func like this
     }
 
-    /**
-     * Handle for the given path.
-     *
-     *
-     * @param {Request} req 
-     * @param {Response} res
-     * @return
-     * @public
-     */
-    public func handleRequest(req : Request , _ res : Response) ->Bool{
-        if let route = routeTable[req.path]{
-            print(route)
-
-        }
-        return false
-    }
-    
-    public func executeRequestCallback(req : Request , _ res : Response) -> Bool{
-        if let rout = routeTable[req.path]{
-            for cb in rout.callbacks{
-                
-                print(cb)
-                if cb(req,res) == false{
-                    return false
-                }
-            }
-        }
-        return true
-    }
+  
     
     /**
-     * Set Any Type MiddleWares .
+     * Set middlewares type of function or middleware.
+     *
+     * if first argument type is string, this function use routing module
+     * and then other arguments is RouteAble type.
+     * except in this case, anytime use function arguments are Middleware or function(Callback)
      *
      *
-     * @param {Middleware | RouteAble} middleware
+     *
+     *
+     * @param {Middleware | RouteAble | String} middleware
      * @return
      * @public
      */
     public func use(middleware : Any...){
-        for md in middleware{
-            middlewareList.append(md)
+        var temp = middleware
+        
+        /*
+         * i have no idea which case is better
+         * which one is batter? why?
+         */
+        if true{
+            if case let path as String = temp.first {
+                temp.removeFirst()
+                let routeList = [RouteAble](temp)
+                makeChildRoute(path, module:routeList)
+                return
+            }
+            for md in middleware{
+                middlewareList.append(md)
+            }
+        }else{
+            
+            /*
+            switch temp.first{
+            case let path as String:
+                temp.removeFirst()
+                let routeList = [RouteAble](temp)
+                makeChildRoute(path, module:routeList)
+            default:
+                for md in middleware{
+                    middlewareList.append(md)
+                }
+                break
+            }
+            */
+
         }
-    }
+        
+        
+}
+    
     /**
      * Set Function Type MiddleWares.
      *
@@ -89,14 +100,8 @@ public class RouteAble : Require{
     public func use(middleware : CallBack){
         middlewareList.append(middleware)
     }
-
-    /**
-    *@deprecate
-    */
-    public func use(middleware : Method){
-        middlewareList.append(middleware)
-    }
     
+   
     /**
      * setup static path or url
      * @param {String} sPath
@@ -119,35 +124,37 @@ public class RouteAble : Require{
     
     
     public func all(path : String , _ callback : CallBack ...) -> RouteAble{
-        trevi.router.routeTable[superPath! + path] = Route(method:.GET,path,callback)
-        return self
+        registerCompleteRoutePath(.GET, path: path, callback: callback)
+        return registerCompleteRoutePath(.POST, path: path, callback: callback)
     }
     
     public func get(path : String , _ callback : CallBack ...) -> RouteAble{
-        trevi.router.routeTable[superPath! + path] = Route(method:.GET,path,callback)
-        return self
+        return registerCompleteRoutePath(.GET, path: path, callback: callback)
     }
-    public func get(path : String , _ module : RouteAble ...)-> RouteAble{
-        for ra in module{
-            ra.superPath = (self.superPath)!
-            ra.prepare()
-        }
-        return self
-    }
-    public func post(path : String , _ callback : CallBack ...){
-        trevi.router.routeTable[superPath! + path] = Route(method:.GET,path,callback)
 
+    public func post(path : String , _ callback : CallBack ...) ->RouteAble{
+        return registerCompleteRoutePath(.POST, path: path, callback: callback)
     }
-    public func post(path : String , _ module : RouteAble ...)-> RouteAble{
+    
+    
+    
+
+    private func makeChildRoute(path:String , module:[RouteAble])->RouteAble{
         for ma in module{
             ma.superPath = (self.superPath)! + path
             ma.prepare()
         }
         return self
-
     }
-
     
+    private func registerCompleteRoutePath(type:HTTPMethodType, path:String, callback:[CallBack]) -> RouteAble{
+        var completePath = superPath!+path;
+        if superPath != "" && path == "/"{
+            completePath = superPath!
+        }
+        trevi.router.appendRoute(completePath,Route(method:type,completePath,callback));
+        return self
+    }
     
     
 }

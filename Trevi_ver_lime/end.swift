@@ -17,14 +17,28 @@ public class End : RouteAble{
     //if you want use user custom RouteAble Class for Routing 
     // fill prepare func like this 
     public override func prepare() {
-        let index = trevi.trevi(self)
-        index.get("/h222i") { req ,res in
-            print("index.hi")
-            return true
+        let index = trevi.store(self)
+        index.get("/1") { req ,res in
+            res.statusCode = 200;
+            res.bodyString = "im " + req.path
+            res.send()
+            return false
         }
-        index.get("/hi123123") { req ,res in
-            print("index.hi")
-            return true
+        index.get("/2") { req ,res in
+            res.statusCode = 200;
+            res.bodyString = "im " + req.path
+            res.send()
+            return false
+
         }
+        
+        index.get("/3") { req, res in
+            res.statusCode = 200;
+            res.bodyString = "im " + req.path
+            res.send()
+            return false
+
+        }
+        
     }
 }
