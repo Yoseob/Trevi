@@ -15,6 +15,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
+        
+        
         let server = Server()
         
         //Trevi is used routor like nodejs express
@@ -34,7 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use(router)
         
         lime.get("/callback") { req, res in
-            let msg = "hello iwas"
+            let msg = "im callback"
             res.statusCode = 200
             res.send(msg)
             return false
