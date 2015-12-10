@@ -8,21 +8,20 @@
 
 import Foundation
 
-public typealias CallBack = (Request , Response) -> Bool // will remove next
+public typealias CallBack = ( Request, Response ) -> Bool // will remove next
 
 public enum HTTPMethodType: String {
-    case GET = "GET"
-    case POST = "POST"
-    case PUT = "PUT"
-    case HEAD = "HEAD"
+    case GET       = "GET"
+    case POST      = "POST"
+    case PUT       = "PUT"
+    case HEAD      = "HEAD"
     case UNDEFINED = "UNDEFINED"
 }
 
 
-
 public enum HTTPMethod {
-    case Get(CallBack)
-    case Post(CallBack)
-    case Put(CallBack)
-    case Delte(CallBack)
+    case Get( CallBack )
+    case Post( CallBack )
+    case Put( CallBack )
+    case Delte( CallBack )
 }

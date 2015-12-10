@@ -8,24 +8,24 @@
 
 import Foundation
 
-public class Router : Middleware{
-    
-    public var name : MiddlewareName
-    private var routeTable = [String : Route]()
-    
-    public init(){
+public class Router: Middleware {
+
+    public var  name: MiddlewareName
+    private var routeTable = [ String: Route ] ()
+
+    public init () {
         name = .Router
     }
-   
-    public func operateCommand(params : MiddlewareParams) -> Bool {
+
+    public func operateCommand ( params: MiddlewareParams ) -> Bool {
         return true
     }
-    
-    public func appendRoute(path:String , _ route:Route){
+
+    public func appendRoute ( path: String, _ route: Route ) {
         self.routeTable[path] = route
     }
-    
-    public func route(path : String) ->Route!{
+
+    public func route ( path: String ) -> Route! {
         return self.routeTable[path]
     }
 }

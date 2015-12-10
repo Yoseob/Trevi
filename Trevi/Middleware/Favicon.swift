@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class Favicon : Middleware{
-    
-    public var name : MiddlewareName;
-    
-    public init(){
+public class Favicon: Middleware {
+
+    public var name: MiddlewareName;
+
+    public init () {
         name = .Favicon
     }
-    
-    public func operateCommand(params : MiddlewareParams) ->Bool {
+
+    public func operateCommand ( params: MiddlewareParams ) -> Bool {
         return true
     }
 }

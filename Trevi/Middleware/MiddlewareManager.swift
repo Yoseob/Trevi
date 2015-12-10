@@ -8,56 +8,53 @@
 
 import Foundation
 
+public class MiddlewareManager {
 
+    public var enabledMiddlwareList = [ Any ] ()
 
-public class MiddlewareManager{
-    
-    public var enabledMiddlwareList = [Any]()
-    
-    public class func sharedInstance() -> MiddlewareManager {
-        dispatch_once(&StaticInstance.dispatchToken) {
-            StaticInstance.instance = MiddlewareManager()
+    public class func sharedInstance () -> MiddlewareManager {
+        dispatch_once ( &StaticInstance.dispatchToken ) {
+            StaticInstance.instance = MiddlewareManager ()
         }
         return StaticInstance.instance!
     }
-    
+
     struct StaticInstance {
         static var dispatchToken: dispatch_once_t = 0
-        static var instance: MiddlewareManager?
-    }
-    
-    private init() {
-        
+        static var instance:      MiddlewareManager?
     }
 
-    public func handleRequest(request:Request , _ response:Response){
-        let containerRoute = Route()
-        for middleware in enabledMiddlwareList
-        {
-            let isNextMd = matchType(middleware, params: MiddlewareParams(request,response,containerRoute))
-            if isNextMd == false{
+    private init () {
+
+    }
+
+    public func handleRequest ( request: Request, _ response: Response ) {
+        let containerRoute = Route ()
+        for middleware in enabledMiddlwareList {
+            let isNextMd = matchType ( middleware, params: MiddlewareParams ( request, response, containerRoute ) )
+            if isNextMd == false {
                 return
             }
         }
     }
-    
-    private func matchType(obj : Any , params : MiddlewareParams) -> Bool{
-        var ret : Bool = true;
-        switch obj{
+
+    private func matchType ( obj: Any, params: MiddlewareParams ) -> Bool {
+        var ret: Bool = true;
+        switch obj {
         case let mw as Middleware:
-            ret = mw.operateCommand(params)
+            ret = mw.operateCommand ( params )
         case let cb as CallBack:
-            ret = cb(params.req,params.res)
+            ret = cb ( params.req, params.res )
         default:
             break
-            
+
         }
         return ret
     }
-    
-    public func appendMiddleWare(md : Any){
-        enabledMiddlwareList.append(md)
+
+    public func appendMiddleWare ( md: Any ) {
+        enabledMiddlwareList.append ( md )
     }
-    
-    
+
+
 }
