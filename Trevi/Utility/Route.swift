@@ -8,30 +8,30 @@
 
 import Foundation
 
-public class Route{
-    
+public class Route {
+
     //origin Path
-    var path:String!
+    var path:      String!
     //used Routing
-    var routePath:String!
-    var method : HTTPMethodType!
-    var regExp : String!
-    var keys = [String]();
-    var callbacks = [CallBack]!()
-    var params = [String : String]();
-    
-    init(){
+    var routePath: String!
+    var method:    HTTPMethodType!
+    var regExp:    String!
+    var keys = [ String ] ();
+    var callbacks = [ CallBack ]! ()
+    var params    = [ String: String ] ();
+
+    init () {
         self.method = .UNDEFINED
     }
-    init(method : HTTPMethodType , _ path : String ,  _ callback : [CallBack]){
+    init ( method: HTTPMethodType, _ path: String, _ callback: [CallBack] ) {
         self.method = method
         self.path = path
         self.callbacks = callback
     }
-    init(method : HTTPMethodType , path : String , routeAble : RouteAble...){
+    init ( method: HTTPMethodType, path: String, routeAble: RouteAble... ) {
         self.method = method
         self.path = path
 //        self.callback.append(callback);
     }
-    
+
 }

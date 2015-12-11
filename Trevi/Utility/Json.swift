@@ -7,15 +7,16 @@
 //
 
 import Foundation
-public enum JSON  {
-    case Array([JSON])
-    case Dictionary([Swift.String: JSON])
-    case String(Swift.String)
-    case Number(Float)
+
+public enum JSON {
+    case Array( [JSON] )
+    case Dictionary( [Swift.String:JSON] )
+    case String( Swift.String )
+    case Number( Float )
     case Null
 }
 
-extension JSON{
+extension JSON {
 
     public var string: Swift.String? {
         switch self {
@@ -25,16 +26,16 @@ extension JSON{
             return nil
         }
     }
-    
+
     public var int: Int? {
         switch self {
         case .Number(let d):
-            return Int(d)
+            return Int ( d )
         default:
             return nil
         }
     }
-    
+
     public var float: Float? {
         switch self {
         case .Number(let d):
@@ -43,7 +44,7 @@ extension JSON{
             return nil
         }
     }
-    
+
     public var bool: Bool? {
         switch self {
         case .Number(let d):
@@ -52,7 +53,7 @@ extension JSON{
             return nil
         }
     }
-    
+
     public var isNull: Bool {
         switch self {
         case Null:
@@ -61,26 +62,26 @@ extension JSON{
             return false
         }
     }
-    
-    public func wrap(json: AnyObject) -> JSON {
+
+    public func wrap ( json: AnyObject ) -> JSON {
         if let str = json as? Swift.String {
-            return .String(str)
+            return .String ( str )
         }
         if let num = json as? NSNumber {
-            return .Number(num.floatValue)
+            return .Number ( num.floatValue )
         }
-        if let dictionary = json as? [Swift.String: AnyObject] {
-            
-            return .Dictionary(internalConvertDictionary(dictionary))
+        if let dictionary = json as? [Swift.String:AnyObject] {
+
+            return .Dictionary ( internalConvertDictionary ( dictionary ) )
         }
         if let array = json as? [AnyObject] {
-            return .Array(internalConvertArray(array))
+            return .Array ( internalConvertArray ( array ) )
         }
-        assert(json is NSNull, "Unsupported Type")
+        assert ( json is NSNull, "Unsupported Type" )
         return .Null
     }
-    
-    private func internalConvertDictionary(dic : [Swift.String: AnyObject]) -> [Swift.String: JSON]!{
+
+    private func internalConvertDictionary ( dic: [Swift.String:AnyObject] ) -> [Swift.String:JSON]! {
 //        var newDictionary = [:]
 //        for (k,v) in dic{
 //            switch v{
@@ -96,10 +97,11 @@ extension JSON{
 //    
 //            }
 //        }
-        
+
         return nil;
     }
-    private func internalConvertArray(arr : [AnyObject]) -> [JSON]!{
+
+    private func internalConvertArray ( arr: [AnyObject] ) -> [JSON]! {
         return nil
     }
 }
