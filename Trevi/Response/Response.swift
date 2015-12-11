@@ -8,19 +8,12 @@
 
 import Foundation
 
-<<<<<<< HEAD
-public class Response{
-    public var header  = [String:String]()
-    
-    public var body = [String : String]!()
-    public var data : NSData?
-=======
-public class Response {
 
+public class Response{
+
+    public var data : NSData?
     public var header = [ String: String ] ()
     public var body = [ String: String ]! ()
-
->>>>>>> 3e1e130e7cc0e9dfddb495263cb01ea72bec7848
     public var bodyString: String? {
         didSet {
             if let _ = header[Content_Type] {
@@ -28,7 +21,7 @@ public class Response {
             }
         }
     }
-    
+
     private var bodyData : NSData? {
         if let dt = data{
             return dt
@@ -39,10 +32,10 @@ public class Response {
         }else if let b = body{
             resultBodyString = dictionaryToString(b);
         }
-        
+
         return resultBodyString.dataUsingEncoding(NSUTF8StringEncoding)!
     }
-    
+
     public var statusString: String {
         return internalStatus.statusString ()
     }
@@ -57,35 +50,14 @@ public class Response {
             return statusCode
         }
     }
-<<<<<<< HEAD
+
     private var internalStatus : StatusCode = .OK
-    
+
     private var socket : SwiftSocket?
-    
 
-    public init(){
-    
-=======
-    private var internalStatus: StatusCode = .OK
-
-    private var socket:   SwiftSocket?
     public var  renderer: Renderer?
 
-    private var bodyData: NSData? {
-
-        var resultBodyString: String!
-        if let bodyString = bodyString {
-            resultBodyString = bodyString
-        } else if let b = body {
-            resultBodyString = dictionaryToString ( b );
-        }
-
-        return resultBodyString.dataUsingEncoding ( NSUTF8StringEncoding )!
-    }
-
-    public init () {
-
->>>>>>> 3e1e130e7cc0e9dfddb495263cb01ea72bec7848
+    public init(){
     }
 
     public init ( socket: SwiftSocket ) {

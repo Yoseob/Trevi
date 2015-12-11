@@ -168,12 +168,9 @@
 		239411E31C0C2E19001B9B07 /* Trevi_ver_lime */ = {
 			isa = PBXGroup;
 			children = (
-<<<<<<< HEAD
 				2368EAC11C1991FE007DB033 /* index.html */,
 				2368EAC21C1991FE007DB033 /* myImage.jpg */,
-=======
 				90516F301C18D7E5005CEED8 /* ssp */,
->>>>>>> 3e1e130e7cc0e9dfddb495263cb01ea72bec7848
 				239411E41C0C2E19001B9B07 /* AppDelegate.swift */,
 				239411E61C0C2E19001B9B07 /* ViewController.swift */,
 				239411E81C0C2E19001B9B07 /* Assets.xcassets */,

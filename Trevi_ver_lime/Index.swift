@@ -26,16 +26,11 @@ public class Index: RouteAble {
             res.send ()
             return false
         }
-<<<<<<< HEAD
+
         index.get("/lee") { req ,res in
             res.bodyString = "im " + req.path
             res.send()
-=======
-        index.get ( "/lee" ) {
-            req, res in
-            res.bodyString = "im " + req.params["yoseob"]!
-            res.send ()
->>>>>>> 3e1e130e7cc0e9dfddb495263cb01ea72bec7848
+
             return false
         }
         index.get ( "/hi" ) {

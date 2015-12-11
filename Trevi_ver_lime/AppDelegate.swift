@@ -22,7 +22,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let lime   = Lime ()
 
         //'use' func call for use middleware
-<<<<<<< HEAD
         lime.use(BodyParser())
         lime.use(Favicon())
         
@@ -45,18 +44,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return false
         }
 
-        
-        lime.get("/",{ req, res in
-=======
-        lime.use ( BodyParser () )
-        lime.use ( Favicon () )
-        lime.use ( SwiftServerPage () )
-
-        // It's very important used kind of RouteAble
-        // Register for main modle
-        lime.use ( lime );
-
-        lime.use ( router )
 
         lime.get ( "/callback" ) { req, res in
             let msg = "Hello Trevi!"
@@ -65,7 +52,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         lime.get ( "/", { req, res in
->>>>>>> 3e1e130e7cc0e9dfddb495263cb01ea72bec7848
             return true
         }, { req, res in
             let msg = "im root"

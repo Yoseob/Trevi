@@ -8,16 +8,6 @@
 
 import Foundation
 
-<<<<<<< HEAD
-//ddd trevi and router relation is unstable
-public class Trevi : Middleware{
-    
-    public var usedModuleList = [RouteAble]()
-    public var router = Router()
-    public var name : MiddlewareName
-    
-    private init(){
-=======
 
 public class Trevi: Middleware {
 
@@ -26,7 +16,6 @@ public class Trevi: Middleware {
     public var name: MiddlewareName
 
     private init () {
->>>>>>> 3e1e130e7cc0e9dfddb495263cb01ea72bec7848
         name = .Trevi
     }
 
