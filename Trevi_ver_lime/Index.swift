@@ -24,7 +24,7 @@ public class Index : RouteAble{
             return false
         }
         index.get("/lee") { req ,res in
-            res.bodyString = "im " + req.params["yoseob"]!
+            res.bodyString = "im " + req.path
             res.send()
             return false
         }

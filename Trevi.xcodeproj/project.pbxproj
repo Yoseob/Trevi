@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2368EAC31C1991FE007DB033 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 2368EAC11C1991FE007DB033 /* index.html */; };
+		2368EAC41C1991FE007DB033 /* myImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2368EAC21C1991FE007DB033 /* myImage.jpg */; };
 		236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D61C12198D0076ED36 /* MiddlewareManager.swift */; };
 		236E53D91C1235130076ED36 /* Favicon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D81C1235130076ED36 /* Favicon.swift */; };
 		236E53DE1C1500EA0076ED36 /* end.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53DD1C1500EA0076ED36 /* end.swift */; };
@@ -21,7 +23,6 @@
 		239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239411EA1C0C2E19001B9B07 /* Main.storyboard */; };
 		239411FC1C0C2E81001B9B07 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F21C0C2E81001B9B07 /* Request.swift */; };
 		239411FD1C0C2E81001B9B07 /* Require.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F41C0C2E81001B9B07 /* Require.swift */; };
-		239411FE1C0C2E81001B9B07 /* RequireAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F51C0C2E81001B9B07 /* RequireAble.swift */; };
 		239411FF1C0C2E81001B9B07 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F71C0C2E81001B9B07 /* Response.swift */; };
 		239412001C0C2E81001B9B07 /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411F91C0C2E81001B9B07 /* PreparedData.swift */; };
 		239412011C0C2E81001B9B07 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411FA1C0C2E81001B9B07 /* Http.swift */; };
@@ -67,6 +68,8 @@
 
 /* Begin PBXFileReference section */
 		096BFC225DB66447A8580EC2 /* Pods-Trevi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trevi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Trevi/Pods-Trevi.debug.xcconfig"; sourceTree = "<group>"; };
+		2368EAC11C1991FE007DB033 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		2368EAC21C1991FE007DB033 /* myImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = myImage.jpg; sourceTree = "<group>"; };
 		236E53D61C12198D0076ED36 /* MiddlewareManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiddlewareManager.swift; sourceTree = "<group>"; };
 		236E53D81C1235130076ED36 /* Favicon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
 		236E53DD1C1500EA0076ED36 /* end.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = end.swift; sourceTree = "<group>"; };
@@ -85,7 +88,6 @@
 		239411ED1C0C2E19001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		239411F21C0C2E81001B9B07 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		239411F41C0C2E81001B9B07 /* Require.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Require.swift; sourceTree = "<group>"; };
-		239411F51C0C2E81001B9B07 /* RequireAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequireAble.swift; sourceTree = "<group>"; };
 		239411F71C0C2E81001B9B07 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		239411F91C0C2E81001B9B07 /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
 		239411FA1C0C2E81001B9B07 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
@@ -164,6 +166,8 @@
 		239411E31C0C2E19001B9B07 /* Trevi_ver_lime */ = {
 			isa = PBXGroup;
 			children = (
+				2368EAC11C1991FE007DB033 /* index.html */,
+				2368EAC21C1991FE007DB033 /* myImage.jpg */,
 				239411E41C0C2E19001B9B07 /* AppDelegate.swift */,
 				239411E61C0C2E19001B9B07 /* ViewController.swift */,
 				239411E81C0C2E19001B9B07 /* Assets.xcassets */,
@@ -188,7 +192,6 @@
 			isa = PBXGroup;
 			children = (
 				239411F41C0C2E81001B9B07 /* Require.swift */,
-				239411F51C0C2E81001B9B07 /* RequireAble.swift */,
 			);
 			path = Require;
 			sourceTree = "<group>";
@@ -374,8 +377,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2368EAC31C1991FE007DB033 /* index.html in Resources */,
 				239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */,
 				239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */,
+				2368EAC41C1991FE007DB033 /* myImage.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,7 +436,6 @@
 				239411FC1C0C2E81001B9B07 /* Request.swift in Sources */,
 				239412001C0C2E81001B9B07 /* PreparedData.swift in Sources */,
 				236E53E21C1726450076ED36 /* Router.swift in Sources */,
-				239411FE1C0C2E81001B9B07 /* RequireAble.swift in Sources */,
 				906E50B51C121202005937A8 /* System.swift in Sources */,
 				239412011C0C2E81001B9B07 /* Http.swift in Sources */,
 				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,

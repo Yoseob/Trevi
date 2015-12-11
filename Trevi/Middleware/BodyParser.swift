@@ -66,6 +66,9 @@ public class BodyParser : Middleware{
                 req.header[segSet[0]] = segSet[1];
             }
         }
+        
+        
+        
         if headerComp.last?.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 0{
             req.body = self.convertStringToDictionary(headerComp.last!)!
             

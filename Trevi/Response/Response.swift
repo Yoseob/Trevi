@@ -12,7 +12,7 @@ public class Response{
     public var header  = [String:String]()
     
     public var body = [String : String]!()
-    
+    public var data : NSData?
     public var bodyString: String? {
         didSet {
             if let _ = header[Content_Type] {
@@ -20,6 +20,21 @@ public class Response{
             }
         }
     }
+    
+    private var bodyData : NSData? {
+        if let dt = data{
+            return dt
+        }
+        var resultBodyString : String!
+        if let bodyString = bodyString {
+            resultBodyString = bodyString
+        }else if let b = body{
+            resultBodyString = dictionaryToString(b);
+        }
+        
+        return resultBodyString.dataUsingEncoding(NSUTF8StringEncoding)!
+    }
+    
     public var statusString: String {
         return internalStatus.statusString()
     }
@@ -38,18 +53,7 @@ public class Response{
     
     private var socket : SwiftSocket?
     
-    private var bodyData : NSData? {
-        
-        var resultBodyString : String!
-        if let bodyString = bodyString {
-            resultBodyString = bodyString
-        }else if let b = body{
-            resultBodyString = dictionaryToString(b);
-        }
-        
-        return resultBodyString.dataUsingEncoding(NSUTF8StringEncoding)!
-    }
-    
+
     public init(){
     
     }

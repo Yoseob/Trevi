@@ -32,14 +32,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // it's very important used kind of RouteAble
         //register for main modle
         lime.use(lime);
-        
         lime.use(router)
         
-        lime.get("/callback") { req, res in
-            let msg = "hello iwas"
-            res.send(msg)
+        lime.get("/intro") { req, res in
+            let file_path = NSBundle.mainBundle().pathForResource("index", ofType: "html")
+            res.data = NSData(contentsOfFile: file_path!)
+            res.send()
             return false
         }
+        
+        lime.get("/image") { req, res in
+            let file_path = NSBundle.mainBundle().pathForResource("myImage", ofType: "jpg")
+            res.data = NSData(contentsOfFile: file_path!)
+            res.send()
+            return false
+        }
+
         
         lime.get("/",{ req, res in
             return true
