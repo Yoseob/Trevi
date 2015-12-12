@@ -57,10 +57,14 @@ public class RouteAble: Require {
          * which one is batter? why?
          */
         if true {
-            if case let path as String = temp.first {
+            if case let path as String = temp.first{
                 temp.removeFirst ()
                 let routeList = [ RouteAble ] ( temp )
                 makeChildRoute ( path, module: routeList )
+                return
+            }else if case let route as RouteAble = temp.first{
+                let routeList = [ RouteAble ] ( temp )
+                makeChildRoute ( "", module: routeList )
                 return
             }
             for md in middleware {
@@ -128,7 +132,7 @@ public class RouteAble: Require {
         return registerCompleteRoutePath ( .POST, path: path, callback: callback )
     }
 
-    private func makeChildRoute ( path: String, module: [RouteAble] ) -> RouteAble {
+    public func makeChildRoute ( path: String, module: [RouteAble] ) -> RouteAble {
         for ma in module {
             ma.superPath = (self.superPath)! + path
             ma.prepare ()

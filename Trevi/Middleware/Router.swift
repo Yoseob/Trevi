@@ -11,7 +11,7 @@ import Foundation
 public class Router: Middleware {
 
     public var  name: MiddlewareName
-    private var routeTable = [ String: Route ] ()
+    public var routeTable = [ String: Route ] ()
 
     public init () {
         name = .Router

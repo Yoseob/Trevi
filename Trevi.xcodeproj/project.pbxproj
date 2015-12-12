@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2368EAC31C1991FE007DB033 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 2368EAC11C1991FE007DB033 /* index.html */; };
+		2368EAC31C1991FE007DB033 /* intro.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 2368EAC11C1991FE007DB033 /* intro.ssp */; };
 		2368EAC41C1991FE007DB033 /* myImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2368EAC21C1991FE007DB033 /* myImage.jpg */; };
 		236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D61C12198D0076ED36 /* MiddlewareManager.swift */; };
 		236E53D91C1235130076ED36 /* Favicon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D81C1235130076ED36 /* Favicon.swift */; };
@@ -33,6 +33,7 @@
 		239412121C0C513C001B9B07 /* BodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412111C0C513C001B9B07 /* BodyParser.swift */; };
 		239412141C0DECC2001B9B07 /* Lime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412131C0DECC2001B9B07 /* Lime.swift */; };
 		239412161C0DF99A001B9B07 /* Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412151C0DF99A001B9B07 /* Index.swift */; };
+		23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 		90516F331C18D7E5005CEED8 /* arg_test.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90516F311C18D7E5005CEED8 /* arg_test.ssp */; };
 		90516F341C18D7E5005CEED8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90516F321C18D7E5005CEED8 /* index.ssp */; };
 		906E50B11C11DB9A005937A8 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
@@ -40,7 +41,6 @@
 		906E50B71C121225005937A8 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
 		906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B81C1212CC005937A8 /* SwiftServerPage.swift */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,11 +69,11 @@
 
 /* Begin PBXFileReference section */
 		096BFC225DB66447A8580EC2 /* Pods-Trevi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trevi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Trevi/Pods-Trevi.debug.xcconfig"; sourceTree = "<group>"; };
-		2368EAC11C1991FE007DB033 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
-		2368EAC21C1991FE007DB033 /* myImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = myImage.jpg; sourceTree = "<group>"; };
+		2368EAC11C1991FE007DB033 /* intro.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = intro.ssp; path = ../intro.ssp; sourceTree = "<group>"; };
+		2368EAC21C1991FE007DB033 /* myImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = myImage.jpg; path = ../myImage.jpg; sourceTree = "<group>"; };
 		236E53D61C12198D0076ED36 /* MiddlewareManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiddlewareManager.swift; sourceTree = "<group>"; };
 		236E53D81C1235130076ED36 /* Favicon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
-		236E53DD1C1500EA0076ED36 /* end.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = end.swift; sourceTree = "<group>"; };
+		236E53DD1C1500EA0076ED36 /* end.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = end.swift; path = ../end.swift; sourceTree = "<group>"; };
 		236E53DF1C1726370076ED36 /* Trevi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trevi.swift; sourceTree = "<group>"; };
 		236E53E11C1726450076ED36 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		236E53E31C173D9C0076ED36 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
@@ -98,7 +98,7 @@
 		2394120F1C0C4FEB001B9B07 /* Middleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
 		239412111C0C513C001B9B07 /* BodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParser.swift; sourceTree = "<group>"; };
 		239412131C0DECC2001B9B07 /* Lime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lime.swift; sourceTree = "<group>"; };
-		239412151C0DF99A001B9B07 /* Index.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Index.swift; sourceTree = "<group>"; };
+		239412151C0DF99A001B9B07 /* Index.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Index.swift; path = ../Index.swift; sourceTree = "<group>"; };
 		6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D536535D78CC69D99029EC3 /* Pods-Trevi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trevi.release.xcconfig"; path = "Pods/Target Support Files/Pods-Trevi/Pods-Trevi.release.xcconfig"; sourceTree = "<group>"; };
 		90516F311C18D7E5005CEED8 /* arg_test.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arg_test.ssp; sourceTree = "<group>"; };
@@ -114,7 +114,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7BC9D522446DFD749796360 /* Pods_Trevi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +128,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2368EAC51C1C88BC007DB033 /* routes */ = {
+			isa = PBXGroup;
+			children = (
+				239412151C0DF99A001B9B07 /* Index.swift */,
+				236E53DD1C1500EA0076ED36 /* end.swift */,
+			);
+			path = routes;
+			sourceTree = "<group>";
+		};
+		2368EAC61C1C88EE007DB033 /* public */ = {
+			isa = PBXGroup;
+			children = (
+				2368EAC21C1991FE007DB033 /* myImage.jpg */,
+			);
+			path = public;
+			sourceTree = "<group>";
+		};
 		239411C91C0C2DA3001B9B07 = {
 			isa = PBXGroup;
 			children = (
@@ -168,8 +184,8 @@
 		239411E31C0C2E19001B9B07 /* Trevi_ver_lime */ = {
 			isa = PBXGroup;
 			children = (
-				2368EAC11C1991FE007DB033 /* index.html */,
-				2368EAC21C1991FE007DB033 /* myImage.jpg */,
+				2368EAC61C1C88EE007DB033 /* public */,
+				2368EAC51C1C88BC007DB033 /* routes */,
 				90516F301C18D7E5005CEED8 /* ssp */,
 				239411E41C0C2E19001B9B07 /* AppDelegate.swift */,
 				239411E61C0C2E19001B9B07 /* ViewController.swift */,
@@ -177,8 +193,6 @@
 				239411EA1C0C2E19001B9B07 /* Main.storyboard */,
 				239411ED1C0C2E19001B9B07 /* Info.plist */,
 				239412131C0DECC2001B9B07 /* Lime.swift */,
-				239412151C0DF99A001B9B07 /* Index.swift */,
-				236E53DD1C1500EA0076ED36 /* end.swift */,
 			);
 			path = Trevi_ver_lime;
 			sourceTree = "<group>";
@@ -274,6 +288,7 @@
 			children = (
 				90516F311C18D7E5005CEED8 /* arg_test.ssp */,
 				90516F321C18D7E5005CEED8 /* index.ssp */,
+				2368EAC11C1991FE007DB033 /* intro.ssp */,
 			);
 			path = ssp;
 			sourceTree = "<group>";
@@ -388,7 +403,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2368EAC31C1991FE007DB033 /* index.html in Resources */,
+				2368EAC31C1991FE007DB033 /* intro.ssp in Resources */,
 				239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */,
 				90516F341C18D7E5005CEED8 /* index.ssp in Resources */,
 				90516F331C18D7E5005CEED8 /* arg_test.ssp in Resources */,
