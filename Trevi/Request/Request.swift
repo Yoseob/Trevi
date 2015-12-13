@@ -66,7 +66,6 @@ public class Request {
         // Parsing request path
         self.path = (url.componentsSeparatedByString( "?" ) as [String])[0]
         if self.path.characters.last != "/" {
-            print(self.path)
             self.path += "/"
         }
         

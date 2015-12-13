@@ -29,18 +29,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(trevi) // it is important to routing
         
-        for r in trevi.router.routeList{
-            print(r)
-            
-        }
-        
-
         lime.use(){ req, res in
             res.status = 404
             res.bodyString = "404 Pages Not Found"
             res.send ()
             return true
         }
+        
         do {
             try server.createServer ( lime ).listen ( 8080 )
 

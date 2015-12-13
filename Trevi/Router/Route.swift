@@ -48,7 +48,7 @@ public class Route {
             for match in regex.matchesInString ( self.path, options: [], range: NSMakeRange( 0, self.path.length() ) ) {
                 let paramNameRange = match.rangeAtIndex ( 1 )
                 let paramName = self.path.substring(paramNameRange.location, length: paramNameRange.length)
-                self.regex = self.regex.stringByReplacingOccurrencesOfString ( ":\(paramName)", withString: "(.*)" )
+                self.regex = self.regex.stringByReplacingOccurrencesOfString ( ":\(paramName)", withString: "([\(unreserved)\\:\\?\\#\\[\\]\\@\(sub_delims);]*)" )
                 self.params.updateValue( "", forKey: paramName )
             }
         }

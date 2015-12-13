@@ -35,13 +35,13 @@ public class SwiftServerPage: Middleware, Renderer {
         return compileConvertedSwift ( filename, swiftCode: convertSSPtoSwift ( loadFile ( filename ), args: args ) )!
     }
 
-    func loadFile ( filepath: String ) -> String {
+    private final func loadFile ( filepath: String ) -> String {
         // TODO: error handling..
-        let data = try! File.read ( filepath, encoding: NSUTF8StringEncoding )
+        let data = try! File.read ( fileDispatcher( filepath ), encoding: NSUTF8StringEncoding )
         return data
     }
 
-    func convertSSPtoSwift ( data: String, args: [String:String] ) -> String {
+    private final func convertSSPtoSwift ( data: String, args: [String:String] ) -> String {
         guard let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [ .CaseInsensitive ] ) else {
             print ( "Error parsing data." )
             return ""
@@ -84,7 +84,7 @@ public class SwiftServerPage: Middleware, Renderer {
         return (swiftCode + "print(\"\(htmlTag)\")\n")
     }
 
-    func compileConvertedSwift ( filename: String, swiftCode: String ) -> String? {
+    private final func compileConvertedSwift ( filename: String, swiftCode: String ) -> String? {
         // TODO: error handling..
         try! File.write ( "\(filename).swift", data: swiftCode, encoding: NSUTF8StringEncoding )
 
@@ -92,5 +92,17 @@ public class SwiftServerPage: Middleware, Renderer {
         .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
         .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
         return compiled
+    }
+    
+    private final func fileDispatcher( filepath: String ) -> String {
+        if let filename = filepath.componentsSeparatedByString( "/" ).last {
+            let nameElement = filename.componentsSeparatedByString( "." )
+            if let bundleFilepath = NSBundle.mainBundle().pathForResource( nameElement[0], ofType: nameElement.count > 1 ? nameElement[1] : "" ) {
+                return bundleFilepath
+            }
+        }
+        
+        // TODO : return error by wrong filename.
+        return filepath
     }
 }
