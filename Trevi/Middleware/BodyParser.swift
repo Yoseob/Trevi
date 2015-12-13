@@ -20,7 +20,7 @@ public class BodyParser: Middleware {
         var req: Request = params.req
         let r:   Route   = params.route
         parserBody ( &req, r )
-        return true
+        return false
     }
 
     public func parserBody ( inout req: Request, _ route: Route ) {

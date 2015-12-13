@@ -32,14 +32,14 @@ public class MiddlewareManager {
         let containerRoute = Route ()
         for middleware in enabledMiddlwareList {
             let isNextMd = matchType ( middleware, params: MiddlewareParams ( request, response, containerRoute ) )
-            if isNextMd == false {
+            if isNextMd == true {
                 return
             }
         }
     }
 
     private func matchType ( obj: Any, params: MiddlewareParams ) -> Bool {
-        var ret: Bool = true;
+        var ret: Bool = false;
         switch obj {
         case let mw as Middleware:
             ret = mw.operateCommand ( params )

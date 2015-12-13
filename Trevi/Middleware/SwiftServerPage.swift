@@ -24,7 +24,7 @@ public class SwiftServerPage: Middleware, Renderer {
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
         let res: Response = params.res
         res.renderer = self
-        return true
+        return false
     }
 
     public func render ( filename: String ) -> String {
