@@ -18,7 +18,7 @@ public class Router: Middleware {
     }
 
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
-        return true
+        return false
     }
     
     public func appendRoute ( path: String, _ route: Route ) {

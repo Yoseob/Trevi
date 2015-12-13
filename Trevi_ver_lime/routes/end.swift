@@ -21,23 +21,20 @@ public class End: RouteAble {
         let index = trevi.store ( self )
         index.get ( "/1" ) {
             req, res in
-            res.bodyString = "im " + req.path
-            res.send ()
+
             return false
         }
         index.get ( "/2" ) {
             req, res in
-            res.bodyString = "im " + req.path
-            res.send ()
-            return false
+            return res.send ("im " + req.path)
+
 
         }
 
         index.get ( "/3" ) {
             req, res in
-            res.bodyString = "im " + req.path
-            res.send ()
-            return false
+            return res.send ("im " + req.path)
+
 
         }
 

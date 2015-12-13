@@ -20,30 +20,28 @@ public class Lime: RouteAble {
         
         lime.get("/intro") { req, res in
             let file_path = NSBundle.mainBundle().pathForResource("intro", ofType: "ssp")
-            res.data = NSData(contentsOfFile: file_path!)
-            res.send()
-            return false
+            res.send(NSData(contentsOfFile: file_path!)!)
+            return true
         }
         
         lime.get("/image") { req, res in
             let file_path = NSBundle.mainBundle().pathForResource("myImage", ofType: "jpg")
-            res.data = NSData(contentsOfFile: file_path!)
-            res.send()
-            return false
+            res.send(NSData(contentsOfFile: file_path!)!)
+            return true
         }
         
         lime.get ( "/callback" ) { req, res in
             let msg = "Hello Trevi!"
             res.send ( msg )
-            return false
+            return true
         }
         
         lime.get ( "/", { req, res in
-            return true
+            return false
             }, { req, res in
                 let msg = "im root"
                 res.send (msg)
-                return false
+            return true
         } )
         
         lime.use ( "/yoseob", Index () )
@@ -71,15 +69,15 @@ public class Lime: RouteAble {
         lime.get( "/param/:name/:arg/test", { req, res in
             var msg = "Request path : \(req.path)<br>"
             msg += "Found parameter : <br>\(req.params)"
-            res.send ( msg )
-            return false
+            return res.send ( msg )
+
         } )
         
         lime.get( "/param/:arg", { req, res in
             var msg = "Request path : \(req.path)<br>"
             msg += "Found parameter : <br>\(req.params)"
-            res.send ( msg )
-            return false
+            return res.send ( msg )
+
         } )
     }
 }

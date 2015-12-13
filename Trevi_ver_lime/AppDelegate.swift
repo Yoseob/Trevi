@@ -31,9 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(){ req, res in
             res.status = 404
-            res.bodyString = "404 Pages Not Found"
-            res.send ()
-            return true
+
+            return res.send ("404 Pages Not Found")
+
         }
         
         do {

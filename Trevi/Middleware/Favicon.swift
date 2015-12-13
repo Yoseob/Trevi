@@ -17,6 +17,6 @@ public class Favicon: Middleware {
     }
 
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
-        return true
+        return false
     }
 }

@@ -42,11 +42,11 @@ public class Trevi: Middleware {
         if let target = router.route ( req.path ) where target.method == req.method {
             req.parseParam( target )
             for cb in target.callbacks {
-                if cb ( req, res ) == false {
-                    return false
+                if cb ( req, res ) == true {
+                    return true
                 }
             }
         }
-        return true
+        return false
     }
 }

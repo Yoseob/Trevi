@@ -20,24 +20,16 @@ public class Index: RouteAble {
     public override func prepare () {
         let index = trevi.store ( self )
 
-        index.get ( "/" ) {
-            ( req, res ) -> Bool in
-            res.bodyString = "im " + req.path
-            res.send ()
-            return false
+        index.get ( "/" ) { ( req, res ) -> Bool in
+            return res.send ("im " + req.path)
         }
 
         index.get("/lee") { req ,res in
-            res.bodyString = "im " + req.path
-            res.send()
-
-            return false
+            return res.send("im " + req.path)
         }
         index.get ( "/hi" ) {
             req, res in
-            res.bodyString = "im " + req.path
-            res.send ()
-            return false
+            return res.send ("im " + req.path)
         }
 
         index.use ( "/end", End () )
