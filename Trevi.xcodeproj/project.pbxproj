@@ -7,14 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2368EAC31C1991FE007DB033 /* intro.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 2368EAC11C1991FE007DB033 /* intro.ssp */; };
-		2368EAC41C1991FE007DB033 /* myImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2368EAC21C1991FE007DB033 /* myImage.jpg */; };
+		2368EACA1C1C9060007DB033 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2368EAC91C1C9060007DB033 /* Route.swift */; };
 		236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D61C12198D0076ED36 /* MiddlewareManager.swift */; };
 		236E53D91C1235130076ED36 /* Favicon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D81C1235130076ED36 /* Favicon.swift */; };
-		236E53DE1C1500EA0076ED36 /* end.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53DD1C1500EA0076ED36 /* end.swift */; };
 		236E53E01C1726370076ED36 /* Trevi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53DF1C1726370076ED36 /* Trevi.swift */; };
 		236E53E21C1726450076ED36 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E11C1726450076ED36 /* Router.swift */; };
-		236E53E41C173D9C0076ED36 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E31C173D9C0076ED36 /* Route.swift */; };
 		236E53E71C1835570076ED36 /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E61C1835570076ED36 /* Json.swift */; };
 		239411D71C0C2DA3001B9B07 /* Trevi.h in Headers */ = {isa = PBXBuildFile; fileRef = 239411D61C0C2DA3001B9B07 /* Trevi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E41C0C2E19001B9B07 /* AppDelegate.swift */; };
@@ -32,10 +29,13 @@
 		239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120F1C0C4FEB001B9B07 /* Middleware.swift */; };
 		239412121C0C513C001B9B07 /* BodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412111C0C513C001B9B07 /* BodyParser.swift */; };
 		239412141C0DECC2001B9B07 /* Lime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412131C0DECC2001B9B07 /* Lime.swift */; };
-		239412161C0DF99A001B9B07 /* Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412151C0DF99A001B9B07 /* Index.swift */; };
+		23D2F39D1C1DA4A000F0C784 /* myImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F3951C1DA4A000F0C784 /* myImage.jpg */; };
+		23D2F39E1C1DA4A000F0C784 /* end.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2F3971C1DA4A000F0C784 /* end.swift */; };
+		23D2F39F1C1DA4A000F0C784 /* Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2F3981C1DA4A000F0C784 /* Index.swift */; };
+		23D2F3A01C1DA4A000F0C784 /* arg_test.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39A1C1DA4A000F0C784 /* arg_test.ssp */; };
+		23D2F3A11C1DA4A000F0C784 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39B1C1DA4A000F0C784 /* index.ssp */; };
+		23D2F3A21C1DA4A000F0C784 /* intro.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39C1C1DA4A000F0C784 /* intro.ssp */; };
 		23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
-		90516F331C18D7E5005CEED8 /* arg_test.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90516F311C18D7E5005CEED8 /* arg_test.ssp */; };
-		90516F341C18D7E5005CEED8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90516F321C18D7E5005CEED8 /* index.ssp */; };
 		906E50B11C11DB9A005937A8 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
 		906E50B51C121202005937A8 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B41C121202005937A8 /* System.swift */; };
 		906E50B71C121225005937A8 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
@@ -69,14 +69,11 @@
 
 /* Begin PBXFileReference section */
 		096BFC225DB66447A8580EC2 /* Pods-Trevi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trevi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Trevi/Pods-Trevi.debug.xcconfig"; sourceTree = "<group>"; };
-		2368EAC11C1991FE007DB033 /* intro.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = intro.ssp; path = ../intro.ssp; sourceTree = "<group>"; };
-		2368EAC21C1991FE007DB033 /* myImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = myImage.jpg; path = ../myImage.jpg; sourceTree = "<group>"; };
+		2368EAC91C1C9060007DB033 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		236E53D61C12198D0076ED36 /* MiddlewareManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiddlewareManager.swift; sourceTree = "<group>"; };
 		236E53D81C1235130076ED36 /* Favicon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
-		236E53DD1C1500EA0076ED36 /* end.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = end.swift; path = ../end.swift; sourceTree = "<group>"; };
 		236E53DF1C1726370076ED36 /* Trevi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Trevi.swift; sourceTree = "<group>"; };
 		236E53E11C1726450076ED36 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
-		236E53E31C173D9C0076ED36 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		236E53E61C1835570076ED36 /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
 		239411D31C0C2DA3001B9B07 /* Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		239411D61C0C2DA3001B9B07 /* Trevi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Trevi.h; sourceTree = "<group>"; };
@@ -98,11 +95,14 @@
 		2394120F1C0C4FEB001B9B07 /* Middleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
 		239412111C0C513C001B9B07 /* BodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParser.swift; sourceTree = "<group>"; };
 		239412131C0DECC2001B9B07 /* Lime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lime.swift; sourceTree = "<group>"; };
-		239412151C0DF99A001B9B07 /* Index.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Index.swift; path = ../Index.swift; sourceTree = "<group>"; };
+		23D2F3951C1DA4A000F0C784 /* myImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = myImage.jpg; sourceTree = "<group>"; };
+		23D2F3971C1DA4A000F0C784 /* end.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = end.swift; sourceTree = "<group>"; };
+		23D2F3981C1DA4A000F0C784 /* Index.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Index.swift; sourceTree = "<group>"; };
+		23D2F39A1C1DA4A000F0C784 /* arg_test.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arg_test.ssp; sourceTree = "<group>"; };
+		23D2F39B1C1DA4A000F0C784 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
+		23D2F39C1C1DA4A000F0C784 /* intro.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = intro.ssp; sourceTree = "<group>"; };
 		6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D536535D78CC69D99029EC3 /* Pods-Trevi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trevi.release.xcconfig"; path = "Pods/Target Support Files/Pods-Trevi/Pods-Trevi.release.xcconfig"; sourceTree = "<group>"; };
-		90516F311C18D7E5005CEED8 /* arg_test.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arg_test.ssp; sourceTree = "<group>"; };
-		90516F321C18D7E5005CEED8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		906E50B01C11DB9A005937A8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		906E50B41C121202005937A8 /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		906E50B61C121225005937A8 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
@@ -128,23 +128,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2368EAC51C1C88BC007DB033 /* routes */ = {
-			isa = PBXGroup;
-			children = (
-				239412151C0DF99A001B9B07 /* Index.swift */,
-				236E53DD1C1500EA0076ED36 /* end.swift */,
-			);
-			path = routes;
-			sourceTree = "<group>";
-		};
-		2368EAC61C1C88EE007DB033 /* public */ = {
-			isa = PBXGroup;
-			children = (
-				2368EAC21C1991FE007DB033 /* myImage.jpg */,
-			);
-			path = public;
-			sourceTree = "<group>";
-		};
 		239411C91C0C2DA3001B9B07 = {
 			isa = PBXGroup;
 			children = (
@@ -170,7 +153,7 @@
 			children = (
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
 				239412091C0C46CE001B9B07 /* Utility */,
-				239412031C0C45CA001B9B07 /* Router */,
+				239412031C0C45CA001B9B07 /* Route */,
 				239411F11C0C2E81001B9B07 /* Request */,
 				239411F31C0C2E81001B9B07 /* Require */,
 				239411F61C0C2E81001B9B07 /* Response */,
@@ -184,9 +167,9 @@
 		239411E31C0C2E19001B9B07 /* Trevi_ver_lime */ = {
 			isa = PBXGroup;
 			children = (
-				2368EAC61C1C88EE007DB033 /* public */,
-				2368EAC51C1C88BC007DB033 /* routes */,
-				90516F301C18D7E5005CEED8 /* ssp */,
+				23D2F3941C1DA4A000F0C784 /* public */,
+				23D2F3961C1DA4A000F0C784 /* routes */,
+				23D2F3991C1DA4A000F0C784 /* views */,
 				239411E41C0C2E19001B9B07 /* AppDelegate.swift */,
 				239411E61C0C2E19001B9B07 /* ViewController.swift */,
 				239411E81C0C2E19001B9B07 /* Assets.xcassets */,
@@ -231,26 +214,19 @@
 			path = Socket;
 			sourceTree = "<group>";
 		};
-		239412031C0C45CA001B9B07 /* Router */ = {
+		239412031C0C45CA001B9B07 /* Route */ = {
 			isa = PBXGroup;
 			children = (
-				239412041C0C45CA001B9B07 /* Route */,
+				2368EAC91C1C9060007DB033 /* Route.swift */,
 				2394120C1C0C4A5C001B9B07 /* RouteAble.swift */,
 			);
+			name = Route;
 			path = Router;
-			sourceTree = "<group>";
-		};
-		239412041C0C45CA001B9B07 /* Route */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Route;
 			sourceTree = "<group>";
 		};
 		239412091C0C46CE001B9B07 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				236E53E31C173D9C0076ED36 /* Route.swift */,
 				2394120A1C0C46EF001B9B07 /* Utility.swift */,
 				906E50B01C11DB9A005937A8 /* File.swift */,
 				906E50B41C121202005937A8 /* System.swift */,
@@ -274,6 +250,33 @@
 			path = Middleware;
 			sourceTree = "<group>";
 		};
+		23D2F3941C1DA4A000F0C784 /* public */ = {
+			isa = PBXGroup;
+			children = (
+				23D2F3951C1DA4A000F0C784 /* myImage.jpg */,
+			);
+			path = public;
+			sourceTree = "<group>";
+		};
+		23D2F3961C1DA4A000F0C784 /* routes */ = {
+			isa = PBXGroup;
+			children = (
+				23D2F3971C1DA4A000F0C784 /* end.swift */,
+				23D2F3981C1DA4A000F0C784 /* Index.swift */,
+			);
+			path = routes;
+			sourceTree = "<group>";
+		};
+		23D2F3991C1DA4A000F0C784 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				23D2F39A1C1DA4A000F0C784 /* arg_test.ssp */,
+				23D2F39B1C1DA4A000F0C784 /* index.ssp */,
+				23D2F39C1C1DA4A000F0C784 /* intro.ssp */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
 		839AA75E11A1D42DA38A1A49 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,16 +284,6 @@
 				6D536535D78CC69D99029EC3 /* Pods-Trevi.release.xcconfig */,
 			);
 			name = Pods;
-			sourceTree = "<group>";
-		};
-		90516F301C18D7E5005CEED8 /* ssp */ = {
-			isa = PBXGroup;
-			children = (
-				90516F311C18D7E5005CEED8 /* arg_test.ssp */,
-				90516F321C18D7E5005CEED8 /* index.ssp */,
-				2368EAC11C1991FE007DB033 /* intro.ssp */,
-			);
-			path = ssp;
 			sourceTree = "<group>";
 		};
 		E5BB8A5291C367B8114D512F /* Frameworks */ = {
@@ -403,12 +396,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2368EAC31C1991FE007DB033 /* intro.ssp in Resources */,
+				23D2F39D1C1DA4A000F0C784 /* myImage.jpg in Resources */,
+				23D2F3A01C1DA4A000F0C784 /* arg_test.ssp in Resources */,
 				239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */,
-				90516F341C18D7E5005CEED8 /* index.ssp in Resources */,
-				90516F331C18D7E5005CEED8 /* arg_test.ssp in Resources */,
 				239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */,
-				2368EAC41C1991FE007DB033 /* myImage.jpg in Resources */,
+				23D2F3A11C1DA4A000F0C784 /* index.ssp in Resources */,
+				23D2F3A21C1DA4A000F0C784 /* intro.ssp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,13 +452,13 @@
 				906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */,
 				239412021C0C2E81001B9B07 /* Socket.swift in Sources */,
 				906E50B11C11DB9A005937A8 /* File.swift in Sources */,
-				236E53E41C173D9C0076ED36 /* Route.swift in Sources */,
 				239412121C0C513C001B9B07 /* BodyParser.swift in Sources */,
 				239411FC1C0C2E81001B9B07 /* Request.swift in Sources */,
 				239412001C0C2E81001B9B07 /* PreparedData.swift in Sources */,
 				236E53E21C1726450076ED36 /* Router.swift in Sources */,
 				906E50B51C121202005937A8 /* System.swift in Sources */,
 				239412011C0C2E81001B9B07 /* Http.swift in Sources */,
+				2368EACA1C1C9060007DB033 /* Route.swift in Sources */,
 				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,
 				906E50B71C121225005937A8 /* String.swift in Sources */,
 				236E53D91C1235130076ED36 /* Favicon.swift in Sources */,
@@ -481,9 +474,9 @@
 			files = (
 				239412141C0DECC2001B9B07 /* Lime.swift in Sources */,
 				239411E71C0C2E19001B9B07 /* ViewController.swift in Sources */,
-				239412161C0DF99A001B9B07 /* Index.swift in Sources */,
-				236E53DE1C1500EA0076ED36 /* end.swift in Sources */,
 				239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */,
+				23D2F39E1C1DA4A000F0C784 /* end.swift in Sources */,
+				23D2F39F1C1DA4A000F0C784 /* Index.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -62,7 +62,7 @@ public class RouteAble: Require {
                 let routeList = [ RouteAble ] ( temp )
                 makeChildRoute ( path, module: routeList )
                 return
-            }else if case let route as RouteAble = temp.first{
+            }else if case _ as RouteAble = temp.first{
                 let routeList = [ RouteAble ] ( temp )
                 makeChildRoute ( "", module: routeList )
                 return

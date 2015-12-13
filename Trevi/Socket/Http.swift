@@ -39,6 +39,7 @@ public class Http {
         receivedRequestCallback();
         return self
     }
+    
     private func receivedRequestCallback() {
         socket.receivedRequestCallback = {
             req,res,sock in
