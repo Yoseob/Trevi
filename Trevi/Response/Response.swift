@@ -13,7 +13,7 @@ public class Response{
 
     public var data : NSData?
     public var header = [ String: String ] ()
-    public var body = [ String: String ]! ()
+    public var body = [ String: AnyObject ] ()
     public var bodyString: String? {
         didSet {
             if let _ = header[Content_Type] {
@@ -29,11 +29,12 @@ public class Response{
         var resultBodyString : String!
         if let bodyString = bodyString {
             resultBodyString = bodyString
-        }else if let b = body{
-            resultBodyString = dictionaryToString(b);
+            return resultBodyString.dataUsingEncoding(NSUTF8StringEncoding)!
+        }else if body.keys.count > 0{
+            return   NSKeyedArchiver.archivedDataWithRootObject(body) as NSData
         }
 
-        return resultBodyString.dataUsingEncoding(NSUTF8StringEncoding)!
+        return nil
     }
 
     public var statusString: String {

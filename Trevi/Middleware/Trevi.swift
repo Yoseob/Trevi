@@ -39,8 +39,6 @@ public class Trevi: Middleware {
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
         let req: Request  = params.req
         let res: Response = params.res
-//        let route : Route  = obj[2] as! Route
-        
         if let target = router.route ( req.path ) where target.method == req.method {
             req.parseParam( target )
             for cb in target.callbacks {
