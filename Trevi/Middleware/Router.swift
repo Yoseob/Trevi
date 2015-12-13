@@ -11,7 +11,7 @@ import Foundation
 public class Router: Middleware {
 
     public var  name: MiddlewareName
-    private var routeList = [ Route ] ()
+    public var routeList = [ Route ] ()
 
     public init () {
         name = .Router

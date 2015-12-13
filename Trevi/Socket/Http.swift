@@ -17,32 +17,37 @@ public class Http {
 
     private var socket: SocketServer = CurrentSocket ()
     private var mwManager            = MiddlewareManager.sharedInstance ()
-    private var router               = Router ()
+
 
     public init () {
     }
 
-    public func createServer ( requireModule: Any... ) -> Http {
-
+    public func createServer ( requireModule: RouteAble... ) -> Http {
+        
         for rm in requireModule {
-            switch rm {
-            case let module as RouteAble:
-                mwManager.enabledMiddlwareList = module.middlewareList;
-            case let callback as CallBack:
-                mwManager.enabledMiddlwareList.append ( callback )
-            default: break
-            }
+            rm.makeChildRoute("", module:requireModule)
+            mwManager.enabledMiddlwareList += rm.middlewareList;
         }
-
+        receivedRequestCallback();
+        return self
+    }
+    
+    public func createServer ( callBacks: CallBack... ) -> Http {
+        for cb in callBacks {
+            mwManager.enabledMiddlwareList.append ( cb )
+        }
+        receivedRequestCallback();
+        return self
+    }
+    
+    private func receivedRequestCallback() {
         socket.receivedRequestCallback = {
             req,res,sock in
             self.mwManager.handleRequest(req,res)
-
+            
             return false
         }
-        return self
     }
-
     public func listen ( port: Int ) throws {
         try socket.startOnPort ( port )
 

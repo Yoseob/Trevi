@@ -10,8 +10,8 @@ import Foundation
 
 public class Route {
 
-    var path: String!
-    var regex: String!
+    public var path: String!
+    public var regex: String!
     var method: HTTPMethodType!
     var callbacks = [ CallBack ]!()
     var params    = [ String : String ]()
@@ -38,6 +38,11 @@ public class Route {
     }
     
     private final func getRegex() {
+        if self.path.length() == 1 {
+            self.regex = "^/$"
+            return
+        }
+        
         if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: ":([\(unreserved)\(gen_delims)\(sub_delims)]*?)(/|$)", options: [ .CaseInsensitive ] ) {
             self.regex = "^\(self.path)/$"
             for match in regex.matchesInString ( self.path, options: [], range: NSMakeRange( 0, self.path.length() ) ) {
