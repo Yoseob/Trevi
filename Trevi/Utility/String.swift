@@ -8,13 +8,31 @@
 
 import Foundation
 
+public let CRLF = "\r\n"
+public let SP = " "
+public let HT = "\t"
+
+//public enum UrlRegex: String {
+//    case unreserved = "\\w\\-\\.\\_\\~"
+//    case gen_delims = "\\:\\/\\?\\#\\[\\]\\@"
+//    case sub_delims = "\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\="
+//}
+public let unreserved = "\\w\\-\\.\\_\\~"
+public let gen_delims = "\\:\\/\\?\\#\\[\\]\\@"
+public let sub_delims = "\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\="
+
 public enum StringError: ErrorType {
     case UnsupportedEncodingError
 }
 
 extension String {
+    
     func length () -> Int {
         return self.characters.count
+    }
+    
+    func trim () -> String {
+        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
 
     func substring ( start: Int, length: Int ) -> String {
@@ -32,5 +50,19 @@ extension String {
         default:
             throw StringError.UnsupportedEncodingError
         }
+    }
+    
+    // TODO : Which one better? it needs testing..
+    func isMatch( regex: String ) -> Bool {
+        if let _ = self.rangeOfString( regex, options: .RegularExpressionSearch) {
+            return true
+        } else {
+            return false
+        }
+//        if let exp = try? NSRegularExpression( pattern: regex, options: [] ) {
+//            return exp.numberOfMatchesInString( self, options: [], range: NSMakeRange(0, self.characters.count) ) > 0
+//        } else {
+//            return false
+//        }
     }
 }

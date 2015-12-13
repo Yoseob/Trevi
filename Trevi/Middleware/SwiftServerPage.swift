@@ -24,7 +24,6 @@ public class SwiftServerPage: Middleware, Renderer {
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
         let res: Response = params.res
         res.renderer = self
-        print ( res.renderer )
         return true
     }
 

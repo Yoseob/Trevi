@@ -33,6 +33,7 @@
 		239412121C0C513C001B9B07 /* BodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412111C0C513C001B9B07 /* BodyParser.swift */; };
 		239412141C0DECC2001B9B07 /* Lime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412131C0DECC2001B9B07 /* Lime.swift */; };
 		239412161C0DF99A001B9B07 /* Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412151C0DF99A001B9B07 /* Index.swift */; };
+		23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 		90516F331C18D7E5005CEED8 /* arg_test.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90516F311C18D7E5005CEED8 /* arg_test.ssp */; };
 		90516F341C18D7E5005CEED8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90516F321C18D7E5005CEED8 /* index.ssp */; };
 		906E50B11C11DB9A005937A8 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
@@ -40,7 +41,6 @@
 		906E50B71C121225005937A8 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
 		906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B81C1212CC005937A8 /* SwiftServerPage.swift */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,7 +114,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C7BC9D522446DFD749796360 /* Pods_Trevi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

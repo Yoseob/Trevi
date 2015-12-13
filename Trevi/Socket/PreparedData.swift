@@ -12,6 +12,7 @@ import Foundation
 class PreparedData {
 
     var requestdata: NSData!
+    
     init ( requestData: NSData ) {
         self.requestdata = requestData;
     }
@@ -26,13 +27,11 @@ class PreparedData {
     }
 
     private func requestFactory ( data: NSData ) -> Request {
-
-        return Request ( data )
+        return Request( data )
     }
 
     private func setupResponse ( socket: SwiftSocket ) -> Response {
-        let res = Response ( socket: socket )
-        return res
+        return Response( socket: socket )
     }
 
 }

@@ -11,7 +11,7 @@ import Foundation
 public class Router: Middleware {
 
     public var  name: MiddlewareName
-    private var routeTable = [ String: Route ] ()
+    private var routeList = [ Route ] ()
 
     public init () {
         name = .Router
@@ -20,12 +20,22 @@ public class Router: Middleware {
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
         return true
     }
-
+    
     public func appendRoute ( path: String, _ route: Route ) {
-        self.routeTable[path] = route
+        self.routeList.append( route )
+        sortRouteList()
     }
 
     public func route ( path: String ) -> Route! {
-        return self.routeTable[path]
+        for route in routeList {
+            if path.isMatch( route.regex ) {
+                return route
+            }
+        }
+        return nil
+    }
+    
+    private func sortRouteList() {
+        routeList = routeList.sort( { $0.regex > $1.regex } )
     }
 }

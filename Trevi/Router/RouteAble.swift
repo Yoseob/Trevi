@@ -19,7 +19,6 @@ import Foundation
 public class RouteAble: Require {
 
     public var superPath: String?
-    public var routeTable     = [ String: Route ] ()
     public var trevi          = Trevi.sharedInstance ()
 
     //danger this property. i think should be changed private or access controll

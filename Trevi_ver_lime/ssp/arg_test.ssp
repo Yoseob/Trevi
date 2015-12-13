@@ -4,6 +4,7 @@
 </head>
 <body>
 	<h1>Hello World!</h1>
-	<p>number : <%=number%></p>
+    <p>Current time : <%=time%></p>
+    <p>Number : <%=number%></p>
 </body>
 </html>
