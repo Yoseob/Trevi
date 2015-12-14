@@ -20,8 +20,12 @@ public class Lime: RouteAble {
         
         lime.get("/intro") { req, res in
             let file_path = NSBundle.mainBundle().pathForResource("intro", ofType: "ssp")
-            res.send(NSData(contentsOfFile: file_path!)!)
+            res.render(file_path!)
             return true
+        }
+        lime.get("/big") { req, res in
+            let file_path = NSBundle.mainBundle().pathForResource("bg", ofType: "jpg")
+            return res.send(NSData(contentsOfFile: file_path!)!)
         }
         
         lime.get("/image") { req, res in
@@ -85,6 +89,17 @@ public class Lime: RouteAble {
             msg += "Found parameter : <br>\(req.params)"
             return res.send ( msg )
 
+        } )
+        
+        lime.post("/json"){ req, res in
+            var result = [String : AnyObject]()
+            result["yoseob"] = "gkgkgkgkgkgkgkgk"
+            res.send(result)
+            return true
+        }
+        lime.get( "/re", { req, res in
+            return res.redirect(url: "http://www.naver.com")
+            
         } )
 
 

@@ -6,6 +6,26 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
+
+
+/*
+
+Cache-Control → no-cache, no-store, must-revalidate
+Connection →
+Connection
+Options that are desired for the connection
+close
+Content-Encoding → gzip
+Content-Type → text/html; charset=UTF-8
+Date → Sun, 13 Dec 2015 22:22:54 GMT
+P3P → CP="CAO DSP CURa ADMa TAIa PSAa OUR LAW STP PHY ONL UNI PUR FIN COM NAV INT DEM STA PRE"
+Pragma → no-cache
+Server → nginx
+Transfer-Encoding → chunked
+X-Frame-Options → SAMEORIGIN
+
+
+*/
 import Foundation
 
 
@@ -28,27 +48,39 @@ public class Response{
         }
     }
     
+    //for image
+    private var data : NSData?{
+        didSet{
+            
+        }
+    }
     
-    private var data : NSData?
-    private var body = [ String: AnyObject ] ()
+    //for dictionary
+    private var body : [ String: AnyObject ]?{
+        didSet{
+            header[Content_Type] = "application/json;charset=utf-8"
+        }
+    }
+    
+    //for text
     private var bodyString: String? {
         didSet {
-            if let _ = header[Content_Type] {
-                header[Content_Type] = "text/plain;text/html;charset=utf-8"
-            }
+                header[Content_Type] = "text/plain;charset=utf-8"
         }
     }
 
+    //for all kind of data
     private var bodyData : NSData? {
+        
         if let dt = data{
             return dt
-        }
-        var resultBodyString : String!
-        if let bodyString = bodyString {
-            resultBodyString = bodyString
-            return resultBodyString.dataUsingEncoding(NSUTF8StringEncoding)!
-        }else if body.keys.count > 0{
-            return   NSKeyedArchiver.archivedDataWithRootObject(body) as NSData
+        }else if let bodyString = bodyString {
+            return bodyString.dataUsingEncoding(NSUTF8StringEncoding)!
+        }else if (body != nil)  {
+            let jsonData = try? NSJSONSerialization.dataWithJSONObject(body!, options:NSJSONWritingOptions(rawValue:0))
+//            if need jsonString, use it
+//            let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
+            return jsonData
         }
 
         return nil
@@ -76,30 +108,28 @@ public class Response{
      *
      * Examples:
      *
-     *     res.send({ some: 'dictionary' });
-     *     res.send('some html');
+     *     res.send([:])
+     *     res.send('some html')
      *
-     * @param { String|number|Any} data
+     * @param { String|number|AnyObject} data
      * @public
      */
 
-    public func send ( dt: AnyObject ) -> Bool {
-        //need control flow that can divide any type
-        switch dt {
+    public func send (data: AnyObject? = nil) -> Bool {
+        //need control flow that can divide AnyObject type
+        switch data {
         case let str as String :
             bodyString = str
-        case let d as NSData:
-            self.data = d
+        case let dt as NSData:
+            self.data = dt
+        case let dic as [String:AnyObject]:
+            body = dic
         default:
             break
         }
-        return implSend ()
+        return end()
     }
 
-    public func send () -> Bool {
-        return implSend ()
-        
-    }
 
     public func render ( obj: AnyObject... ) -> Bool {
         let filename = obj[0] as! String
@@ -114,51 +144,52 @@ public class Response{
         if let data = renderer?.render ( filename, args: args ) {
             bodyString = data;
         }
-
-        return implSend ()
+        //this function called when rand html. forced change content-type = text/html
+        header[Content_Type] = "text/html;charset=utf-8"
+        return end()
 
     }
 
-    public func template () -> Bool{
-       return implSend ()
+    public func template() -> Bool{
+       return end()
     }
 
-    public func redirect ( url u: String ) {
+    public func redirect ( url u: String )->Bool{
         self.status = 302
         self.header[Location] = u
+        return end()
     }
 
-    private func implSend () ->Bool{
-        let headerData       = prepareHeader ()
-        let sendData: NSData = makeResponse ( headerData, body: self.bodyData! )
+    private func end() ->Bool{
+        let headerData = prepareHeader ()
+        let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
         socket?.sendData ( sendData )
         return true
     }
 
 
-    private func makeResponse ( header: NSData, body: NSData ) -> ( NSData ) {
+    private func makeResponse ( header: NSData, body: NSData?) -> ( NSData ) {
         let result = NSMutableData ( data: header )
-        result.appendData ( body )
+        
+        if let b = body {
+            result.appendData ( b )
+        }
+
         return result;
     }
 
     private func prepareHeader () -> NSData {
-        header[Content_Length] = "\(bodyData!.length)" // replace bodyString length
+        //        header[Date] = String(NSDate().formatted)  Not GMT
+        header[Server] = "Trevi"
+        header[Accept_Ranges] = "bytes"
+        
+        if let bodyData = bodyData  {
+            header[Content_Length] = "\(bodyData.length)" // replace bodyString length
+        }
         var headerString = "\(HttpProtocol) \(statusCode) \(statusString)" + NewLine
         headerString += dictionaryToString ( header )
         return headerString.dataUsingEncoding ( NSUTF8StringEncoding )!
 
-    }
-
-    private func prepareBody () -> NSData {
-        var resultBodyString: String!
-        if let bodyString = bodyString where bodyString.length () > 1 {
-            resultBodyString = bodyString
-        } else {
-            resultBodyString = dictionaryToString ( body );
-        }
-
-        return resultBodyString.dataUsingEncoding ( NSUTF8StringEncoding )!
     }
 
     private func dictionaryToString ( dic: NSDictionary ) -> String! {

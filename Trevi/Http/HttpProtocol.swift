@@ -35,6 +35,7 @@ public var Refresh                     = "Refresh"
 public var Strict_Transport_Security   = "Strict-Transport-Security"
 public var Transfer_Encoding           = "Transfer-Encoding"
 public var Upgrade                     = "Upgrade"
+public var Server                      = "Server"
 
 public enum StatusCode: Int {
     func statusString () -> String! {
