@@ -30,6 +30,12 @@ public class Lime: RouteAble {
             return true
         }
         
+        lime.get("/bg") { req, res in
+            let file_path = NSBundle.mainBundle().pathForResource("background", ofType: "png")
+            res.send(NSData(contentsOfFile: file_path!)!)
+            return true
+        }
+        
         lime.get ( "/callback" ) { req, res in
             let msg = "Hello Trevi!"
             res.send ( msg )

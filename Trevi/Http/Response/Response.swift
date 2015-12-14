@@ -57,14 +57,14 @@ public class Response{
 
     private var internalStatus : StatusCode = .OK
 
-    private var socket : SwiftSocket?
+    public var socket : TreviSocket?
 
     public var  renderer: Renderer?
 
     public init(){
     }
 
-    public init ( socket: SwiftSocket ) {
+    public init ( socket: TreviSocket ) {
         self.socket = socket   // if render , send , template func is called call self.socket.send(AnyOnject)
     }
     
@@ -131,7 +131,7 @@ public class Response{
     private func implSend () ->Bool{
         let headerData       = prepareHeader ()
         let sendData: NSData = makeResponse ( headerData, body: self.bodyData! )
-        socket?.sendData ( sendData )
+        socket!.sendData ( sendData )
         return true
     }
 
