@@ -71,7 +71,6 @@ public class Response{
 
     //for all kind of data
     private var bodyData : NSData? {
-        
         if let dt = data{
             return dt
         }else if let bodyString = bodyString {
@@ -82,7 +81,6 @@ public class Response{
 //            let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
             return jsonData
         }
-
         return nil
     }
 
@@ -140,7 +138,7 @@ public class Response{
         } else {
             args = [:]
         }
-
+        
         if let data = renderer?.render ( filename, args: args ) {
             bodyString = data;
         }
@@ -160,9 +158,9 @@ public class Response{
         return end()
     }
 
-    private func implSend () ->Bool{
+    private func end () ->Bool{
         let headerData       = prepareHeader ()
-        let sendData: NSData = makeResponse ( headerData, body: self.bodyData! )
+        let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
         socket!.sendData ( sendData )
         return true
     }
@@ -186,7 +184,7 @@ public class Response{
         if let bodyData = bodyData  {
             header[Content_Length] = "\(bodyData.length)" // replace bodyString length
         }
-        var headerString = "\(HttpProtocol) \(statusCode) \(statusString)" + NewLine
+        var headerString = "\(HttpProtocol) \(statusCode) \(statusString)" + CRLF
         headerString += dictionaryToString ( header )
         return headerString.dataUsingEncoding ( NSUTF8StringEncoding )!
 
@@ -201,7 +199,7 @@ public class Response{
                 resultString += "\(key):\(value)\r\n"
             }
         }
-        resultString += NewLine
+        resultString += CRLF
         return resultString;
     }
 }

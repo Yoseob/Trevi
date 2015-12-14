@@ -88,6 +88,10 @@ public class Lime: RouteAble {
             msg += "Found parameter : <br>\(req.params)"
             return res.send ( msg )
 
-        } )
+        })
+        lime.get("/redir"){ req , res in
+            return res.redirect(url: "http://www.naver.com")
+
+        }
     }
 }
