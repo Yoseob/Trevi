@@ -11,13 +11,17 @@ import Darwin
 // Should abstract Socket states
 public class Socket<T: InetAddress> {
     
+    // Filedescriptor's read, write event manager using GCD
+    public var eventHandle : EventHandler! = nil
+    
     // Socket properties
     public let fd : Int32
     public var address : InetAddress
     
     // Socket states
-    public var isFdValid : Bool { return fd >= 0 }
+    public var isCreated : Bool { return fd >= 0 }
     public var isBound : Bool = false
+    public var isHandlerCreated : Bool { return eventHandle != nil }
     
     public init(fd : Int32, address : InetAddress) {
         self.fd = fd
@@ -44,7 +48,7 @@ public class Socket<T: InetAddress> {
     
     // bind socket
     public func bind() -> Bool {
-        guard isFdValid && !isBound else {
+        guard isCreated && !isBound else {
             log.error("Socket bind")
             return false
         }
@@ -69,7 +73,10 @@ public enum SocketOption {
             OOBINLINE(Bool),
             REUSEADDR(Bool),
             KEEPALIVE(Bool),
-            NOSIGPIPE(Bool)
+            NOSIGPIPE(Bool),
+    
+            SNDBUF(Int32),
+            RCVBUF(Int32)
     
     var match : (name : Int32, value : Int32) {
         switch self {
@@ -80,6 +87,9 @@ public enum SocketOption {
         case .REUSEADDR(let value):     return (SO_REUSEADDR, Int32(Int(value)))
         case .KEEPALIVE(let value) :      return (SO_KEEPALIVE, Int32(Int(value)))
         case .NOSIGPIPE(let value) :      return (SO_NOSIGPIPE, Int32(Int(value)))
+            
+        case .SNDBUF(let value):            return (SO_SNDBUF, value)
+        case .RCVBUF(let value):            return (SO_RCVBUF, value)
         }
     }
 }
@@ -138,6 +148,7 @@ extension Socket {
         }
     }
     
+    // Should apply event setting
     public var isNonBlocking : Bool {
         get {
             return (flags & O_NONBLOCK) != 0 ? true : false
@@ -145,9 +156,11 @@ extension Socket {
         set {
             if newValue {
                 flags |= O_NONBLOCK
+                eventHandle.readEvent = NonBlockingRead()
             }
             else {
                 flags = flags & ~O_NONBLOCK
+                eventHandle.readEvent = BlockingRead()
             }
         }
     }

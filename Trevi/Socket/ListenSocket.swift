@@ -11,26 +11,19 @@ import Dispatch
 
 public class ListenSocket<T: InetAddress> : Socket<T> {
     
-    let eventHandle : EventHandler<T>
-    
     // Create socket and bind address
-    public init?(address : T, options : [SocketOption]? = nil,
-                    queue : dispatch_queue_t? = defaultQueue) {
+    public init?(address : T, queue : dispatch_queue_t = defaultQueue) {
         
         let fd = socket(T.domain, SOCK_STREAM, 0)
         
-        eventHandle = EventHandler(fd: fd, queue: queue!)
-        
         super.init(fd: fd, address: address)
-        
-        // change error handling
-        guard fd != -1 else {
-            return nil
-        }
-        
-        setSocketOption(options!)
-                        
-        guard bind() else {
+        eventHandle = EventHandler(fd: fd, queue: queue)
+
+        // Should apply error handling
+        guard isCreated else { return nil }
+        guard bind() else { return nil }
+        let optStatus = setSocketOption([.REUSEADDR(true)])
+        guard optStatus && isHandlerCreated else{
             return nil
         }
     }
@@ -51,8 +44,10 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         return (clientFd, clientAddr)
     }
     
+    // Should sperate listen and dispatch listen event, client socket read event
+    // Should extract nonBlock input
     public func listen(nonBlock : Bool, backlog : Int32 = 50,
-        clientCallback: (ConnectedSocket<T>) -> Void) -> Bool { 
+        clientCallback: (ConnectedSocket<T>, UInt) -> Void) -> Bool {
         
        self.isNonBlocking = nonBlock
             
@@ -63,37 +58,26 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         }
 
         log.info("Server listens on port \(self.address.port())")
-        
-        eventHandle.dispatchReadEvent(){
+    
+        eventHandle.dispatchReadEvent() {
             _ in
             
             // Should change this part to short(Injection).
             //  -> Correct common things with ConnectedSocket's loop and error handling
-            repeat{
-                let (clientFd, clientAddr) = self.accept()
-                
-                if clientFd > 0 {
-                    let clientSocket = ConnectedSocket<T>(fd: clientFd,
-                                                address: clientAddr, options: [.NOSIGPIPE(true)])
-                    
-                    guard clientSocket != nil else {
-                        log.error("Cannot create client socket")
-                        return
-                    }
-                    //clientSocket!.isNonBlocking = nonBlock
-                    clientCallback(clientSocket!)
-                }
-                else if errno == EWOULDBLOCK {
-                    break
-                }
-                else if errno == EAGAIN{
-                    log.info("EAGAIN")
-                    continue
-                }
-                else {
-                    log.error("Listen error: \(errno)")
-                }
-            } while(true)
+            
+            let (clientFd, clientAddr) = self.accept()
+            
+            let clientSocket = ConnectedSocket<T>(fd: clientFd, address: clientAddr)
+            
+            guard clientSocket != nil else {
+                log.error("Cannot create client socket")
+                return
+            }
+            
+            clientSocket!.eventHandle.dispatchReadEvent(){
+                length in
+                clientCallback(clientSocket!, length)
+            }
         }
 
         return true

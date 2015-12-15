@@ -10,8 +10,7 @@ import Darwin
 
 // Should add connect function
 public class ConnectedSocket<T: InetAddress> : Socket<T> {
-    public let eventHandle : EventHandler<T>
-    
+
     var bufferPtr  = UnsafeMutablePointer<CChar>.alloc(4096 + 2)
     var bufferLen : Int = 4096 {
         didSet {
@@ -26,16 +25,14 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     var closeRequested : Bool = false
     
     // Accept client socket
-    public init?(fd : Int32, address : T, options : [SocketOption]? = nil,
-                    queue : dispatch_queue_t = defaultQueue) {
-            
-        eventHandle = EventHandler(fd: fd, queue: queue)
+    public init?(fd : Int32, address : T, queue : dispatch_queue_t = defaultQueue) {
+        
         super.init(fd: fd, address: address)
-                        
-        setSocketOption(options)
-
-        // change error handling
-        guard fd != -1 else { return nil }
+        eventHandle = EventHandler(fd: fd, queue: queue)
+        
+        guard isCreated else { return nil }
+        let optStatus = setSocketOption([.NOSIGPIPE(true)])
+        guard optStatus && isHandlerCreated else { return nil }
     }
     deinit {
         bufferPtr.dealloc(bufferLen + 2)
@@ -79,14 +76,14 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         return ( readBufferLen, readBufferPtr, 0 )
     }
     
-    public func write<type>(buffer: UnsafePointer<type>, length : Int, queue : dispatch_queue_t = defaultQueue) -> Bool {
-        
-        let bufferSize = length
+    public func write<M>(buffer: UnsafePointer<M>, length : Int,
+                                        queue : dispatch_queue_t = defaultQueue) -> Bool {
+      
         eventHandle.writeQueue = queue
         
         self.sendCount++
         
-        let status = eventHandle.dispatchWriteEvent(buffer, length : bufferSize){
+        let status = eventHandle.dispatchWriteEvent(buffer, length : length){
             
             --self.sendCount
             

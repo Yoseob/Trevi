@@ -34,7 +34,6 @@
 		23D2F3A01C1DA4A000F0C784 /* arg_test.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39A1C1DA4A000F0C784 /* arg_test.ssp */; };
 		23D2F3A11C1DA4A000F0C784 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39B1C1DA4A000F0C784 /* index.ssp */; };
 		23D2F3A21C1DA4A000F0C784 /* intro.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39C1C1DA4A000F0C784 /* intro.ssp */; };
-		23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 		906E50B11C11DB9A005937A8 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
 		906E50B51C121202005937A8 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B41C121202005937A8 /* System.swift */; };
 		906E50B71C121225005937A8 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
@@ -51,12 +50,12 @@
 		DF3B81A11C1E08C500974327 /* SocketUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B819B1C1E08C500974327 /* SocketUtility.swift */; };
 		DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A21C1E092400974327 /* InetAddress.swift */; };
 		DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A41C1E098400974327 /* UnixBridge.c */; };
-		DF3B81A91C1E0E5A00974327 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF3B81A81C1E0E5A00974327 /* Pods_Trevi.framework */; };
 		DF3B81B61C1E3F9300974327 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3B81B51C1E3F9300974327 /* background.png */; };
+		DF7E4AB21C1E73C200A57379 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		906E50CF1C122541005937A8 /* PBXContainerItemProxy */ = {
+		DF7E4AB01C1E717E00A57379 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 239411CA1C0C2DA3001B9B07 /* Project object */;
 			proxyType = 1;
@@ -138,7 +137,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF3B81A91C1E0E5A00974327 /* Pods_Trevi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,7 +144,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23EE66C91C189C940001FB89 /* Pods_Trevi.framework in Frameworks */,
+				DF7E4AB21C1E73C200A57379 /* Pods_Trevi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,7 +383,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				906E50D01C122541005937A8 /* PBXTargetDependency */,
+				DF7E4AB11C1E717E00A57379 /* PBXTargetDependency */,
 			);
 			name = Trevi_ver_lime;
 			productName = Trevi_ver_lime;
@@ -539,10 +537,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		906E50D01C122541005937A8 /* PBXTargetDependency */ = {
+		DF7E4AB11C1E717E00A57379 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 239411D21C0C2DA3001B9B07 /* Trevi */;
-			targetProxy = 906E50CF1C122541005937A8 /* PBXContainerItemProxy */;
+			targetProxy = DF7E4AB01C1E717E00A57379 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

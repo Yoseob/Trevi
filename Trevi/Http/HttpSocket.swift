@@ -24,36 +24,25 @@ class TreviSocketServer {
 
     func startOnPort ( p: Int ) throws {
 
-        guard let socket = ListenSocket<IPv4> ( address: IPv4 ( port: p ), options : [.REUSEADDR(true)] ) else {
+        guard let socket = ListenSocket<IPv4> ( address: IPv4 ( port: p )) else {
             // Should handle Listener error
             return
         }
         socket.listen (true) {
-            client in
+            client, length in
+
+            var initialData: NSData?
+            let (size, data, _ ) = client.read()
+
+            if size > 0 {
+                initialData = NSData ( bytes: data, length: size )
+            }
             
-            let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-            print("New client connected from thread: \(tid)")
-            
-             client.eventHandle.dispatchReadEvent(){
-                length in
-
-                client.isNonBlocking = true
-
-                var initialData: NSData?
-                let (size, data, _ ) = client.read()
-
-                if size > 0 {
-                    initialData = NSData ( bytes: data, length: size )
-                }
-                
-                if let initialData = initialData {
-                    
-                    let preparedData = PreparedData ( requestData: initialData )
-                    let httpClient       = TreviSocket ( socket: client )
-                    let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
-                    self.httpCallback! ( req, res, httpClient )
-                    
-                }
+            if let initialData = initialData {
+                let preparedData = PreparedData ( requestData: initialData )
+                let httpClient       = TreviSocket ( socket: client )
+                let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
+                self.httpCallback! ( req, res, httpClient )
             }
         }
 

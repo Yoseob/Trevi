@@ -31,10 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(){ req, res in
             res.status = 404
-
             return res.send ("404 Pages Not Found")
-
         }
+        
         
         do {
             try server.createServer ( lime ).listen ( 8080 )
