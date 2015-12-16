@@ -160,7 +160,7 @@ public class Response{
         return end()
     }
 
-    private func implSend () ->Bool{
+    private func end () ->Bool{
         let headerData       = prepareHeader ()
         let sendData: NSData = makeResponse ( headerData, body: self.bodyData! )
         socket!.sendData ( sendData )
