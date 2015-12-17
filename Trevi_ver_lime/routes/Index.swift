@@ -31,7 +31,9 @@ public class Index: RouteAble {
             req, res in
             return res.send ("im " + req.path)
         }
-
+        index.post ( "/json" ) { req, res in
+            return res.send (["name":"이요섭"])
+        }
         index.use ( "/end", End () )
     }
 }

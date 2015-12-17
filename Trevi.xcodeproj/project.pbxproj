@@ -180,7 +180,6 @@
 			isa = PBXGroup;
 			children = (
 				23351DFA1C1DE7CA00BB54FB /* Require.swift */,
-				23351DFB1C1DE7CA00BB54FB /* RequireAble.swift */,
 			);
 			path = Require;
 			sourceTree = "<group>";
@@ -206,9 +205,9 @@
 		239411D51C0C2DA3001B9B07 /* Trevi */ = {
 			isa = PBXGroup;
 			children = (
-				23351DF91C1DE7CA00BB54FB /* Require */,
 				23351DF01C1DE75700BB54FB /* Http */,
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
+				23351DF91C1DE7CA00BB54FB /* Require */,
 				239412091C0C46CE001B9B07 /* Utility */,
 				239412031C0C45CA001B9B07 /* Route */,
 				239411F81C0C2E81001B9B07 /* Socket */,
@@ -450,7 +449,6 @@
 				23351DF51C1DE75700BB54FB /* Request.swift in Sources */,
 				DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */,
 				DF3B819F1C1E08C500974327 /* LogFactory.swift in Sources */,
-				23351DFD1C1DE7CA00BB54FB /* RequireAble.swift in Sources */,
 				236E53E21C1726450076ED36 /* Router.swift in Sources */,
 				906E50B51C121202005937A8 /* System.swift in Sources */,
 				2368EACA1C1C9060007DB033 /* Route.swift in Sources */,

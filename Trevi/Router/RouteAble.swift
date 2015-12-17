@@ -122,14 +122,58 @@ public class RouteAble: Require {
         registerCompleteRoutePath ( .GET, path: path, callback: callback )
         return registerCompleteRoutePath ( .POST, path: path, callback: callback )
     }
-
+    /**
+     * Support http ver 1.1/1.0
+     */
     public func get ( path: String, _ callback: CallBack... ) -> RouteAble {
         return registerCompleteRoutePath ( .GET, path: path, callback: callback )
     }
-
+    /**
+     * Support http ver 1.1/1.0
+     */
     public func post ( path: String, _ callback: CallBack... ) -> RouteAble {
         return registerCompleteRoutePath ( .POST, path: path, callback: callback )
     }
+    /**
+     * Support http ver 1.1/1.0
+     */
+    public func put ( path: String, _ callback: CallBack... ) -> RouteAble {
+        return registerCompleteRoutePath ( .PUT, path: path, callback: callback )
+    }
+    /**
+     * Support http ver 1.1/1.0
+     */
+    public func head ( path: String, _ callback: CallBack... ) -> RouteAble {
+        return registerCompleteRoutePath ( .HEAD, path: path, callback: callback )
+    }
+    /**
+     * Support http ver 1.1/1.0
+     */
+    public func delete ( path: String, _ callback: CallBack... ) -> RouteAble {
+        return registerCompleteRoutePath ( .DELETE, path: path, callback: callback )
+    }
+    /**
+     * Support http ver 1.1. but we not support this version
+     */
+    public func options(){}
+    /**
+     * Support http ver 1.1. but we not support this version
+     */
+    public func trace(){}
+    /**
+     * Support http ver 1.1. but we not support this version
+     */
+    public func connect(){}
+    /**
+     * Support http ver 1.1. but we not support this version
+     */
+    public func link(){}
+    
+    /**
+     * Support http ver 1.1. but we not support this version
+     */
+    public func unlink(){}
+    
 
     public func makeChildRoute ( path: String, module: [RouteAble] ) -> RouteAble {
         for ma in module {
