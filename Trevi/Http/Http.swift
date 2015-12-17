@@ -17,6 +17,19 @@ public class Http {
     public init () {
     }
 
+    /**
+     * Create Server base on RouteAble Model, maybe it able to use many Middleware
+     * end return self
+     *
+     * Examples:
+     *     http.createServer(RouteAble).listen(Port)
+     *
+     *
+     *
+     * @param {RouteAble} requireModule
+     * @return {Http} self
+     * @public
+     */
     public func createServer ( requireModule: RouteAble... ) -> Http {
         
         for rm in requireModule {
@@ -27,6 +40,21 @@ public class Http {
         return self
     }
     
+    /**
+     * Create Server base on just single callback, after few time, modify can use many callback
+     * end return self.
+     *
+     * Examples:
+     *     http.createServer({  req,res in
+     *          return send("hello Trevi!")
+     *      }).listen(Port)
+     *
+     *
+     *
+     * @param {RouteAble} requireModule
+     * @return {Http} self
+     * @public
+     */
     public func createServer ( callBacks: CallBack... ) -> Http {
         for cb in callBacks {
             mwManager.enabledMiddlwareList.append ( cb )
@@ -35,14 +63,12 @@ public class Http {
         return self
     }
     
-    private func receivedRequestCallback() {
-        socket.httpCallback = {
-            req,res,sock in
-            self.mwManager.handleRequest(req,res)
-            
-            return false
-        }
-    }
+    /**
+     * Set port, Begin Server and listen socket
+     *
+     * @param {Int} port
+     * @public
+     */
     public func listen ( port: Int ) throws {
         try socket.startOnPort ( port )
 
@@ -58,5 +84,16 @@ public class Http {
     public func stopListening () {
         socket.disconnect ()
     }
+    
+    
+    private func receivedRequestCallback() {
+        socket.httpCallback = {
+            req,res,sock in
+            self.mwManager.handleRequest(req,res)
+            
+            return false
+        }
+    }
+    
 
 }

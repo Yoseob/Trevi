@@ -6,26 +6,6 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-
-
-/*
-
-Cache-Control → no-cache, no-store, must-revalidate
-Connection →
-Connection
-Options that are desired for the connection
-close
-Content-Encoding → gzip
-Content-Type → text/html; charset=UTF-8
-Date → Sun, 13 Dec 2015 22:22:54 GMT
-P3P → CP="CAO DSP CURa ADMa TAIa PSAa OUR LAW STP PHY ONL UNI PUR FIN COM NAV INT DEM STA PRE"
-Pragma → no-cache
-Server → nginx
-Transfer-Encoding → chunked
-X-Frame-Options → SAMEORIGIN
-
-
-*/
 import Foundation
 
 
@@ -33,6 +13,7 @@ public class Response{
 
     public var header = [ String: String ] ()
     
+    //use fill statusline of header 
     public var statusString: String {
         return internalStatus.statusString ()
     }
@@ -48,10 +29,11 @@ public class Response{
         }
     }
     
-    //for image
+    //for binary
     private var data : NSData?{
         didSet{
-            
+            //set response content-type of header 
+            //image.. Any
         }
     }
     
@@ -69,7 +51,15 @@ public class Response{
         }
     }
 
-    //for all kind of data
+    /**
+     * Make body. Surport all kind of Class. This value only used getter
+     *
+     *
+     * @param { String|number|AnyObject} data
+     * @return {NSData} bodyData
+     * @private
+     */
+
     private var bodyData : NSData? {
         if let dt = data{
             return dt
@@ -77,8 +67,8 @@ public class Response{
             return bodyString.dataUsingEncoding(NSUTF8StringEncoding)!
         }else if (body != nil)  {
             let jsonData = try? NSJSONSerialization.dataWithJSONObject(body!, options:NSJSONWritingOptions(rawValue:0))
-//            if need jsonString, use it
-//            let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
+            // if need jsonString, use it
+            // let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
             return jsonData
         }
         return nil
@@ -107,7 +97,7 @@ public class Response{
      * Examples:
      *
      *     res.send([:])
-     *     res.send('some html')
+     *     res.send('some String')
      *
      * @param { String|number|AnyObject} data
      * @public
@@ -128,7 +118,18 @@ public class Response{
         return end()
     }
 
-
+    /**
+     * Send with html,etc, this function is help MVC
+     *
+     *
+     * Examples:
+     *
+     *     res.render('some html')
+     *     res.render('some html',[:])
+     *
+     * @param { String|number|AnyObject} data
+     * @public
+     */
     public func render ( obj: AnyObject... ) -> Bool {
         let filename = obj[0] as! String
         let args: [String:String]
@@ -147,17 +148,31 @@ public class Response{
         return end()
 
     }
-
+    //not yet impliment
     public func template() -> Bool{
        return end()
     }
-
+    
+    /**
+     * Redirect Page redering with destination url
+     *
+     * @param { String} url
+     * @public
+     * return {Bool} isSend
+     */
     public func redirect ( url u: String )->Bool{
         self.status = 302
         self.header[Location] = u
         return end()
     }
-
+    
+    /**
+     * Prepare header and body to send, Impliment send
+     *
+     *
+     * @private
+     * return {Bool} isSend
+     */
     private func end () ->Bool{
         let headerData       = prepareHeader ()
         let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
@@ -168,22 +183,21 @@ public class Response{
 
     private func makeResponse ( header: NSData, body: NSData?) -> ( NSData ) {
         let result = NSMutableData ( data: header )
-        
         if let b = body {
-            result.appendData ( b )
+            result.appendData (b)
         }
-
         return result;
     }
 
     private func prepareHeader () -> NSData {
-        //        header[Date] = String(NSDate().formatted)  Not GMT
-        header[Server] = "Trevi"
+        // header[Date] = String(NSDate().formatted)  Not GMT
+        header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
         
         if let bodyData = bodyData  {
             header[Content_Length] = "\(bodyData.length)" // replace bodyString length
         }
+        
         var headerString = "\(HttpProtocol) \(statusCode) \(statusString)" + CRLF
         headerString += dictionaryToString ( header )
         return headerString.dataUsingEncoding ( NSUTF8StringEncoding )!

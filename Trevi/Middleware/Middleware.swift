@@ -25,6 +25,20 @@ public enum MiddlewareName: String {
     // else...
 }
 
+
+
+    /**
+    * if you want to make middleware, use this protocol
+    *
+    * Examples:
+    *
+    *        public func operateCommand ( params: MiddlewareParams ) -> Bool {
+    *           return false
+    *        }
+    *
+    * @public
+    */
+
 public protocol Middleware {
     var name: MiddlewareName { get set }
     func operateCommand ( params: MiddlewareParams ) -> Bool
