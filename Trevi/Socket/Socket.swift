@@ -136,6 +136,8 @@ extension Socket{
     }
 }
 
+
+// Should extract this module, and move to Server Model Module
 // Socket Flags
 extension Socket {
     public var flags : Int32 {
@@ -149,7 +151,6 @@ extension Socket {
         }
     }
     
-    // Should apply event setting
     public var isNonBlocking : Bool {
         get {
             return (flags & O_NONBLOCK) != 0 ? true : false

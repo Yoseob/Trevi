@@ -39,6 +39,7 @@
 		906E50B71C121225005937A8 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
 		906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B81C1212CC005937A8 /* SwiftServerPage.swift */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		90ADBF2D1C22ED8A00EF3094 /* bg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 90ADBF2C1C22ED8A00EF3094 /* bg.jpg */; };
 		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
 		DF3B81941C1E086400974327 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81911C1E086400974327 /* HttpSocket.swift */; };
 		DF3B81951C1E086400974327 /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81921C1E086400974327 /* PreparedData.swift */; };
@@ -79,7 +80,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		096BFC225DB66447A8580EC2 /* Pods-Trevi.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trevi.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Trevi/Pods-Trevi.debug.xcconfig"; sourceTree = "<group>"; };
 		23351DF21C1DE75700BB54FB /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		23351DF41C1DE75700BB54FB /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		23351DF71C1DE78F00BB54FB /* HttpProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpProtocol.swift; sourceTree = "<group>"; };
@@ -111,12 +111,11 @@
 		23D2F39A1C1DA4A000F0C784 /* arg_test.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = arg_test.ssp; sourceTree = "<group>"; };
 		23D2F39B1C1DA4A000F0C784 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		23D2F39C1C1DA4A000F0C784 /* intro.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = intro.ssp; sourceTree = "<group>"; };
-		6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		6D536535D78CC69D99029EC3 /* Pods-Trevi.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Trevi.release.xcconfig"; path = "Pods/Target Support Files/Pods-Trevi/Pods-Trevi.release.xcconfig"; sourceTree = "<group>"; };
 		906E50B01C11DB9A005937A8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		906E50B41C121202005937A8 /* System.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = System.swift; sourceTree = "<group>"; };
 		906E50B61C121225005937A8 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		906E50B81C1212CC005937A8 /* SwiftServerPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftServerPage.swift; sourceTree = "<group>"; };
+		90ADBF2C1C22ED8A00EF3094 /* bg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bg.jpg; sourceTree = "<group>"; };
 		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		DF3B81911C1E086400974327 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
 		DF3B81921C1E086400974327 /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
@@ -128,7 +127,6 @@
 		DF3B819B1C1E08C500974327 /* SocketUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketUtility.swift; sourceTree = "<group>"; };
 		DF3B81A21C1E092400974327 /* InetAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InetAddress.swift; sourceTree = "<group>"; };
 		DF3B81A41C1E098400974327 /* UnixBridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UnixBridge.c; sourceTree = "<group>"; };
-		DF3B81A81C1E0E5A00974327 /* Pods_Trevi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_Trevi.framework; path = Pods/../build/Debug/Pods_Trevi.framework; sourceTree = "<group>"; };
 		DF3B81B51C1E3F9300974327 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,7 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF7E4AB21C1E73C200A57379 /* Pods_Trevi.framework in Frameworks */,
+            67ab9025b805a64248d4431629af6ba67a44172b
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,7 +182,6 @@
 			isa = PBXGroup;
 			children = (
 				23351DFA1C1DE7CA00BB54FB /* Require.swift */,
-				23351DFB1C1DE7CA00BB54FB /* RequireAble.swift */,
 			);
 			path = Require;
 			sourceTree = "<group>";
@@ -195,8 +192,6 @@
 				239411D51C0C2DA3001B9B07 /* Trevi */,
 				239411E31C0C2E19001B9B07 /* Trevi_ver_lime */,
 				239411D41C0C2DA3001B9B07 /* Products */,
-				839AA75E11A1D42DA38A1A49 /* Pods */,
-				E5BB8A5291C367B8114D512F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -212,9 +207,9 @@
 		239411D51C0C2DA3001B9B07 /* Trevi */ = {
 			isa = PBXGroup;
 			children = (
-				23351DF91C1DE7CA00BB54FB /* Require */,
 				23351DF01C1DE75700BB54FB /* Http */,
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
+				23351DF91C1DE7CA00BB54FB /* Require */,
 				239412091C0C46CE001B9B07 /* Utility */,
 				239412031C0C45CA001B9B07 /* Route */,
 				239411F81C0C2E81001B9B07 /* Socket */,
@@ -294,6 +289,7 @@
 		23D2F3941C1DA4A000F0C784 /* public */ = {
 			isa = PBXGroup;
 			children = (
+				90ADBF2C1C22ED8A00EF3094 /* bg.jpg */,
 				DF3B81B51C1E3F9300974327 /* background.png */,
 				23D2F3951C1DA4A000F0C784 /* myImage.jpg */,
 			);
@@ -319,24 +315,6 @@
 			path = views;
 			sourceTree = "<group>";
 		};
-		839AA75E11A1D42DA38A1A49 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				096BFC225DB66447A8580EC2 /* Pods-Trevi.debug.xcconfig */,
-				6D536535D78CC69D99029EC3 /* Pods-Trevi.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		E5BB8A5291C367B8114D512F /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				DF3B81A81C1E0E5A00974327 /* Pods_Trevi.framework */,
-				6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -355,12 +333,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 239411DB1C0C2DA3001B9B07 /* Build configuration list for PBXNativeTarget "Trevi" */;
 			buildPhases = (
-				9DEEDF3C949E4FC6A40110B3 /* Check Pods Manifest.lock */,
 				239411CE1C0C2DA3001B9B07 /* Sources */,
 				239411CF1C0C2DA3001B9B07 /* Frameworks */,
 				239411D01C0C2DA3001B9B07 /* Headers */,
 				239411D11C0C2DA3001B9B07 /* Resources */,
-				16FDFDAB8A1A0840984BAC59 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -445,44 +421,12 @@
 				239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */,
 				239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */,
 				23D2F3A11C1DA4A000F0C784 /* index.ssp in Resources */,
+				90ADBF2D1C22ED8A00EF3094 /* bg.jpg in Resources */,
 				23D2F3A21C1DA4A000F0C784 /* intro.ssp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		16FDFDAB8A1A0840984BAC59 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Trevi/Pods-Trevi-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9DEEDF3C949E4FC6A40110B3 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		239411CE1C0C2DA3001B9B07 /* Sources */ = {
@@ -507,7 +451,6 @@
 				23351DF51C1DE75700BB54FB /* Request.swift in Sources */,
 				DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */,
 				DF3B819F1C1E08C500974327 /* LogFactory.swift in Sources */,
-				23351DFD1C1DE7CA00BB54FB /* RequireAble.swift in Sources */,
 				236E53E21C1726450076ED36 /* Router.swift in Sources */,
 				906E50B51C121202005937A8 /* System.swift in Sources */,
 				2368EACA1C1C9060007DB033 /* Route.swift in Sources */,
@@ -644,7 +587,6 @@
 		};
 		239411DC1C0C2DA3001B9B07 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 096BFC225DB66447A8580EC2 /* Pods-Trevi.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -669,7 +611,6 @@
 		};
 		239411DD1C0C2DA3001B9B07 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6D536535D78CC69D99029EC3 /* Pods-Trevi.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;

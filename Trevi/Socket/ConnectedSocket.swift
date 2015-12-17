@@ -8,20 +8,16 @@
 
 import Darwin
 
+let ClientBufferSize = 4096
+
 // Should add connect function
 public class ConnectedSocket<T: InetAddress> : Socket<T> {
     
-    var bufferPtr  = UnsafeMutablePointer<CChar>.alloc(4096 + 2)
-    var bufferLen : Int = 4096 {
-        didSet {
-            bufferPtr.dealloc(oldValue + 2)
-        }
-        willSet{
-            bufferPtr = UnsafeMutablePointer<CChar>.alloc(newValue + 2)
-        }
-    }
+    var bufferPtr  = UnsafeMutablePointer<CChar>.alloc(ClientBufferSize + 2)
+    var bufferLen : Int = ClientBufferSize
     
     var isConnected : Bool = false
+    var isClosing : Bool = false
     
     // Accept client socket
     public init?(fd : Int32, address : T, queue : dispatch_queue_t = defaultQueue) {
@@ -44,7 +40,12 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         
         eventHandle.cancelEvent()
         
-        Darwin.shutdown(fd, SHUT_RDWR)
+        Darwin.shutdown(fd, SHUT_RD)
+        
+        if eventHandle.isWriting() {
+            isClosing = true
+            return
+        }
         
         super.close()
     }
@@ -64,7 +65,7 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
 
     // Should add connect()
     
-    public func read() -> (length: Int, buffer: UnsafePointer<CChar>){
+    public func read() -> (length: Int, buffer: UnsafePointer<CChar>) {
         let readBufferPtr = UnsafePointer<CChar>(bufferPtr)
         let readBufferLen = Darwin.read(fd, bufferPtr, bufferLen)
         
@@ -83,7 +84,9 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
             
             eventHandle.writeQueue = queue
             
-            let status = eventHandle.dispatchWriteEvent(buffer, length : length)
+            let status = eventHandle.dispatchWriteEvent(buffer, length : length) {
+                if self.isClosing { self.close() }
+            }
             
             return status
     }

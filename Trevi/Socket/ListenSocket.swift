@@ -34,7 +34,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         self.close()
     }
     
-    // Should extract nonBlock input, and make Server Model Module
+    // Should extract nonBlock input, and move to Server Model Module
     public func listen(nonBlock : Bool, backlog : Int32 = 50) -> Bool {
         guard !isListening else { return false }
         
@@ -82,7 +82,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
                     return 0
                 }
                 
-                // Should move this client's nonBlock setting to Server Model Module
+                // Should extract this client's nonBlock setting, and move to Server Model Module
                 clientSocket!.isNonBlocking = nonBlock
                 
                 clientCallback(clientSocket!)

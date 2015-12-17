@@ -8,6 +8,10 @@
 
 import Dispatch
 
+// For single thread server model
+//public let defaultQueue = dispatch_get_main_queue()
+
+// For multi thread server model (It does not mean blocking, just for parallelizing)
 public let defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 // Below codes are prototype for injecting read event according with Socket's states.
@@ -38,8 +42,10 @@ public class EventHandler {
     
     // Should abstract this queue's setting in Server Model Module
     var queue : dispatch_queue_t
-    var writeQueue : dispatch_queue_t?
     var source : dispatch_source_t?
+    
+    var writeQueue : dispatch_queue_t?
+    var writeCounts : Int = 0
     
     var readEvent : ReadEvent = BlockingRead()
     
@@ -56,6 +62,9 @@ public class EventHandler {
     
     public func isEventValid() -> Bool { return self.source != nil ? true : false }
     
+    public func isWriting() -> Bool { return self.writeCounts > 0 }
+    
+    // Should be devided read and write events
     public func cancelEvent() -> Bool {
         if let source = self.source {
             dispatch_source_cancel(source)
@@ -87,27 +96,27 @@ public class EventHandler {
         }
     }
     
-    public func dispatchWriteEvent<M>(buffer : UnsafePointer<M>, length : Int ) -> Bool {
+    public func dispatchWriteEvent<M>(buffer : UnsafePointer<M>,
+        length : Int, closeSocket : ()->() ) -> Bool {
         
         let typeSize = sizeof(M) <= 0 ? 1 : sizeof(M)
         let bufferSize = length*typeSize
         
-        guard bufferSize > 0 else {
-            return true
-        }
-        
-        if writeQueue == nil {
-            writeQueue = self.queue
-        }
+        guard bufferSize > 0 else { return true }
+        if writeQueue == nil { writeQueue = self.queue }
         
         guard let dispatchData = dispatch_data_create(buffer, bufferSize, writeQueue! , nil) else {
             return false
         }
         
+        ++self.writeCounts
         dispatch_write(fd, dispatchData, writeQueue!) {
             _, _ in
             let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
             print("Write thread: \(tid)")
+            
+            --self.writeCounts
+            if !self.isWriting() { closeSocket() }
         }
         
         return true

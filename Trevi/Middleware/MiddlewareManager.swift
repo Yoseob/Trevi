@@ -28,6 +28,16 @@ public class MiddlewareManager {
 
     }
 
+    /**
+     *
+     * Handling request and operate middleware stacked in(at?) list
+     * if matched suitable module or middleware, that should return false to stop operate next thing
+     *
+     *
+     * @param {Request} request
+     * @param {Response} response
+     * @public
+     */
     public func handleRequest ( request: Request, _ response: Response ) {
         let containerRoute = Route ()
         for middleware in enabledMiddlwareList {
@@ -37,7 +47,16 @@ public class MiddlewareManager {
             }
         }
     }
-
+    
+    /**
+     *
+     * Operate after matching type of module
+     *
+     *
+     * @param {Any | Middleware | CallBack} obj
+     * @param {MiddlewareParams} params
+     * @public
+     */
     private func matchType ( obj: Any, params: MiddlewareParams ) -> Bool {
         var ret: Bool = false;
         switch obj {
