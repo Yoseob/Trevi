@@ -70,9 +70,6 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
             self.eventHandle.dispatchReadEvent() {
                 _ in
                 
-                let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-                print("Accept thread : \(tid)")
-                
                 let (clientFd, clientAddr) = self.accept()
                 
                 let clientSocket = ConnectedSocket<T>(fd: clientFd, address: clientAddr)

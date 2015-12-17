@@ -31,7 +31,7 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         guard optStatus && isHandlerCreated else { return nil }
     }
     deinit {
-        log.debug("Connected Socket closed")
+//        log.debug("Connected Socket closed")
         bufferPtr.dealloc(bufferLen + 2)
         self.close()
     }

@@ -36,15 +36,9 @@ class TreviSocketServer {
             // Should handle Listener error
             return
         }
-        
-        let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-        print("Main thread: \(tid)")
-        
+
         socket.listenClientReadEvent (true) {
             client in
-            
-            let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-            print("Read thread: \(tid)")
             
             var initialData: NSData?
             let (length, buffer ) = client.read()

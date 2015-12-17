@@ -39,7 +39,7 @@ public class Socket<T: InetAddress> {
     
     // close socket
     deinit{
-        log.debug("Socket closed")
+//        log.debug("Socket closed")
         close()
     }
     

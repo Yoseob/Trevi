@@ -54,7 +54,7 @@ public class EventHandler {
         self.queue = queue
     }
     deinit {
-        log.debug("EventHandler closed")
+//        log.debug("EventHandler closed")
         if let source = self.source {
             dispatch_source_cancel(source)
         }
@@ -112,9 +112,7 @@ public class EventHandler {
         ++self.writeCounts
         dispatch_write(fd, dispatchData, writeQueue!) {
             _, _ in
-            let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-            print("Write thread: \(tid)")
-            
+
             --self.writeCounts
             if !self.isWriting() { closeSocket() }
         }
