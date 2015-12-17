@@ -15,6 +15,7 @@ public enum HTTPMethodType: String {
     case POST      = "POST"
     case PUT       = "PUT"
     case HEAD      = "HEAD"
+    case DELETE    = "DELETE"
     case UNDEFINED = "UNDEFINED"
 }
 extension NSDate {

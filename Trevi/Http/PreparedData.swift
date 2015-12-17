@@ -20,14 +20,24 @@ class PreparedData {
     init ( requestData: NSData ) {
         self.requestdata = requestData;
     }
-
+    
+    /**
+     * Factory Methed to make reqeust and response
+     *
+     *
+     * @param { TreviSocket} socket
+     * @return {( Request, Response )}
+     * @private
+     */
     func prepareReqAndRes ( socket: TreviSocket ) -> ( Request, Response ) {
-        return (setupRequest (), setupResponse ( socket ))
+        let req = setupRequest();
+        let res = setupResponse(socket)
+        res.method = req.method
+        return (req,res)
     }
 
     private func setupRequest () -> Request {
-        let resultRequest: Request = requestFactory ( requestdata )
-        return resultRequest
+        return requestFactory ( requestdata )
     }
 
     private func requestFactory ( data: NSData ) -> Request {

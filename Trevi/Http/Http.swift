@@ -31,7 +31,6 @@ public class Http {
      * @public
      */
     public func createServer ( requireModule: RouteAble... ) -> Http {
-        
         for rm in requireModule {
             rm.makeChildRoute("", module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
@@ -85,12 +84,16 @@ public class Http {
         socket.disconnect ()
     }
     
-    
+    /**
+     * Register request callback function
+     * request received delegate middleware manager
+     *
+     * @private
+     */
     private func receivedRequestCallback() {
         socket.httpCallback = {
             req,res,sock in
             self.mwManager.handleRequest(req,res)
-            
             return false
         }
     }

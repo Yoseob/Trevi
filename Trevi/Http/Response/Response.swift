@@ -10,7 +10,7 @@ import Foundation
 
 
 public class Response{
-
+    
     public var header = [ String: String ] ()
     
     //use fill statusline of header 
@@ -74,7 +74,8 @@ public class Response{
         return nil
     }
 
-
+    public var method : HTTPMethodType = .UNDEFINED
+    
     private var internalStatus : StatusCode = .OK
 
     public var socket : TreviSocket?
@@ -180,15 +181,31 @@ public class Response{
         return true
     }
 
-
+    /**
+     * Factory method make to response and make complate send message
+     *
+     * @param { NSData} header
+     * @param { NSData} body
+     * @private
+     * return {NSData} bodyData
+     */
     private func makeResponse ( header: NSData, body: NSData?) -> ( NSData ) {
-        let result = NSMutableData ( data: header )
-        if let b = body {
-            result.appendData (b)
+        if method != .HEAD{
+            if let b = body {
+                let result = NSMutableData ( data: header )
+                result.appendData (b)
+                return result
+            }
         }
-        return result;
+        return header
     }
-
+    
+    /**
+     * Factory method fill header data
+     *
+     * @private
+     * return {NSData} headerdata
+     */
     private func prepareHeader () -> NSData {
         // header[Date] = String(NSDate().formatted)  Not GMT
         header[Server] = "Trevi-lime"
