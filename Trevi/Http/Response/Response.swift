@@ -166,7 +166,14 @@ public class Response{
         self.header[Location] = u
         return end()
     }
-
+    
+    /**
+     * Prepare header and body to send, Impliment send
+     *
+     *
+     * @private
+     * return {Bool} isSend
+     */
     private func end () ->Bool{
         let headerData       = prepareHeader ()
         let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
