@@ -1,3 +1,11 @@
+//
+//  HttpSocket.swift
+//  Trevi
+//
+//  Created by LeeYoseob on 2015. 11. 20..
+//  Copyright © 2015년 LeeYoseob. All rights reserved.
+//
+
 typealias HttpCallback = ( ( Request, Response, TreviSocket ) -> Bool )
 
 public class TreviSocket {
@@ -10,7 +18,7 @@ public class TreviSocket {
 
     func sendData ( data: NSData ) {
 
-        socket.write (data.bytes, length: data.length, queue: dispatch_get_main_queue())
+        socket.write (data, queue: dispatch_get_main_queue())
       
         socket.close ()
     }
@@ -28,14 +36,14 @@ class TreviSocketServer {
             // Should handle Listener error
             return
         }
-        socket.listen (true) {
-            client, length in
+        socket.listenClientReadEvent (true) {
+            client in
 
             var initialData: NSData?
-            let (size, data, _ ) = client.read()
+            let (length, buffer ) = client.read()
 
-            if size > 0 {
-                initialData = NSData ( bytes: data, length: size )
+            if length > 0 {
+                initialData = NSData ( bytes: buffer, length: length )
             }
             
             if let initialData = initialData {
@@ -44,6 +52,8 @@ class TreviSocketServer {
                 let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
                 self.httpCallback! ( req, res, httpClient )
             }
+            
+            return length
         }
 
         self.socket = socket

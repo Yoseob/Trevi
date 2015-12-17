@@ -3,7 +3,7 @@
 //  SwiftGCDSocket
 //
 //  Created by JangTaehwan on 2015. 12. 8..
-//  Copyright © 2015년 JangTaehwan. All rights reserved.
+//  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
 import Darwin
@@ -39,6 +39,7 @@ public class Socket<T: InetAddress> {
     
     // close socket
     deinit{
+        log.debug("Socket closed")
         close()
     }
     
@@ -68,15 +69,15 @@ public class Socket<T: InetAddress> {
 // Socket options
 public enum SocketOption {
     case BROADCAST(Bool),
-            DEBUG(Bool),
-            DONTROUTE(Bool),
-            OOBINLINE(Bool),
-            REUSEADDR(Bool),
-            KEEPALIVE(Bool),
-            NOSIGPIPE(Bool),
+    DEBUG(Bool),
+    DONTROUTE(Bool),
+    OOBINLINE(Bool),
+    REUSEADDR(Bool),
+    KEEPALIVE(Bool),
+    NOSIGPIPE(Bool),
     
-            SNDBUF(Int32),
-            RCVBUF(Int32)
+    SNDBUF(Int32),
+    RCVBUF(Int32)
     
     var match : (name : Int32, value : Int32) {
         switch self {
@@ -96,7 +97,7 @@ public enum SocketOption {
 
 extension Socket{
     
-    // This function sets various sockets' option 
+    // This function sets various sockets' option
     // e.g. setSocketOption([.BROADCAST(true), .REUSEADDR(true), .NOSIGPIPE(true)])
     public func setSocketOption(options: [SocketOption]?) -> Bool {
         if options == nil { return false }
@@ -114,7 +115,7 @@ extension Socket{
                 return false
             }
             
-         //   log.info("Success to set socket option : \(option), value : \(value)")
+            //   log.info("Success to set socket option : \(option), value : \(value)")
         }
         return true
     }
@@ -124,7 +125,7 @@ extension Socket{
         let name = option.match.name
         var buffer = Int32(0)
         var bufferLen = socklen_t(sizeof(Int32))
-
+        
         let status  = getsockopt(fd, SOL_SOCKET, name, &buffer, &bufferLen)
         
         if status == -1 {
@@ -156,11 +157,11 @@ extension Socket {
         set {
             if newValue {
                 flags |= O_NONBLOCK
-                eventHandle.readEvent = NonBlockingRead()
+                self.eventHandle.readEvent = NonBlockingRead()
             }
             else {
                 flags = flags & ~O_NONBLOCK
-                eventHandle.readEvent = BlockingRead()
+                self.eventHandle.readEvent = BlockingRead()
             }
         }
     }
