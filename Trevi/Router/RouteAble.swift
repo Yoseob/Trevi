@@ -59,11 +59,9 @@ public class RouteAble: Require {
         if true {
             if case let path as String = temp.first{
                 temp.removeFirst ()
-                makeChildRoute (path, module: temp )
-                return self
+                return makeChildRoute (path, module: temp )
             }else if case _ as RouteAble = temp.first{
-                makeChildRoute ("", module: middleware)
-                return self
+                return makeChildRoute ("", module: middleware)
             }
         } else {
             /*
