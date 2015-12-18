@@ -17,12 +17,15 @@ public class Lime: RouteAble {
 
     public override func prepare() {
         let lime = trevi.store(self)
+
+        
         
         lime.get("/intro") { req, res in
             let file_path = NSBundle.mainBundle().pathForResource("intro", ofType: "ssp")
             res.render(file_path!)
             return true
         }
+        
         lime.get("/big") { req, res in
             let file_path = NSBundle.mainBundle().pathForResource("bg", ofType: "jpg")
             return res.send(NSData(contentsOfFile: file_path!)!)

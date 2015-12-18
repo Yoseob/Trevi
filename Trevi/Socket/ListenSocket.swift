@@ -3,7 +3,7 @@
 //  SwiftGCDSocket
 //
 //  Created by JangTaehwan on 2015. 12. 7..
-//  Copyright © 2015년 JangTaehwan. All rights reserved.
+//  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
 import Darwin
@@ -11,37 +11,48 @@ import Dispatch
 
 public class ListenSocket<T: InetAddress> : Socket<T> {
     
-    let eventHandle : EventHandler<T>
+    var isListening : Bool = false
     
     // Create socket and bind address
-    public init?(address : T, options : [SocketOption]? = nil,
-                    queue : dispatch_queue_t? = defaultQueue) {
+    public init?(address : T, queue : dispatch_queue_t = defaultQueue) {
         
         let fd = socket(T.domain, SOCK_STREAM, 0)
         
-        eventHandle = EventHandler(fd: fd, queue: queue!)
-        
         super.init(fd: fd, address: address)
+        eventHandle = EventHandler(fd: fd, queue: queue)
         
-        // change error handling
-        guard fd != -1 else {
-            return nil
-        }
+        let optStatus = setSocketOption([.REUSEADDR(true)])
         
-        setSocketOption(options!)
-                        
-        guard bind() else {
+        // Should apply error handling
+        guard isCreated else { return nil }
+        guard bind() else { return nil }
+        guard optStatus && isHandlerCreated else {
             return nil
         }
     }
-    deinit{
+    deinit {
         self.close()
     }
     
-    func accept() -> (Int32, T) {
+    // Should extract nonBlock input, and move to Server Model Module
+    public func listen(nonBlock : Bool, backlog : Int32 = 50) -> Bool {
+        guard !isListening else { return false }
+        
+        self.isNonBlocking = nonBlock
+        
+        let status = Darwin.listen(fd, backlog)
+        guard status == 0 else { return false }
+        
+        log.info("Server listens on port \(self.address.port())")
+        self.isListening = true
+        
+        return self.isListening
+    }
+    
+    public func accept() -> (Int32, T) {
         var clientAddr    = T()
         var clientAddrLen = socklen_t(T.length)
-                
+        
         let clientFd = withUnsafeMutablePointer(&clientAddr) {
             ptr -> Int32 in
             let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
@@ -51,51 +62,44 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         return (clientFd, clientAddr)
     }
     
-    public func listen(nonBlock : Bool, backlog : Int32 = 50,
-        clientCallback: (ConnectedSocket<T>) -> Void) -> Bool { 
-        
-       self.isNonBlocking = nonBlock
+    public func listenClientEvent(nonBlock : Bool, backlog : Int32 = 50,
+        clientCallback: (ConnectedSocket<T>) -> Void) -> Bool {
             
-        let rc = Darwin.listen(fd, backlog)
-        guard rc == 0 else {
-            log.error("ListenSocket listen")
-            return false
-        }
-
-        log.info("Server listens on port \(self.address.port())")
-        
-        eventHandle.dispatchReadEvent(){
-            _ in
+            guard listen(nonBlock, backlog: backlog) else { return false }
             
-            // Should change this part to short(Injection).
-            //  -> Correct common things with ConnectedSocket's loop and error handling
-            repeat{
+            self.eventHandle.dispatchReadEvent() {
+                _ in
+                
                 let (clientFd, clientAddr) = self.accept()
                 
-                if clientFd > 0 {
-                    let clientSocket = ConnectedSocket<T>(fd: clientFd,
-                                                address: clientAddr, options: [.NOSIGPIPE(true)])
-                    
-                    guard clientSocket != nil else {
-                        log.error("Cannot create client socket")
-                        return
-                    }
-                    //clientSocket!.isNonBlocking = nonBlock
-                    clientCallback(clientSocket!)
+                let clientSocket = ConnectedSocket<T>(fd: clientFd, address: clientAddr)
+                
+                guard clientSocket != nil else {
+                    log.error("Cannot create client socket")
+                    return 0
                 }
-                else if errno == EWOULDBLOCK {
-                    break
+                
+                // Should extract this client's nonBlock setting, and move to Server Model Module
+                clientSocket!.isNonBlocking = nonBlock
+                
+                clientCallback(clientSocket!)
+                
+                return 42
+            }
+            
+            return true
+    }
+    
+    public func listenClientReadEvent(nonBlock : Bool, backlog : Int32 = 50,
+        clientReadCallback: (ConnectedSocket<T>) -> Int) -> Bool {
+            
+            let status = listenClientEvent(nonBlock, backlog: backlog) {
+                clientSocket in
+                
+                clientSocket.eventHandle.dispatchReadEvent(){
+                    return clientReadCallback(clientSocket)
                 }
-                else if errno == EAGAIN{
-                    log.info("EAGAIN")
-                    continue
-                }
-                else {
-                    log.error("Listen error: \(errno)")
-                }
-            } while(true)
-        }
-
-        return true
+            }
+            return status
     }
 }

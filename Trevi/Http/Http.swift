@@ -1,5 +1,5 @@
 //
-//  Server.swift
+//  Http.swift
 //  Trevi
 //
 //  Created by LeeYoseob on 2015. 11. 20..

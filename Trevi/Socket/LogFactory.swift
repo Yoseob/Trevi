@@ -3,7 +3,7 @@
 //  SwiftGCDSocket
 //
 //  Created by JangTaehwan on 2015. 12. 7..
-//  Copyright © 2015년 JangTaehwan. All rights reserved.
+//  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
 import Dispatch

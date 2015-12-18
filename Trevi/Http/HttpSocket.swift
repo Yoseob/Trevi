@@ -1,3 +1,11 @@
+//
+//  HttpSocket.swift
+//  Trevi
+//
+//  Created by LeeYoseob on 2015. 11. 20..
+//  Copyright © 2015년 LeeYoseob. All rights reserved.
+//
+
 typealias HttpCallback = ( ( Request, Response, TreviSocket ) -> Bool )
 
 public class TreviSocket {
@@ -10,7 +18,7 @@ public class TreviSocket {
 
     func sendData ( data: NSData ) {
 
-        socket.write (data.bytes, length: data.length, queue: dispatch_get_main_queue())
+        socket.write (data, queue: dispatch_get_main_queue())
       
         socket.close ()
     }
@@ -24,37 +32,29 @@ class TreviSocketServer {
 
     func startOnPort ( p: Int ) throws {
 
-        guard let socket = ListenSocket<IPv4> ( address: IPv4 ( port: p ), options : [.REUSEADDR(true)] ) else {
+        guard let socket = ListenSocket<IPv4> ( address: IPv4 ( port: p )) else {
             // Should handle Listener error
             return
         }
-        socket.listen (true) {
+
+        socket.listenClientReadEvent (true) {
             client in
             
-            let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-            print("New client connected from thread: \(tid)")
+            var initialData: NSData?
+            let (length, buffer ) = client.read()
             
-             client.eventHandle.dispatchReadEvent(){
-                length in
-
-                client.isNonBlocking = true
-
-                var initialData: NSData?
-                let (size, data, _ ) = client.read()
-
-                if size > 0 {
-                    initialData = NSData ( bytes: data, length: size )
-                }
-                
-                if let initialData = initialData {
-                    
-                    let preparedData = PreparedData ( requestData: initialData )
-                    let httpClient       = TreviSocket ( socket: client )
-                    let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
-                    self.httpCallback! ( req, res, httpClient )
-                    
-                }
+            if length > 0 {
+                initialData = NSData ( bytes: buffer, length: length )
             }
+            
+            if let initialData = initialData {
+                let preparedData = PreparedData ( requestData: initialData )
+                let httpClient       = TreviSocket ( socket: client )
+                let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
+                self.httpCallback! ( req, res, httpClient )
+            }
+            
+            return length
         }
 
         self.socket = socket
