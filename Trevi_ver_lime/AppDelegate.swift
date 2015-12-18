@@ -31,22 +31,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(){ req, res in
             res.status = 404
-
             return res.send ("404 Pages Not Found")
 
         }
         
         do {
-            try server.createServer ( lime ).listen ( 8080 )
+            try server.createServer ( lime ).listen (8080)
 
-/*
+
+            /*
             try server.createServer( { req , res in
                 var dic = [String : AnyObject]()
                 dic["name"] = "im yoseob";
-                res.body = dic
-                res.send()
+                res.send(dic)
                 return true
                 }).listen(8080)
+
             */
         } catch {
 
