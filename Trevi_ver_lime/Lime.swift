@@ -57,6 +57,12 @@ public class Lime: RouteAble {
             return true
         } )
         
+        // The test code for parsing body to json
+        lime.post ( "/json" ) { req, res in
+            res.send ( req.json )
+            return false
+        }
+        
         lime.use ( "/yoseob", Index () )
         
         // Register SSP(Swift Server Page) on '/ssp'
@@ -92,9 +98,9 @@ public class Lime: RouteAble {
             return res.send ( msg )
 
         })
+        
         lime.get("/redir"){ req , res in
             return res.redirect(url: "http://www.naver.com")
-
         }
     }
 }
