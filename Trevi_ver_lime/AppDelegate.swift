@@ -36,16 +36,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         
         do {
-            try server.createServer ( lime ).listen ( 8080 )
+            try server.createServer ( lime ).listen (8080)
 
-/*
+
+            /*
             try server.createServer( { req , res in
                 var dic = [String : AnyObject]()
                 dic["name"] = "im yoseob";
-                res.body = dic
-                res.send()
+                res.send(dic)
                 return true
                 }).listen(8080)
+
             */
         } catch {
 
