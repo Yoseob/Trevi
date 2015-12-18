@@ -8,10 +8,19 @@
 
 import Darwin
 
+/**
+ * Socket class
+ *
+ * Manage POSIX C socket's file descriptor, and provides socket functions.
+ *
+ * 'isNonblocking' module will be extracted when socket server model created.
+ * 'select' and 'poll' module should be added.
+ *
+ */
+ 
 // Should abstract Socket states
 public class Socket<T: InetAddress> {
     
-    // Filedescriptor's read, write event manager using GCD
     public var eventHandle : EventHandler! = nil
     
     // Socket properties
@@ -28,7 +37,19 @@ public class Socket<T: InetAddress> {
         self.address = address
     }
     
-    // create socket
+    
+    /**
+     * convenience init? 
+     * Create a socket
+     *
+     * @param
+     *  First : A address family for this socket.
+     *  Second : Socket type (SOCK_STREAM / SOCK_DGRAM).
+     *
+     * @return 
+     *  If socket function succeeds, calls init().
+     *  However, if it fails, returns nil
+     */
     public convenience init?(address : InetAddress, type : Int32){
         let tfd = socket(T.domain, type, 0)
         
@@ -37,9 +58,7 @@ public class Socket<T: InetAddress> {
         self.init(fd: tfd, address: address)
     }
     
-    // close socket
     deinit{
-//        log.debug("Socket closed")
         close()
     }
     
@@ -47,7 +66,14 @@ public class Socket<T: InetAddress> {
         Darwin.close(fd)
     }
     
-    // bind socket
+    /**
+     * bind
+     * Bind socket with server's address
+     *
+     * @param
+     * @return
+     *  Success or failure
+     */
     public func bind() -> Bool {
         guard isCreated && !isBound else {
             log.error("Socket bind")
@@ -97,8 +123,16 @@ public enum SocketOption {
 
 extension Socket{
     
-    // This function sets various sockets' option
-    // e.g. setSocketOption([.BROADCAST(true), .REUSEADDR(true), .NOSIGPIPE(true)])
+    /**
+     * setSocketOption
+     * Set various sockets' option
+     *
+     * Examples: setSocketOption([.BROADCAST(true), .REUSEADDR(true), .NOSIGPIPE(true)])
+     *
+     * @param
+     * @return
+     *  Success or failure
+     */
     public func setSocketOption(options: [SocketOption]?) -> Bool {
         if options == nil { return false }
         
@@ -120,7 +154,19 @@ extension Socket{
         return true
     }
     
-    // It returns a socket option regardress of the value of enum cases.
+    /**
+    * getSocketOption
+    * Get a socket option by input option
+    *
+    * Examples: getSocketOption(.REUSEADDR(true))
+    *   SocketOption's value does not metter in a result, so
+     *  this example is same with getSocketOption(.REUSEADDR(false))
+    *
+    * @param
+    *
+    * @return
+    *  Success or failure
+    */
     public func getSocketOption(option: SocketOption) -> Bool {
         let name = option.match.name
         var buffer = Int32(0)

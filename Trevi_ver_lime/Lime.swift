@@ -48,6 +48,11 @@ public class Lime: RouteAble {
             res.send ( msg )
             return true
         }
+        lime.post ( "/hi" ) { req, res in
+            let msg = "Hello hi!"
+            res.send ( msg )
+            return true
+        }
         
         lime.get ( "/", { req, res in
             return false

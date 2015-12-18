@@ -50,6 +50,10 @@ public class Request {
     private final func parse () {
         let requestHeader: [String] = String ( data: self.data, encoding: NSUTF8StringEncoding )!.componentsSeparatedByString ( CRLF )
         let requestLineElements: [String] = requestHeader.first!.componentsSeparatedByString ( SP )
+        print(self.data)
+        for str in requestHeader {
+            print(str)
+        }
         
         // This is only for HTTP/1.x
         if requestLineElements.count == 3 {
