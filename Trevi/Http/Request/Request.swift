@@ -9,19 +9,39 @@
 import Foundation
 
 public class Request {
-    public var method: HTTPMethodType = HTTPMethodType.UNDEFINED
-
-    // path /test/:id
-    public var params                 = [ String: String ] ()
-
-    // path /test?id = "123"
-    public var query                  = [ String: String ] ()
-    public var header                 = [ String: String ] ()
     
-    private var _body: String!
-    public var body:   [String:AnyObject!]!
-
+    // HTTP method like GET, POST.
+    public var method: HTTPMethodType = HTTPMethodType.UNDEFINED
+    public var version   = String ()
+    
+    // Original HTTP data include header & body
+    public var data: NSData! {
+        didSet {
+            parse()
+        }
+    }
+    
+    // HTTP header
+    public var header    = [ String: String ] ()
+    
+    // HTTP body
+    public var body      = NSData()
+    
+    // Body parsed to JSON
+    public var json: [String:AnyObject!]!
+    
+    // Parameter in url for semantic URL
+    // ex) /url/:name
+    public var params    = [ String: String ] ()
+    
+    // Qeury string from requested url
+    // ex) /url?id="123"
+    public var query     = [ String: String ] ()
+    
+    // Seperated path by component from the requested url
     public var pathComponent: [String] = [ String ] ()
+    
+    // Requested url
     public var path: String {
         didSet {
             let segment = self.path.componentsSeparatedByString ( "/" )
@@ -31,11 +51,8 @@ public class Request {
         }
     }
     
-    public var data: NSData! {
-        didSet {
-            parse()
-        }
-    }
+    // A variable to contain something needs by user.
+    public var attribute = [ String : String ] ()
 
     public init () {
         self.path = String ()
@@ -48,7 +65,13 @@ public class Request {
     }
     
     private final func parse () {
-        let requestHeader: [String] = String ( data: self.data, encoding: NSUTF8StringEncoding )!.componentsSeparatedByString ( CRLF )
+        
+        // TODO : error when file uploaded..
+        guard let converted = String ( data: self.data, encoding: NSUTF8StringEncoding ) else {
+            return
+        }
+        
+        let requestHeader: [String] = converted.componentsSeparatedByString ( CRLF )
         let requestLineElements: [String] = requestHeader.first!.componentsSeparatedByString ( SP )
         
         // This is only for HTTP/1.x
@@ -58,7 +81,8 @@ public class Request {
             }
             parseUrl( requestLineElements[1] )
             parseHeader( requestHeader )
-            self._body = requestHeader.last
+            
+            self.body = requestHeader.last!.dataUsingEncoding(NSUTF8StringEncoding)!
         }
     }
     
