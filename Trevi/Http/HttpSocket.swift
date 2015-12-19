@@ -19,7 +19,6 @@ public class TreviSocket {
     func sendData ( data: NSData ) {
 
         socket.write (data, queue: dispatch_get_main_queue())
-      
         socket.close ()
     }
 }
@@ -32,7 +31,7 @@ class TreviSocketServer {
 
     func startOnPort ( p: Int ) throws {
 
-        guard let socket = ListenSocket<IPv4> ( address: IPv4 ( port: p )) else {
+        guard let socket = ListenSocket<IPv4> ( address: IPv4 (port: p)) else {
             // Should handle Listener error
             return
         }
