@@ -78,6 +78,7 @@ public class RouteAble: Require {
             }
             */
         }
+
         
         for md in middleware {
             middlewareList.append ( md )
