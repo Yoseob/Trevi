@@ -20,6 +20,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //main Module
         let lime   = Lime ()
         
+        //I think middleware setting at instance of Http Class 
+        // server.use(Favicon()) or server.set(Favicon())
+        
+        
         //'use' func call for use middleware
         lime.use(BodyParser())
         
@@ -37,8 +41,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         do {
             try server.createServer ( lime ).listen (8080)
-
-
+            
+            //If you want to make light Server. use it
             /*
             try server.createServer( { req , res in
                 var dic = [String : AnyObject]()
