@@ -8,16 +8,32 @@
 
 import Dispatch
 
-// For single thread server model
-//public let defaultQueue = dispatch_get_main_queue()
 
-// For multi thread server model (It does not mean blocking, just for parallelizing)
+/**
+* Set the 'defaultQueue' to 'dispatch_get_main_queue()' for single thread server model.
+* Then all event will dispatch to main queue in GCD, and all tasks will be processed by main thread.
+* Examples:
+*   public let defaultQueue = dispatch_get_main_queue()
+*
+* On the other hand if you want multi thread server model and more parallelizing,
+* set the defaultQueue to dispatch_get_global_queue(_ ,  0)
+*
+*/
 public let defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 // Below codes are prototype for injecting read event according with Socket's states.
 //  I think it's not good way, should find better way
 public typealias readCallbackType = (() -> Int)
 
+
+/**
+ * ReadEvent
+ * Socket's read event protocol
+ *
+ * Set read event type in EventHandler according with block and non-block.
+ * These classes will be injected when socket's isNonblocking sets.
+ *
+ */
 public protocol ReadEvent {
     func excute(callback : readCallbackType) -> Bool
 }
@@ -36,6 +52,15 @@ public class NonBlockingRead : ReadEvent {
     }
 }
 
+
+/**
+ * EventHandler class
+ *
+ * Manage all socket' read and write event based on GCD.
+ *
+ * Should change this module to be working in Linux.
+ *
+ */
 public class EventHandler {
     
     let fd : Int32
@@ -74,6 +99,30 @@ public class EventHandler {
         return false
     }
     
+    
+    /**
+     * dispatchReadEvent
+     * Dispatch socket's read event.
+     *
+     * Examples:
+     *  eventHandle.dispatchReadEvent(){
+     *
+     *      let (count, buffer) = clientSocket.read()
+     *
+     *      clientSocket.write(buffer, length: count, queue: dispatch_get_main_queue())
+     *
+     *      return count
+     *  }
+     *
+     * @param
+     *  First : Should be readCallbackType and return read length. If return 0 this EventHandler's
+     *           read event will stop, and parent's socket will deinit. Don't be worry about strong 
+     *           reference. All parent's properties will be destroyed.
+     *
+     *
+     * @return
+     *  Success or failure.
+     */
     public func dispatchReadEvent(callback : readCallbackType) -> Bool {
         source = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
             UInt(fd), 0, queue)
@@ -96,6 +145,23 @@ public class EventHandler {
         }
     }
     
+    /**
+     * dispatchWriteEvent
+     * Write response data to this socket.
+     *
+     * Examples:
+     *  eventHandle.dispatchWriteEvent(buffer, length : length) {
+     *      if self.isClosing { self.close() }
+     *  }
+     *
+     * @param
+     *  First : Data buffer pointer<data type>.
+     *  Second : Daga length.
+     *  Third : Close event to prevent socket closing before writting.
+     *
+     * @return
+     *  Success or failure.
+     */
     public func dispatchWriteEvent<M>(buffer : UnsafePointer<M>,
         length : Int, closeSocket : ()->() ) -> Bool {
         

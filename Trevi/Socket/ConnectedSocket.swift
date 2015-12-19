@@ -10,7 +10,14 @@ import Darwin
 
 let ClientBufferSize = 4096
 
-// Should add connect function
+/**
+* ConnectedSocket class
+*
+* Manage a tcp client socket, and provide read, write functions.
+*
+* Should add connect function.
+*
+*/
 public class ConnectedSocket<T: InetAddress> : Socket<T> {
     
     var bufferPtr  = UnsafeMutablePointer<CChar>.alloc(ClientBufferSize + 2)
@@ -19,7 +26,19 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     var isConnected : Bool = false
     var isClosing : Bool = false
     
-    // Accept client socket
+    /**
+    * init?
+    * After accept, create a client socket,
+    *
+    * @param
+    *  First : Client socket's file descriptor.
+    *  Second : Client socket's address family.
+    *  Third : A dispatch queue for this socket's read event.
+    *
+    * @return
+    *  If bind function succeeds, create a client socket.
+    *  However, if it fails, returns nil
+    */
     public init?(fd : Int32, address : T, queue : dispatch_queue_t = defaultQueue) {
         
         super.init(fd: fd, address: address)
@@ -49,25 +68,25 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         
         super.close()
     }
-    
-    func accept() -> (Int32, T) {
-        var clientAddr    = T()
-        var clientAddrLen = socklen_t(T.length)
-        
-        let clientFd = withUnsafeMutablePointer(&clientAddr) {
-            ptr -> Int32 in
-            let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
-            return Darwin.accept(self.fd, addrPtr, &clientAddrLen);
-        }
-        
-        return (clientFd, clientAddr)
-    }
 
     // Should add connect()
     
+    /**
+    * read
+    * Read recived data from this socket.
+    *
+    * @param
+    *
+    * @return
+    *  First : Read length.
+    *  Second : Read data buffer pointer.
+    */
     public func read() -> (length: Int, buffer: UnsafePointer<CChar>) {
         let readBufferPtr = UnsafePointer<CChar>(bufferPtr)
         let readBufferLen = Darwin.read(fd, bufferPtr, bufferLen)
+   
+//        print(length)
+//        print(blockToString(buffer, length: length))
         
         guard readBufferLen >= 0 else {
             bufferPtr[0] = 0
@@ -79,6 +98,20 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         return ( readBufferLen, readBufferPtr )
     }
     
+    /**
+     * write
+     * Write response data to this socket.
+     *
+     * @param
+     *  First : Data buffer pointer.
+     *  Second : Data length.
+     *  Third : A dispatch queue for write event.
+     *             If you use dispatch_get_main_queue(), all write event in this program 
+     *             will be processed by main thread.
+     *
+     * @return
+     *  Success or failure.
+     */
     public func write<M>(buffer: UnsafePointer<M>, length : Int,
         queue : dispatch_queue_t = defaultQueue) -> Bool {
             
