@@ -52,8 +52,7 @@ public class Lime: RouteAble {
         lime.get ( "/", { req, res in
             return false
             }, { req, res in
-                let msg = "im root"
-                res.send (msg)
+                res.render("trevi.ssp", [ "title" : "Trevi" ])
             return true
         } )
         
