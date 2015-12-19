@@ -128,27 +128,26 @@ public class Response{
      *     res.render('some html')
      *     res.render('some html',[:])
      *
-     * @param { String|number|AnyObject} data
+     * @param { String } filename
+     * @param { AnyObject } args
      * @public
      */
-    public func render ( obj: AnyObject... ) -> Bool {
-        let filename = obj[0] as! String
-        let args: [String:String]
-
-        if obj.count > 1 {
-            args = obj[1] as! [String:String]
-        } else {
-            args = [:]
+    public func render ( filename: String, args: AnyObject? = nil ) -> Bool {
+        
+        var _args = [ String : String ]()
+        if args != nil {
+            _args = args as! [String:String]
         }
         
-        if let data = renderer?.render ( filename, args: args ) {
+        if let data = renderer?.render ( filename, args: _args ) {
             bodyString = data;
         }
+        
         //this function called when rand html. forced change content-type = text/html
         header[Content_Type] = "text/html;charset=utf-8"
         return end()
-
     }
+    
     //not yet impliment
     public func template() -> Bool{
        return end()

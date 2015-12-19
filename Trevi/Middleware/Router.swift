@@ -26,7 +26,9 @@ public class Router: Middleware {
         sortRouteList()
     }
 
+    // TODO : why can't get path parameter...?
     public func route ( path: String ) -> Route! {
+        
         for route in routeList {
             if path.isMatch( route.regex ) {
                 return route

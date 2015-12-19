@@ -52,7 +52,7 @@ public class Lime: RouteAble {
         lime.get ( "/", { req, res in
             return false
             }, { req, res in
-                res.render("trevi.ssp", [ "title" : "Trevi" ])
+                res.render("trevi.ssp", args: [ "title" : "Trevi" ])
             return true
         } )
         
@@ -80,7 +80,7 @@ public class Lime: RouteAble {
             dateFormatter.timeZone = NSTimeZone()
             let localDate = dateFormatter.stringFromDate( date )
             
-            res.render( "arg_test.ssp", [ "title": "Hello World", "number": "77", "time": localDate ] )
+            res.render( "arg_test.ssp", args: [ "title": "Hello World", "number": "77", "time": localDate ] )
             return false
         }
         
