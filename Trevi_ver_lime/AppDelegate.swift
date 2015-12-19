@@ -9,48 +9,56 @@
 import Cocoa
 import Trevi
 
-
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+    func applicationDidFinishLaunching ( aNotification: NSNotification ) {
+        let server = Http ()
 
-    func applicationDidFinishLaunching(aNotification: NSNotification) {
+        //Trevi is used routor like nodejs express
+        let trevi = Trevi.sharedInstance ()
+        //main Module
+        let lime   = Lime ()
         
-        let server = Server()
-
-        //use func call for use middleware 
-        let lime = Lime()
+        //I think middleware setting at instance of Http Class 
+        // server.use(Favicon()) or server.set(Favicon())
         
+        
+        //'use' func call for use middleware
         lime.use(BodyParser())
         
+        lime.use(Favicon())
         
-        lime.get("/callback") { req, res, next in
-            let msg = "hello iwas"
-            res.send(msg)
-            next(true)
-        }
-        lime.post("/yoseob") { request, response , _ in
-            
+        lime.use(SwiftServerPage())
+        
+        lime.use(trevi) // it is important to routing
+        
+        lime.use(){ req, res in
+            res.status = 404
+            return res.send ("404 Pages Not Found")
         }
         
-        lime.use({ req , res , _ in
-            res.statusCode = 404;
-            res.bodyString = "not Found"
-            res.send("hahah")
-        })
         
         do {
-            try server.createServer(lime)
-        }catch {
+            try server.createServer ( lime ).listen (8080)
             
+            //If you want to make light Server. use it
+            /*
+            try server.createServer( { req , res in
+                var dic = [String : AnyObject]()
+                dic["name"] = "im yoseob";
+                res.send(dic)
+                return true
+                }).listen(8080)
+
+            */
+        } catch {
+
         }
-        
-    }
-    
-    func applicationWillTerminate(aNotification: NSNotification) {
-        // Insert code here to tear down your application
     }
 
+    func applicationWillTerminate ( aNotification: NSNotification ) {
+        // Insert code here to tear down your application
+    }
 }
 

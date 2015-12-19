@@ -16,4 +16,4 @@ FOUNDATION_EXPORT const unsigned char TreviVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Trevi/PublicHeader.h>
 
-
+FOUNDATION_EXPORT int swift_fcntl(int fildes, int cmd, int val);

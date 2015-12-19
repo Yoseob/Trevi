@@ -8,25 +8,38 @@
 
 import Foundation
 
+public typealias MiddlewareParams = ( req:Request, res:Response, route:Route )
+
 public enum MiddlewareName: String {
-    
-    case Err = "Error"
-    case Undefind = "Undefind"
-    case BodyParser = "bodyParser"
-    case Logger = "logger"
-    case Json = "json"
-    case CookieParser = "cookieParser"
-    case Session = "session"
+    case Err             = "error"
+    case Undefined       = "undefined"
+    case Favicon         = "favicon"
+    case BodyParser      = "bodyParser"
+    case Logger          = "logger"
+    case Json            = "json"
+    case CookieParser    = "cookieParser"
+    case Session         = "session"
+    case SwiftServerPage = "swiftServerPage"
+    case Trevi           = "trevi"
+    case Router          = "router"
     // else...
 }
 
-public class Middleware : RequireAble{
-    
-    override init(){
-        
-        super.init()
-        name = .Undefind
-    }
-    
+
+
+    /**
+    * if you want to make middleware, use this protocol
+    *
+    * Examples:
+    *
+    *        public func operateCommand ( params: MiddlewareParams ) -> Bool {
+    *           return false
+    *        }
+    *
+    * @public
+    */
+
+public protocol Middleware {
+    var name: MiddlewareName { get set }
+    func operateCommand ( params: MiddlewareParams ) -> Bool
 }
-    

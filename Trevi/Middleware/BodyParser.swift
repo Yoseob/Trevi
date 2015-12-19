@@ -8,24 +8,43 @@
 
 import Foundation
 
+public class BodyParser: Middleware {
 
-public class BodyParser : Middleware{
-    
+    public var name: MiddlewareName;
 
-    
-    public override init(){
-        super.init()
+    public init () {
         name = .BodyParser
     }
     
-    public override func operateCommand(obj: AnyObject...) {
-        
-        var req : Request = obj[0] as! Request;
-        let r : Route = obj[1] as! Route
-        parserBody(&req,r)
-    }
-    public func parserBody(inout req : Request , _ route : Route){
-        // fill request.params use route.regExp and Params
+    public func operateCommand ( params: MiddlewareParams ) -> Bool {
+        var req: Request = params.req
+        parserBody ( &req )
+        return false
     }
     
+    public func parserBody ( inout req: Request ) {
+        if req.method != HTTPMethodType.GET {
+            if let type = req.header["Content-Type"] {
+                switch type {
+                case "application/json":
+                    req.json = self.convertStringToDictionary ( req.body )!
+                default:
+                    return
+                }
+            }
+        }
+    }
+    
+    private func wrap ( json: [String:AnyObject]! ) {
+        
+    }
+    
+    private func convertStringToDictionary ( data: NSData ) -> [String:AnyObject!]! {
+        do {
+            return try NSJSONSerialization.JSONObjectWithData ( data, options: .MutableContainers ) as? [String:AnyObject!]
+        } catch {
+            print ( "Something went wrong" )
+            return nil
+        }
+    }
 }

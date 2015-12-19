@@ -1,0 +1,10 @@
+<html>
+<head>
+	<title><%=title%></title>
+</head>
+<body>
+	<h1>Hello World!</h1>
+    <p>Current time : <%=time%></p>
+    <p>Number : <%=number%></p>
+</body>
+</html>
