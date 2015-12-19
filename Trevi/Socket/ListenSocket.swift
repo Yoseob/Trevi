@@ -176,7 +176,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      *
      * @param
      *  First : Socket's nonBlock mode.
-     *  Second : Backlog queue setting. Handle client's concurrent connect requests
+     *  Second : Backlog queue setting. Handle client's concurrent connect requests.
      *  Third : Client socket's read callback when a client socket get a request.
      *             In this closure, you should return read length, so if 0 value return socket will be closed.
      *

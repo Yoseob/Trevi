@@ -11,7 +11,6 @@
 		23351DF61C1DE75700BB54FB /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DF41C1DE75700BB54FB /* Response.swift */; };
 		23351DF81C1DE78F00BB54FB /* HttpProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DF71C1DE78F00BB54FB /* HttpProtocol.swift */; };
 		23351DFC1C1DE7CA00BB54FB /* Require.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DFA1C1DE7CA00BB54FB /* Require.swift */; };
-		23351DFD1C1DE7CA00BB54FB /* RequireAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DFB1C1DE7CA00BB54FB /* RequireAble.swift */; };
 		2368EACA1C1C9060007DB033 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2368EAC91C1C9060007DB033 /* Route.swift */; };
 		236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D61C12198D0076ED36 /* MiddlewareManager.swift */; };
 		236E53D91C1235130076ED36 /* Favicon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D81C1235130076ED36 /* Favicon.swift */; };
@@ -52,7 +51,6 @@
 		DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A21C1E092400974327 /* InetAddress.swift */; };
 		DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A41C1E098400974327 /* UnixBridge.c */; };
 		DF3B81B61C1E3F9300974327 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = DF3B81B51C1E3F9300974327 /* background.png */; };
-		DF7E4AB21C1E73C200A57379 /* Pods_Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A17A47BCABC2B1F716DC8C9 /* Pods_Trevi.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,7 +82,6 @@
 		23351DF41C1DE75700BB54FB /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		23351DF71C1DE78F00BB54FB /* HttpProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpProtocol.swift; sourceTree = "<group>"; };
 		23351DFA1C1DE7CA00BB54FB /* Require.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Require.swift; sourceTree = "<group>"; };
-		23351DFB1C1DE7CA00BB54FB /* RequireAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequireAble.swift; sourceTree = "<group>"; };
 		2368EAC91C1C9060007DB033 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		236E53D61C12198D0076ED36 /* MiddlewareManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiddlewareManager.swift; sourceTree = "<group>"; };
 		236E53D81C1235130076ED36 /* Favicon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
@@ -142,7 +139,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-            67ab9025b805a64248d4431629af6ba67a44172b
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,10 +223,10 @@
 				23D2F3991C1DA4A000F0C784 /* views */,
 				239411E41C0C2E19001B9B07 /* AppDelegate.swift */,
 				239411E61C0C2E19001B9B07 /* ViewController.swift */,
+				239412131C0DECC2001B9B07 /* Lime.swift */,
 				239411E81C0C2E19001B9B07 /* Assets.xcassets */,
 				239411EA1C0C2E19001B9B07 /* Main.storyboard */,
 				239411ED1C0C2E19001B9B07 /* Info.plist */,
-				239412131C0DECC2001B9B07 /* Lime.swift */,
 			);
 			path = Trevi_ver_lime;
 			sourceTree = "<group>";

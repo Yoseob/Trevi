@@ -53,7 +53,10 @@ public class Socket<T: InetAddress> {
     public convenience init?(address : InetAddress, type : Int32){
         let tfd = socket(T.domain, type, 0)
         
-        guard tfd != -1 else { return nil }
+        guard tfd > 0 else {
+            log.error("Socket convenience init")
+            return nil
+        }
         
         self.init(fd: tfd, address: address)
     }
@@ -138,18 +141,17 @@ extension Socket{
         
         for option in options!{
             let name = option.match.name
-            let value = option.match.value
             var buffer = option.match.value
             let bufferLen = socklen_t(sizeof(Int32))
             
             let status  = setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
             
             if status == -1 {
-                log.error("Failed to set socket option : \(option), value : \(value)")
+                log.error("Failed to set socket option : \(option), value : \(buffer)")
                 return false
             }
             
-            //   log.info("Success to set socket option : \(option), value : \(value)")
+            //   log.info("Success to set socket option : \(option), value : \(buffer)")
         }
         return true
     }
@@ -167,7 +169,7 @@ extension Socket{
     * @return
     *  Success or failure
     */
-    public func getSocketOption(option: SocketOption) -> Bool {
+    public func getSocketOption(option: SocketOption) -> Int32 {
         let name = option.match.name
         var buffer = Int32(0)
         var bufferLen = socklen_t(sizeof(Int32))
@@ -176,9 +178,9 @@ extension Socket{
         
         if status == -1 {
             log.error("Failed to get socket option name : \(name)")
-            return false
+            return status
         }
-        return true
+        return buffer
     }
 }
 

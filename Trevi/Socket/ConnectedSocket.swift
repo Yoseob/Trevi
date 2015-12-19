@@ -84,6 +84,9 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     public func read() -> (length: Int, buffer: UnsafePointer<CChar>) {
         let readBufferPtr = UnsafePointer<CChar>(bufferPtr)
         let readBufferLen = Darwin.read(fd, bufferPtr, bufferLen)
+   
+//        print(length)
+//        print(blockToString(buffer, length: length))
         
         guard readBufferLen >= 0 else {
             bufferPtr[0] = 0
