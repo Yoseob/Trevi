@@ -15,7 +15,7 @@ public class Request {
     public var version   = String ()
     
     // Original HTTP data include header & body
-    public var data: NSData! {
+    public var headerString: String! {
         didSet {
             parse()
         }
@@ -58,16 +58,16 @@ public class Request {
         self.path = String ()
     }
     
-    public init ( _ reqData: NSData ) {
+    public init ( _ headerStr: String ) {
         self.path = String ()
-        self.data = reqData
+        self.headerString = headerStr
         parse ()
     }
     
     private final func parse () {
         
         // TODO : error when file uploaded..
-        guard let converted = String ( data: self.data, encoding: NSUTF8StringEncoding ) else {
+        guard let converted = headerString else {
             return
         }
         

@@ -8,8 +8,14 @@
 
 import Foundation
 
+public protocol Sender{
+    func send(data: AnyObject?) -> Bool
+    func end () -> Bool
+    func template() -> Bool
+    func render ( filename: String, args: AnyObject? ) -> Bool
+}
 
-public class Response{
+public class Response :Sender{
     
     public var header = [ String: String ] ()
     
@@ -104,7 +110,7 @@ public class Response{
      * @public
      */
 
-    public func send (data: AnyObject? = nil) -> Bool {
+    public func send (data: AnyObject?) -> Bool {
         //need control flow that can divide AnyObject type
         switch data {
         case let str as String :
@@ -132,7 +138,7 @@ public class Response{
      * @param { AnyObject } args
      * @public
      */
-    public func render ( filename: String, args: AnyObject? = nil ) -> Bool {
+    public func render ( filename: String, args: AnyObject? ) -> Bool {
         
         var _args = [ String : String ]()
         if args != nil {
@@ -144,7 +150,15 @@ public class Response{
         }
         
         //this function called when rand html. forced change content-type = text/html
-        header[Content_Type] = "text/html;charset=utf-8"
+        // should add control flow  filename.css or filename.js filename.html etc 
+        let temp : [String] = filename.componentsSeparatedByString(".")
+        var filetype = temp.last! as String
+        if filetype.length() > 0 && filetype == "ssp" {
+            filetype = "html"
+        }
+        let content_type = "text/\(filetype);charset=utf-8"
+
+        header[Content_Type] = content_type
         return end()
     }
     
@@ -152,7 +166,23 @@ public class Response{
     public func template() -> Bool{
        return end()
     }
-    
+    /**
+     * Prepare header and body to send, Impliment send
+     *
+     *
+     * @private
+     * return {Bool} isSend
+     */
+    public func end () ->Bool{
+        let headerData       = prepareHeader ()
+        let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
+        socket!.sendData ( sendData )
+        if header[Connection] != "keep-alive"{
+            socket!.socketClose()
+        }
+        return true
+    }
+
     /**
      * Redirect Page redering with destination url
      *
@@ -166,19 +196,6 @@ public class Response{
         return end()
     }
     
-    /**
-     * Prepare header and body to send, Impliment send
-     *
-     *
-     * @private
-     * return {Bool} isSend
-     */
-    private func end () ->Bool{
-        let headerData       = prepareHeader ()
-        let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
-        socket!.sendData ( sendData )
-        return true
-    }
 
     /**
      * Factory method make to response and make complate send message

@@ -8,6 +8,7 @@
 
 import Foundation
 
+// if need handle request, response, route
 public typealias MiddlewareParams = ( req:Request, res:Response, route:Route )
 
 public enum MiddlewareName: String {

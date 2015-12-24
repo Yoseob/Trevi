@@ -11,9 +11,8 @@ import Foundation
 public class Http {
 
     private var socket = TreviSocketServer ()
-    private var mwManager            = MiddlewareManager.sharedInstance ()
-
-
+    private var mwManager = MiddlewareManager.sharedInstance ()
+    
     public init () {
     }
 
@@ -92,7 +91,7 @@ public class Http {
      */
     private func receivedRequestCallback() {
         socket.httpCallback = {
-            req,res,sock in
+            req,res in
             self.mwManager.handleRequest(req,res)
             return false
         }

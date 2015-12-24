@@ -6,7 +6,12 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-typealias HttpCallback = ( ( Request, Response, TreviSocket ) -> Bool )
+typealias HttpCallback = ( ( Request, Response) -> Bool )
+
+public protocol RequestHandler{
+    func beginHandle(req : Request , _ res :Response )
+}
+
 
 public class TreviSocket {
 
@@ -15,23 +20,32 @@ public class TreviSocket {
     init(socket : ConnectedSocket<IPv4>){
         self.socket = socket
     }
-
+    
+    
+    
+    
     func sendData ( data: NSData ) {
-
         socket.write (data, queue: dispatch_get_main_queue())
-      
+    }
+
+    func socketClose(){
         socket.close ()
     }
 }
 
-class TreviSocketServer {
+class TreviSocketServer : RequestHandler{
 
+    
+    var totalLength = 0
     var socket: ListenSocket<IPv4>!
-
+    
     var httpCallback: HttpCallback?
+    var prepare = PreparedData()
 
+    
     func startOnPort ( p: Int ) throws {
-
+        prepare.requestHandler = self
+        
         guard let socket = ListenSocket<IPv4> ( address: IPv4 ( port: p )) else {
             // Should handle Listener error
             return
@@ -39,22 +53,20 @@ class TreviSocketServer {
 
         socket.listenClientReadEvent (true) {
             client in
+   
+            let readData = client.read()
             
-            var initialData: NSData?
-            let (length, buffer ) = client.read()
+            self.totalLength += readData.length
             
-            if length > 0 {
-                initialData = NSData ( bytes: buffer, length: length )
+            if readData.length > 0 {
+                let (contentLength, headerLength) = self.prepare.appendReadData(readData)
+                self.totalLength -= headerLength
+                if self.totalLength >= contentLength || contentLength == 0{
+                     let httpClient = TreviSocket ( socket: client )
+                    self.prepare.handleRequest(httpClient)
+                }
             }
-            
-            if let initialData = initialData {
-                let preparedData = PreparedData ( requestData: initialData )
-                let httpClient       = TreviSocket ( socket: client )
-                let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
-                self.httpCallback! ( req, res, httpClient )
-            }
-            
-            return length
+            return readData.length
         }
 
         self.socket = socket
@@ -62,5 +74,11 @@ class TreviSocketServer {
 
     func disconnect () {
         self.socket.close ()
+    }
+    
+    func beginHandle(req : Request , _ res :Response) {
+        
+        self.httpCallback! ( req, res )
+        self.prepare.dInit()
     }
 }
