@@ -31,7 +31,16 @@ extension sockaddr_in : InetAddress {
     public static let length = __uint8_t(sizeof(IPv4))
     public func port() -> in_port_t { return  in_port_t(ntohs(self.sin_port)) }
     
-    public init(address : in_addr = INADDR_ANY, port : Int = 0) {
+ 
+    public init(address : String, port : Int){
+        sin_len = __uint8_t(sizeof(sockaddr_in))
+        sin_family = sa_family_t(AF_INET)
+        sin_port = in_port_t(htons(CUnsignedShort(port)))
+        sin_addr = in_addr(s_addr: inet_addr(address))
+        sin_zero = (0,0,0,0,0,0,0,0)
+    }
+    
+    public init(address : in_addr = INADDR_ANY, port : Int) {
         sin_len = __uint8_t(sizeof(sockaddr_in))
         sin_family = sa_family_t(AF_INET)
         sin_port = in_port_t(htons(CUnsignedShort(port)))
