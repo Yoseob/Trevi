@@ -20,9 +20,7 @@ public class TreviSocket {
     init(socket : ConnectedSocket<IPv4>){
         self.socket = socket
     }
-    
-    
-    
+
     
     func sendData ( data: NSData ) {
         socket.write (data, queue: dispatch_get_main_queue())
