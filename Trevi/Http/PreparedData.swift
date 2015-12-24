@@ -48,7 +48,9 @@ class PreparedData {
     }
     
     func handleRequest(socket : TreviSocket ){
-        self.req?.body = self.resultData
+        if self.resultData.length > 0 {
+            self.req?.body = self.resultData
+        }
         let res = setupResponse(socket)
         requestHandler?.beginHandle(self.req!, res)
     }
