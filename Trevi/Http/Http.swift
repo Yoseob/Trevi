@@ -32,7 +32,7 @@ public class Http {
      */
     public func createServer ( requireModule: RouteAble... ) -> Http {
         for rm in requireModule {
-            rm.makeChildRoute("", module:requireModule)
+            rm.makeChildRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }
         receivedRequestCallback();

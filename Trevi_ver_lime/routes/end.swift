@@ -19,23 +19,8 @@ public class End: RouteAble {
     // fill prepare func like this 
     public override func prepare () {
         let index = trevi.store ( self )
-        index.get ( "/1" ) {
-            req, res in
-
-            return false
-        }
-        index.get ( "/2" ) {
-            req, res in
-            return res.send ("im " + req.path)
-
-
-        }
-
-        index.get ( "/3" ) {
-            req, res in
-            return res.send ("im " + req.path)
-
-
+        index.get ( "/" ) { req, res in
+            return res.send("bye~!")
         }
 
     }

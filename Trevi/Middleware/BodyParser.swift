@@ -15,37 +15,36 @@ public class BodyParser: Middleware {
     public init () {
         name = .BodyParser
     }
-
+    
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
         var req: Request = params.req
-        let r:   Route   = params.route
-        parserBody ( &req, r )
+        parserBody ( &req )
         return false
     }
-
-    public func parserBody ( inout req: Request, _ route: Route ) {
-        // fill request.params use route.regExp and Params
-//        req.body = self.convertStringToDictionary ( headerComp.last! )!
-    }
-
-    private func wrap ( json: [String:AnyObject]! ) {
-
-    }
-
-    private func convertStringToDictionary ( text: String ) -> [String:AnyObject!]! {
-        if let data = text.dataUsingEncoding ( NSUTF8StringEncoding ) {
-            do {
-                let json
-                = try NSJSONSerialization.JSONObjectWithData ( data, options: .MutableContainers ) as? [String:AnyObject!]
-                print ( "convertStringToDictionary" )
-
-                return json
-            } catch {
-                print ( "Something went wrong" )
+    
+    public func parserBody ( inout req: Request ) {
+        if req.method != HTTPMethodType.GET {
+            if let type = req.header["Content-Type"] {
+                switch type {
+                case "application/json":
+                    req.json = self.convertStringToDictionary ( req.body )!
+                default:
+                    return
+                }
             }
         }
-        return nil
     }
-
-
+    
+    private func wrap ( json: [String:AnyObject]! ) {
+        
+    }
+    
+    private func convertStringToDictionary ( data: NSData ) -> [String:AnyObject!]! {
+        do {
+            return try NSJSONSerialization.JSONObjectWithData ( data, options: .MutableContainers ) as? [String:AnyObject!]
+        } catch {
+            print ( "Something went wrong" )
+            return nil
+        }
+    }
 }

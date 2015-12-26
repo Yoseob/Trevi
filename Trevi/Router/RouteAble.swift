@@ -8,9 +8,7 @@
 
 
 /*
-    RouteAble is not protocol because set,post,update,etc http callback method is not defualt
-
-
+    RouteAble is interface to make module like need to start server and matched for path   
 */
 
 import Foundation
@@ -48,26 +46,22 @@ public class RouteAble: Require {
      * @return
      * @public
      */
-    public func use ( middleware: Any... ) {
-        var temp = middleware
-
+    public func use ( middleware: AnyObject... ) -> RouteAble {
         /*
          * i have no idea which case is better
          * which one is batter? why?
          */
+    
+        
+        //um... how to remove this flow control strategy??
+        //I think remove flow control, overring enable to that use("",[AnyObject])
+        var temp = middleware
         if true {
             if case let path as String = temp.first{
                 temp.removeFirst ()
-                let routeList = [ RouteAble ] ( temp )
-                makeChildRoute ( path, module: routeList )
-                return
+                return makeChildRoute (path, module: temp )
             }else if case _ as RouteAble = temp.first{
-                let routeList = [ RouteAble ] ( temp )
-                makeChildRoute ( "", module: routeList )
-                return
-            }
-            for md in middleware {
-                middlewareList.append ( md )
+                return makeChildRoute ("", module: middleware)
             }
         } else {
             /*
@@ -84,6 +78,12 @@ public class RouteAble: Require {
             }
             */
         }
+
+        
+        for md in middleware {
+            middlewareList.append ( md )
+        }
+        return self
     }
 
     /**
@@ -94,12 +94,14 @@ public class RouteAble: Require {
      * @return
      * @public
      */
-    public func use ( middleware: CallBack ) {
-        middlewareList.append ( middleware )
+    public func use ( middleware:CallBack ...)-> RouteAble {
+        for md in middleware {
+            middlewareList.append ( md )
+        }
+        return self
     }
-
     /**
-     * setup static path or url
+     * Setup static path or url
      * @param {String} sPath
      * @return
      * @public
@@ -109,7 +111,7 @@ public class RouteAble: Require {
     }
 
     /**
-     * make routing path use preRoutePath
+     * Make routing path use preRoutePath
      * @param {String} sPath
      * @return
      * @public
@@ -175,11 +177,13 @@ public class RouteAble: Require {
     public func unlink(){}
     
 
-    public func makeChildRoute ( path: String, module: [RouteAble] ) -> RouteAble {
-        for ma in module {
+    public func makeChildRoute ( path: String, module: [AnyObject] ) -> RouteAble {
+        let _ = module.map({ (obj) -> RouteAble in
+            let ma = (obj as! RouteAble)
             ma.superPath = (self.superPath)! + path
             ma.prepare ()
-        }
+            return ma
+        })
         return self
     }
 
