@@ -25,7 +25,7 @@ public class Request {
     public var header    = [ String: String ] ()
     
     // HTTP body
-    public var body      = NSData()
+    public var body      = NSMutableData()
     
     // Body parsed to JSON
     public var json: [String:AnyObject!]!
@@ -81,8 +81,7 @@ public class Request {
             }
             parseUrl( requestLineElements[1] )
             parseHeader( requestHeader )
-            
-            self.body = requestHeader.last!.dataUsingEncoding(NSUTF8StringEncoding)!
+    
         }
     }
     

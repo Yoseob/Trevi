@@ -10,14 +10,6 @@ import Foundation
 
 public typealias CallBack = ( Request, Response ) -> Bool // will remove next
 
-public enum HTTPMethodType: String {
-    case GET       = "GET"
-    case POST      = "POST"
-    case PUT       = "PUT"
-    case HEAD      = "HEAD"
-    case DELETE    = "DELETE"
-    case UNDEFINED = "UNDEFINED"
-}
 extension NSDate {
     struct Date {
         static let formatter = NSDateFormatter()
@@ -29,10 +21,12 @@ extension NSDate {
         Date.formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
         return Date.formatter.stringFromDate(self)
     }
-}
-public enum HTTPMethod {
-    case Get( CallBack )
-    case Post( CallBack )
-    case Put( CallBack )
-    case Delte( CallBack )
+    
+    static func GtmString() -> String{
+        let date = NSDate();
+        let formatter = NSDateFormatter();
+        formatter.dateFormat = " E,dd LLL yyyy HH:mm:ss 'GMT'";
+        formatter.timeZone =   NSTimeZone(abbreviation: "GMT");
+        return  formatter.stringFromDate(date);
+    }
 }

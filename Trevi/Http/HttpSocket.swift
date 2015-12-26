@@ -20,6 +20,7 @@ public class TreviSocket {
     init(socket : ConnectedSocket<IPv4>){
         self.socket = socket
     }
+    
 
     
     func sendData ( data: NSData ) {
@@ -58,7 +59,10 @@ class TreviSocketServer : RequestHandler{
             
             if readData.length > 0 {
                 let (contentLength, headerLength) = self.prepare.appendReadData(readData)
-                self.totalLength -= headerLength
+                
+                if contentLength > headerLength{
+                    self.totalLength -= headerLength
+                }
                 if self.totalLength >= contentLength || contentLength == 0{
                      let httpClient = TreviSocket ( socket: client )
                     self.prepare.handleRequest(httpClient)

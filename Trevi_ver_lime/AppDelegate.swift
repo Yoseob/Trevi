@@ -13,6 +13,7 @@ import Trevi
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching ( aNotification: NSNotification ) {
+              
         let server = Http ()
 
         //Trevi is used routor like nodejs express

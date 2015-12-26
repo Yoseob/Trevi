@@ -11,7 +11,7 @@ import Foundation
 
 /*
 
-    PreparedData is just Factory
+    PreparedData is make request and response after read all of data from client
 
 */
 class PreparedData {
@@ -20,10 +20,8 @@ class PreparedData {
     }
 
     var requestHandler :RequestHandler?
-    private var resultData = NSMutableData()
-    private var content_Length = 0
+    private var content_length = 0
     var socket : TreviSocket?
-    
     private var req : Request?
 
 
@@ -35,30 +33,36 @@ class PreparedData {
         print(data)
         //header
         if data.containsString("HTTP/1."){
+            req = nil
             req = setupRequest(data)
             if let contentLength = req?.header[Content_Length]{
-                content_Length =  Int(contentLength)!
+                content_length =  Int(contentLength)!
                 headerLength = params.length
             }
         }else{
-            resultData.appendBytes(params.buffer, length: params.length)
+            //read file
+            //req.body
+            /*
+            
+            if content_length > config.max_post_size {
+                read file
+            }else{
+                read stack memory
+            }
+            
+            */
+            req?.body.appendBytes(params.buffer, length: params.length)
         }
-        
-        return (content_Length,headerLength)
+        return (content_length,headerLength)
     }
     
     func handleRequest(socket : TreviSocket ){
-        if self.resultData.length > 0 {
-            self.req?.body = self.resultData
-        }
         let res = setupResponse(socket)
         requestHandler?.beginHandle(self.req!, res)
     }
     
     func dInit(){
-        content_Length = 0
-        resultData = NSMutableData()
-        req = nil
+        content_length = 0
     }
  
     /**

@@ -62,6 +62,17 @@ public class Http {
     }
     
     /**
+     * Add MiddleWare direct at Server
+     *ㅋ
+     ㅋ @param {Middleware} mw
+     * @public
+     */
+    
+    public func set( mw :  Middleware ...){
+        mwManager.enabledMiddlwareList.append(mw)
+    }
+    
+    /**
      * Set port, Begin Server and listen socket
      *
      * @param {Int} port

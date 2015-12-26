@@ -37,6 +37,20 @@ public var Transfer_Encoding           = "Transfer-Encoding"
 public var Upgrade                     = "Upgrade"
 public var Server                      = "Server"
 
+
+
+
+
+public enum HTTPMethodType: String {
+    case GET       = "GET"
+    case POST      = "POST"
+    case PUT       = "PUT"
+    case HEAD      = "HEAD"
+    case DELETE    = "DELETE"
+    case UNDEFINED = "UNDEFINED"
+}
+
+
 public enum StatusCode: Int {
     func statusString () -> String! {
         switch self {
@@ -100,3 +114,219 @@ public enum StatusCode: Int {
     case BadGateway          = 502
     case ServiceUnavailable  = 503
 }
+
+public class Mime {
+    
+    class func type(key: String) -> String {
+        
+        var mType = [
+            
+            "xfu":"application/x-www-form-urlencoded",
+            "fdt":"multipart/form-data",
+            "css":"text/css",
+            "txt":"text/plain",
+            "json":"application/json",
+            "jpeg":"image/jpeg",
+            "jpg":"image/jpeg",
+            "png":"image/png",
+            "html":"text/html",
+            
+            
+            "mix":"multipart/mixed",
+            "dig":"multipart/digest",
+            "aln":"multipart/alternative",
+            
+            "aif":"audio/x-aiff",
+            "aifc":"audio/x-aiff",
+            "aiff":"audio/x-aiff",
+            "asf":"video/x-ms-asf",
+            "asr":"video/x-ms-asf",
+            "asx":"video/x-ms-asf",
+            "au":"audio/basic",
+            "avi":"video/x-msvideo",
+            "axs":"application/olescript",
+            "bas":"text/plain",
+            "bcpio":"application/x-bcpio",
+            "bin":"application/octet-stream",
+            "bmp":"image/bmp",
+            "c":"text/plain",
+            "cat":"application/vnd.ms-pkiseccat",
+            "cdf":"application/x-netcdf",
+            "cer":"application/x-x509-ca-cert",
+            "class":"application/octet-stream",
+            "clp":"application/x-msclip",
+            "cmx":"image/x-cmx",
+            "cod":"image/cis-cod",
+            "cpio application/x-cpio":"undefined",
+            "crd":"application/x-mscardfile",
+            "crl":"application/pkix-crl",
+            "crt":"application/x-x509-ca-cert",
+            "csh":"application/x-csh",
+            "dcr":"application/x-director",
+            "der":"application/x-x509-ca-cert",
+            "dir":"application/x-director",
+            "dll":"application/x-msdownload",
+            "dms":"application/octet-stream",
+            "doc":"application/msword",
+            "dot":"application/msword",
+            "dvi":"application/x-dvi",
+            "dxr":"application/x-director",
+            "eps":"application/postscript",
+            "etx":"text/x-setext",
+            "evy":"application/envoy",
+            "exe":"application/octet-stream",
+            "fif":"application/fractals",
+            "flr":"x-world/x-vrml",
+            "gif":"image/gif",
+            "gtar":"application/x-gtar",
+            "gz":"application/x-gzip",
+            "hdf":"application/x-hdf",
+            "hlp":"application/winhlp",
+            "hqx":"application/mac-binhex40",
+            "hta":"application/hta",
+            "htc":"text/x-component",
+            "htt":"text/webviewhtml",
+            "ico":"image/x-icon",
+            "ief":"image/ief",
+            "iii":"application/x-iphone",
+            "ins":"application/x-internet-signup",
+            "isp":"application/x-internet-signup",
+            "jfif":"image/pipeg",
+            "mny":"application/x-msmoney",
+            "mht":"message/rfc822",
+            "lsf":"video/x-la-asf",
+            "mhtml":"message/rfc822",
+            "mid":"audio/mid",
+            "mov":"video/quicktime",
+            "m3u":"audio/x-mpegurl",
+            "movie":"video/x-sgi-movie",
+            "mp2":"video/mpeg",
+            "mp3":"audio/mpeg",
+            "mpa":"video/mpeg",
+            "mpe":"video/mpeg",
+            "mpeg":"video/mpeg",
+            "mpv2":"video/mpeg",
+            "mpg":"video/mpeg",
+            "mpp":"application/vnd.ms-project",
+            "ms":"application/x-troff-ms",
+            "msg":"application/vnd.ms-outlook",
+            "mvb":"application/x-msmediaview",
+            "nc":"application/x-netcdf",
+            "nws":"message/rfc822",
+            "acx":"application/internet-property-stream",
+            "ai":"application/postscript",
+            "js":"application/x-javascript",
+            "latex":"application/x-latex",
+            "lha":"application/octet-stream",
+            "lzh":"application/octet-stream",
+            "m13":"application/x-msmediaview",
+            "m14":"application/x-msmediaview",
+            "man":"application/x-troff-man",
+            "mdb":"application/x-msaccess",
+            "me":"application/x-troff-me",
+            "pbm":"image/x-portable-bitmap",
+            "pgm":"image/x-portable-graymap",
+            "pnm":"image/x-portable-anymap",
+            "ppm":"image/x-portable-pixmap",
+            "qt":"video/quicktime",
+            "ra":"audio/x-pn-realaudio",
+            "ram":"audio/x-pn-realaudio",
+            "ras":"image/x-cmu-raster",
+            "rgb":"image/x-rgb",
+            "rmi":"audio/mid",
+            "rtx":"text/richtext",
+            "sct":"text/scriptlet",
+            "snd":"audio/basic",
+            
+            "z":"application/x-compress",
+            "zip":"application/zip",
+            "oda":"application/oda",
+            "p10":"application/pkcs10",
+            "p12":"application/x-pkcs12",
+            "p7b":"application/x-pkcs7-certificates",
+            "p7c":"application/x-pkcs7-mime",
+            "p7m":"application/x-pkcs7-mime",
+            "p7r":"application/x-pkcs7-certreqresp",
+            "p7s":"application/x-pkcs7-signature",
+            "pdf":"application/pdf",
+            "pfx":"application/x-pkcs12",
+            "pko":"application/ynd.ms-pkipko",
+            "pma":"application/x-perfmon",
+            "pmc":"application/x-perfmon",
+            "pml":"application/x-perfmon",
+            "pmr":"application/x-perfmon",
+            "pmw":"application/x-perfmon",
+            "pot":"application/vnd.ms-powerpoint",
+            "pps":"application/vnd.ms-powerpoint",
+            "ppt":"application/vnd.ms-powerpoint",
+            "prf":"application/pics-rules",
+            "ps":"application/postscript",
+            "pub":"application/x-mspublisher",
+            "roff":"application/x-troff",
+            "rtf":"application/rtf",
+            "scd":"application/x-msschedule",
+            "setpay":"application/set-payment-initiation",
+            "setreg":"application/set-registration-initiation",
+            "sh":"application/x-sh",
+            "shar":"application/x-shar",
+            "sit":"application/x-stuffit",
+            "spc":"application/x-pkcs7-certificates",
+            "spl":"application/futuresplash",
+            "src":"application/x-wais-source",
+            "sst":"application/vnd.ms-pkicertstore",
+            "stl":"application/vnd.ms-pkistl",
+            "sv4cpio":"application/x-sv4cpio",
+            "sv4crc":"application/x-sv4crc",
+            "svg":"image/svg+xml",
+            "swf":"application/x-shockwave-flash",
+            "t":"application/x-troff",
+            "tar":"application/x-tar",
+            "tcl":"application/x-tcl",
+            "tex":"application/x-tex",
+            "texi":"application/x-texinfo",
+            "texinfo":"application/x-texinfo",
+            "tgz":"application/x-compressed",
+            "wcm":"application/vnd.ms-works",
+            "wdb":"application/vnd.ms-works",
+            "wks":"application/vnd.ms-works",
+            "wmf":"application/x-msmetafile",
+            "wps":"application/vnd.ms-works",
+            "wri":"application/x-mswrite",
+            "xla":"application/vnd.ms-excel",
+            "xlc":"application/vnd.ms-excel",
+            "xlm":"application/vnd.ms-excel",
+            "xls":"application/vnd.ms-excel",
+            "xlt":"application/vnd.ms-excel",
+            "xlw":"application/vnd.ms-excel",
+
+            
+            "tif":"image/tiff",
+            "tiff":"image/tiff",
+            "tr":"application/x-troff",
+            "trm":"application/x-msterminal",
+            "tsv":"text/tab-separated-values",
+            "uls":"text/iuls",
+            "ustar":"application/x-ustar",
+            "vcf":"text/x-vcard",
+            "vrml":"x-world/x-vrml",
+            "wav":"audio/x-wav",
+            "wrl":"x-world/x-vrml",
+            "wrz":"x-world/x-vrml",
+            "xaf":"x-world/x-vrml",
+            "xbm":"image/x-xbitmap",
+            "xof":"x-world/x-vrml",
+            "xpm":"image/x-xpixmap",
+            "xwd":"image/x-xwindowdump",
+
+        ]
+        
+        if let t = mType[key] {
+            return t
+        }
+        
+        return ""
+    
+    }
+    
+}
+

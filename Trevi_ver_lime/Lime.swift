@@ -36,5 +36,9 @@ public class Lime: RouteAble {
         lime.get("/redir"){ req , res in
             return res.redirect(url: "http://127.0.0.1:8080/trevi")
         }
+        
+        lime.post("/post") { (req, res) -> Bool in
+            return res.send("post data")
+        }
     }
 }

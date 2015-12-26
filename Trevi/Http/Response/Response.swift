@@ -53,7 +53,7 @@ public class Response :Sender{
     //for text
     private var bodyString: String? {
         didSet {
-                header[Content_Type] = "text/plain;charset=utf-8"
+            header[Content_Type] = "text/plain;charset=utf-8"
         }
     }
 
@@ -223,7 +223,7 @@ public class Response :Sender{
      * return {NSData} headerdata
      */
     private func prepareHeader () -> NSData {
-        // header[Date] = String(NSDate().formatted)  Not GMT
+        header[Date] = NSDate.GtmString()
         header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
         
