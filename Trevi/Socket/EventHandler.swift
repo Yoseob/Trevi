@@ -23,7 +23,7 @@ public let defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFA
 
 // Below codes are prototype for injecting read event according with Socket's states.
 //  I think it's not good way, should find better way
-public typealias readCallbackType = (() -> Int)
+public typealias readCallback = (() -> Int)
 
 
 /**
@@ -35,10 +35,10 @@ public typealias readCallbackType = (() -> Int)
  *
  */
 public protocol ReadEvent {
-    func excute(callback : readCallbackType) -> Bool
+    func excute(callback : readCallback) -> Bool
 }
 public class BlockingRead : ReadEvent {
-    public func excute(callback: readCallbackType) -> Bool {
+    public func excute(callback: readCallback) -> Bool {
         repeat{
             guard callback() != 0 else {
                 return false
@@ -47,7 +47,7 @@ public class BlockingRead : ReadEvent {
     }
 }
 public class NonBlockingRead : ReadEvent {
-    public func excute(callback: readCallbackType) -> Bool {
+    public func excute(callback: readCallback) -> Bool {
         return callback() != 0
     }
 }
@@ -115,7 +115,7 @@ public class EventHandler {
      *  }
      *
      * @param
-     *  First : Should be readCallbackType and return read length. If return 0 this EventHandler's
+     *  First : Should be readCallback and return read length. If return 0 this EventHandler's
      *           read event will stop, and parent's socket will deinit. Don't be worry about strong 
      *           reference. All parent's properties will be destroyed.
      *
@@ -123,7 +123,7 @@ public class EventHandler {
      * @return
      *  Success or failure.
      */
-    public func dispatchReadEvent(callback : readCallbackType) -> Bool {
+    public func dispatchReadEvent(callback : readCallback) -> Bool {
         source = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
             UInt(fd), 0, queue)
         

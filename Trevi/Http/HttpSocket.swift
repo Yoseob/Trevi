@@ -31,8 +31,9 @@ class TreviSocketServer {
 
     func startOnPort ( p: Int ) throws {
 
-        guard let socket = ListenSocket<IPv4> ( address: IPv4 (port: p)) else {
-            // Should handle Listener error
+        //guard let socket = ListenSocket<IPv4> ( address: IPv4 (port: p)) else {
+        guard let socket = ListenSocket<IPv4> ( address: IPv4 (ip: "127.0.0.1", port: p)) else {
+        // Should handle Listener error
             return
         }
 
