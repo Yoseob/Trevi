@@ -22,23 +22,19 @@ public enum MiddlewareName: String {
     case SwiftServerPage = "swiftServerPage"
     case Trevi           = "trevi"
     case Router          = "router"
+    case ServeStatic     = "serveStatic"
     // else...
 }
 
-
-
-    /**
-    * if you want to make middleware, use this protocol
-    *
-    * Examples:
-    *
-    *        public func operateCommand ( params: MiddlewareParams ) -> Bool {
-    *           return false
-    *        }
-    *
-    * @public
-    */
-
+/**
+ if you want to make middleware, use this protocol
+ 
+ Examples:
+ 
+     public func operateCommand ( params: MiddlewareParams ) -> Bool {
+        return false
+     }
+ */
 public protocol Middleware {
     var name: MiddlewareName { get set }
     func operateCommand ( params: MiddlewareParams ) -> Bool

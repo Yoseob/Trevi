@@ -37,6 +37,8 @@
 		906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B81C1212CC005937A8 /* SwiftServerPage.swift */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
+		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
+		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
 		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
 		DF3B81941C1E086400974327 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81911C1E086400974327 /* HttpSocket.swift */; };
 		DF3B81951C1E086400974327 /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81921C1E086400974327 /* PreparedData.swift */; };
@@ -108,6 +110,8 @@
 		906E50B61C121225005937A8 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		906E50B81C1212CC005937A8 /* SwiftServerPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftServerPage.swift; sourceTree = "<group>"; };
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
+		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
+		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		DF3B81911C1E086400974327 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
 		DF3B81921C1E086400974327 /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
@@ -272,6 +276,7 @@
 				906E50B81C1212CC005937A8 /* SwiftServerPage.swift */,
 				236E53D61C12198D0076ED36 /* MiddlewareManager.swift */,
 				236E53D81C1235130076ED36 /* Favicon.swift */,
+				90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */,
 			);
 			path = Middleware;
 			sourceTree = "<group>";
@@ -280,6 +285,7 @@
 			isa = PBXGroup;
 			children = (
 				23973D601C25AB3B00FBB8E7 /* sky.jpeg */,
+				90BEEE651C2F5155009A8DA8 /* style.css */,
 			);
 			path = public;
 			sourceTree = "<group>";
@@ -407,6 +413,7 @@
 				239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */,
 				23973D611C25AB3B00FBB8E7 /* sky.jpeg in Resources */,
 				90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */,
+				90BEEE661C2F5155009A8DA8 /* style.css in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +431,7 @@
 				23351DF81C1DE78F00BB54FB /* HttpProtocol.swift in Sources */,
 				DF3B81A01C1E08C500974327 /* Socket.swift in Sources */,
 				906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */,
+				90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */,
 				DF3B81951C1E086400974327 /* PreparedData.swift in Sources */,
 				23351DFC1C1DE7CA00BB54FB /* Require.swift in Sources */,
 				DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */,

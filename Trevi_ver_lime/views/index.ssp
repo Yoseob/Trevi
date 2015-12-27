@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="fp-enabled" style="overflow: hidden; height: 100%;">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -11,12 +11,9 @@
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <style type="text/css">
-        .btn,h1,h2,h3,h4,h5,h6{letter-spacing:.09em;text-transform:uppercase}.btn,.copyright p,h1,h2,h3,h4,h5,h6{text-transform:uppercase}@font-face{font-family:"San Francisco-UL";font-weight:100;src:url(https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-ultralight-webfont.woff)}@font-face{font-family:"San Francisco-T";font-weight:200;src:url(https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-thin-webfont.woff)}@font-face{font-family:"San Francisco-R";font-weight:400;src:url(https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff)}@font-face{font-family:"San Francisco-M";font-weight:500;src:url(https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff)}@font-face{font-family:"San Francisco-SB";font-weight:600;src:url(https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff)}@font-face{font-family:"San Francisco-B";font-weight:700;src:url(https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff)}*{font-family:"San Francisco-UL"}.bg-box{height:100%;width:100%;left:0;position:absolute;top:0;background:linear-gradient(to bottom,#40ed56 0,#06a985 100%)}h1,h2,h3,h4,h5,h6{font-family:"San Francisco",sans-serif;font-weight:400;margin:0 0 17px;opacity:1;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";filter:alpha(opacity=100)}a,body{font-family:Lato,sans-serif}h2,h5{margin-bottom:33px}h5,h6{letter-spacing:.11em}h1{font-size:7em;margin-bottom:17px}h2{font-size:2.667em}h3{font-size:1.556em;margin-bottom:30px}h4{font-size:1.222em;margin-bottom:36px}h5{font-size:.889em}.btn,h6{font-size:.778em}p{line-height:1.667em;letter-spacing:.046em;margin:0 0 30px}p.lead{font-size:1em;line-height:1.69em;letter-spacing:.05em;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";filter:alpha(opacity=80)}a{opacity:.8;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";filter:alpha(opacity=80);color:#373737;-webkit-transition:all .3s;-moz-transition:all .3s;-ms-transition:all .3s;-o-transition:all .3s;transition:all .3s}.btn:active,a:focus,a:hover{-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"}a:focus,a:hover{opacity:1;filter:alpha(opacity=100);text-decoration:none;color:inherit;outline:0;-webkit-transition:opacity .3s;-moz-transition:opacity .3s;-ms-transition:opacity .3s;-o-transition:opacity .3s;transition:opacity .3s}a:active{color:#a0a0a0;-webkit-transition:opacity .3s;-moz-transition:opacity .3s;-ms-transition:opacity .3s;-o-transition:opacity .3s;transition:opacity .3s}.btn{margin-bottom:20px;background:0 0;opacity:.8;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";filter:alpha(opacity=80);-webkit-border-radius:0;-moz-border-radius:0;-ms-border-radius:0;border-radius:0;font-weight:700;border:0;border-left:2px solid;border-right:2px solid;padding:9px 27px;position:relative;text-align:center;-webkit-transition:opacity .3s,padding .3s;-moz-transition:opacity .3s,padding .3s;-ms-transition:opacity .3s,padding .3s;-o-transition:opacity .3s,padding .3s;transition:opacity .3s,padding .3s}.btn:after,.btn:before{border-top:2px solid;border-bottom:2px solid}.btn:active{opacity:1;filter:alpha(opacity=100);-webkit-box-shadow:none;box-shadow:none;-webkit-transition:padding .3s;-moz-transition:padding .3s;-ms-transition:padding .3s;-o-transition:padding .3s;transition:padding .3s}.btn:active:hover,.btn:hover{color:inherit;padding:9px 37px;opacity:1;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";filter:alpha(opacity=100);-webkit-transition:opacity .3s,padding .3s;-moz-transition:opacity .3s,padding .3s;-ms-transition:opacity .3s,padding .3s;-o-transition:opacity .3s,padding .3s;transition:opacity .3s,padding .3s}.btn:after,.btn:before{content:'';position:absolute;width:5px;top:0;height:100%}body,body main.fullpage section .section-content-wrapper{position:relative}.btn:before{left:0}.btn:after{right:0}.btn[aria-label=Close]{padding-top:14px;padding-bottom:14px}.btn[aria-label=Close]:hover{padding:14px 37px}.btn[aria-label=Close] img{display:block}.btn-reset{background-color:transparent;-webkit-box-shadow:none;box-shadow:none;border:0;padding:0}.btn-reset:active:focus,.btn-reset:focus,.btn:active:focus,.btn:focus{outline-offset:0;outline:0;color:inherit}body{font-weight:300;color:#fff;font-size:18px;text-align:center;padding-right:0!important}body main.fullpage section{opacity:0;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";filter:alpha(opacity=0);visibility:hidden}body main.fullpage section .section-content-wrapper .section-content{display:table-cell;vertical-align:middle}body main section{padding-top:120px}body main section .section-title{font-size:2.778em;margin-bottom:60px}body main section .section-content-title{letter-spacing:.05em;margin-bottom:25px}body main section p.lead{margin-bottom:62px}.copyright p{opacity:.6;-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";filter:alpha(opacity=60);padding-bottom:48px;padding-top:48px;font-size:.778em;margin:0}
-    </style>
-
+    <link rel="stylesheet" href="/style.css">
 </head>
-<body style="overflow: hidden;">
+<body>
 
 <div class="bg-box">
     <div class="layer"></div>
@@ -24,11 +21,10 @@
 
 <main class="fullpage main fullpage-wrapper"
       style="height: 100%; position: relative; top: 0px;transition: top 0ms ease 900ms; touch-action: none;">
-    <section data-anchor="home" class="fp-section active" style="height: 906px; visibility: visible; opacity: 1;">
+    <section style="height: 906px; visibility: visible; opacity: 1;">
         <div class="section-content-wrapper container"
              style="padding-top: 50px; padding-bottom: 50px; overflow: hidden; display: table; height: 633px; margin-bottom: 0px;">
             <div class="section-content">
-
                 <h1 class="section-main-title">Trevi</h1>
 
                 <h3 class="section-main-subtitle">Lime version</h3>

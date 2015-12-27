@@ -13,6 +13,9 @@ public protocol Renderer {
     func render ( filename: String, args: [String:String] ) -> String
 }
 
+/**
+ A Middleware for compiling a specific SSP(Swift Server Page) file and send the data to client.
+ */
 public class SwiftServerPage: Middleware, Renderer {
 
     public var name: MiddlewareName;
@@ -26,22 +29,56 @@ public class SwiftServerPage: Middleware, Renderer {
         res.renderer = self
         return false
     }
-
-    public func render ( filename: String ) -> String {
-        return compileConvertedSwift ( filename, swiftCode: convertSSPtoSwift ( loadFile ( filename ), args: [:] ) )!
+    
+    /**
+     Get a compiled result of a SSP(Swift Server Page) file from the specific path.
+     
+     - Parameter path: The name of the file or path of the file from which to read data.
+     
+     - Returns: A string initialized by compiled swift server page data from the file specified by path.
+     */
+    public func render ( path: String ) -> String {
+        return compile ( path, code: convertToSwift ( from: load ( path ), with: [:] ) )!
     }
-
-    public func render ( filename: String, args: [String:String] ) -> String {
-        return compileConvertedSwift ( filename, swiftCode: convertSSPtoSwift ( loadFile ( filename ), args: args ) )!
+    
+    /**
+     Get a compiled result of a SSP(Swift Server Page) file from the specific path with input arguments.
+     
+     - Parameter path: The name of the file or path of the file from which to read data.
+     - Parameter args: The arguments which will be using for compiling SSP file.
+     
+     - Returns: A string initialized by compiled swift server page data from the file specified by path.
+     */
+    public func render ( path: String, args: [String:String] ) -> String {
+        return compile ( path, code: convertToSwift ( from: load ( path ), with: args ) )!
     }
-
-    private final func loadFile ( filepath: String ) -> String {
+    
+    /**
+     Load the file from input path and convert to String type.
+     
+     - Parameter path: The name of the file or path of the file from which to read data.
+     
+     - Returns: A string initialized by data from the file specified by path.
+     */
+    private final func load ( path: String ) -> String {
         // TODO: error handling..
-        let data = try! File.read ( fileDispatcher( filepath ), encoding: NSUTF8StringEncoding )
-        return data
+        let data = try! File.read ( from: File.getRealPath( path ))
+        guard let str = String( data: data, encoding: NSUTF8StringEncoding ) else {
+            return String()
+        }
+        return str
     }
-
-    private final func convertSSPtoSwift ( data: String, args: [String:String] ) -> String {
+    
+    /**
+     Get the swift source codes from the specific SSP(Swift Server Page) file. In this process, the SSP codes is divided into HTML codes and swift codes.
+     After that, the HTML codes is wrapped by `print` function. An wrapped HTML codes are combined with swift code again.
+     
+     - Parameter ssp: The original data of SSP file which will be converted to a swift source code file.
+     - Parameter args: The list of arguments which is used at compiling.
+     
+     - Returns: The swift source codes which are converted from SSP file with arguments.
+     */
+    private final func convertToSwift ( from ssp: String, with args: [String:String] ) -> String {
         guard let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [ .CaseInsensitive ] ) else {
             print ( "Error parsing data." )
             return ""
@@ -53,56 +90,51 @@ public class SwiftServerPage: Middleware, Renderer {
             swiftCode += "var \(key) = \"\(args[key]!)\"\n"
         }
 
-        var startIdx = data.startIndex
+        var startIdx = ssp.startIndex
 
-        for match in regex.matchesInString ( data, options: [], range: NSMakeRange ( 0, data.length () ) ) {
+        for match in regex.matchesInString ( ssp, options: [], range: NSMakeRange ( 0, ssp.length () ) ) {
             let tagRange      = match.rangeAtIndex ( 0 )
             let contentsRange = match.rangeAtIndex ( 2 )
             let swiftTag, htmlTag: String
 
-            if data.substring ( match.rangeAtIndex ( 1 ).location, length: match.rangeAtIndex ( 1 ).length ) == "<%=" {
-                swiftTag = "print(\(data.substring ( contentsRange.location, length: contentsRange.length )), terminator:\"\")"
+            if ssp.substring ( match.rangeAtIndex ( 1 ).location, length: match.rangeAtIndex ( 1 ).length ) == "<%=" {
+                swiftTag = "print(\(ssp.substring ( contentsRange.location, length: contentsRange.length )), terminator:\"\")"
             } else {
-                swiftTag = data.substring ( contentsRange.location, length: contentsRange.length )
+                swiftTag = ssp.substring ( contentsRange.location, length: contentsRange.length )
             }
 
-            htmlTag = data[startIdx ..< data.startIndex.advancedBy ( tagRange.location )]
+            htmlTag = ssp[startIdx ..< ssp.startIndex.advancedBy ( tagRange.location )]
             .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
             .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
             .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
 
             swiftCode += "print(\"\(htmlTag)\", terminator:\"\")\n\(swiftTag)\n"
 
-            startIdx = data.startIndex.advancedBy ( tagRange.location + tagRange.length )
+            startIdx = ssp.startIndex.advancedBy ( tagRange.location + tagRange.length )
         }
 
-        let htmlTag = data[startIdx ..< data.endIndex]
+        let htmlTag = ssp[startIdx ..< ssp.endIndex]
         .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
         .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
         .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
 
         return (swiftCode + "print(\"\(htmlTag)\")\n")
     }
-
-    private final func compileConvertedSwift ( filename: String, swiftCode: String ) -> String? {
+    
+    /**
+     Get a compiled result of a swift codes.
+     
+     - Parameter path: The path where compiled swift codes will be locate.
+     - Parameter code: Source codes which will be compiled.
+     
+     - Returns: Compiled data from the swift codes
+     */
+    private final func compile ( path: String, code: String ) -> String? {
         // TODO: error handling..
-        try! File.write ( "\(filename).swift", data: swiftCode, encoding: NSUTF8StringEncoding )
-
-        let compiled: String? = System.executeCmd ( "/usr/bin/swift", args: [ "\(filename).swift" ] )
+        try! File.write ( code.dataUsingEncoding( NSUTF8StringEncoding )!, to: "\(path).swift" )
+        let compiled: String? = System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
         .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
         .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
         return compiled
-    }
-    
-    private final func fileDispatcher( filepath: String ) -> String {
-        if let filename = filepath.componentsSeparatedByString( "/" ).last {
-            let nameElement = filename.componentsSeparatedByString( "." )
-            if let bundleFilepath = NSBundle.mainBundle().pathForResource( nameElement[0], ofType: nameElement.count > 1 ? nameElement[1] : "" ) {
-                return bundleFilepath
-            }
-        }
-        
-        // TODO : return error by wrong filename.
-        return filepath
     }
 }

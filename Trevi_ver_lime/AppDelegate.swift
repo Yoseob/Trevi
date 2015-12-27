@@ -33,6 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(trevi) // it is important to routing
         
+        lime.use(ServeStatic()) // it is important to routing
+        
         lime.use(){ req, res in
             res.status = 404
             return res.send ("404 Pages Not Found")
