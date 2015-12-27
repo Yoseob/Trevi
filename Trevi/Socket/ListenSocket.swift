@@ -31,7 +31,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      *  If bind function succeeds, calls super.init().
      *  However, if it fails, returns nil
      */
-    public init?(address : T, queue : dispatch_queue_t = defaultQueue) {
+    public init?(address : T, queue : dispatch_queue_t = acceptQueue) {
         
         let fd = socket(T.domain, SOCK_STREAM, 0)
         

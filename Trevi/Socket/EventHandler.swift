@@ -8,19 +8,6 @@
 
 import Dispatch
 
-
-/**
-* Set the 'defaultQueue' to 'dispatch_get_main_queue()' for single thread server model.
-* Then all event will dispatch to main queue in GCD, and all tasks will be processed by main thread.
-* Examples:
-*   public let defaultQueue = dispatch_get_main_queue()
-*
-* On the other hand if you want multi thread server model and more parallelizing,
-* set the defaultQueue to dispatch_get_global_queue(_ ,  0)
-*
-*/
-public let defaultQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-
 // Below codes are prototype for injecting read event according with Socket's states.
 //  I think it's not good way, should find better way
 public typealias readCallback = (() -> Int)
@@ -69,12 +56,11 @@ public class EventHandler {
     var queue : dispatch_queue_t
     var source : dispatch_source_t?
     
-    var writeQueue : dispatch_queue_t?
     var writeCounts : Int = 0
     
     var readEvent : ReadEvent = BlockingRead()
     
-    public init(fd: Int32, queue : dispatch_queue_t = defaultQueue) {
+    public init(fd: Int32, queue : dispatch_queue_t ) {
         self.fd = fd
         self.queue = queue
     }
@@ -169,14 +155,13 @@ public class EventHandler {
         let bufferSize = length*typeSize
         
         guard bufferSize > 0 else { return true }
-        if writeQueue == nil { writeQueue = self.queue }
         
-        guard let dispatchData = dispatch_data_create(buffer, bufferSize, writeQueue! , nil) else {
+        guard let dispatchData = dispatch_data_create(buffer, bufferSize, writeQueue , nil) else {
             return false
         }
         
         ++self.writeCounts
-        dispatch_write(fd, dispatchData, writeQueue!) {
+        dispatch_write(fd, dispatchData, writeQueue) {
             _, _ in
 
             --self.writeCounts
