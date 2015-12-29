@@ -16,74 +16,67 @@
 * set the defaultQueue to dispatch_get_global_queue(_ ,  0)
 *
 */
-public let acceptQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-public let readQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-public let writeQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+let globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+let mainQueue = dispatch_get_main_queue()
+let defaultQueue : dispatch_queue_t? = globalQueue // mainQueue
 
-typealias HttpCallback = ( ( Request, Response, TreviSocket ) -> Bool )
-typealias ClientSocket = ConnectedSocket<IPv4>!
+public let acceptQueue = defaultQueue != nil ? defaultQueue : globalQueue
+public let readQueue = defaultQueue != nil ? defaultQueue : globalQueue
+public let writeQueue = defaultQueue != nil ? defaultQueue : globalQueue
 
-public class TreviSocket {
+public typealias ClientCallback = ( ( ConnectedSocket<IPv4> ) -> Int )
+
+public class ClientSocket {
     
     weak var socket : ConnectedSocket<IPv4>!
     
-    init(socket : ConnectedSocket<IPv4>){
+    public init( socket : ConnectedSocket<IPv4> ){
         self.socket = socket
     }
     
-    func sendData ( data: NSData ) {
+    public func sendData ( data: NSData ) {
         socket.write (data)
     }
     
-    func socketClose(){
+    public func socketClose(){
         socket.close ()
     }
     
-    func socketCloseAfter(seconds : __uint64_t){
+    public func socketCloseAfter( seconds : __uint64_t ) {
         socket.setTimeout(seconds)
     }
 }
 
-public class TreviSocketServer {
+public class HttpSocket {
     
-    var socket: ListenSocket<IPv4>!
+    var listenSocket: ListenSocket<IPv4>!
     
-    var httpCallback: HttpCallback?
+    var ip : String = "0.0.0.0"
     
-    func startOnPort ( p: Int ) throws {
+    // Set closeTime to terminate connection with a client after the time from last client request.
+    var closeTime: __uint64_t? = 3  // = nil
+    
+    public func startListening (port : __uint16_t, callback : ClientCallback ) throws {
 
-//        guard let socket = ListenSocket<IPv4> ( address: IPv4 (ip: "127.0.0.1", port: p)) else {
-        guard let socket = ListenSocket<IPv4> ( address: IPv4 (port: p)) else {
-            log.error("Could not create ListenSocket address : \(IPv4.domain)")
+        guard let listenSocket = ListenSocket<IPv4> ( address: IPv4 (ip: "127.0.0.1", port: port)) else {
+            log.error("Could not create ListenSocket on ip : \(self.ip), port : \(port))")
             return
         }
         
-        socket.listenClientReadEvent (true) {
+        listenSocket.listenClientReadEvent (true) {
             client in
             
-            var initialData: NSData?
-            let ( buffer, length ) = client.read()
-            
-            client.setTimeout(3);
-            
-            if length > 0 {
-                initialData = NSData ( bytes: buffer, length: length )
+            if let time = self.closeTime {
+                client.setTimeout(time)
             }
             
-            if let initialData = initialData {
-                let preparedData = PreparedData ( requestData: initialData )
-                let httpClient       = TreviSocket ( socket: client )
-                let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
-                self.httpCallback! ( req, res, httpClient )
-            }
-            
-            return length
+            return callback(client)
         }
         
-        self.socket = socket
+        self.listenSocket = listenSocket
     }
     
     func disconnect () {
-        self.socket.close ()
+        self.listenSocket.close ()
     }
 }

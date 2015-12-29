@@ -9,9 +9,12 @@
 import Foundation
 
 public class Http {
-
-    private var socket = TreviSocketServer ()
-    private var mwManager            = MiddlewareManager.sharedInstance ()
+    
+    typealias HttpCallback = ( ( Request, Response, ClientSocket ) -> Bool )
+    private var httpCallback: HttpCallback?
+    
+    private var socket = HttpSocket ()
+    private var mwManager = MiddlewareManager.sharedInstance ()
 
 
     public init () {
@@ -68,9 +71,28 @@ public class Http {
      * @param {Int} port
      * @public
      */
-    public func listen ( port: Int ) throws {
-        try socket.startOnPort ( port )
-
+    public func listen ( port: __uint16_t ) throws {
+        
+        try socket.startListening( port ) {
+            client in
+            
+            var initialData: NSData?
+            let ( buffer, length ) = client.read()
+        
+            if length > 0 {
+                initialData = NSData ( bytes: buffer, length: length )
+            }
+            
+            if let initialData = initialData {
+                let preparedData = PreparedData ( requestData: initialData )
+                let httpClient       = ClientSocket ( socket: client )
+                let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
+                self.httpCallback! ( req, res, httpClient )
+            }
+            
+            return length
+        }
+        
         if true {
 
             while true {
@@ -91,7 +113,7 @@ public class Http {
      * @private
      */
     private func receivedRequestCallback() {
-        socket.httpCallback = {
+        self.httpCallback = {
             req,res,sock in
             self.mwManager.handleRequest(req,res)
             return false

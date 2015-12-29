@@ -71,7 +71,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         let status = Darwin.listen(fd, backlog)
         guard status == 0 else { return false }
         
-        log.info("Server listens on port \(self.address.port())")
+        log.info("Server listens on ip : \(self.address.ip()), port : \(self.address.port())")
         self.isListening = true
         
         return self.isListening

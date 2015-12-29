@@ -32,7 +32,7 @@ public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
     return value
 }
 
-public func blockToUTF8String(block: UnsafePointer<CChar>, length: Int) -> String {
+public func blockToUTF8String(block: UnsafePointer<CChar>) -> String {
     let (k,_) = String.fromCStringRepairingIllFormedUTF8(block)
     let value = k! as String
     return value
