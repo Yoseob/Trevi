@@ -54,7 +54,7 @@ public class HttpSocket {
     var ip : String = "0.0.0.0"
     
     // Set closeTime to terminate connection with a client after the time from last client request.
-    var closeTime: __uint64_t? = 3  // = nil
+    var closeTime: __uint64_t?
     
     public func startListening (port : __uint16_t, callback : ClientCallback ) throws {
 
