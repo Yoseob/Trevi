@@ -15,7 +15,7 @@ public enum FileError: ErrorType {
 class File {
 
     // Reading
-    static func read ( filePath: String, encoding: UInt = NSUTF8StringEncoding ) throws -> String {
+    static func read(filePath: String, encoding: UInt = NSUTF8StringEncoding ) throws -> String {
         do {
             let contents = try String ( contentsOfFile: filePath, encoding: encoding )
             return contents
@@ -26,7 +26,7 @@ class File {
     }
 
     // Writing
-    static func write ( filePath: String, data: String, encoding: UInt = NSUTF8StringEncoding ) throws {
+    static func write(filePath: String, data: String, encoding: UInt = NSUTF8StringEncoding ) throws {
         do {
             try data.writeToFile ( filePath, atomically: false, encoding: encoding )
         } catch {

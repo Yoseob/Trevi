@@ -10,7 +10,16 @@ import Foundation
 private protocol parseAble{
     func parse() -> [String:AnyObject!]!
 }
-public typealias Function =  (NSData) -> [String:AnyObject!]!
+
+struct ParserdData {
+    var name : String?
+    var value : String?
+    var type : String?
+    var data : NSData?
+}
+
+
+public typealias Function =  (Request) -> [String:AnyObject!]!
 
 public class BodyParser: Middleware {
 
@@ -45,7 +54,7 @@ public class BodyParser: Middleware {
                 //Content-Type: multipart/form-data; boundary=----WebKitFormBoundarywXfXEDEZqJO6nhGr
                 
                 let ret = spliteContentType(type)
-                parserBody(&req, boundry: ret.boundry, function: nil)
+//                parserBody(&req, boundry: "--"+ret.boundry, function: nil)
             }
         }
         return false
@@ -65,11 +74,11 @@ public class BodyParser: Middleware {
     
     private func parserBody ( inout req: Request , boundry : String? , function : Function? ) {
         
-        let bodyStringLength = "\(req.body.length)"
-        if bodyStringLength != req.header[Content_Length]  {
+
+        if req.header[Content_Length] != nil && req.bodyFragments.count == 0  {
             let headerList = req.headerString.componentsSeparatedByString(CRLF)
-            
-            let newBodyData = NSMutableData()
+
+            var buff = String()
             var flag = false
             
             for line in headerList{
@@ -77,55 +86,91 @@ public class BodyParser: Middleware {
                     flag = true
                 }
                 if flag && line.length() > 0{
-                    newBodyData.appendData(line.dataUsingEncoding(NSUTF8StringEncoding)!)
+                    buff += line
+                    buff += CRLF
                 }
             }
-            
-            let oldBodyData = NSData(bytes: req.body.mutableBytes, length: req.body.length)
-            newBodyData.appendData(oldBodyData)
-            req.body = newBodyData
-            
+    
+            if buff.length() > 0 {
+                req.bodyFragments.insert(buff, atIndex: 0)
+            }
         }
+        
+        
         if let boundry = boundry {
-            req.json = form_data_parser(req.body, boundry: boundry)
+            req.json = form_data_parser(req, boundry: boundry)
             return
         }
-        req.json = function!(req.body)
+        req.json = function!(req)
     }
     
-    private func fake_parser ( data: NSData) -> [String:AnyObject!]!{
+    private func fake_parser ( req : Request) -> [String:AnyObject!]!{
         
         return nil
     }
-    private func json_parser ( data: NSData ) -> [String:AnyObject!]!{
+    private func json_parser ( req : Request ) -> [String:AnyObject!]!{
         do {
-            return try NSJSONSerialization.JSONObjectWithData ( data, options: .MutableContainers ) as? [String:AnyObject!]
+            return try NSJSONSerialization.JSONObjectWithData ( NSData(), options: .MutableContainers ) as? [String:AnyObject!]
         } catch {
             print ( "Something went wrong" )
             return nil
         }
     }
     
-    private func plain_parser ( data: NSData ) -> [String:AnyObject!]!{
+    private func plain_parser ( req : Request ) -> [String:AnyObject!]!{
         print ( "plain_parser" )
         return nil
     }
     
-    private func x_www_form_urlencoded_parser ( data: NSData ) -> [String:AnyObject!]!{
-        print(data.length)
+    private func x_www_form_urlencoded_parser ( req : Request ) -> [String:AnyObject!]!{
         print ( "x_www_form_urlencoded_parser" )
         return nil
     }
     
-    private func form_data_parser ( data: NSData , boundry:String) -> [String:AnyObject!]!{
+    private func form_data_parser ( req : Request , boundry:String) -> [String:AnyObject!]!{
         print ( "form_data_parser" )
-        let bodyData = String(data: data, encoding: NSUTF8StringEncoding)
-        let datas = bodyData!.componentsSeparatedByString(boundry)
-        for dt in datas {
-            print(dt)
+        
+        
+        var begin = false
+        var end  = false
+        
+        var object : ParserdData?
+        for str in req.bodyFragments{
+            
+            str.enumerateLines({ (line, stop) -> () in
+                if begin {
+                    let spliteCoponents = line.componentsSeparatedByString("; ")
+
+                }else if end{
+                    
+                }
+
+                if line == boundry{
+                    if let obj = object {
+                        if obj.type == "image/jpeg"{
+                            req.body[obj.name!] = obj.value
+                        }else if obj.type == "form-data"{
+                            req.body[obj.name!] = obj.data
+                        }
+                    }
+                    object = ParserdData()
+                    begin = true
+                }else if line == CRLF{
+                    end = true
+                    begin = false
+                }
+                
+                
+            })
         }
+ 
 
         return nil
     }
- 
-}
+    func convert<T>(count: Int, data: UnsafePointer<T>) -> [T] {
+        
+        let buffer = UnsafeBufferPointer(start: data, count: count);
+        return Array(buffer)
+    }
+    
+ }

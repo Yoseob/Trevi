@@ -51,7 +51,8 @@ class PreparedData {
             }
             
             */
-            req?.body.appendBytes(params.buffer, length: params.length)
+//            req?.body.appendBytes(params.buffer, length: params.length)
+            req?.bodyFragments.append(data)
         }
         return (content_length,headerLength)
     }

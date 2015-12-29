@@ -25,7 +25,9 @@ public class Request {
     public var header    = [ String: String ] ()
     
     // HTTP body
-    public var body      = NSMutableData()
+    public var body      = [String : AnyObject]()
+    
+    public var bodyFragments = [String]()
     
     // Body parsed to JSON
     public var json: [String:AnyObject!]!
