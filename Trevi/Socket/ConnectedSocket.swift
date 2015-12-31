@@ -11,13 +11,13 @@ import Darwin
 let ClientBufferSize = 4096
 
 /**
-* ConnectedSocket class
-*
-* Manage a tcp client socket, and provide read, write functions.
-*
-* Should add connect function.
-*
-*/
+ * ConnectedSocket class
+ *
+ * Manage a tcp client socket, and provide read, write functions.
+ *
+ * Should add connect function.
+ *
+ */
 public class ConnectedSocket<T: InetAddress> : Socket<T> {
     
     var bufferPtr  = UnsafeMutablePointer<CChar>.alloc(ClientBufferSize + 2)
@@ -26,20 +26,22 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     var isConnected : Bool = false
     var isClosing : Bool = false
     
+    public var timeout : Timer! = nil
+    
     /**
-    * init?
-    * After accept, create a client socket,
-    *
-    * @param
-    *  First : Client socket's file descriptor.
-    *  Second : Client socket's address family.
-    *  Third : A dispatch queue for this socket's read event.
-    *
-    * @return
-    *  If bind function succeeds, create a client socket.
-    *  However, if it fails, returns nil
-    */
-    public init?(fd : Int32, address : T, queue : dispatch_queue_t = defaultQueue) {
+     * init?
+     * After accept, create a client socket,
+     *
+     * @param
+     *  First : Client socket's file descriptor.
+     *  Second : Client socket's address family.
+     *  Third : A dispatch queue for this socket's read event.
+     *
+     * @return
+     *  If bind function succeeds, create a client socket.
+     *  However, if it fails, returns nil
+     */
+    public init?(fd : Int32, address : T, queue : dispatch_queue_t = readQueue) {
         
         super.init(fd: fd, address: address)
         eventHandle = EventHandler(fd: fd, queue: queue)
@@ -57,18 +59,20 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     
     public override func close() {
         
-        eventHandle.cancelEvent()
+        // Should be modified for thread safe.(atomic)
+        self.isClosing = true
         
+        self.cancelTimeout()
+        eventHandle.cancelEvent()
         Darwin.shutdown(fd, SHUT_RD)
         
         if eventHandle.isWriting() {
-            isClosing = true
             return
         }
         
         super.close()
     }
-
+    
     // Should add connect()
     
     /**
@@ -81,21 +85,18 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     *  First : Read length.
     *  Second : Read data buffer pointer.
     */
-    public func read() -> (length: Int, buffer: UnsafePointer<CChar>) {
-        let readBufferPtr = UnsafePointer<CChar>(bufferPtr)
+    public func read() -> (buffer: UnsafeMutablePointer<CChar>, length: Int) {
+        let readBufferPtr = UnsafeMutablePointer<CChar>(bufferPtr)
         let readBufferLen = Darwin.read(fd, bufferPtr, bufferLen)
-   
-//        print(length)
-//        print(blockToString(buffer, length: length))
         
         guard readBufferLen >= 0 else {
             bufferPtr[0] = 0
-            return ( readBufferLen, readBufferPtr )
+            return ( readBufferPtr, readBufferLen )
         }
         
         bufferPtr[readBufferLen] = 0
         
-        return ( readBufferLen, readBufferPtr )
+        return ( readBufferPtr, readBufferLen )
     }
     
     /**
@@ -106,16 +107,13 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
      *  First : Data buffer pointer.
      *  Second : Data length.
      *  Third : A dispatch queue for write event.
-     *             If you use dispatch_get_main_queue(), all write event in this program 
+     *             If you use dispatch_get_main_queue(), all write event in this program
      *             will be processed by main thread.
      *
      * @return
      *  Success or failure.
      */
-    public func write<M>(buffer: UnsafePointer<M>, length : Int,
-        queue : dispatch_queue_t = defaultQueue) -> Bool {
-            
-            eventHandle.writeQueue = queue
+    public func write<M>(buffer: UnsafePointer<M>, length : Int) -> Bool {
             
             let status = eventHandle.dispatchWriteEvent(buffer, length : length) {
                 if self.isClosing { self.close() }
@@ -124,10 +122,32 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
             return status
     }
     
-    public func write(data : NSData,
-        queue : dispatch_queue_t = defaultQueue) -> Bool {
+    public func write(data : NSData) -> Bool {
             
-            return write(data.bytes, length: data.length, queue: queue)
+            return write(data.bytes, length: data.length)
+    }
+    
+    public func cancelTimeout() {
+        if let timeout = self.timeout {
+            timeout.cancelTimer()
+            self.timeout = nil
+        }
+    }
+    
+    public func setTimeout(seconds : __uint64_t) {
+        self.cancelTimeout()
+        timeout = Timer(interval: seconds, leeway: 1, queue: readQueue)
+        
+        timeout.startTimerOnce(){
+            [unowned self] in
+            guard self.isClosing else {
+                self.close()
+                return
+            }
+        }
     }
 }
+
+
+
 

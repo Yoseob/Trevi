@@ -29,7 +29,7 @@ class PreparedData {
      * @return {( Request, Response )}
      * @private
      */
-    func prepareReqAndRes ( socket: TreviSocket ) -> ( Request, Response ) {
+    func prepareReqAndRes ( socket: ClientSocket ) -> ( Request, Response ) {
         let req = setupRequest();
         let res = setupResponse(socket)
         res.method = req.method
@@ -44,7 +44,7 @@ class PreparedData {
         return Request( data )
     }
 
-    private func setupResponse ( socket: TreviSocket ) -> Response {
+    private func setupResponse ( socket: ClientSocket ) -> Response {
         return Response( socket: socket )
     }
 

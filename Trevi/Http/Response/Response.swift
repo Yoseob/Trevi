@@ -78,14 +78,14 @@ public class Response{
     
     private var internalStatus : StatusCode = .OK
 
-    public var socket : TreviSocket?
+    public var socket : ClientSocket?
 
     public var  renderer: Renderer?
 
     public init(){
     }
 
-    public init ( socket: TreviSocket ) {
+    public init ( socket: ClientSocket ) {
         self.socket = socket   // if render , send , template func is called call self.socket.send(AnyOnject)
     }
     

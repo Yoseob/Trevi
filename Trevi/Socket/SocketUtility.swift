@@ -17,15 +17,24 @@ public let ntohl  = htonl
 
 
 // Get String from the pointer
-func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
-    var string = "Fail to convert block to String"
+public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
     
-    if let data = String.fromCString(block) {
-        string = data
-        if string.hasSuffix("\r\n") {
-            string = string[string.startIndex..<string.endIndex.predecessor()]
+    var idx = block
+    var value = "" as String
+    
+    for _ in 0...length {
+        if idx.memory > 31{
+            let c = String(format: "%c", idx.memory)
+            value += c
         }
+        idx++
     }
-    
-    return string
+    return value
 }
+
+public func blockToUTF8String(block: UnsafePointer<CChar>) -> String {
+    let (k,_) = String.fromCStringRepairingIllFormedUTF8(block)
+    let value = k! as String
+    return value
+}
+

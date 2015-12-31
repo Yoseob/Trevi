@@ -31,7 +31,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      *  If bind function succeeds, calls super.init().
      *  However, if it fails, returns nil
      */
-    public init?(address : T, queue : dispatch_queue_t = defaultQueue) {
+    public init?(address : T, queue : dispatch_queue_t = acceptQueue) {
         
         let fd = socket(T.domain, SOCK_STREAM, 0)
         
@@ -71,7 +71,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         let status = Darwin.listen(fd, backlog)
         guard status == 0 else { return false }
         
-        log.info("Server listens on port \(self.address.port())")
+        log.info("Server listens on ip : \(self.address.ip()), port : \(self.address.port())")
         self.isListening = true
         
         return self.isListening
