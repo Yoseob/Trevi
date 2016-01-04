@@ -72,7 +72,6 @@ public class Request {
         guard let converted = headerString else {
             return
         }
-        
         let requestHeader: [String] = converted.componentsSeparatedByString ( CRLF )
         let requestLineElements: [String] = requestHeader.first!.componentsSeparatedByString ( SP )
         

@@ -100,6 +100,8 @@ public class HttpSocket : RequestHandler {
         let readData = client.read()
         self.totalLength += readData.length
         
+
+        
         if readData.length > 0 {
             let (contentLength, headerLength) = self.prepare.appendReadData(readData)
             
@@ -111,6 +113,7 @@ public class HttpSocket : RequestHandler {
                 self.prepare.handleRequest(httpClient)
             }
         }
+
         return readData.length
 
     }
