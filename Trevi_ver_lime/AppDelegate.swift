@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //I think middleware setting at instance of Http Class 
         // server.use(Favicon()) or server.set(Favicon())
         
+        lime.use( Logger( format: ":remote-addr - [ :date ] \":method :url :status :response-time ms" ) )
         
         //'use' func call for use middleware
         lime.use(BodyParser())
