@@ -24,8 +24,6 @@ public let acceptQueue = defaultQueue != nil ? defaultQueue : globalQueue
 public let readQueue = defaultQueue != nil ? defaultQueue : globalQueue
 public let writeQueue = defaultQueue != nil ? defaultQueue : globalQueue
 
-public typealias ClientCallback = ( ( ConnectedSocket<IPv4> ) -> Int )
-
 public class ClientSocket {
     
     weak var socket : ConnectedSocket<IPv4>!
@@ -38,30 +36,41 @@ public class ClientSocket {
         socket.write (data)
     }
     
-    public func socketClose(){
+    public func close(){
         socket.close ()
     }
     
-    public func socketCloseAfter( seconds : __uint64_t ) {
+    public func closeAfter( seconds : __uint64_t ) {
         socket.setTimeout(seconds)
     }
 }
 
-public class HttpSocket {
+
+public protocol RequestHandler{
+    func beginHandle(req : Request , _ res :Response )
+}
+
+public class HttpSocket : RequestHandler {
     
     var listenSocket: ListenSocket<IPv4>!
-    
     var ip : String = "0.0.0.0"
+    
+    var httpCallback: HttpCallback?
+    var prepare = PreparedData()
+    var totalLength = 0
+    
     
     // Set closeTime to terminate connection with a client after the time from last client request.
     var closeTime: __uint64_t?
     
-    public func startListening (port : __uint16_t, callback : ClientCallback ) throws {
+    public func startListening (port : __uint16_t ) throws {
 
-        guard let listenSocket = ListenSocket<IPv4> ( address: IPv4 (ip: "127.0.0.1", port: port)) else {
+        guard let listenSocket = ListenSocket<IPv4> ( address: IPv4 (ip: ip, port: port)) else {
             log.error("Could not create ListenSocket on ip : \(self.ip), port : \(port))")
             return
         }
+        
+        prepare.requestHandler = self
         
         listenSocket.listenClientReadEvent (true) {
             client in
@@ -69,14 +78,40 @@ public class HttpSocket {
             if let time = self.closeTime {
                 client.setTimeout(time)
             }
-            
-            return callback(client)
+            return self.prepareRequest(client)
         }
         
         self.listenSocket = listenSocket
     }
     
-    func disconnect () {
+    public func disconnect () {
         self.listenSocket.close ()
+    }
+    
+    public func beginHandle(req : Request , _ res :Response) {
+        
+        self.httpCallback! ( req, res )
+        self.prepare.dInit()
+    }
+    
+    
+    private func prepareRequest(client : ConnectedSocket<IPv4>) -> Int{
+        
+        let readData = client.read()
+        self.totalLength += readData.length
+        
+        if readData.length > 0 {
+            let (contentLength, headerLength) = self.prepare.appendReadData(readData)
+            
+            if contentLength > headerLength{
+                self.totalLength -= headerLength
+            }
+            if self.totalLength >= contentLength || contentLength == 0{
+                let httpClient = ClientSocket ( socket: client )
+                self.prepare.handleRequest(httpClient)
+            }
+        }
+        return readData.length
+
     }
 }

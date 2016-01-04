@@ -8,9 +8,10 @@
 
 import Foundation
 
+public typealias HttpCallback = ( ( Request, Response) -> Bool )
+
 public class Http {
     
-    typealias HttpCallback = ( ( Request, Response, ClientSocket ) -> Bool )
     private var httpCallback: HttpCallback?
     
     private var socket = HttpSocket ()
@@ -66,6 +67,17 @@ public class Http {
     }
     
     /**
+     * Add MiddleWare direct at Server
+     *ㅋ
+     ㅋ @param {Middleware} mw
+     * @public
+     */
+    
+    public func set( mw :  Middleware ...){
+        mwManager.enabledMiddlwareList.append(mw)
+    }
+    
+    /**
      * Set port, Begin Server and listen socket
      *
      * @param {Int} port
@@ -73,26 +85,8 @@ public class Http {
      */
     public func listen ( port: __uint16_t ) throws {
         
-        try socket.startListening( port ) {
-            client in
-            
-            var initialData: NSData?
-            let ( buffer, length ) = client.read()
-        
-            if length > 0 {
-                initialData = NSData ( bytes: buffer, length: length )
-            }
-            
-            if let initialData = initialData {
-                let preparedData = PreparedData ( requestData: initialData )
-                let httpClient       = ClientSocket ( socket: client )
-                let (req, res)   = preparedData.prepareReqAndRes ( httpClient )
-                self.httpCallback! ( req, res, httpClient )
-            }
-            
-            return length
-        }
-        
+        try socket.startListening( port )
+                
         if true {
 
             while true {
@@ -113,8 +107,8 @@ public class Http {
      * @private
      */
     private func receivedRequestCallback() {
-        self.httpCallback = {
-            req,res,sock in
+        socket.httpCallback = {
+            req,res in
             self.mwManager.handleRequest(req,res)
             return false
         }

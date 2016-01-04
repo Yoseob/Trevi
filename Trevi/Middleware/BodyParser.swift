@@ -7,44 +7,170 @@
 //
 
 import Foundation
+private protocol parseAble{
+    func parse() -> [String:AnyObject!]!
+}
+
+struct ParserdData {
+    var name : String?
+    var value : String?
+    var type : String?
+    var data : NSData?
+}
+
+
+public typealias Function =  (Request) -> [String:AnyObject!]!
 
 public class BodyParser: Middleware {
 
     public var name: MiddlewareName;
 
+    public var functionTable = [String : Function]()
+    
     public init () {
         name = .BodyParser
-    }
     
-    public func operateCommand ( params: MiddlewareParams ) -> Bool {
-        var req: Request = params.req
-        parserBody ( &req )
-        return false
-    }
-    
-    public func parserBody ( inout req: Request ) {
-        if req.method != HTTPMethodType.GET {
-            if let type = req.header["Content-Type"] {
-                switch type {
-                case "application/json":
-                    req.json = self.convertStringToDictionary ( req.body )!
-                default:
-                    return
-                }
-            }
-        }
-    }
-    
-    private func wrap ( json: [String:AnyObject]! ) {
+        //add need content type parser
+        self.functionTable["application/json"] = json_parser
+        self.functionTable["multipart/form-data"] = fake_parser
+        self.functionTable["application/x-www-form-urlencoded"] = x_www_form_urlencoded_parser
+        
+        //raw 
+        self.functionTable["text/plain"] = plain_parser
         
     }
     
-    private func convertStringToDictionary ( data: NSData ) -> [String:AnyObject!]! {
+    
+    
+    public func operateCommand ( params: MiddlewareParams ) -> Bool {
+        var req: Request = params.req
+        
+        if req.method == .POST || req.method == .PUT {
+            if let type = req.header[Content_Type]  where (functionTable[type] != nil)  {
+                parserBody ( &req, boundry: nil, function: functionTable[type]!)
+            }else if let type = req.header[Content_Type] {
+                
+                // below case need splite contenttype and boundary
+                //Content-Type: multipart/form-data; boundary=----WebKitFormBoundarywXfXEDEZqJO6nhGr
+                
+                let ret = spliteContentType(type)
+//                parserBody(&req, boundry: "--"+ret.boundry, function: nil)
+            }
+        }
+        return false
+    }
+
+    private func spliteContentType(contentType : String) -> (content_type:String ,boundry : String){
+        
+        
+        let components = contentType.componentsSeparatedByString("; ")
+        let lastObject = components.last!
+        let boundary = lastObject.componentsSeparatedByString("=").last
+        
+        return (components.first!,boundary!)
+    }
+    
+    
+    
+    private func parserBody ( inout req: Request , boundry : String? , function : Function? ) {
+        
+
+        if req.header[Content_Length] != nil && req.bodyFragments.count == 0  {
+            let headerList = req.headerString.componentsSeparatedByString(CRLF)
+
+            var buff = String()
+            var flag = false
+            
+            for line in headerList{
+                if line.length() == 0 {
+                    flag = true
+                }
+                if flag && line.length() > 0{
+                    buff += line
+                    buff += CRLF
+                }
+            }
+    
+            if buff.length() > 0 {
+                req.bodyFragments.insert(buff, atIndex: 0)
+            }
+        }
+        
+        
+        if let boundry = boundry {
+            req.json = form_data_parser(req, boundry: boundry)
+            return
+        }
+        req.json = function!(req)
+    }
+    
+    private func fake_parser ( req : Request) -> [String:AnyObject!]!{
+        
+        return nil
+    }
+    private func json_parser ( req : Request ) -> [String:AnyObject!]!{
         do {
-            return try NSJSONSerialization.JSONObjectWithData ( data, options: .MutableContainers ) as? [String:AnyObject!]
+            return try NSJSONSerialization.JSONObjectWithData ( NSData(), options: .MutableContainers ) as? [String:AnyObject!]
         } catch {
             print ( "Something went wrong" )
             return nil
         }
     }
-}
+    
+    private func plain_parser ( req : Request ) -> [String:AnyObject!]!{
+        print ( "plain_parser" )
+        return nil
+    }
+    
+    private func x_www_form_urlencoded_parser ( req : Request ) -> [String:AnyObject!]!{
+        print ( "x_www_form_urlencoded_parser" )
+        return nil
+    }
+    
+    private func form_data_parser ( req : Request , boundry:String) -> [String:AnyObject!]!{
+        print ( "form_data_parser" )
+        
+        
+        var begin = false
+        var end  = false
+        
+        var object : ParserdData?
+        for str in req.bodyFragments{
+            
+            str.enumerateLines({ (line, stop) -> () in
+                if begin {
+                    let spliteCoponents = line.componentsSeparatedByString("; ")
+
+                }else if end{
+                    
+                }
+
+                if line == boundry{
+                    if let obj = object {
+                        if obj.type == "image/jpeg"{
+                            req.body[obj.name!] = obj.value
+                        }else if obj.type == "form-data"{
+                            req.body[obj.name!] = obj.data
+                        }
+                    }
+                    object = ParserdData()
+                    begin = true
+                }else if line == CRLF{
+                    end = true
+                    begin = false
+                }
+                
+                
+            })
+        }
+ 
+
+        return nil
+    }
+    func convert<T>(count: Int, data: UnsafePointer<T>) -> [T] {
+        
+        let buffer = UnsafeBufferPointer(start: data, count: count);
+        return Array(buffer)
+    }
+    
+ }

@@ -8,6 +8,7 @@
 
 import Foundation
 
+// if need handle request, response, route
 public typealias MiddlewareParams = ( req:Request, res:Response, route:Route )
 
 public enum MiddlewareName: String {
@@ -26,15 +27,20 @@ public enum MiddlewareName: String {
     // else...
 }
 
-/**
- if you want to make middleware, use this protocol
- 
- Examples:
- 
-     public func operateCommand ( params: MiddlewareParams ) -> Bool {
-        return false
-     }
- */
+
+
+    /**
+    * if you want to make middleware, use this protocol
+    *
+    * Examples:
+    *
+    *        public func operateCommand ( params: MiddlewareParams ) -> Bool {
+    *           return false
+    *        }
+    *
+    * @public
+    */
+
 public protocol Middleware {
     var name: MiddlewareName { get set }
     func operateCommand ( params: MiddlewareParams ) -> Bool

@@ -13,6 +13,7 @@ import Trevi
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching ( aNotification: NSNotification ) {
+              
         let server = Http ()
 
         //Trevi is used routor like nodejs express
@@ -40,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return res.send ("404 Pages Not Found")
         }
         
-        
+
         do {
             try server.createServer ( lime ).listen (8080)
             

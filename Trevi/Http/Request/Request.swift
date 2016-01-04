@@ -15,7 +15,7 @@ public class Request {
     public var version   = String ()
     
     // Original HTTP data include header & body
-    public var data: NSData! {
+    public var headerString: String! {
         didSet {
             parse()
         }
@@ -25,7 +25,9 @@ public class Request {
     public var header    = [ String: String ] ()
     
     // HTTP body
-    public var body      = NSData()
+    public var body      = [String : AnyObject]()
+    
+    public var bodyFragments = [String]()
     
     // Body parsed to JSON
     public var json: [String:AnyObject!]!
@@ -58,16 +60,16 @@ public class Request {
         self.path = String ()
     }
     
-    public init ( _ reqData: NSData ) {
+    public init ( _ headerStr: String ) {
         self.path = String ()
-        self.data = reqData
+        self.headerString = headerStr
         parse ()
     }
     
     private final func parse () {
         
         // TODO : error when file uploaded..
-        guard let converted = String ( data: self.data, encoding: NSUTF8StringEncoding ) else {
+        guard let converted = headerString else {
             return
         }
         
@@ -81,8 +83,7 @@ public class Request {
             }
             parseUrl( requestLineElements[1] )
             parseHeader( requestHeader )
-            
-            self.body = requestHeader.last!.dataUsingEncoding(NSUTF8StringEncoding)!
+    
         }
     }
     
