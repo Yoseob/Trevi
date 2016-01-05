@@ -51,15 +51,19 @@ public protocol RequestHandler{
 
 public class HttpSocket : RequestHandler {
     
-    var listenSocket: ListenSocket<IPv4>!
+    let ip : String?
+    var listenSocket : ListenSocket<IPv4>!
     
-    var httpCallback: HttpCallback?
+    var httpCallback : HttpCallback?
     var prepare = PreparedData()
     var totalLength = 0
     
     // If set closeTime a client will be disconnected withn closeTime.
     var closeTime: __uint64_t?
     
+    public init(ip : String? = nil){
+        self.ip = ip
+    }
     
     /**
      * setServerModel
@@ -91,10 +95,21 @@ public class HttpSocket : RequestHandler {
      *  Second : port setting
      *
      */
-    public func startListening (ip : String = "127.0.0.1", port : __uint16_t ) throws {
-
-        guard let listenSocket = ListenSocket<IPv4> ( address: IPv4 (ip: ip, port: port)) else {
-            log.error("Could not create ListenSocket on ip : \(ip), port : \(port))")
+    public func startListening ( port : __uint16_t ) throws {
+        
+        var address : IPv4 {
+            get{
+                if let ip = self.ip{
+                    return IPv4(ip: ip, port: port)
+                }
+                else{
+                    return IPv4(port: port)
+                }
+            }
+        }
+        
+        guard let listenSocket = ListenSocket<IPv4> ( address: address) else {
+            log.error("Could not create ListenSocket on ip : \(self.ip), port : \(port))")
             return
         }
         
