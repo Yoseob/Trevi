@@ -28,15 +28,6 @@ public class PreparedData {
     
     func appendReadData(params : ReceivedParams) -> (Int,Int){
 
-        
-        var unsafebufferpointer = UnsafeBufferPointer(start: params.buffer, count: params.length)
-        let arr  = Array(unsafebufferpointer)
-    
-        arr.forEach { bit in
-            
-        }
-        
-        
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
@@ -72,10 +63,7 @@ public class PreparedData {
     }
     
     func dispatchBodyData(bodyFragment : String){
-        
-    let data = (bodyFragment as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-//        print(testData?.length)
-//            filemanager.write("test.txt", data: data, encoding: NSUTF8StringEncoding)
+        req?.bodyFragments.append(bodyFragment)
     }
     
     func handleRequest(socket : ClientSocket ){
