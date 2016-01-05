@@ -23,10 +23,10 @@ public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
     var value = "" as String
     
     for _ in 0...length {
-        if idx.memory > 31{
+        //if idx.memory > 31{
             let c = String(format: "%c", idx.memory)
             value += c
-        }
+        //}
         idx++
     }
     return value

@@ -31,6 +31,7 @@ public class PreparedData {
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
+        //print("\(data)   end")
         //header
         if data.containsString("HTTP/1."){
             req = nil
