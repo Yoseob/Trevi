@@ -41,7 +41,7 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
      *  If bind function succeeds, create a client socket.
      *  However, if it fails, returns nil
      */
-    public init?(fd : Int32, address : T, queue : dispatch_queue_t = readQueue) {
+    public init?(fd : Int32, address : T, queue : dispatch_queue_t = serverModel.readQueue) {
         
         super.init(fd: fd, address: address)
         eventHandle = EventHandler(fd: fd, queue: queue)
@@ -127,16 +127,18 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
             return write(data.bytes, length: data.length)
     }
     
-    public func cancelTimeout() {
-        if let timeout = self.timeout {
-            timeout.cancelTimer()
-            self.timeout = nil
-        }
-    }
-    
+    /**
+     * setTimeout
+     * Close this socket after set time.
+     * If call this function again the time will be reset.
+     *
+     * @param
+     *  First : Time(Seconds).
+     *
+     */
     public func setTimeout(seconds : __uint64_t) {
         self.cancelTimeout()
-        timeout = Timer(interval: seconds, leeway: 1, queue: readQueue)
+        timeout = Timer(interval: seconds, leeway: 1, queue: serverModel.readQueue)
         
         timeout.startTimerOnce(){
             [unowned self] in
@@ -144,6 +146,12 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
                 self.close()
                 return
             }
+        }
+    }
+    public func cancelTimeout() {
+        if let timeout = self.timeout {
+            timeout.cancelTimer()
+            self.timeout = nil
         }
     }
 }

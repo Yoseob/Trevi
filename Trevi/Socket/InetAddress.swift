@@ -8,8 +8,6 @@
 
 import Darwin
 
-
-// Should modify ip to be stable
 public protocol InetAddress {
     static var domain : Int32 { get }
     static var length : __uint8_t { get }

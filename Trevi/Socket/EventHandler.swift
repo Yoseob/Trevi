@@ -12,7 +12,6 @@ import Dispatch
 //  I think it's not good way, should find better way
 public typealias readCallback = (() -> Int)
 
-
 /**
  * ReadEvent
  * Socket's read event protocol
@@ -27,7 +26,7 @@ public protocol ReadEvent {
 public class BlockingRead : ReadEvent {
     public func excute(callback: readCallback) -> Bool {
         repeat{
-            guard callback() != 0 else {
+            guard callback() > 0 else {
                 return false
             }
         } while(true)
@@ -35,10 +34,51 @@ public class BlockingRead : ReadEvent {
 }
 public class NonBlockingRead : ReadEvent {
     public func excute(callback: readCallback) -> Bool {
-        return callback() != 0
+        return callback() > 0
+    }
+}
+/*
+* Set a queue to .f for single thread task handling.
+* Then all event in the queue will be dispatched to main queue in GCD, and they will be processed by main thread.
+* Examples:
+*   public let defaultQueue = dispatch_get_main_queue()
+    *
+    * On the other hand if you want multi thread server model and more parallelizing,
+* set the defaultQueue to dispatch_get_global_queue(_ ,  0)
+*/
+public enum DispatchQueue {
+    case SINGLE
+    case MULTI
+    
+    public var queue : dispatch_queue_t {
+        switch self {
+        case .SINGLE : return dispatch_get_main_queue()
+        case .MULTI : return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+        }
     }
 }
 
+/**
+* ServerModel class - Singleton
+* 
+* Store event queue properties.
+*
+* If a queue is SINGLE, all events in the queue will be dispatched to main queue in GCD,
+* and they will be processed just by main thread.
+*
+* On the other hand if a queue is MULTI, all events will be dispatched to global queue,
+*  and they will be processed by multi threads. Set a queue to MULTI for more parallelizing.
+*
+*/
+public let serverModel : ServerModel = ServerModel.sharedInstance
+public class ServerModel {
+    
+    static private let sharedInstance = ServerModel()
+    
+    public var acceptQueue = DispatchQueue.MULTI.queue
+    public var readQueue = DispatchQueue.MULTI.queue
+    public var writeQueue = DispatchQueue.MULTI.queue
+}
 
 /**
  * EventHandler class
@@ -111,7 +151,7 @@ public class EventHandler {
      */
     public func dispatchReadEvent(callback : readCallback) -> Bool {
         source = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
-            UInt(fd), 0, queue)
+            UInt(fd), 0, self.queue)
         
         if let source = self.source {
             dispatch_source_set_event_handler(source) {
@@ -121,7 +161,6 @@ public class EventHandler {
                     return
                 }
             }
-            
             dispatch_resume(source)
             return true
         }
@@ -156,12 +195,12 @@ public class EventHandler {
         
         guard bufferSize > 0 else { return true }
         
-        guard let dispatchData = dispatch_data_create(buffer, bufferSize, writeQueue , nil) else {
+        guard let dispatchData = dispatch_data_create(buffer, bufferSize, serverModel.writeQueue , nil) else {
             return false
         }
         
         ++self.writeCounts
-        dispatch_write(fd, dispatchData, writeQueue) {
+        dispatch_write(fd, dispatchData, serverModel.writeQueue) {
             _, _ in
 
             --self.writeCounts

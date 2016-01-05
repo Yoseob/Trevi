@@ -31,7 +31,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      *  If bind function succeeds, calls super.init().
      *  However, if it fails, returns nil
      */
-    public init?(address : T, queue : dispatch_queue_t = acceptQueue) {
+    public init?(address : T, queue : dispatch_queue_t = serverModel.acceptQueue) {
         
         let fd = socket(T.domain, SOCK_STREAM, 0)
         
@@ -63,10 +63,8 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      *  Success or failure
      */
     // Should extract nonBlock input, and move to Server Model Module
-    public func listen(nonBlock : Bool, backlog : Int32 = 50) -> Bool {
+    public func listen(backlog : Int32 = 50) -> Bool {
         guard !isListening else { return false }
-        
-        self.isNonBlocking = nonBlock
         
         let status = Darwin.listen(fd, backlog)
         guard status == 0 else { return false }
@@ -107,7 +105,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      * Examples:
      *  let server: ListenSocket? = ListenSocket(address: IPv4(port: 8080))
      *
-     *  server!.listenClientEvent(false) {
+     *  server!.listenClientEvent() {
      *      clientSocket in
      *
      *      clientSocket.eventHandle.dispatchReadEvent(){
@@ -128,10 +126,10 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      * @return
      *  Success or failure
      */
-    public func listenClientEvent(nonBlock : Bool, backlog : Int32 = 50,
+    public func listenClientEvent(backlog : Int32 = 50,
         clientCallback: (ConnectedSocket<T>) -> Void) -> Bool {
             
-            guard listen(nonBlock, backlog: backlog) else { return false }
+            guard listen(backlog) else { return false }
             
             self.eventHandle.dispatchReadEvent() {
                 _ in
@@ -144,10 +142,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
                     log.error("Cannot create client socket")
                     return 0
                 }
-                
-                // Should extract this client's nonBlock setting, and move to Server Model Module
-                clientSocket!.isNonBlocking = nonBlock
-                
+        
                 clientCallback(clientSocket!)
                 
                 return 42
@@ -164,7 +159,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      * Examples:
      *  let server: ListenSocket? = ListenSocket(address: IPv4(port: 8080))
      *
-     *  server!.listenClientReadEvent(false) {
+     *  server!.listenClientReadEvent() {
      *      clientSocket in
      *
      *      let (length, buffer) = clientSocket.read()
@@ -183,10 +178,10 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      * @return
      *  Success or failure.
      */
-    public func listenClientReadEvent(nonBlock : Bool, backlog : Int32 = 50,
+    public func listenClientReadEvent(backlog : Int32 = 50,
         clientReadCallback: (ConnectedSocket<T>) -> Int) -> Bool {
             
-            let status = listenClientEvent(nonBlock, backlog: backlog) {
+            let status = listenClientEvent(backlog) {
                 clientSocket in
                 
                 clientSocket.eventHandle.dispatchReadEvent(){

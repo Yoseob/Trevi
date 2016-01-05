@@ -7,29 +7,19 @@
 //
 
 /**
-* Set a queue to 'dispatch_get_main_queue()' for single thread task handling.
-* Then all event in the queue will be dispatched to main queue in GCD, and they will be processed by main thread.
-* Examples:
-*   public let defaultQueue = dispatch_get_main_queue()
+* ClientSocket class
 *
-* On the other hand if you want multi thread server model and more parallelizing,
-* set the defaultQueue to dispatch_get_global_queue(_ ,  0)
+* Interface for managing HttpSocket's client
 *
 */
-let globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-let mainQueue = dispatch_get_main_queue()
-let defaultQueue : dispatch_queue_t? = globalQueue // mainQueue
-
-public let acceptQueue = defaultQueue != nil ? defaultQueue : globalQueue
-public let readQueue = defaultQueue != nil ? defaultQueue : globalQueue
-public let writeQueue = defaultQueue != nil ? defaultQueue : globalQueue
-
 public class ClientSocket {
     
+    let ip : String
     weak var socket : ConnectedSocket<IPv4>!
     
     public init( socket : ConnectedSocket<IPv4> ){
         self.socket = socket
+        self.ip = socket.address.ip()
     }
     
     public func sendData ( data: NSData ) {
@@ -50,29 +40,67 @@ public protocol RequestHandler{
     func beginHandle(req : Request , _ res :Response )
 }
 
+/**
+ * HttpSocket class
+ *
+ * Set http server model and manage http client connections.
+ *
+ * Dispatch a request handle event.
+ *
+ */
+
 public class HttpSocket : RequestHandler {
     
     var listenSocket: ListenSocket<IPv4>!
-    var ip : String = "0.0.0.0"
     
     var httpCallback: HttpCallback?
     var prepare = PreparedData()
     var totalLength = 0
     
-    
-    // Set closeTime to terminate connection with a client after the time from last client request.
+    // If set closeTime a client will be disconnected withn closeTime.
     var closeTime: __uint64_t?
     
-    public func startListening (port : __uint16_t ) throws {
+    
+    /**
+     * setServerModel
+     * Set server model by input dispatch queues. 
+     * Tasks in these queues will be processed by threads which is set at inputs.
+     *
+     * Examples:
+     *  self.setServerModel(.MULTI, .MULTI, .SINGLE)
+     *
+     * @param
+     *  First : Client accept queue setting.
+     *  Second : Client request read queue setting.
+     *  Third : Write response queue setting.
+     *
+     */
+    public func setServerModel(accept : DispatchQueue,
+        _ read : DispatchQueue, _ write : DispatchQueue) {
+        serverModel.acceptQueue = accept.queue
+        serverModel.readQueue = read.queue
+        serverModel.writeQueue = write.queue
+    }
+    
+    /**
+     * startListening
+     * Listen http socket and dispatch client event.
+     *
+     * @param
+     *  First : Server ip set
+     *  Second : port setting
+     *
+     */
+    public func startListening (ip : String = "127.0.0.1", port : __uint16_t ) throws {
 
         guard let listenSocket = ListenSocket<IPv4> ( address: IPv4 (ip: ip, port: port)) else {
-            log.error("Could not create ListenSocket on ip : \(self.ip), port : \(port))")
+            log.error("Could not create ListenSocket on ip : \(ip), port : \(port))")
             return
         }
         
         prepare.requestHandler = self
         
-        listenSocket.listenClientReadEvent (true) {
+        listenSocket.listenClientReadEvent () {
             client in
             
             if let time = self.closeTime {
@@ -89,18 +117,13 @@ public class HttpSocket : RequestHandler {
     }
     
     public func beginHandle(req : Request , _ res :Response) {
-        
         self.httpCallback! ( req, res )
         self.prepare.dInit()
     }
     
-    
     private func prepareRequest(client : ConnectedSocket<IPv4>) -> Int{
-        
         let readData = client.read()
         self.totalLength += readData.length
-        
-
         
         if readData.length > 0 {
             let (contentLength, headerLength) = self.prepare.appendReadData(readData)
@@ -115,6 +138,5 @@ public class HttpSocket : RequestHandler {
         }
 
         return readData.length
-
     }
 }

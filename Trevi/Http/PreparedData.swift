@@ -30,16 +30,20 @@ public class PreparedData {
 
         
         var unsafebufferpointer = UnsafeBufferPointer(start: params.buffer, count: params.length)
+        
+//        print(blockToString(params.buffer, length: params.length))
+        
         let arr  = Array(unsafebufferpointer)
     
-        arr.forEach { bit in
-            
-        }
+//        arr.forEach { bit in
+//            print(bit)
+//        }
         
         
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
+        //print("\(data)   end")
         //header
         if data.containsString("HTTP/1."){
             req = nil

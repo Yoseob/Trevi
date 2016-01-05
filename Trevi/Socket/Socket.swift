@@ -21,20 +21,32 @@ import Darwin
 // Should abstract Socket states
 public class Socket<T: InetAddress> {
     
-    public var eventHandle : EventHandler! = nil
-    
     // Socket properties
     public let fd : Int32
     public var address : InetAddress
+    
+    // EventHandler for socket's read and write event.
+    // ReadEvent will be set according with socket's non-block state.
+    public var eventHandle : EventHandler! = nil {
+        didSet{
+            if self.nonblock {
+                self.eventHandle.readEvent = NonBlockingRead()
+            }
+            else {
+                self.eventHandle.readEvent = BlockingRead()
+            }
+        }
+    }
     
     // Socket states
     public var isCreated : Bool { return fd >= 0 }
     public var isBound : Bool = false
     public var isHandlerCreated : Bool { return eventHandle != nil }
     
-    public init(fd : Int32, address : InetAddress) {
+    public init(fd : Int32, address : InetAddress, nonblock : Bool = true) {
         self.fd = fd
         self.address = address
+        self.nonblock = nonblock
     }
     
     
@@ -184,9 +196,7 @@ extension Socket{
     }
 }
 
-
-// Should extract this module, and move to Server Model Module
-// Socket Flags
+// Socket Flags and Socket's blocking or non-blocking setting
 extension Socket {
     public var flags : Int32 {
         get {
@@ -194,23 +204,21 @@ extension Socket {
         }
         set {
             if swift_fcntl(fd, F_SETFL, Int32(newValue)) == -1 {
-                log.error("fcntl set error")
+                log.error("Socket fcntl set error")
             }
         }
     }
     
-    public var isNonBlocking : Bool {
+    public var nonblock : Bool {
         get {
             return (flags & O_NONBLOCK) != 0 ? true : false
         }
         set {
             if newValue {
                 flags |= O_NONBLOCK
-                self.eventHandle.readEvent = NonBlockingRead()
             }
             else {
                 flags = flags & ~O_NONBLOCK
-                self.eventHandle.readEvent = BlockingRead()
             }
         }
     }
