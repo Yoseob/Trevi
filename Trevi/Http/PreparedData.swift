@@ -19,13 +19,30 @@ public class PreparedData {
     init(){
     }
 
+    // If completed with a request to begin addressing delegate
     public var requestHandler :RequestHandler?
+    
+    //The content-length of the body
     private var content_length = 0
+    
     private var req : Request?
+    
     var filemanager  = File()
     
-    var testData : NSMutableData?
     
+    /**
+     Functions that can make with one request a function been divided into several
+     
+     - Parameter path: Data received and length
+     
+        Examples:
+            public func operateCommand ( params: MiddlewareParams ) -> Bool {
+                return false
+             }
+
+     - Returns: {(Int,Int)} content-length,header-length
+
+     */
     func appendReadData(params : ReceivedParams) -> (Int,Int){
 
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
@@ -35,7 +52,6 @@ public class PreparedData {
         if data.containsString("HTTP/1."){
             req = nil
             req = setupRequest(data)
-            testData = NSMutableData()
             if let contentLength = req?.header[Content_Length]{
                 content_length =  Int(contentLength)!
                 headerLength = params.length
@@ -62,16 +78,35 @@ public class PreparedData {
         return (content_length,headerLength)
     }
     
+    
+    /**
+     Function with which to data rather than parsing through
+     
+     - Parameter path: At the request of a string body
+     
+     - Returns: Void
+     
+     */
     func dispatchBodyData(bodyFragment : String){
         req?.bodyFragments.append(bodyFragment)
     }
     
+    /**
+     Running time with response to complete function to listen to the data of the request.
+
+     
+     - Parameter path: A socket for response
+     
+     - Returns: Void
+     
+     */
     func handleRequest(socket : ClientSocket ){
         let res = setupResponse(socket)
         requestHandler?.beginHandle(self.req!, res)
     }
     
     func dInit(){
+        
         content_length = 0
     }
  

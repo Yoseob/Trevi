@@ -115,6 +115,11 @@ public enum StatusCode: Int {
     case ServiceUnavailable  = 503
 }
 
+
+/*
+    Content-type and mime-type
+
+*/
 public class Mime {
     
     class func type(key: String) -> String {
