@@ -27,8 +27,6 @@ public enum MiddlewareName: String {
     // else...
 }
 
-
-
     /**
     * if you want to make middleware, use this protocol
     *
@@ -40,7 +38,6 @@ public enum MiddlewareName: String {
     *
     * @public
     */
-
 public protocol Middleware {
     var name: MiddlewareName { get set }
     func operateCommand ( params: MiddlewareParams ) -> Bool

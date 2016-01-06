@@ -8,7 +8,11 @@
 
 import Foundation
 
-
+/*
+    One of the Middleware class to the path to ensure that able to handle the user defined url
+    However, it's not find the path to the running is trevi all save the path at this class when the server is starting on the go.
+    This class is real class router's functioning.
+*/
 public class Trevi: Middleware {
 
     public var usedModuleList = [ RouteAble ] ()
@@ -19,18 +23,28 @@ public class Trevi: Middleware {
         name = .Trevi
     }
 
+    //Singleton lazy
     struct StaticInstance {
         static var dispatchToken: dispatch_once_t = 0
         static var instance:      Trevi?
     }
 
+    //instance Singleton
     public class func sharedInstance () -> Trevi {
         dispatch_once ( &StaticInstance.dispatchToken ) {
             StaticInstance.instance = Trevi ()
         }
         return StaticInstance.instance!
     }
-
+    
+    /**
+     General module to use as a class module used to store, 
+     and users and is not necessary.
+     
+     - Parameter path : User class just a collection of justice url
+     
+     - Returns : Self
+     */
     public func store ( routeable: RouteAble ) -> RouteAble {
         Trevi.sharedInstance ().usedModuleList.append ( routeable )
         return routeable

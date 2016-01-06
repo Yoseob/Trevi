@@ -18,7 +18,10 @@ struct ParserdData {
     var data : NSData?
 }
 
-
+/*
+    This class is the middleware as one of the most important
+    Consisting of many ways is easily allows us to write the user body.
+*/
 public typealias Function =  (Request) -> [String:AnyObject!]!
 
 public class BodyParser: Middleware {
@@ -41,7 +44,13 @@ public class BodyParser: Middleware {
     }
     
     
+    /**
+    The function implemented is Middleware protocol
     
+     - Parameter path: parameter consists of route, Requests and response\
+     
+    - Returns: it is Mean that can next action
+    */
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
         var req: Request = params.req
         
@@ -69,7 +78,13 @@ public class BodyParser: Middleware {
     }
     
     
-    
+    /**
+     Strategy patterns in their use of using body parsing     
+     
+     - Parameter path: Request and In certain cases, for boundary, Parse function
+     
+     - Returns: Void
+     */
     private func parserBody ( inout req: Request , boundry : String? , function : Function? ) {
         
         if let boundry = boundry {
@@ -107,8 +122,7 @@ public class BodyParser: Middleware {
     
     private func form_data_parser ( req : Request , boundry:String) -> [String:AnyObject!]!{
         print ( "form_data_parser" )
-        
-        
+
         var begin = false
         var end  = false
         
@@ -138,8 +152,6 @@ public class BodyParser: Middleware {
                 }
             })
         }
- 
-
         return nil
     }
     func convert<T>(count: Int, data: UnsafePointer<T>) -> [T] {
