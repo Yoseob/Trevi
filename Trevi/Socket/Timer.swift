@@ -8,8 +8,13 @@
 
 import Dispatch
 
+/**
+ * Timer class
+ *
+ * Provide dispatch event after set time.
+ *
+ */
 public class Timer {
-    
     let interval : __uint64_t
     let leeway : __uint64_t
     var queue : dispatch_queue_t
@@ -25,6 +30,11 @@ public class Timer {
         self.cancelTimer()
     }
     
+    /**
+     Start timer event.
+     
+     - Parameter event: Event which will happen each interval time.
+    */
     public func startTimer(event : dispatch_block_t) {
         
         self.source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
@@ -36,6 +46,11 @@ public class Timer {
         }
     }
     
+    /**
+     Start timer event just one time.
+     
+     - Parameter event: Event which will happen after interval time and be terminated.
+     */
     public func startTimerOnce(event : dispatch_block_t) {
         self.startTimer() {
             self.cancelTimer()

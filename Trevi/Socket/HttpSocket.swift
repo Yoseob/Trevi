@@ -44,11 +44,9 @@ public protocol RequestHandler{
  * HttpSocket class
  *
  * Set http server model and manage http client connections.
- *
  * Dispatch a request handle event.
  *
  */
-
 public class HttpSocket : RequestHandler {
     
     let ip : String?
@@ -65,19 +63,12 @@ public class HttpSocket : RequestHandler {
         self.ip = ip
     }
     
-    /**
-     * setServerModel
-     * Set server model by input dispatch queues. 
-     * Tasks in these queues will be processed by threads which is set at inputs.
-     *
-     * Examples:
-     *  self.setServerModel(.MULTI, .MULTI, .SINGLE)
-     *
-     * @param
-     *  First : Client accept queue setting.
-     *  Second : Client request read queue setting.
-     *  Third : Write response queue setting.
-     *
+     /**
+     Set server model by input dispatch queues.
+     
+     - Parameter accept: Client accept queue setting.
+     - Parameter read: Client request read queue setting.
+     - Parameter write: Write response queue setting.
      */
     public func setServerModel(accept : DispatchQueue,
         _ read : DispatchQueue, _ write : DispatchQueue) {
@@ -86,14 +77,10 @@ public class HttpSocket : RequestHandler {
         serverModel.writeQueue = write.queue
     }
     
-    /**
-     * startListening
-     * Listen http socket and dispatch client event.
-     *
-     * @param
-     *  First : Server ip set
-     *  Second : port setting
-     *
+     /**
+     Listen http socket and dispatch client event.
+     
+     - Parameter port: Server port setting.
      */
     public func startListening ( port : __uint16_t ) throws {
         
