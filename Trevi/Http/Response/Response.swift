@@ -170,6 +170,7 @@ public class Response :Sender{
     public func template() -> Bool{
         return end()
     }
+    
     /**
      * Prepare header and body to send, Impliment send
      *

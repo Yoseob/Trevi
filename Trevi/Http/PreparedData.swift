@@ -19,85 +19,95 @@ public class PreparedData {
     init(){
     }
 
+    // If completed with a request to begin addressing delegate
     public var requestHandler :RequestHandler?
+    
+    //The content-length of the body
     private var content_length = 0
+    
     private var req : Request?
-
-
+    
     var filemanager  = File()
     
+    
+    /**
+     Functions that can make with one request a function been divided into several
+     
+     - Parameter path: Data received and length
+     
+        Examples:
+            public func operateCommand ( params: MiddlewareParams ) -> Bool {
+                return false
+             }
+
+     - Returns: {(Int,Int)} content-length,header-length
+
+     */
     func appendReadData(params : ReceivedParams) -> (Int,Int){
-        
+
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
-        let data = strData! as String
+        var data = strData! as String
         var headerLength = 0;
-//        print(data)
-//        print("end")
+        //print("\(data)   end")
         //header
         if data.containsString("HTTP/1."){
             req = nil
             req = setupRequest(data)
-
             if let contentLength = req?.header[Content_Length]{
                 content_length =  Int(contentLength)!
                 headerLength = params.length
             }
-            /*
-            
-            if req!.header[Content_Length] != nil && req!.bodyFragments.count == 0  {
-            let headerList = req!.headerString.componentsSeparatedByString(CRLF)
-            
-            var buff = String()
-            var flag = false
-            
-            for line in headerList{
-            if line.length() == 0 {
-            flag = true
-            }
-            if flag && line.length() > 0{
-            buff += line
-            buff += CRLF
-            }
-            }
-            
-            if buff.length() > 0 {
-            req!.bodyFragments.insert(buff, atIndex: 0)
-            }
-            }
 
-            
-            
-            
-            */
-            
-        }else{
-            //read file
-            //req.body
-            /*
-            
-            if content_length > config.max_post_size {
-                read file
-            }else{
-                read stack memory
+            if req!.header[Content_Length] != nil && req!.bodyFragments.count == 0  {
+                let headerList = req!.headerString.componentsSeparatedByString(CRLF)
+                var buff = String()
+                var flag = false
+                
+                for line in headerList{
+                    if line.length() == 0 {
+                        flag = true
+                    }
+                    if flag && line.length() > 0{
+                        buff += line
+                        buff += CRLF
+                    }
+                }
+                data = buff
             }
-            
-            */
-//            req?.body.appendBytes(params.buffer, length: params.length)
-            
-            filemanager.write("test.txt", data: data, encoding: NSUTF8StringEncoding)
-//            try! File.writetest( "image.txt", data:data, encoding: NSUTF8StringEncoding )
-            req?.bodyFragments.append(data)
         }
-    
+        dispatchBodyData(data)
         return (content_length,headerLength)
     }
     
+    
+    /**
+     Function with which to data rather than parsing through
+     
+     - Parameter path: At the request of a string body
+     
+     - Returns: Void
+     
+     */
+    func dispatchBodyData(bodyFragment : String){
+        req?.bodyFragments.append(bodyFragment)
+    }
+    
+    /**
+     Running time with response to complete function to listen to the data of the request.
+
+     
+     - Parameter path: A socket for response
+     
+     - Returns: Void
+     
+     */
     func handleRequest(socket : ClientSocket ){
         let res = setupResponse(socket)
         requestHandler?.beginHandle(self.req!, res)
     }
     
     func dInit(){
+        
         content_length = 0
     }
  

@@ -7,29 +7,19 @@
 //
 
 /**
-* Set a queue to 'dispatch_get_main_queue()' for single thread task handling.
-* Then all event in the queue will be dispatched to main queue in GCD, and they will be processed by main thread.
-* Examples:
-*   public let defaultQueue = dispatch_get_main_queue()
+* ClientSocket class
 *
-* On the other hand if you want multi thread server model and more parallelizing,
-* set the defaultQueue to dispatch_get_global_queue(_ ,  0)
+* Interface for managing HttpSocket's client
 *
 */
-let globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-let mainQueue = dispatch_get_main_queue()
-let defaultQueue : dispatch_queue_t? = globalQueue // mainQueue
-
-public let acceptQueue = defaultQueue != nil ? defaultQueue : globalQueue
-public let readQueue = defaultQueue != nil ? defaultQueue : globalQueue
-public let writeQueue = defaultQueue != nil ? defaultQueue : globalQueue
-
 public class ClientSocket {
     
+    let ip : String
     weak var socket : ConnectedSocket<IPv4>!
     
     public init( socket : ConnectedSocket<IPv4> ){
         self.socket = socket
+        self.ip = socket.address.ip()
     }
     
     public func sendData ( data: NSData ) {
@@ -50,29 +40,69 @@ public protocol RequestHandler{
     func beginHandle(req : Request , _ res :Response )
 }
 
+/**
+ * HttpSocket class
+ *
+ * Set http server model and manage http client connections.
+ * Dispatch a request handle event.
+ *
+ */
 public class HttpSocket : RequestHandler {
     
-    var listenSocket: ListenSocket<IPv4>!
-    var ip : String = "0.0.0.0"
+    let ip : String?
+    var listenSocket : ListenSocket<IPv4>!
     
-    var httpCallback: HttpCallback?
+    var httpCallback : HttpCallback?
     var prepare = PreparedData()
     var totalLength = 0
     
-    
-    // Set closeTime to terminate connection with a client after the time from last client request.
+    // If set closeTime a client will be disconnected withn closeTime.
     var closeTime: __uint64_t?
     
-    public func startListening (port : __uint16_t ) throws {
-
-        guard let listenSocket = ListenSocket<IPv4> ( address: IPv4 (ip: ip, port: port)) else {
+    public init(ip : String? = nil){
+        self.ip = ip
+    }
+    
+     /**
+     Set server model by input dispatch queues.
+     
+     - Parameter accept: Client accept queue setting.
+     - Parameter read: Client request read queue setting.
+     - Parameter write: Write response queue setting.
+     */
+    public func setServerModel(accept : DispatchQueue,
+        _ read : DispatchQueue, _ write : DispatchQueue) {
+        serverModel.acceptQueue = accept.queue
+        serverModel.readQueue = read.queue
+        serverModel.writeQueue = write.queue
+    }
+    
+     /**
+     Listen http socket and dispatch client event.
+     
+     - Parameter port: Server port setting.
+     */
+    public func startListening ( port : __uint16_t ) throws {
+        
+        var address : IPv4 {
+            get{
+                if let ip = self.ip{
+                    return IPv4(ip: ip, port: port)
+                }
+                else{
+                    return IPv4(port: port)
+                }
+            }
+        }
+        
+        guard let listenSocket = ListenSocket<IPv4> ( address: address) else {
             log.error("Could not create ListenSocket on ip : \(self.ip), port : \(port))")
             return
         }
         
         prepare.requestHandler = self
         
-        listenSocket.listenClientReadEvent (true) {
+        listenSocket.listenClientReadEvent () {
             client in
             
             if let time = self.closeTime {
@@ -89,14 +119,11 @@ public class HttpSocket : RequestHandler {
     }
     
     public func beginHandle(req : Request , _ res :Response) {
-        
         self.httpCallback! ( req, res )
         self.prepare.dInit()
     }
     
-    
     private func prepareRequest(client : ConnectedSocket<IPv4>) -> Int{
-        
         let readData = client.read()
         self.totalLength += readData.length
         
@@ -111,7 +138,7 @@ public class HttpSocket : RequestHandler {
                 self.prepare.handleRequest(httpClient)
             }
         }
-        return readData.length
 
+        return readData.length
     }
 }

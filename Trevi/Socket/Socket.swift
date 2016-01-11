@@ -18,37 +18,45 @@ import Darwin
  *
  */
  
-// Should abstract Socket states
+// Should abstract Socket states.
 public class Socket<T: InetAddress> {
     
-    public var eventHandle : EventHandler! = nil
-    
-    // Socket properties
+    // Socket properties.
     public let fd : Int32
     public var address : InetAddress
     
-    // Socket states
+    // EventHandler for socket's read and write event.
+    // ReadEvent will be set according with socket's non-block state.
+    public var eventHandle : EventHandler! = nil {
+        didSet{
+            if self.nonblock {
+                self.eventHandle.readEvent = NonBlockingRead()
+            }
+            else {
+                self.eventHandle.readEvent = BlockingRead()
+            }
+        }
+    }
+    
+    // Socket states.
     public var isCreated : Bool { return fd >= 0 }
     public var isBound : Bool = false
     public var isHandlerCreated : Bool { return eventHandle != nil }
     
-    public init(fd : Int32, address : InetAddress) {
+    public init(fd : Int32, address : InetAddress, nonblock : Bool = true) {
         self.fd = fd
         self.address = address
+        self.nonblock = nonblock
     }
     
     
-    /**
-     * convenience init? 
-     * Create a socket
-     *
-     * @param
-     *  First : A address family for this socket.
-     *  Second : Socket type (SOCK_STREAM / SOCK_DGRAM).
-     *
-     * @return 
-     *  If socket function succeeds, calls init().
-     *  However, if it fails, returns nil
+     /**
+      Create a socket.
+     
+     - Parameter address: A address family for this socket.
+     - Parameter type: Socket type (SOCK_STREAM / SOCK_DGRAM).
+     
+     - Returns:  If socket function succeeds, calls init(). However, if it fails, returns nil.
      */
     public convenience init?(address : InetAddress, type : Int32){
         let tfd = socket(T.domain, type, 0)
@@ -69,13 +77,10 @@ public class Socket<T: InetAddress> {
         Darwin.close(fd)
     }
     
-    /**
-     * bind
-     * Bind socket with server's address
-     *
-     * @param
-     * @return
-     *  Success or failure
+     /**
+     Bind socket with server's address.
+    
+     - Returns:  Success or failure.
      */
     public func bind() -> Bool {
         guard isCreated && !isBound else {
@@ -95,7 +100,7 @@ public class Socket<T: InetAddress> {
     }
 }
 
-// Socket options
+// Socket options.
 public enum SocketOption {
     case BROADCAST(Bool),
     DEBUG(Bool),
@@ -126,15 +131,15 @@ public enum SocketOption {
 
 extension Socket{
     
-    /**
-     * setSocketOption
-     * Set various sockets' option
-     *
-     * Examples: setSocketOption([.BROADCAST(true), .REUSEADDR(true), .NOSIGPIPE(true)])
-     *
-     * @param
-     * @return
-     *  Success or failure
+     /**
+     Set various sockets' option.
+     
+     Example:
+        setSocketOption([.BROADCAST(true), .REUSEADDR(true), .NOSIGPIPE(true)])
+     
+     - Parameter options: SocketOption enum array.
+     
+     - Returns: Success or failure
      */
     public func setSocketOption(options: [SocketOption]?) -> Bool {
         if options == nil { return false }
@@ -156,19 +161,19 @@ extension Socket{
         return true
     }
     
-    /**
-    * getSocketOption
-    * Get a socket option by input option
-    *
-    * Examples: getSocketOption(.REUSEADDR(true))
-    *   SocketOption's value does not metter in a result, so
-     *  this example is same with getSocketOption(.REUSEADDR(false))
-    *
-    * @param
-    *
-    * @return
-    *  Success or failure
-    */
+     /**
+     Get a socket option by input option.
+     
+     Example:
+     getSocketOption(.REUSEADDR(true))
+     
+     SocketOption's value does not metter in a result, so this example is same with
+    getSocketOption(.REUSEADDR(false))
+     
+     - Parameter options: SocketOption enum
+     
+     - Returns: Success or failure
+     */
     public func getSocketOption(option: SocketOption) -> Int32 {
         let name = option.match.name
         var buffer = Int32(0)
@@ -184,9 +189,7 @@ extension Socket{
     }
 }
 
-
-// Should extract this module, and move to Server Model Module
-// Socket Flags
+// Socket Flags and Socket's blocking or non-blocking setting.
 extension Socket {
     public var flags : Int32 {
         get {
@@ -194,23 +197,21 @@ extension Socket {
         }
         set {
             if swift_fcntl(fd, F_SETFL, Int32(newValue)) == -1 {
-                log.error("fcntl set error")
+                log.error("Socket fcntl set error")
             }
         }
     }
     
-    public var isNonBlocking : Bool {
+    public var nonblock : Bool {
         get {
             return (flags & O_NONBLOCK) != 0 ? true : false
         }
         set {
             if newValue {
                 flags |= O_NONBLOCK
-                self.eventHandle.readEvent = NonBlockingRead()
             }
             else {
                 flags = flags & ~O_NONBLOCK
-                self.eventHandle.readEvent = BlockingRead()
             }
         }
     }

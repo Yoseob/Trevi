@@ -12,7 +12,6 @@ import Dispatch
 //  I think it's not good way, should find better way
 public typealias readCallback = (() -> Int)
 
-
 /**
  * ReadEvent
  * Socket's read event protocol
@@ -27,7 +26,7 @@ public protocol ReadEvent {
 public class BlockingRead : ReadEvent {
     public func excute(callback: readCallback) -> Bool {
         repeat{
-            guard callback() != 0 else {
+            guard callback() > 0 else {
                 return false
             }
         } while(true)
@@ -35,16 +34,47 @@ public class BlockingRead : ReadEvent {
 }
 public class NonBlockingRead : ReadEvent {
     public func excute(callback: readCallback) -> Bool {
-        return callback() != 0
+        return callback() > 0
     }
 }
 
+public enum DispatchQueue {
+    case SINGLE
+    case MULTI
+    
+    public var queue : dispatch_queue_t {
+        switch self {
+        case .SINGLE : return dispatch_get_main_queue()
+        case .MULTI : return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+        }
+    }
+}
+
+/**
+ ServerModel class - Singleton
+
+ Store event queue properties.
+
+  If a queue is SINGLE, all events in the queue will be dispatched to main queue in GCD,
+ and they will be processed just by main thread.
+
+  On the other hand if a queue is MULTI, all events will be dispatched to global queue,
+ and they will be processed by multi threads. Set a queue to MULTI for more parallelizing.
+*/
+public let serverModel : ServerModel = ServerModel.sharedInstance
+public class ServerModel {
+    
+    static private let sharedInstance = ServerModel()
+    
+    public var acceptQueue = DispatchQueue.MULTI.queue
+    public var readQueue = DispatchQueue.MULTI.queue
+    public var writeQueue = DispatchQueue.MULTI.queue
+}
 
 /**
  * EventHandler class
  *
  * Manage all socket' read and write event based on GCD.
- *
  * Should change this module to be working in Linux.
  *
  */
@@ -85,33 +115,28 @@ public class EventHandler {
         return false
     }
     
-    
     /**
-     * dispatchReadEvent
-     * Dispatch socket's read event.
-     *
-     * Examples:
-     *  eventHandle.dispatchReadEvent(){
-     *
-     *      let (count, buffer) = clientSocket.read()
-     *
-     *      clientSocket.write(buffer, length: count, queue: dispatch_get_main_queue())
-     *
-     *      return count
-     *  }
-     *
-     * @param
-     *  First : Should be readCallback and return read length. If return 0 this EventHandler's
-     *           read event will stop, and parent's socket will deinit. Don't be worry about strong 
-     *           reference. All parent's properties will be destroyed.
-     *
-     *
-     * @return
-     *  Success or failure.
+     Dispatch socket's read event.
+     
+     Example:
+         eventHandle.dispatchReadEvent(){
+         
+            let (count, buffer) = clientSocket.read()
+         
+            clientSocket.write(buffer, length: count, queue: dispatch_get_main_queue())
+         
+            return count
+         }
+     
+     - Parameter callback: Should be readCallback and return read length. 
+            If return 0 this EventHandler's read event will stop, and parent's socket will deinit. 
+            Don't be worry about strong reference. All parent's properties will be destroyed.
+     
+     - Returns:  Success or failure
      */
-    public func dispatchReadEvent(callback : readCallback) -> Bool {
+       public func dispatchReadEvent(callback : readCallback) -> Bool {
         source = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
-            UInt(fd), 0, queue)
+            UInt(fd), 0, self.queue)
         
         if let source = self.source {
             dispatch_source_set_event_handler(source) {
@@ -121,7 +146,6 @@ public class EventHandler {
                     return
                 }
             }
-            
             dispatch_resume(source)
             return true
         }
@@ -131,22 +155,19 @@ public class EventHandler {
         }
     }
     
-    /**
-     * dispatchWriteEvent
-     * Write response data to this socket.
-     *
-     * Examples:
-     *  eventHandle.dispatchWriteEvent(buffer, length : length) {
-     *      if self.isClosing { self.close() }
-     *  }
-     *
-     * @param
-     *  First : Data buffer pointer<data type>.
-     *  Second : Daga length.
-     *  Third : Close event to prevent socket closing before writting.
-     *
-     * @return
-     *  Success or failure.
+     /**
+     Write response data to this socket.
+     
+     Example:
+        eventHandle.dispatchWriteEvent(buffer, length : length) {
+            if self.isClosing { self.close() }
+        }
+     
+     - Parameter buffer: Data buffer pointer<data type>.
+     - Parameter length: Daga length.
+     - Parameter closeSocket: Close event to prevent socket closing before writting.
+     
+     - Returns:  Success or failure
      */
     public func dispatchWriteEvent<M>(buffer : UnsafePointer<M>,
         length : Int, closeSocket : ()->() ) -> Bool {
@@ -156,12 +177,12 @@ public class EventHandler {
         
         guard bufferSize > 0 else { return true }
         
-        guard let dispatchData = dispatch_data_create(buffer, bufferSize, writeQueue , nil) else {
+        guard let dispatchData = dispatch_data_create(buffer, bufferSize, serverModel.writeQueue , nil) else {
             return false
         }
         
         ++self.writeCounts
-        dispatch_write(fd, dispatchData, writeQueue) {
+        dispatch_write(fd, dispatchData, serverModel.writeQueue) {
             _, _ in
 
             --self.writeCounts

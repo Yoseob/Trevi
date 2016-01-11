@@ -8,8 +8,6 @@
 
 import Darwin
 
-
-// Should modify ip to be stable
 public protocol InetAddress {
     static var domain : Int32 { get }
     static var length : __uint8_t { get }
@@ -18,7 +16,7 @@ public protocol InetAddress {
     init()
 }
 
-// IPv4 address extention
+// IPv4 address extention.
 let INADDR_ANY = in_addr(s_addr: 0)
 public typealias IPv4 = sockaddr_in
 
@@ -54,8 +52,8 @@ extension sockaddr_in : InetAddress {
     }
 }
 
-// IPv6 address extention
-// It's not stable
+// IPv6 address extention.
+// It's not stable.
 let IN6ADDR_ANY = in6addr_any
 public typealias IPv6 = sockaddr_in6
 

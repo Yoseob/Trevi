@@ -18,7 +18,10 @@ struct ParserdData {
     var data : NSData?
 }
 
-
+/*
+    This class is the middleware as one of the most important
+    Consisting of many ways is easily allows us to write the user body.
+*/
 public typealias Function =  (Request) -> [String:AnyObject!]!
 
 public class BodyParser: Middleware {
@@ -41,7 +44,13 @@ public class BodyParser: Middleware {
     }
     
     
+    /**
+    The function implemented is Middleware protocol
     
+     - Parameter path: parameter consists of route, Requests and response\
+     
+    - Returns: it is Mean that can next action
+    */
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
         var req: Request = params.req
         
@@ -50,52 +59,33 @@ public class BodyParser: Middleware {
                 parserBody ( &req, boundry: nil, function: functionTable[type]!)
             }else if let type = req.header[Content_Type] {
                 
-                // below case need splite contenttype and boundary
+                // below case need splite content-type and boundary
                 //Content-Type: multipart/form-data; boundary=----WebKitFormBoundarywXfXEDEZqJO6nhGr
-                
                 let ret = spliteContentType(type)
-//                parserBody(&req, boundry: "--"+ret.boundry, function: nil)
+                
+                parserBody(&req, boundry: "--"+ret.boundry, function: nil)
             }
         }
         return false
     }
 
     private func spliteContentType(contentType : String) -> (content_type:String ,boundry : String){
-        
-        
+
         let components = contentType.componentsSeparatedByString("; ")
         let lastObject = components.last!
-        let boundary = lastObject.componentsSeparatedByString("=").last
-        
+        let boundary = lastObject.componentsSeparatedByString("=").last        
         return (components.first!,boundary!)
     }
     
     
-    
+    /**
+     Strategy patterns in their use of using body parsing     
+     
+     - Parameter path: Request and In certain cases, for boundary, Parse function
+     
+     - Returns: Void
+     */
     private func parserBody ( inout req: Request , boundry : String? , function : Function? ) {
-        
-
-        if req.header[Content_Length] != nil && req.bodyFragments.count == 0  {
-            let headerList = req.headerString.componentsSeparatedByString(CRLF)
-
-            var buff = String()
-            var flag = false
-            
-            for line in headerList{
-                if line.length() == 0 {
-                    flag = true
-                }
-                if flag && line.length() > 0{
-                    buff += line
-                    buff += CRLF
-                }
-            }
-    
-            if buff.length() > 0 {
-                req.bodyFragments.insert(buff, atIndex: 0)
-            }
-        }
-        
         
         if let boundry = boundry {
             req.json = form_data_parser(req, boundry: boundry)
@@ -110,7 +100,10 @@ public class BodyParser: Middleware {
     }
     private func json_parser ( req : Request ) -> [String:AnyObject!]!{
         do {
-            return try NSJSONSerialization.JSONObjectWithData ( NSData(), options: .MutableContainers ) as? [String:AnyObject!]
+            
+            
+            let data = req.bodyFragments.first!.dataUsingEncoding(NSUTF8StringEncoding)
+            return try NSJSONSerialization.JSONObjectWithData (data! , options: .MutableContainers ) as? [String:AnyObject!]
         } catch {
             print ( "Something went wrong" )
             return nil
@@ -129,8 +122,7 @@ public class BodyParser: Middleware {
     
     private func form_data_parser ( req : Request , boundry:String) -> [String:AnyObject!]!{
         print ( "form_data_parser" )
-        
-        
+
         var begin = false
         var end  = false
         
@@ -138,11 +130,9 @@ public class BodyParser: Middleware {
         for str in req.bodyFragments{
             
             str.enumerateLines({ (line, stop) -> () in
+                print(line)
                 if begin {
-                    let spliteCoponents = line.componentsSeparatedByString("; ")
-
                 }else if end{
-                    
                 }
 
                 if line == boundry{
@@ -156,15 +146,12 @@ public class BodyParser: Middleware {
                     object = ParserdData()
                     begin = true
                 }else if line == CRLF{
+                    print("CRLF")
                     end = true
                     begin = false
                 }
-                
-                
             })
         }
- 
-
         return nil
     }
     func convert<T>(count: Int, data: UnsafePointer<T>) -> [T] {

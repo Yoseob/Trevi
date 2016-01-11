@@ -28,20 +28,16 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     
     public var timeout : Timer! = nil
     
-    /**
-     * init?
-     * After accept, create a client socket,
-     *
-     * @param
-     *  First : Client socket's file descriptor.
-     *  Second : Client socket's address family.
-     *  Third : A dispatch queue for this socket's read event.
-     *
-     * @return
-     *  If bind function succeeds, create a client socket.
-     *  However, if it fails, returns nil
+     /**
+     After accept, create a client socket.
+     
+     - Parameter fd: Client socket's file descriptor.
+     - Parameter address: Client socket's address family.
+     - Parameter queue: A dispatch queue for this socket's read event(request).
+     
+     - Returns:  If bind function succeeds, create a client socket. However, if it fails, returns nil.
      */
-    public init?(fd : Int32, address : T, queue : dispatch_queue_t = readQueue) {
+    public init?(fd : Int32, address : T, queue : dispatch_queue_t = serverModel.readQueue) {
         
         super.init(fd: fd, address: address)
         eventHandle = EventHandler(fd: fd, queue: queue)
@@ -73,17 +69,10 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         super.close()
     }
     
-    // Should add connect()
-    
     /**
-    * read
-    * Read recived data from this socket.
-    *
-    * @param
-    *
-    * @return
-    *  First : Read length.
-    *  Second : Read data buffer pointer.
+    Read recived data from this socket.
+    
+    - Returns:  (Data buffer pointer, Data length)
     */
     public func read() -> (buffer: UnsafeMutablePointer<CChar>, length: Int) {
         let readBufferPtr = UnsafeMutablePointer<CChar>(bufferPtr)
@@ -99,19 +88,13 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         return ( readBufferPtr, readBufferLen )
     }
     
-    /**
-     * write
-     * Write response data to this socket.
-     *
-     * @param
-     *  First : Data buffer pointer.
-     *  Second : Data length.
-     *  Third : A dispatch queue for write event.
-     *             If you use dispatch_get_main_queue(), all write event in this program
-     *             will be processed by main thread.
-     *
-     * @return
-     *  Success or failure.
+     /**
+     Write response data to this socket.
+     
+     - Parameter buffer: Data buffer pointer.
+     - Parameter length: Data length.
+     
+     - Returns:  Success or failure
      */
     public func write<M>(buffer: UnsafePointer<M>, length : Int) -> Bool {
             
@@ -126,17 +109,16 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
             
             return write(data.bytes, length: data.length)
     }
-    
-    public func cancelTimeout() {
-        if let timeout = self.timeout {
-            timeout.cancelTimer()
-            self.timeout = nil
-        }
-    }
-    
+     
+     /**
+     Close this socket after set time.
+     If call this function again the previous time event will be terminated.
+     
+     - Parameter seconds: Time(Seconds).
+     */
     public func setTimeout(seconds : __uint64_t) {
         self.cancelTimeout()
-        timeout = Timer(interval: seconds, leeway: 1, queue: readQueue)
+        timeout = Timer(interval: seconds, leeway: 1, queue: serverModel.readQueue)
         
         timeout.startTimerOnce(){
             [unowned self] in
@@ -144,6 +126,12 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
                 self.close()
                 return
             }
+        }
+    }
+    public func cancelTimeout() {
+        if let timeout = self.timeout {
+            timeout.cancelTimer()
+            self.timeout = nil
         }
     }
 }
