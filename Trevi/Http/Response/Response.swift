@@ -19,7 +19,7 @@ public class Response :Sender{
     
     public var header = [ String: String ] ()
     
-    //use fill statusline of header 
+    //use fill statusline of header
     public var statusString: String {
         return internalStatus.statusString ()
     }
@@ -38,7 +38,7 @@ public class Response :Sender{
     //for binary
     private var data : NSData?{
         didSet{
-            //set response content-type of header 
+            //set response content-type of header
             //image.. Any
         }
     }
@@ -56,7 +56,7 @@ public class Response :Sender{
             header[Content_Type] = "text/plain;charset=utf-8"
         }
     }
-
+    
     /**
      * Make body. Surport all kind of Class. This value only used getter
      *
@@ -65,7 +65,7 @@ public class Response :Sender{
      * @return {NSData} bodyData
      * @private
      */
-
+    
     private var bodyData : NSData? {
         if let dt = data{
             return dt
@@ -79,23 +79,27 @@ public class Response :Sender{
         }
         return nil
     }
-
+    
     public var method : HTTPMethodType = .UNDEFINED
     
     private var internalStatus : StatusCode = .OK
-
+    
+    public let startTime: NSDate
+    
     public var socket : ClientSocket?
-
-    public var  renderer: Renderer?
-
-    public init(){
-    }
-
-    public init ( socket: ClientSocket ) {
-        self.socket = socket   // if render , send , template func is called call self.socket.send(AnyOnject)
+    
+    public var renderer : Renderer?
+    
+    public var onFinished : (( Response ) -> Void)?
+    
+    public init (){
+        self.startTime = NSDate ()
     }
     
-
+    public init ( socket: ClientSocket ) {
+        self.startTime = NSDate ()
+        self.socket = socket   // if render , send , template func is called call self.socket.send(AnyOnject)
+    }
     
     /**
      * Send a response data
@@ -109,7 +113,7 @@ public class Response :Sender{
      * @param { String|number|AnyObject} data
      * @public
      */
-
+    
     public func send (data: AnyObject?) -> Bool {
         //need control flow that can divide AnyObject type
         switch data {
@@ -124,7 +128,7 @@ public class Response :Sender{
         }
         return end()
     }
-
+    
     /**
      * Send with html,etc, this function is help MVC
      *
@@ -150,21 +154,21 @@ public class Response :Sender{
         }
         
         //this function called when rand html. forced change content-type = text/html
-        // should add control flow  filename.css or filename.js filename.html etc 
+        // should add control flow  filename.css or filename.js filename.html etc
         let temp : [String] = filename.componentsSeparatedByString(".")
         var filetype = temp.last! as String
         if filetype.length() > 0 && filetype == "ssp" {
             filetype = "html"
         }
         let content_type = "text/\(filetype);charset=utf-8"
-
+        
         header[Content_Type] = content_type
         return end()
     }
     
     //not yet impliment
     public func template() -> Bool{
-       return end()
+        return end()
     }
     /**
      * Prepare header and body to send, Impliment send
@@ -174,6 +178,11 @@ public class Response :Sender{
      * return {Bool} isSend
      */
     public func end () ->Bool{
+        
+        if onFinished != nil {
+            onFinished! ( self )
+        }
+        
         let headerData       = prepareHeader ()
         let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
         socket!.sendData ( sendData )
@@ -182,7 +191,7 @@ public class Response :Sender{
         }
         return true
     }
-
+    
     /**
      * Redirect Page redering with destination url
      *
@@ -196,7 +205,7 @@ public class Response :Sender{
         return end()
     }
     
-
+    
     /**
      * Factory method make to response and make complate send message
      *
@@ -234,9 +243,9 @@ public class Response :Sender{
         var headerString = "\(HttpProtocol) \(statusCode) \(statusString)" + CRLF
         headerString += dictionaryToString ( header )
         return headerString.dataUsingEncoding ( NSUTF8StringEncoding )!
-
+        
     }
-
+    
     private func dictionaryToString ( dic: NSDictionary ) -> String! {
         var resultString = ""
         for (key, value) in dic {

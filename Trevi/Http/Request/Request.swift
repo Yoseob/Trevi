@@ -53,15 +53,19 @@ public class Request {
         }
     }
     
+    public let startTime: NSDate
+    
     // A variable to contain something needs by user.
     public var attribute = [ String : String ] ()
-
+    
     public init () {
-        self.path = String ()
+        self.path      = String ()
+        self.startTime = NSDate ()
     }
     
     public init ( _ headerStr: String ) {
-        self.path = String ()
+        self.path      = String ()
+        self.startTime = NSDate ()
         self.headerString = headerStr
         parse ()
     }
@@ -78,12 +82,13 @@ public class Request {
         
         // This is only for HTTP/1.x
         if requestLineElements.count == 3 {
+            self.version = requestLineElements[2].stringByReplacingOccurrencesOfString("HTTP/", withString: "")
             if let method = HTTPMethodType ( rawValue: requestLineElements[0] ) {
                 self.method = method
             }
             parseUrl( requestLineElements[1] )
             parseHeader( requestHeader )
-    
+            
         }
     }
     

@@ -67,10 +67,17 @@ public class Logger: Middleware {
         let req: Request  = params.req
         let res: Response = params.res
         
-        let log = compile( req, res: res )
-        print( log )
+        res.onFinished = { _res in
+            self.logRequest( request: req, response: _res )
+        }
         
         return false;
+    }
+    
+    private func logRequest( request req: Request, response res: Response ) {
+        
+        let log = compile( req, res: res )
+        print( log )
     }
     
     private func compile( req: Request, res: Response ) -> String {
@@ -102,13 +109,13 @@ public class Logger: Middleware {
         return isCompiled ? compiled : ""
     }
     
-    // Not suuport yet
     private func http_version ( req: Request, res: Response ) -> String {
         return req.version
     }
     
     private func response_time ( req: Request, res: Response ) -> String {
-        return ""
+        let elapsedTime = Double( res.startTime.timeIntervalSinceDate( req.startTime ) )
+        return "\(elapsedTime * 1000)"
     }
     
     // Not suuport yet
