@@ -179,17 +179,17 @@ public class Response :Sender{
      * return {Bool} isSend
      */
     public func end () ->Bool{
-        
-        if onFinished != nil {
-            onFinished! ( self )
-        }
-        
         let headerData       = prepareHeader ()
         let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
         socket!.sendData ( sendData )
         if header[Connection] != "keep-alive"{
             socket!.close()
         }
+        
+        if onFinished != nil {
+            onFinished! ( self )
+        }
+
         return true
     }
     

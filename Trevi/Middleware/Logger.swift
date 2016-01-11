@@ -9,6 +9,7 @@
 import Foundation
 
 enum LoggerToken: String {
+    case Response       = "res"
     case HttpVersion    = "http-version"
     case ResponseTime   = "response-time"
     case RemoteAddr     = "remote-addr"
@@ -85,8 +86,29 @@ public class Logger: Middleware {
         var isCompiled = false;
         var compiled = String( self.format )
         
+        if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: ":res\\[(.*?)\\]", options: [ .CaseInsensitive ] ) {
+            
+            for match in regex.matchesInString ( self.format, options: [], range: NSMakeRange( 0, self.format.length() ) ) {
+                let tokenRange = match.rangeAtIndex( 1 )
+                let tokenStr   = self.format.substring ( tokenRange.location, length: tokenRange.length )
+                
+                for type in HttpHeaderType.allValues {
+                    if tokenStr.lowercaseString == type.rawValue.lowercaseString {
+                        
+                        guard let logPiece : String = res.header[ type.rawValue ] else {
+                            compiled = compiled.stringByReplacingOccurrencesOfString( ":res[\(tokenStr)]", withString: "" )
+                            continue;
+                        }
+                        
+                        compiled = compiled.stringByReplacingOccurrencesOfString( ":res[\(tokenStr)]", withString: logPiece )
+                        isCompiled = true
+                    }
+                }
+            }
+        }
+        
         guard let regex: NSRegularExpression = try? NSRegularExpression ( pattern: ":([A-z0-9\\-]*)", options: [ .CaseInsensitive ] ) else {
-            return ""
+            return isCompiled ? compiled : ""
         }
         
         // Find tokens in format
@@ -95,10 +117,12 @@ public class Logger: Middleware {
             let tokenStr   = self.format.substring ( tokenRange.location, length: tokenRange.length )
             
             guard let token = LoggerToken ( rawValue: tokenStr ) else {
+                compiled = compiled.stringByReplacingOccurrencesOfString( ":\(tokenStr)", withString: "" )
                 continue;
             }
             
             guard let tokenFunc = funcTbl[ token.rawValue ] else {
+                compiled = compiled.stringByReplacingOccurrencesOfString( ":\(tokenStr)", withString: "" )
                 continue;
             }
             
@@ -120,7 +144,7 @@ public class Logger: Middleware {
     
     // Not suuport yet
     private func remote_addr ( req: Request, res: Response ) -> String {
-        return ""
+        return res.socket!.ip
     }
     
     private func date ( req: Request, res: Response ) -> String {

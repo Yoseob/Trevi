@@ -114,6 +114,7 @@ public class Request {
         for _idx in 1 ..< fields.count {
             if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
                 self.header[fieldSet[0].trim()] = fieldSet[1].trim();
+                self.header[fieldSet[0].trim().lowercaseString] = fieldSet[1].trim();
             }
         }
     }
