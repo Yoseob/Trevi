@@ -6,7 +6,11 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-import Darwin
+#if os(Linux)
+    import SwiftGlibc
+#else
+    import Darwin
+#endif
 
 public protocol InetAddress {
     static var domain : Int32 { get }

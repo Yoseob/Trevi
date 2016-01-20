@@ -6,9 +6,14 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-import Darwin
+#if os(Linux)
+    import SwiftGlibc
+#else
+    import Darwin
+#endif
 
 // Network data byte order functions for Swift
+// Should be removed because Swift support big and little Endian.
 let isLittleEndian = Int(OSHostByteOrder()) == OSLittleEndian
 public let htons = isLittleEndian ? _OSSwapInt16 : { $0 }
 public let htonl  = isLittleEndian ? _OSSwapInt32 : { $0 }
@@ -18,7 +23,6 @@ public let ntohl  = htonl
 
 // Get String from the pointer
 public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
-    
     var idx = block
     var value = "" as String
     

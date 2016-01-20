@@ -6,7 +6,11 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-import Darwin
+#if os(Linux)
+    import SwiftGlibc
+#else
+    import Darwin
+#endif
 
 /**
  * Socket class
@@ -49,7 +53,6 @@ public class Socket<T: InetAddress> {
         self.nonblock = nonblock
     }
     
-    
      /**
       Create a socket.
      
@@ -59,14 +62,18 @@ public class Socket<T: InetAddress> {
      - Returns:  If socket function succeeds, calls init(). However, if it fails, returns nil.
      */
     public convenience init?(address : InetAddress, type : Int32){
-        let tfd = socket(T.domain, type, 0)
+        #if os(Linux)
+            let fd = SwiftGlibc.socket(T.domain, Int32(SOCK_STREAM.rawValue), 0)
+        #else
+            let fd = Darwin.socket(T.domain, SOCK_STREAM, 0)
+        #endif
         
-        guard tfd > 0 else {
+        guard fd > 0 else {
             log.error("Socket convenience init")
             return nil
         }
         
-        self.init(fd: tfd, address: address)
+        self.init(fd: fd, address: address)
     }
     
     deinit{
@@ -74,7 +81,11 @@ public class Socket<T: InetAddress> {
     }
     
     public func close(){
-        Darwin.close(fd)
+        #if os(Linux)
+            SwiftGlibc.close(self.fd)
+        #else
+            Darwin.close(self.fd)
+        #endif
     }
     
      /**
@@ -91,7 +102,12 @@ public class Socket<T: InetAddress> {
         let status = withUnsafePointer(&address) { ptr -> Int32 in
             let name = UnsafePointer<sockaddr>(ptr)
             let nameLen = socklen_t(T.length)
-            return Darwin.bind(self.fd, name, nameLen)
+            
+            #if os(Linux)
+                return SwiftGlibc.bind(self.fd, name, nameLen)
+            #else
+                return Darwin.bind(self.fd, name, nameLen)
+            #endif
         }
         
         isBound = status == 0 ? true : false
@@ -115,13 +131,13 @@ public enum SocketOption {
     
     var match : (name : Int32, value : Int32) {
         switch self {
-        case .BROADCAST(let value) :   return (SO_BROADCAST, Int32(Int(value)))
-        case .DEBUG(let value) :            return (SO_DEBUG, Int32(Int(value)))
-        case .DONTROUTE(let value) :   return (SO_DONTROUTE, Int32(Int(value)))
-        case .OOBINLINE(let value) :      return (SO_OOBINLINE, Int32(Int(value)))
-        case .REUSEADDR(let value):     return (SO_REUSEADDR, Int32(Int(value)))
-        case .KEEPALIVE(let value) :      return (SO_KEEPALIVE, Int32(Int(value)))
-        case .NOSIGPIPE(let value) :      return (SO_NOSIGPIPE, Int32(Int(value)))
+        case .BROADCAST(let value) :   return (SO_BROADCAST, Int32(value.hashValue))
+        case .DEBUG(let value) :            return (SO_DEBUG, Int32(value.hashValue))
+        case .DONTROUTE(let value) :   return (SO_DONTROUTE, Int32(value.hashValue))
+        case .OOBINLINE(let value) :      return (SO_OOBINLINE, Int32(value.hashValue))
+        case .REUSEADDR(let value):     return (SO_REUSEADDR, Int32(value.hashValue))
+        case .KEEPALIVE(let value) :      return (SO_KEEPALIVE, Int32(value.hashValue))
+        case .NOSIGPIPE(let value) :      return (SO_NOSIGPIPE, Int32(value.hashValue))
             
         case .SNDBUF(let value):            return (SO_SNDBUF, value)
         case .RCVBUF(let value):            return (SO_RCVBUF, value)
@@ -149,7 +165,11 @@ extension Socket{
             var buffer = option.match.value
             let bufferLen = socklen_t(sizeof(Int32))
             
-            let status  = setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
+            #if os(Linux)
+                let status  = SwiftGlibc.setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
+            #else
+                let status  = Darwin.setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
+            #endif
             
             if status == -1 {
                 log.error("Failed to set socket option : \(option), value : \(buffer)")
@@ -179,7 +199,11 @@ extension Socket{
         var buffer = Int32(0)
         var bufferLen = socklen_t(sizeof(Int32))
         
-        let status  = getsockopt(fd, SOL_SOCKET, name, &buffer, &bufferLen)
+        #if os(Linux)
+            let status  = SwiftGlibc.getsockopt(fd, SOL_SOCKET, name, &buffer, &bufferLen)
+        #else
+            let status  = Darwin.getsockopt(fd, SOL_SOCKET, name, &buffer, &bufferLen)
+        #endif
         
         if status == -1 {
             log.error("Failed to get socket option name : \(name)")
