@@ -15,13 +15,13 @@ import Dispatch
  *
  */
 public class Timer {
-    let interval : __uint64_t
-    let leeway : __uint64_t
+    let interval : UInt64
+    let leeway : UInt64
     var queue : dispatch_queue_t
     
     var source : dispatch_source_t? = nil
     
-    public init(interval : __uint64_t, leeway : __uint64_t, queue : dispatch_queue_t){
+    public init(interval : UInt64, leeway : UInt64, queue : dispatch_queue_t){
         self.interval = interval * NSEC_PER_SEC
         self.leeway = leeway * NSEC_PER_SEC
         self.queue = queue

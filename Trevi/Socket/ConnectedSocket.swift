@@ -128,7 +128,7 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
      
      - Parameter seconds: Time(Seconds).
      */
-    public func setTimeout(seconds : __uint64_t) {
+    public func setTimeout(seconds : UInt64) {
         self.cancelTimeout()
         timeout = Timer(interval: seconds, leeway: 1, queue: serverModel.readQueue)
         
