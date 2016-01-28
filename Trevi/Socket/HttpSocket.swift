@@ -92,6 +92,7 @@ public class HttpSocket : RequestHandler {
         
         self.httpCallback! ( req, res )
         self.prepare.dInit()
+        self.totalLength = 0
     }
     
     

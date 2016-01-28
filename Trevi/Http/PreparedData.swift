@@ -53,6 +53,7 @@ public class PreparedData {
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
+    
         //header
         if data.containsString("HTTP/1."){
             req = nil
@@ -62,7 +63,7 @@ public class PreparedData {
                 headerLength = params.length
             }
             
-            if req!.header[Content_Length] != nil && req!.bodyFragments.count == 0  {
+            if req!.header[Content_Length] != nil  {
                 let headerList = req!.headerString.componentsSeparatedByString(CRLF)
                 var buff = String()
                 var flag = false
@@ -98,8 +99,12 @@ public class PreparedData {
      
      */
     func dispatchBodyData(bodyFragment : String){
-
-        if boundry == nil{
+        
+        guard  bodyFragment.length() > 0 else{
+            return
+        }
+        
+        if boundry == nil || boundry?.length() == 0{
             let characters = bodyFragment.characters
             for Character in characters{
                 if Character == "\r\n"{
@@ -109,7 +114,7 @@ public class PreparedData {
                 }
             }
         }
-
+        
         var bodys = bodyFragment.componentsSeparatedByString(CRLF);
         
         if bodys.first! != boundry {
@@ -118,37 +123,39 @@ public class PreparedData {
             if traceBodyString == boundry{
                 bodyBuff = bodyBuff.stringByReplacingOccurrencesOfString(temp, withString: "")
                 bodys.removeFirst()
+                bodys.insert(boundry!, atIndex: 0)
             }
         }
 
+        let tailBoundary = boundry! + "--"
         for  str in bodys{
-            if boundry == str || boundry!+"--" == str{
+            if str.length() == 0 {
+                continue
+            }
+            if boundry! == str || tailBoundary == str{
                 boundryCount++
                 traceBodyString = ""
                 if boundryCount == 2{
-                    boundryCount = 1
-                    print("\(bodyBuff)")
+                    boundryCount--;
+                    
+                    //move file IO connector
+                    tempWriteFunction(bodyBuff);
                     bodyBuff = ""
                 }
             }else{
                 if(str != CRLF){
-
                     bodyBuff += str
                     bodyBuff += CRLF
                 }
             }
-            
         }
         traceBodyString = bodys.last!;
-
-
-
-//        var fileName = req?.header[@""]
-//        filemanager.createFile("");
-//        print(bodyFragment)
-//        let splitedBody = bodyFragment.componentsSeparatedByString(@"")
+    }
+    
+    func tempWriteFunction(date : String){
+    //test
+        filemanager.createFile("user_ip_body_\(bodyBuff.substring(20, length: 20))")
         
-        req?.bodyFragments.append(bodyFragment)
     }
     
     /**
@@ -166,7 +173,10 @@ public class PreparedData {
     }
     
     func dInit(){
-        boundry = nil
+        boundry = ""
+        bodyBuff = "" 
+        traceBodyString = ""
+        boundryCount = 0
         content_length = 0
     }
  
@@ -186,7 +196,6 @@ public class PreparedData {
     private func setupResponse ( socket: ClientSocket ) -> Response {
         let res = Response( socket: socket )
         res.method = self.req!.method
-        
         //connection header
         if let connection = req?.header[Connection]{
             res.header[Connection] = connection
