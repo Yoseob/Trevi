@@ -27,8 +27,13 @@ public class PreparedData {
     
     private var req : Request?
     
-    var filemanager  = File()
+    private var filemanager  = File()
     
+    private var traceBodyString : String = ""
+    
+    var boundryCount = 0
+    var bodyBuff = ""
+    private var boundry : String?
     
     /**
      Functions that can make with one request a function been divided into several
@@ -56,7 +61,7 @@ public class PreparedData {
                 content_length =  Int(contentLength)!
                 headerLength = params.length
             }
-
+            
             if req!.header[Content_Length] != nil && req!.bodyFragments.count == 0  {
                 let headerList = req!.headerString.componentsSeparatedByString(CRLF)
                 var buff = String()
@@ -71,16 +76,21 @@ public class PreparedData {
                         buff += CRLF
                     }
                 }
+
                 data = buff
             }
+        }else{
+            dispatchBodyData(data)
         }
-        dispatchBodyData(data)
         return (content_length,headerLength)
     }
     
     
     /**
      Function with which to data rather than parsing through
+     Should be writed File
+     
+     First Seperation based on boundry and Check Content-Dispostion
      
      - Parameter path: At the request of a string body
      
@@ -88,6 +98,56 @@ public class PreparedData {
      
      */
     func dispatchBodyData(bodyFragment : String){
+
+        if boundry == nil{
+            let characters = bodyFragment.characters
+            for Character in characters{
+                if Character == "\r\n"{
+                    let index = characters.indexOf(Character)
+                    boundry = bodyFragment.substringToIndex(index!)
+                    break;
+                }
+            }
+        }
+
+        var bodys = bodyFragment.componentsSeparatedByString(CRLF);
+        
+        if bodys.first! != boundry {
+            let temp = traceBodyString
+            traceBodyString += bodys.first!
+            if traceBodyString == boundry{
+                bodyBuff = bodyBuff.stringByReplacingOccurrencesOfString(temp, withString: "")
+                bodys.removeFirst()
+            }
+        }
+
+        for  str in bodys{
+            if boundry == str || boundry!+"--" == str{
+                boundryCount++
+                traceBodyString = ""
+                if boundryCount == 2{
+                    boundryCount = 1
+                    print("\(bodyBuff)")
+                    bodyBuff = ""
+                }
+            }else{
+                if(str != CRLF){
+
+                    bodyBuff += str
+                    bodyBuff += CRLF
+                }
+            }
+            
+        }
+        traceBodyString = bodys.last!;
+
+
+
+//        var fileName = req?.header[@""]
+//        filemanager.createFile("");
+//        print(bodyFragment)
+//        let splitedBody = bodyFragment.componentsSeparatedByString(@"")
+        
         req?.bodyFragments.append(bodyFragment)
     }
     
@@ -106,7 +166,7 @@ public class PreparedData {
     }
     
     func dInit(){
-        
+        boundry = nil
         content_length = 0
     }
  

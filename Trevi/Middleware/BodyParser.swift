@@ -98,8 +98,6 @@ public class BodyParser: Middleware {
     }
     private func json_parser ( req : Request ) -> [String:AnyObject!]!{
         do {
-            
-            
             let data = req.bodyFragments.first!.dataUsingEncoding(NSUTF8StringEncoding)
             return try NSJSONSerialization.JSONObjectWithData (data! , options: .MutableContainers ) as? [String:AnyObject!]
         } catch {
