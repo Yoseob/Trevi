@@ -40,7 +40,10 @@ extension sockaddr_in : InetAddress {
     public func port() -> in_port_t { return  in_port_t(self.sin_port.bigEndian) }
     
     public init(ip : String, port : UInt16) {
+        #if os(Linux)
+        #else
         sin_len = UInt8(sizeof(sockaddr_in))
+        #endif
         sin_family = sa_family_t(AF_INET)
         sin_port = in_port_t(port.bigEndian)
         sin_addr = in_addr(s_addr: inet_addr(ip))
@@ -48,7 +51,10 @@ extension sockaddr_in : InetAddress {
     }
     
     public init(ip : in_addr = INADDR_ANY, port : UInt16) {
+        #if os(Linux)
+        #else
         sin_len = UInt8(sizeof(sockaddr_in))
+        #endif
         sin_family = sa_family_t(AF_INET)
         sin_port = in_port_t(port.bigEndian)
         sin_addr = ip
@@ -71,7 +77,10 @@ extension sockaddr_in6 : InetAddress {
     public func port() -> in_port_t { return in_port_t(self.sin6_port.bigEndian) }
     
     public init(ip : in6_addr = IN6ADDR_ANY, port : UInt16 = 0) {
+        #if os(Linux)
+        #else
         sin6_len = UInt8(sizeof(sockaddr_in6))
+        #endif
         sin6_family = sa_family_t(AF_INET6)
         sin6_port = in_port_t(port.bigEndian)
         sin6_flowinfo = 0
