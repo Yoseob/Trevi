@@ -46,7 +46,7 @@ public class RouteAble: Require {
      * @return
      * @public
      */
-    public func use ( middleware: AnyObject... ) -> RouteAble {
+    public func use (middleware: AnyObject... ) -> RouteAble {
         /*
          * i have no idea which case is better
          * which one is batter? why?
@@ -56,27 +56,11 @@ public class RouteAble: Require {
         //um... how to remove this flow control strategy??
         //I think remove flow control, overring enable to that use("",[AnyObject])
         var temp = middleware
-        if true {
-            if case let path as String = temp.first{
-                temp.removeFirst ()
-                return makeChildRoute (path, module: temp )
-            }else if case _ as RouteAble = temp.first{
-                return makeChildRoute ("", module: middleware)
-            }
-        } else {
-            /*
-            switch temp.first{
-            case let path as String:
-                temp.removeFirst()
-                let routeList = [RouteAble](temp)
-                makeChildRoute(path, module:routeList)
-            default:
-                for md in middleware{
-                    middlewareList.append(md)
-                }
-                break
-            }
-            */
+        if case let path as String = temp.first{
+            temp.removeFirst ()
+            return makeChildRoute (path, module: temp )
+        }else if case _ as RouteAble = temp.first{
+            return makeChildRoute ("", module: middleware)
         }
 
         

@@ -137,9 +137,9 @@ public class PreparedData {
                 traceBodyString = ""
                 if boundryCount == 2{
                     boundryCount--;
-                    
+                    print("\(bodyBuff) -end");
                     //move file IO connector
-                    tempWriteFunction(bodyBuff);
+//                    tempWriteFunction(bodyBuff);
                     bodyBuff = ""
                 }
             }else{

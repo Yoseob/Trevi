@@ -13,12 +13,10 @@ public typealias HttpCallback = ( ( Request, Response) -> Bool )
 public class Http {
     
     private var httpCallback: HttpCallback?
-    
     private var socket = HttpSocket ()
     private var mwManager = MiddlewareManager.sharedInstance ()
-
-
     public init () {
+    
     }
 
     /**
@@ -72,7 +70,6 @@ public class Http {
      ㅋ @param {Middleware} mw
      * @public
      */
-    
     public func set( mw :  Middleware ...){
         mwManager.enabledMiddlwareList.append(mw)
     }
@@ -88,9 +85,7 @@ public class Http {
         try socket.startListening( port )
                 
         if true {
-
             while true {
-
                 NSRunLoop.mainRunLoop ().run ()
             }
         }
