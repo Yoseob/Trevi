@@ -15,7 +15,7 @@ import Foundation
 */
 public class Trevi: Middleware {
 
-    public var usedModuleList = [ RouteAble ] ()
+    public var usedModuleList = [ RoutAble ] ()
     public var router         = Router ()
     public var name: MiddlewareName
 
@@ -45,7 +45,7 @@ public class Trevi: Middleware {
      
      - Returns : Self
      */
-    public func store ( routeable: RouteAble ) -> RouteAble {
+    public func store ( routeable: RoutAble ) -> RoutAble {
         Trevi.sharedInstance ().usedModuleList.append ( routeable )
         return routeable
     }

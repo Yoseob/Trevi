@@ -12,11 +12,16 @@ public typealias HttpCallback = ( ( Request, Response) -> Bool )
 
 public class Http {
     
-    private var httpCallback: HttpCallback?
-    private var socket = HttpSocket ()
+    private var socket : HttpSocket!
     private var mwManager = MiddlewareManager.sharedInstance ()
-    public init () {
     
+    
+    private var listener : EventListener!
+    
+    var prepare = PreparedData()
+    var totalLength = 0
+
+    public init () {
     }
 
     /**
@@ -32,12 +37,13 @@ public class Http {
      * @return {Http} self
      * @public
      */
-    public func createServer ( requireModule: RouteAble... ) -> Http {
+    public func createServer ( requireModule: RoutAble... ) -> Http {
+        receivedRequestCallback()
+        socket = HttpSocket(listener) // socket = HttpSocket(/* target.listener*/)
         for rm in requireModule {
             rm.makeChildRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }
-        receivedRequestCallback();
         return self
     }
     
@@ -57,16 +63,17 @@ public class Http {
      * @public
      */
     public func createServer ( callBacks: CallBack... ) -> Http {
+        receivedRequestCallback()
+        socket = HttpSocket(listener)
         for cb in callBacks {
             mwManager.enabledMiddlwareList.append ( cb )
         }
-        receivedRequestCallback();
         return self
     }
     
     /**
      * Add MiddleWare direct at Server
-     *ㅋ
+     * 
      ㅋ @param {Middleware} mw
      * @public
      */
@@ -81,7 +88,6 @@ public class Http {
      * @public
      */
     public func listen ( port: __uint16_t ) throws {
-        
         try socket.startListening( port )
                 
         if true {
@@ -102,10 +108,32 @@ public class Http {
      * @private
      */
     private func receivedRequestCallback() {
-        socket.httpCallback = {
-            req,res in
-            self.mwManager.handleRequest(req,res)
-            return false
+        listener = MainListener()
+        
+        listener.on("data") { stream in
+            let readData = stream.read()
+            self.totalLength += readData.length
+            
+            if readData.length > 0 {
+                let (contentLength, headerLength) = self.prepare.appendReadData(readData)
+                
+                if contentLength > headerLength{
+                    self.totalLength -= headerLength
+                }
+                if self.totalLength >= contentLength || contentLength == 0{
+                    self.listener.emit("end", stream)
+                }
+            }
+            return readData.length
+        }
+        
+        listener.on("end") { stream in
+            let httpClient = ClientSocket ( socket: stream )
+            self.mwManager.handleRequest(self.prepare.handleRequest(httpClient))
+            self.prepare.dInit()
+            self.totalLength = 0
+            
+            return 0
         }
     }
     

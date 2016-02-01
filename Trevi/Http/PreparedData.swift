@@ -15,12 +15,6 @@ import Foundation
 
 */
 public class PreparedData {
-
-    init(){
-    }
-
-    // If completed with a request to begin addressing delegate
-    public var requestHandler :RequestHandler?
     
     //The content-length of the body
     private var content_length = 0
@@ -31,9 +25,13 @@ public class PreparedData {
     
     private var traceBodyString : String = ""
     
+    
     var boundryCount = 0
     var bodyBuff = ""
     private var boundry : String?
+    
+    init(){
+    }
     
     /**
      Functions that can make with one request a function been divided into several
@@ -53,11 +51,12 @@ public class PreparedData {
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
-    
+        
         //header
         if data.containsString("HTTP/1."){
             req = nil
             req = setupRequest(data)
+            
             if let contentLength = req?.header[Content_Length]{
                 content_length =  Int(contentLength)!
                 headerLength = params.length
@@ -77,12 +76,14 @@ public class PreparedData {
                         buff += CRLF
                     }
                 }
-
                 data = buff
             }
-        }else{
+        }
+        
+        if(data.length() > 0){
             dispatchBodyData(data)
         }
+    
         return (content_length,headerLength)
     }
     
@@ -137,9 +138,7 @@ public class PreparedData {
                 traceBodyString = ""
                 if boundryCount == 2{
                     boundryCount--;
-                    print("\(bodyBuff) -end");
                     //move file IO connector
-//                    tempWriteFunction(bodyBuff);
                     bodyBuff = ""
                 }
             }else{
@@ -167,9 +166,9 @@ public class PreparedData {
      - Returns: Void
      
      */
-    func handleRequest(socket : ClientSocket ){
+    func handleRequest(socket : ClientSocket ) -> (Request , Response){
         let res = setupResponse(socket)
-        requestHandler?.beginHandle(self.req!, res)
+        return (self.req!,res)
     }
     
     func dInit(){

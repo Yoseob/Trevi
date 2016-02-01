@@ -1,5 +1,5 @@
 //
-//  RouteAble.swift
+//  RoutAble.swift
 //  Trevi
 //
 //  Created by LeeYoseob on 2015. 11. 30..
@@ -8,13 +8,13 @@
 
 
 /*
-    RouteAble is interface to make module like need to start server and matched for path   
+    RoutAble is interface to make module like need to start server and matched for path   
 */
 
 import Foundation
 
 
-public class RouteAble: Require {
+public class RoutAble: Require {
 
     public var superPath: String?
     public var trevi          = Trevi.sharedInstance ()
@@ -28,7 +28,7 @@ public class RouteAble: Require {
     }
 
     public func prepare () {
-        //if you want use user custom RouteAble Class for Routing
+        //if you want use user custom RoutAble Class for Routing
         // fill prepare func like this
     }
 
@@ -36,40 +36,39 @@ public class RouteAble: Require {
      * Set middlewares type of function or middleware.
      *
      * if first argument type is string, this function use routing module
-     * and then other arguments is RouteAble type.
+     * and then other arguments is RoutAble type.
      * except in this case, anytime use function arguments are Middleware or function(Callback)
      *
      *
      *
      *
-     * @param {Middleware | RouteAble | String} middleware
+     * @param { RoutAble | String} middleware
      * @return
      * @public
      */
-    public func use (middleware: AnyObject... ) -> RouteAble {
-        /*
-         * i have no idea which case is better
-         * which one is batter? why?
-         */
-    
-        
-        //um... how to remove this flow control strategy??
-        //I think remove flow control, overring enable to that use("",[AnyObject])
-        var temp = middleware
-        if case let path as String = temp.first{
-            temp.removeFirst ()
-            return makeChildRoute (path, module: temp )
-        }else if case _ as RouteAble = temp.first{
-            return makeChildRoute ("", module: middleware)
-        }
-
-        
+    public func use (path : String = "" ,  _ module : RoutAble... ) -> RoutAble {
+        return makeChildRoute (path, module: module )
+    }
+    /**
+     * Set middlewares type of function or middleware.
+     *
+     * if first argument type is string, this function use routing module
+     * and then other arguments is RoutAble type.
+     * except in this case, anytime use function arguments are Middleware or function(Callback)
+     *
+     *
+     *
+     *
+     * @param { RoutAble | String} middleware
+     * @return
+     * @public
+     */
+    public func use (middleware: Middleware... ) -> RoutAble {
         for md in middleware {
             middlewareList.append ( md )
         }
         return self
     }
-
     /**
      * Set Function Type MiddleWares.
      *
@@ -78,7 +77,7 @@ public class RouteAble: Require {
      * @return
      * @public
      */
-    public func use ( middleware:CallBack ...)-> RouteAble {
+    public func use ( middleware:CallBack ...)-> RoutAble {
         for md in middleware {
             middlewareList.append ( md )
         }
@@ -104,38 +103,38 @@ public class RouteAble: Require {
 
     }
 
-    public func all ( path: String, _ callback: CallBack... ) -> RouteAble {
+    public func all ( path: String, _ callback: CallBack... ) -> RoutAble {
         registerCompleteRoutePath ( .GET, path: path, callback: callback )
         return registerCompleteRoutePath ( .POST, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func get ( path: String, _ callback: CallBack... ) -> RouteAble {
+    public func get ( path: String, _ callback: CallBack... ) -> RoutAble {
         return registerCompleteRoutePath ( .GET, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func post ( path: String, _ callback: CallBack... ) -> RouteAble {
+    public func post ( path: String, _ callback: CallBack... ) -> RoutAble {
         return registerCompleteRoutePath ( .POST, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func put ( path: String, _ callback: CallBack... ) -> RouteAble {
+    public func put ( path: String, _ callback: CallBack... ) -> RoutAble {
         return registerCompleteRoutePath ( .PUT, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func head ( path: String, _ callback: CallBack... ) -> RouteAble {
+    public func head ( path: String, _ callback: CallBack... ) -> RoutAble {
         return registerCompleteRoutePath ( .HEAD, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func delete ( path: String, _ callback: CallBack... ) -> RouteAble {
+    public func delete ( path: String, _ callback: CallBack... ) -> RoutAble {
         return registerCompleteRoutePath ( .DELETE, path: path, callback: callback )
     }
     /**
@@ -161,9 +160,9 @@ public class RouteAble: Require {
     public func unlink(){}
     
 
-    public func makeChildRoute ( path: String, module: [AnyObject] ) -> RouteAble {
-        let _ = module.map({ (obj) -> RouteAble in
-            let ma = (obj as! RouteAble)
+    public func makeChildRoute ( path: String, module: [AnyObject] ) -> RoutAble {
+        let _ = module.map({ (obj) -> RoutAble in
+            let ma = (obj as! RoutAble)
             ma.superPath = (self.superPath)! + path
             ma.prepare ()
             return ma
@@ -171,7 +170,7 @@ public class RouteAble: Require {
         return self
     }
 
-    private func registerCompleteRoutePath ( type: HTTPMethodType, path: String, callback: [CallBack] ) -> RouteAble {
+    private func registerCompleteRoutePath ( type: HTTPMethodType, path: String, callback: [CallBack] ) -> RoutAble {
         var completePath = superPath! + path;
         if superPath != "" && path == "/" {
             completePath = superPath!

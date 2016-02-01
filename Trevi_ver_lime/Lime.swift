@@ -9,7 +9,7 @@
 import Foundation
 import Trevi
 
-public class Lime: RouteAble {
+public class Lime: RoutAble {
 
     override init () {
         super.init ()

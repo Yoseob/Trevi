@@ -19,11 +19,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //Trevi is used routor like nodejs express
         let trevi = Trevi.sharedInstance ()
         //main Module
-        let lime   = Lime ()
-        
-        //I think middleware setting at instance of Http Class 
-        // server.use(Favicon()) or server.set(Favicon())
-        
+        let lime = Lime ()
         
         //'use' func call for use middleware
         lime.use(BodyParser())
@@ -32,9 +28,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(SwiftServerPage())
         
-        lime.use(trevi) // it is important to routing
-        
         lime.use(ServeStatic()) // it is important to routing
+        
+        lime.use(trevi) // it is important to routing
         
         lime.use(){ req, res in
             res.status = 404

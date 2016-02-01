@@ -9,7 +9,7 @@
 import Foundation
 import Trevi
 
-public class End: RouteAble {
+public class End: RoutAble {
 
     public override init () {
         super.init ()
