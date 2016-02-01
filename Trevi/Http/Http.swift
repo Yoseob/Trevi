@@ -14,8 +14,6 @@ public class Http {
     
     private var socket : HttpSocket!
     private var mwManager = MiddlewareManager.sharedInstance ()
-    
-    
     private var listener : EventListener!
     
     var prepare = PreparedData()
@@ -39,7 +37,7 @@ public class Http {
      */
     public func createServer ( requireModule: RoutAble... ) -> Http {
         receivedRequestCallback()
-        socket = HttpSocket(listener) // socket = HttpSocket(/* target.listener*/)
+        socket = HttpSocket(listener)
         for rm in requireModule {
             rm.makeChildRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
@@ -111,6 +109,7 @@ public class Http {
         listener = MainListener()
         
         listener.on("data") { stream in
+            
             let readData = stream.read()
             self.totalLength += readData.length
             

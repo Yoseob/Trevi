@@ -17,29 +17,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let server = Http ()
 
         //Trevi is used routor like nodejs express
-        let trevi = Trevi.sharedInstance ()
-        //main Module
-        let lime = Lime ()
+        let trevi = Trevi()
+
         
         //'use' func call for use middleware
-        lime.use(BodyParser())
+        trevi.use(BodyParser())
         
-        lime.use(Favicon())
+        trevi.use(Favicon())
         
-        lime.use(SwiftServerPage())
+        trevi.use(SwiftServerPage())
         
-        lime.use(ServeStatic()) // it is important to routing
+        trevi.use(ServeStatic())
         
-        lime.use(trevi) // it is important to routing
+        trevi.use("/index",Root())
         
-        lime.use(){ req, res in
+        trevi.use(){ req, res in
             res.status = 404
             return res.send ("404 Pages Not Found")
         }
-        
-
+    
         do {
-            try server.createServer ( lime ).listen (8080)
+            try server.createServer ( trevi ).listen (8080)
             
             //If you want to make light Server. use it
             /*

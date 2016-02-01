@@ -39,6 +39,8 @@ public struct MainListener : EventListener {
     public func emit(name: String, _ stream : ConnectedSocket<IPv4>) ->Int {
         if let listener = eListner[name]{
             return listener(socket: stream)
+        }else{
+            print("unKnown Listener name")
         }
         return 0
     }

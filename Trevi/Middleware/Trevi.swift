@@ -13,30 +13,38 @@ import Foundation
     However, it's not find the path to the running is trevi all save the path at this class when the server is starting on the go.
     This class is real class router's functioning.
 */
-public class Trevi: Middleware {
 
-    public var usedModuleList = [ RoutAble ] ()
-    public var router         = Router ()
-    public var name: MiddlewareName
-
-    private init () {
-        name = .Trevi
-    }
-
-    //Singleton lazy
-    struct StaticInstance {
-        static var dispatchToken: dispatch_once_t = 0
-        static var instance:      Trevi?
-    }
-
-    //instance Singleton
-    public class func sharedInstance () -> Trevi {
-        dispatch_once ( &StaticInstance.dispatchToken ) {
-            StaticInstance.instance = Trevi ()
-        }
-        return StaticInstance.instance!
+public struct LimeListener : EventListener {
+    
+    public var eListner = [String:Listener]()
+    
+    public mutating func on(name: String , listener: Listener) {
+        eListner[name] = listener
     }
     
+    public func emit(name: String, _ stream : ConnectedSocket<IPv4>) ->Int {
+        if let listener = eListner[name]{
+            return listener(socket: stream)
+        }
+        return 0
+    }
+}
+
+public class Trevi : RoutAble {
+    
+    public  override init () {
+    }
+
+    
+    
+    public override func use (var path : String = "" ,  _ module : RoutAble... ) -> RoutAble {
+        self.use(router)
+        if path == "/"{
+            path = ""
+        }
+        return makeChildRoute (path, module: module )
+    }
+
     /**
      General module to use as a class module used to store, 
      and users and is not necessary.
@@ -46,21 +54,7 @@ public class Trevi: Middleware {
      - Returns : Self
      */
     public func store ( routeable: RoutAble ) -> RoutAble {
-        Trevi.sharedInstance ().usedModuleList.append ( routeable )
         return routeable
     }
 
-    public func operateCommand ( params: MiddlewareParams ) -> Bool {
-        let req: Request  = params.req
-        let res: Response = params.res
-        if let target = router.route ( req.path ) where target.method == req.method {
-            req.parseParam( target )
-            for cb in target.callbacks {
-                if cb ( req, res ) == true {
-                    return true
-                }
-            }
-        }
-        return false
-    }
 }

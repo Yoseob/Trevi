@@ -46,11 +46,24 @@ public class PreparedData {
      - Returns: {(Int,Int)} content-length,header-length
 
      */
-    func appendReadData(params : ReceivedParams) -> (Int,Int){
 
+    func appendReadData(params : ReceivedParams) -> (Int,Int){
+        print(params)
+        return appendReadDataForRime(params)
+        
+        let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
+        let data = strData! as String
+        req = setupRequest(data)
+        return (0,params.length)
+    }
+    
+    func appendReadDataForRime(params : ReceivedParams) -> (Int,Int){
+        
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
+        
+        print(data)
         
         //header
         if data.containsString("HTTP/1."){
@@ -83,7 +96,7 @@ public class PreparedData {
         if(data.length() > 0){
             dispatchBodyData(data)
         }
-    
+        
         return (content_length,headerLength)
     }
     

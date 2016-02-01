@@ -16,7 +16,8 @@ public class Index: RoutAble {
     }
 
     public override func prepare () {
-        let index = trevi.store ( self )
+
+        let index = self
 
 
         index.get ( "/", { req, res in

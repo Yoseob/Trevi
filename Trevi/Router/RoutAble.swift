@@ -17,7 +17,7 @@ import Foundation
 public class RoutAble: Require {
 
     public var superPath: String?
-    public var trevi          = Trevi.sharedInstance ()
+    public var router = Router.sharedInstance()
 
     //danger this property. i think should be changed private or access controll
     public var middlewareList = [ Any ] ()
@@ -46,7 +46,10 @@ public class RoutAble: Require {
      * @return
      * @public
      */
-    public func use (path : String = "" ,  _ module : RoutAble... ) -> RoutAble {
+    public func use (var path : String = "" ,  _ module : RoutAble... ) -> RoutAble {
+        if path == "/"{
+            path = ""
+        }
         return makeChildRoute (path, module: module )
     }
     /**
@@ -175,7 +178,8 @@ public class RoutAble: Require {
         if superPath != "" && path == "/" {
             completePath = superPath!
         }
-        trevi.router.appendRoute ( completePath, Route ( method: type, completePath, callback ) );
+        print(completePath)
+        router.appendRoute ( completePath, Route ( method: type, completePath, callback ) );
         return self
     }
 }
