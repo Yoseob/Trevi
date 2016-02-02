@@ -154,7 +154,7 @@ public class PreparedData {
     
     func tempWriteFunction(date : String){
     //test
-        filemanager.createFile("user_ip_body_\(bodyBuff.substring(20, length: 20))")
+    
         
     }
     
