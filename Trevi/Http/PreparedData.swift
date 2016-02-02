@@ -6,7 +6,6 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 import Foundation
 
 /*
@@ -19,7 +18,7 @@ public class PreparedData {
     //The content-length of the body
     private var content_length = 0
     
-    private var req : Request?
+    public var req : Request?
     
     private var filemanager  = File()
     
@@ -31,6 +30,7 @@ public class PreparedData {
     private var boundry : String?
     
     init(){
+    
     }
     
     /**
@@ -46,25 +46,11 @@ public class PreparedData {
      - Returns: {(Int,Int)} content-length,header-length
 
      */
-
     func appendReadData(params : ReceivedParams) -> (Int,Int){
-        print(params)
-        return appendReadDataForRime(params)
-        
-        let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
-        let data = strData! as String
-        req = setupRequest(data)
-        return (0,params.length)
-    }
-    
-    func appendReadDataForRime(params : ReceivedParams) -> (Int,Int){
         
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
-        
-        print(data)
-        
         //header
         if data.containsString("HTTP/1."){
             req = nil
@@ -152,6 +138,7 @@ public class PreparedData {
                 if boundryCount == 2{
                     boundryCount--;
                     //move file IO connector
+                    print(bodyBuff)
                     bodyBuff = ""
                 }
             }else{
@@ -204,7 +191,7 @@ public class PreparedData {
     private func setupRequest ( hData: String ) -> Request {
         return Request( hData )
     }
-
+    
     private func setupResponse ( socket: ClientSocket ) -> Response {
         let res = Response( socket: socket )
         res.method = self.req!.method

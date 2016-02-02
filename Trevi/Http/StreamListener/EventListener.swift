@@ -9,39 +9,55 @@
 import Foundation
 
 
-public typealias Listener  = (socket : ConnectedSocket<IPv4>) -> Int
+public typealias Listener  = (EventInfo) -> Void
+public typealias Stream = ConnectedSocket<IPv4>
 
+public struct EventInfo{
+    var stream : Stream?
+    var params : ReceivedParams?
+}
 
-
+//Http Server call name "data" when received Stream Data,
+//So if you want custom event Listener register event name both "data" and "end"
 public protocol EventListener{
     
-    var eListner : [String:Listener] {get set}
+
+    var eListners : [String:Listener] {get set}
     
-    //Http Server call name "data" when received Stream Data,
-    //So if you want custom event Listener register event name both "data" and "end"
+    mutating func on(name : String, _ listener : Listener)
     
-    mutating func on(name : String, listener : Listener)
-    
-    func emit(name: String, _ stream : ConnectedSocket<IPv4>) -> Int
+    func emit(name: String, _ arg : EventInfo)
+
 }
 
 
+public struct MainListener {
+    public var eListners = [String:Listener]()
+}
 
-public struct MainListener : EventListener {
-    
-    public var eListner = [String:Listener]()
+extension MainListener : EventListener {
 
-    public mutating func on(name: String , listener: Listener) {
-        eListner[name] = listener
+
+    public mutating func on(name: String , _ listener: Listener) {
+        eListners[name] = listener
     }
     
-    //emit(name: String, data: ReceivedParams , socket : ConnectedSocket<IPv4>)
-    public func emit(name: String, _ stream : ConnectedSocket<IPv4>) ->Int {
-        if let listener = eListner[name]{
-            return listener(socket: stream)
+    public func emit(name: String, _ arg : EventInfo) {
+        
+        if let listener = eListners[name]{
+                listener(arg)
+
         }else{
             print("unKnown Listener name")
         }
-        return 0
     }
 }
+
+public class EventEmitter{
+    init(){}
+    func on(name : String , _ listener : Listener){
+    }
+}
+
+
+

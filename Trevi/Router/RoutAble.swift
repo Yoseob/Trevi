@@ -18,6 +18,7 @@ public class RoutAble: Require {
 
     public var superPath: String?
     public var router = Router.sharedInstance()
+    public var eventListener : EventListener?
 
     //danger this property. i think should be changed private or access controll
     public var middlewareList = [ Any ] ()

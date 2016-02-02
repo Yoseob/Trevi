@@ -18,7 +18,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         //Trevi is used routor like nodejs express
         let trevi = Trevi()
-
         
         //'use' func call for use middleware
         trevi.use(BodyParser())

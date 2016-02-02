@@ -9,6 +9,7 @@
 import Foundation
 
 public typealias HttpCallback = ( ( Request, Response) -> Bool )
+public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
 public class Http {
     
@@ -36,9 +37,9 @@ public class Http {
      * @public
      */
     public func createServer ( requireModule: RoutAble... ) -> Http {
-        receivedRequestCallback()
-        socket = HttpSocket(listener)
+        
         for rm in requireModule {
+            socket = HttpSocket(rm.eventListener!)
             rm.makeChildRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }
@@ -105,36 +106,28 @@ public class Http {
      *
      * @private
      */
-    private func receivedRequestCallback() {
+    private func receivedRequestCallback(){
+        
         listener = MainListener()
         
-        listener.on("data") { stream in
-            
-            let readData = stream.read()
-            self.totalLength += readData.length
-            
-            if readData.length > 0 {
-                let (contentLength, headerLength) = self.prepare.appendReadData(readData)
-                
-                if contentLength > headerLength{
-                    self.totalLength -= headerLength
-                }
-                if self.totalLength >= contentLength || contentLength == 0{
-                    self.listener.emit("end", stream)
-                }
+        listener.on("data") { info in
+            var req : Request?
+            if let params = info.params {
+                let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
+                let data = strData! as String
+                 req = Request(data)
+
             }
-            return readData.length
-        }
-        
-        listener.on("end") { stream in
-            let httpClient = ClientSocket ( socket: stream )
-            self.mwManager.handleRequest(self.prepare.handleRequest(httpClient))
-            self.prepare.dInit()
-            self.totalLength = 0
-            
-            return 0
+            if let req = req {
+                let res = Response( socket: ClientSocket ( socket: info.stream! ) )
+                res.method = req.method
+
+                if let connection = req.header[Connection]{
+                    res.header[Connection] = connection
+                }
+                
+                self.mwManager.handleRequest(req, res)
+            }
         }
     }
-    
-
 }

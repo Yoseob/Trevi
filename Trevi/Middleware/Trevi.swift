@@ -14,28 +14,16 @@ import Foundation
     This class is real class router's functioning.
 */
 
-public struct LimeListener : EventListener {
-    
-    public var eListner = [String:Listener]()
-    
-    public mutating func on(name: String , listener: Listener) {
-        eListner[name] = listener
-    }
-    
-    public func emit(name: String, _ stream : ConnectedSocket<IPv4>) ->Int {
-        if let listener = eListner[name]{
-            return listener(socket: stream)
-        }
-        return 0
-    }
-}
 
-public class Trevi : RoutAble {
+
+
+public class Trevi : RoutAble{
     
+    private var httpParser = HttpParser()
     public  override init () {
+        super.init()
+        receivedRequestCallback()
     }
-
-    
     
     public override func use (var path : String = "" ,  _ module : RoutAble... ) -> RoutAble {
         self.use(router)
@@ -45,16 +33,11 @@ public class Trevi : RoutAble {
         return makeChildRoute (path, module: module )
     }
 
-    /**
-     General module to use as a class module used to store, 
-     and users and is not necessary.
-     
-     - Parameter path : User class just a collection of justice url
-     
-     - Returns : Self
-     */
-    public func store ( routeable: RoutAble ) -> RoutAble {
-        return routeable
+    private func receivedRequestCallback() {
+        eventListener = MainListener()
+        
+        eventListener!.on("data") { info in
+            self.httpParser.appendData(info)
+        }
     }
-
 }

@@ -52,6 +52,9 @@ public class HttpSocket {
     var ip : String = "0.0.0.0"
     
     var listener : EventListener?
+    var prepare = PreparedData()
+    var totalLength = 0
+
     
     init(){
         
@@ -72,15 +75,13 @@ public class HttpSocket {
             return
         }
         
-        
         listenSocket.listenClientReadEvent (true) {
             client in
             
             if let time = self.closeTime {
                 client.setTimeout(time)
             }
-            return self.listener!.emit("data", client)
-            
+            return self.readDataHandler(client)
         }
         
         self.listenSocket = listenSocket
@@ -88,5 +89,20 @@ public class HttpSocket {
     
     public func disconnect () {
         self.listenSocket.close ()
+    }
+    
+    
+    private func readDataHandler(stream : Stream) ->Int{
+        
+        let readData : ReceivedParams = stream.read()
+        
+        var info = EventInfo()
+        info.params = readData
+        info.stream = stream
+        listener?.emit("data", info)
+        
+        return readData.length
+
+ 
     }
 }
