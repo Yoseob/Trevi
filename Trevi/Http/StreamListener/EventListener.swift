@@ -18,7 +18,7 @@ public struct EventInfo{
 }
 
 //Http Server call name "data" when received Stream Data,
-//So if you want custom event Listener register event name both "data" and "end"
+//So if you want custom event Listener register event name both "data"
 public protocol EventListener{
     
 
@@ -43,21 +43,14 @@ extension MainListener : EventListener {
     }
     
     public func emit(name: String, _ arg : EventInfo) {
-        
         if let listener = eListners[name]{
                 listener(arg)
-
         }else{
             print("unKnown Listener name")
         }
     }
 }
 
-public class EventEmitter{
-    init(){}
-    func on(name : String , _ listener : Listener){
-    }
-}
 
 
 

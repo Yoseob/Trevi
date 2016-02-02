@@ -37,7 +37,6 @@ public class Http {
      * @public
      */
     public func createServer ( requireModule: RoutAble... ) -> Http {
-        
         for rm in requireModule {
             socket = HttpSocket(rm.eventListener!)
             rm.makeChildRoute(rm.superPath!, module:requireModule)
@@ -116,17 +115,19 @@ public class Http {
                 let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
                 let data = strData! as String
                  req = Request(data)
-
-            }
-            if let req = req {
-                let res = Response( socket: ClientSocket ( socket: info.stream! ) )
-                res.method = req.method
-
-                if let connection = req.header[Connection]{
-                    res.header[Connection] = connection
-                }
                 
-                self.mwManager.handleRequest(req, res)
+                if let req = req {
+                    
+                    let res = Response( socket: ClientSocket ( socket: info.stream! ) )
+                    res.method = req.method
+                    
+                    if let connection = req.header[Connection]{
+                        res.header[Connection] = connection
+                    }
+                    
+                    self.mwManager.handleRequest(req, res)
+                }
+
             }
         }
     }

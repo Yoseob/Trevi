@@ -16,10 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
               
         let server = Http ()
 
-        //Trevi is used routor like nodejs express
         let trevi = Trevi()
         
-        //'use' func call for use middleware
         trevi.use(BodyParser())
         
         trevi.use(Favicon())
@@ -36,18 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     
         do {
+            
             try server.createServer ( trevi ).listen (8080)
             
-            //If you want to make light Server. use it
-            /*
-            try server.createServer( { req , res in
-                var dic = [String : AnyObject]()
-                dic["name"] = "im yoseob";
-                res.send(dic)
-                return true
-                }).listen(8080)
-
-            */
         } catch {
 
         }

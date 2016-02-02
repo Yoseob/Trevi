@@ -14,15 +14,13 @@ import Foundation
     This class is real class router's functioning.
 */
 
-
-
-
 public class Trevi : RoutAble{
     
     private var httpParser = HttpParser()
+    
     public  override init () {
         super.init()
-        receivedRequestCallback()
+        registerRequestEventListener()
     }
     
     public override func use (var path : String = "" ,  _ module : RoutAble... ) -> RoutAble {
@@ -33,9 +31,8 @@ public class Trevi : RoutAble{
         return makeChildRoute (path, module: module )
     }
 
-    private func receivedRequestCallback() {
+    private func registerRequestEventListener() {
         eventListener = MainListener()
-        
         eventListener!.on("data") { info in
             self.httpParser.appendData(info)
         }

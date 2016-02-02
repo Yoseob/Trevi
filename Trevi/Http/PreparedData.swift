@@ -18,7 +18,7 @@ public class PreparedData {
     //The content-length of the body
     private var content_length = 0
     
-    public var req : Request?
+    public var req : TreviRequest?
     
     private var filemanager  = File()
     
@@ -188,12 +188,12 @@ public class PreparedData {
      * @private
      */
 
-    private func setupRequest ( hData: String ) -> Request {
-        return Request( hData )
+    private func setupRequest ( hData: String ) -> TreviRequest {
+        return TreviRequest( hData )
     }
     
-    private func setupResponse ( socket: ClientSocket ) -> Response {
-        let res = Response( socket: socket )
+    private func setupResponse ( socket: ClientSocket ) -> TreviResponse {
+        let res = TreviResponse( socket: socket )
         res.method = self.req!.method
         //connection header
         if let connection = req?.header[Connection]{
