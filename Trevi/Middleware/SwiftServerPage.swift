@@ -38,7 +38,8 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
     public func render ( path: String ) -> String {
-        return compile ( path, code: convertToSwift ( from: load ( path ), with: [:] ) )!
+        
+        return render( path, args: [:] )
     }
     
     /**
@@ -50,7 +51,12 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
     public func render ( path: String, args: [String:String] ) -> String {
-        return compile ( path, code: convertToSwift ( from: load ( path ), with: args ) )!
+        
+        guard let data = load ( path ) else {
+            return ""
+        }
+        
+        return compile ( path, code: convertToSwift ( from: data, with: args ) )!
     }
     
     /**
@@ -60,12 +66,16 @@ public class SwiftServerPage: Middleware, Renderer {
      
      - Returns: A string initialized by data from the file specified by path.
      */
-    private final func load ( path: String ) -> String {
-        // TODO: error handling..
-        let data = try! File.read ( from: File.getRealPath( path ))
-        guard let str = String( data: data, encoding: NSUTF8StringEncoding ) else {
-            return String()
+    private final func load ( path: String ) -> String? {
+        
+        guard let data = File.read ( File.getRealPath( path )) else {
+            return nil
         }
+        
+        guard let str = String( data: data, encoding: NSUTF8StringEncoding ) else {
+            return nil
+        }
+        
         return str
     }
     
@@ -130,11 +140,12 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: Compiled data from the swift codes
      */
     private final func compile ( path: String, code: String ) -> String? {
-        // TODO: error handling..
-        try! File.write ( code.dataUsingEncoding( NSUTF8StringEncoding )!, to: "\(path).swift" )
-        let compiled: String? = System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
-        .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
-        .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
-        return compiled
+        if !File.write( "\(path).swift", data : code, size: code.characters.count, option: O_TRUNC ) {
+            return nil
+        } else {
+            return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
+                .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+                .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
+        }
     }
 }

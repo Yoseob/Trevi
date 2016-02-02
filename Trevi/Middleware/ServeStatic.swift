@@ -23,11 +23,10 @@ public class ServeStatic: Middleware {
         let req: Request  = params.req
         let res: Response = params.res
         
-        do {
-            let data = try File.read( from: File.getRealPath( req.path ) )
-            return res.send( data )
-        } catch {
+        guard let data = File.read( File.getRealPath( req.path ) ) else {
             return false
         }
+        
+        return res.send( data )
     }
 }
