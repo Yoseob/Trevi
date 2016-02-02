@@ -55,6 +55,7 @@ public class HttpSocket : RequestHandler {
     var httpCallback : HttpCallback?
     var prepare = PreparedData()
     var totalLength = 0
+
     
     // If set closeTime a client will be disconnected withn closeTime.
     var closeTime: __uint64_t?
@@ -108,7 +109,7 @@ public class HttpSocket : RequestHandler {
             if let time = self.closeTime {
                 client.setTimeout(time)
             }
-            return self.prepareRequest(client)
+            return self.readDataHandler(client)
         }
         
         self.listenSocket = listenSocket

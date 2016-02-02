@@ -6,7 +6,6 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 import Foundation
 
 /*
@@ -15,20 +14,24 @@ import Foundation
 
 */
 public class PreparedData {
-
-    init(){
-    }
-
-    // If completed with a request to begin addressing delegate
-    public var requestHandler :RequestHandler?
     
     //The content-length of the body
     private var content_length = 0
     
-    private var req : Request?
+    public var req : TreviRequest?
     
-    var filemanager  = File()
+    private var filemanager  = File()
     
+    private var traceBodyString : String = ""
+    
+    
+    var boundryCount = 0
+    var bodyBuff = ""
+    private var boundry : String?
+    
+    init(){
+    
+    }
     
     /**
      Functions that can make with one request a function been divided into several
@@ -44,7 +47,7 @@ public class PreparedData {
 
      */
     func appendReadData(params : ReceivedParams) -> (Int,Int){
-
+        
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
@@ -53,12 +56,13 @@ public class PreparedData {
         if data.containsString("HTTP/1."){
             req = nil
             req = setupRequest(data)
+            
             if let contentLength = req?.header[Content_Length]{
                 content_length =  Int(contentLength)!
                 headerLength = params.length
             }
-
-            if req!.header[Content_Length] != nil && req!.bodyFragments.count == 0  {
+            
+            if req!.header[Content_Length] != nil  {
                 let headerList = req!.headerString.componentsSeparatedByString(CRLF)
                 var buff = String()
                 var flag = false
@@ -75,13 +79,20 @@ public class PreparedData {
                 data = buff
             }
         }
-        dispatchBodyData(data)
+        
+        if(data.length() > 0){
+            dispatchBodyData(data)
+        }
+        
         return (content_length,headerLength)
     }
     
     
     /**
      Function with which to data rather than parsing through
+     Should be writed File
+     
+     First Seperation based on boundry and Check Content-Dispostion
      
      - Parameter path: At the request of a string body
      
@@ -89,7 +100,62 @@ public class PreparedData {
      
      */
     func dispatchBodyData(bodyFragment : String){
-        req?.bodyFragments.append(bodyFragment)
+        
+        guard  bodyFragment.length() > 0 else{
+            return
+        }
+        
+        if boundry == nil || boundry?.length() == 0{
+            let characters = bodyFragment.characters
+            for Character in characters{
+                if Character == "\r\n"{
+                    let index = characters.indexOf(Character)
+                    boundry = bodyFragment.substringToIndex(index!)
+                    break;
+                }
+            }
+        }
+        
+        var bodys = bodyFragment.componentsSeparatedByString(CRLF);
+        
+        if bodys.first! != boundry {
+            let temp = traceBodyString
+            traceBodyString += bodys.first!
+            if traceBodyString == boundry{
+                bodyBuff = bodyBuff.stringByReplacingOccurrencesOfString(temp, withString: "")
+                bodys.removeFirst()
+                bodys.insert(boundry!, atIndex: 0)
+            }
+        }
+
+        let tailBoundary = boundry! + "--"
+        for  str in bodys{
+            if str.length() == 0 {
+                continue
+            }
+            if boundry! == str || tailBoundary == str{
+                boundryCount++
+                traceBodyString = ""
+                if boundryCount == 2{
+                    boundryCount--;
+                    //move file IO connector
+                    print(bodyBuff)
+                    bodyBuff = ""
+                }
+            }else{
+                if(str != CRLF){
+                    bodyBuff += str
+                    bodyBuff += CRLF
+                }
+            }
+        }
+        traceBodyString = bodys.last!;
+    }
+    
+    func tempWriteFunction(date : String){
+    //test
+        filemanager.createFile("user_ip_body_\(bodyBuff.substring(20, length: 20))")
+        
     }
     
     /**
@@ -101,13 +167,16 @@ public class PreparedData {
      - Returns: Void
      
      */
-    func handleRequest(socket : ClientSocket ){
+    func handleRequest(socket : ClientSocket ) -> (Request , Response){
         let res = setupResponse(socket)
-        requestHandler?.beginHandle(self.req!, res)
+        return (self.req!,res)
     }
     
     func dInit(){
-        
+        boundry = ""
+        bodyBuff = "" 
+        traceBodyString = ""
+        boundryCount = 0
         content_length = 0
     }
  
@@ -120,14 +189,13 @@ public class PreparedData {
      * @private
      */
 
-    private func setupRequest ( hData: String ) -> Request {
-        return Request( hData )
+    private func setupRequest ( hData: String ) -> TreviRequest {
+        return TreviRequest( hData )
     }
-
-    private func setupResponse ( socket: ClientSocket ) -> Response {
-        let res = Response( socket: socket )
+    
+    private func setupResponse ( socket: ClientSocket ) -> TreviResponse {
+        let res = TreviResponse( socket: socket )
         res.method = self.req!.method
-        
         //connection header
         if let connection = req?.header[Connection]{
             res.header[Connection] = connection

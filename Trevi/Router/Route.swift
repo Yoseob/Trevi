@@ -29,7 +29,7 @@ public class Route {
         getRegex()
     }
     
-    init ( method: HTTPMethodType, path: String, routeAble: RouteAble... ) {
+    init ( method: HTTPMethodType, path: String, routeAble: RoutAble... ) {
         self.method = method
         self.path = path
 //        self.callback.append(callback);

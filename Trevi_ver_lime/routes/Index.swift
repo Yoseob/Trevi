@@ -9,14 +9,15 @@
 import Foundation
 import Trevi
 
-public class Index: RouteAble {
+public class Index: RoutAble {
 
     public override init () {
         super.init ()
     }
 
     public override func prepare () {
-        let index = trevi.store ( self )
+
+        let index = self
 
 
         index.get ( "/", { req, res in

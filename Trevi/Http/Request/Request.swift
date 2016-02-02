@@ -85,6 +85,14 @@ public class Request {
     
         }
     }
+    private final func parseHeader ( fields: [String] ) {
+        for _idx in 1 ..< fields.count {
+            if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
+                self.header[fieldSet[0].trim()] = fieldSet[1].trim();
+            }
+        }
+    }
+
     
     private final func parseUrl ( url: String ) {
         // Parsing request path
@@ -101,14 +109,6 @@ public class Request {
                 let key   = url.substring ( keyRange.location, length: keyRange.length )
                 let value = url.substring ( valueRange.location, length: valueRange.length )
                 self.query.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
-            }
-        }
-    }
-    
-    private final func parseHeader ( fields: [String] ) {
-        for _idx in 1 ..< fields.count {
-            if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
-                self.header[fieldSet[0].trim()] = fieldSet[1].trim();
             }
         }
     }

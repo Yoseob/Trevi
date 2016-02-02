@@ -99,9 +99,9 @@ public class BodyParser: Middleware {
         return nil
     }
     private func json_parser ( req : Request ) -> [String:AnyObject!]!{
+        return nil
         do {
-            
-            
+
             let data = req.bodyFragments.first!.dataUsingEncoding(NSUTF8StringEncoding)
             return try NSJSONSerialization.JSONObjectWithData (data! , options: .MutableContainers ) as? [String:AnyObject!]
         } catch {
