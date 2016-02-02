@@ -41,6 +41,7 @@ public class MiddlewareManager {
     public func handleRequest ( request: Request, _ response: Response ) {
         let containerRoute = Route ()
         for middleware in enabledMiddlwareList {
+            print(middleware)
             let isNextMd = matchType ( middleware, params: MiddlewareParams ( request, response, containerRoute ) )
             if isNextMd == true {
                 return

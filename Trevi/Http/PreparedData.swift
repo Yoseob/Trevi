@@ -6,7 +6,6 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 import Foundation
 
 /*
@@ -15,25 +14,24 @@ import Foundation
 
 */
 public class PreparedData {
-
-    init(){
-    }
-
-    // If completed with a request to begin addressing delegate
-    public var requestHandler :RequestHandler?
     
     //The content-length of the body
     private var content_length = 0
     
-    private var req : Request?
+    public var req : TreviRequest?
     
     private var filemanager  = File()
     
     private var traceBodyString : String = ""
     
+    
     var boundryCount = 0
     var bodyBuff = ""
     private var boundry : String?
+    
+    init(){
+    
+    }
     
     /**
      Functions that can make with one request a function been divided into several
@@ -49,15 +47,15 @@ public class PreparedData {
 
      */
     func appendReadData(params : ReceivedParams) -> (Int,Int){
-
+        
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
-    
         //header
         if data.containsString("HTTP/1."){
             req = nil
             req = setupRequest(data)
+            
             if let contentLength = req?.header[Content_Length]{
                 content_length =  Int(contentLength)!
                 headerLength = params.length
@@ -77,12 +75,14 @@ public class PreparedData {
                         buff += CRLF
                     }
                 }
-
                 data = buff
             }
-        }else{
+        }
+        
+        if(data.length() > 0){
             dispatchBodyData(data)
         }
+        
         return (content_length,headerLength)
     }
     
@@ -137,9 +137,8 @@ public class PreparedData {
                 traceBodyString = ""
                 if boundryCount == 2{
                     boundryCount--;
-                    print("\(bodyBuff) -end");
                     //move file IO connector
-//                    tempWriteFunction(bodyBuff);
+                    print(bodyBuff)
                     bodyBuff = ""
                 }
             }else{
@@ -167,9 +166,9 @@ public class PreparedData {
      - Returns: Void
      
      */
-    func handleRequest(socket : ClientSocket ){
+    func handleRequest(socket : ClientSocket ) -> (Request , Response){
         let res = setupResponse(socket)
-        requestHandler?.beginHandle(self.req!, res)
+        return (self.req!,res)
     }
     
     func dInit(){
@@ -189,12 +188,12 @@ public class PreparedData {
      * @private
      */
 
-    private func setupRequest ( hData: String ) -> Request {
-        return Request( hData )
+    private func setupRequest ( hData: String ) -> TreviRequest {
+        return TreviRequest( hData )
     }
-
-    private func setupResponse ( socket: ClientSocket ) -> Response {
-        let res = Response( socket: socket )
+    
+    private func setupResponse ( socket: ClientSocket ) -> TreviResponse {
+        let res = TreviResponse( socket: socket )
         res.method = self.req!.method
         //connection header
         if let connection = req?.header[Connection]{

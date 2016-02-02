@@ -46,19 +46,24 @@ public class ClientSocket {
 }
 
 
-public protocol RequestHandler{
-    func beginHandle(req : Request , _ res :Response )
-}
-
-public class HttpSocket : RequestHandler {
+public class HttpSocket {
     
     var listenSocket: ListenSocket<IPv4>!
     var ip : String = "0.0.0.0"
     
-    var httpCallback: HttpCallback?
+    var listener : EventListener?
     var prepare = PreparedData()
     var totalLength = 0
+
     
+    init(){
+        
+    }
+    
+    convenience init( _ eListener : EventListener){
+        self.init()
+        listener = eListener;
+    }
     
     // Set closeTime to terminate connection with a client after the time from last client request.
     var closeTime: __uint64_t?
@@ -70,15 +75,13 @@ public class HttpSocket : RequestHandler {
             return
         }
         
-        prepare.requestHandler = self
-        
         listenSocket.listenClientReadEvent (true) {
             client in
             
             if let time = self.closeTime {
                 client.setTimeout(time)
             }
-            return self.prepareRequest(client)
+            return self.readDataHandler(client)
         }
         
         self.listenSocket = listenSocket
@@ -88,34 +91,18 @@ public class HttpSocket : RequestHandler {
         self.listenSocket.close ()
     }
     
-    public func beginHandle(req : Request , _ res :Response) {
-        
-        self.httpCallback! ( req, res )
-        self.prepare.dInit()
-        self.totalLength = 0
-    }
     
-    
-    private func prepareRequest(client : ConnectedSocket<IPv4>) -> Int{
+    private func readDataHandler(stream : Stream) ->Int{
         
-        let readData = client.read()
-        self.totalLength += readData.length
+        let readData : ReceivedParams = stream.read()
         
-
+        var info = EventInfo()
+        info.params = readData
+        info.stream = stream
+        listener?.emit("data", info)
         
-        if readData.length > 0 {
-            let (contentLength, headerLength) = self.prepare.appendReadData(readData)
-            
-            if contentLength > headerLength{
-                self.totalLength -= headerLength
-            }
-            if self.totalLength >= contentLength || contentLength == 0{
-                let httpClient = ClientSocket ( socket: client )
-                self.prepare.handleRequest(httpClient)
-            }
-        }
-
         return readData.length
 
+ 
     }
 }

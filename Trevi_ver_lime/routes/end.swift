@@ -9,17 +9,18 @@
 import Foundation
 import Trevi
 
-public class End: RouteAble {
+public class End: RoutAble {
 
     public override init () {
+        
         super.init ()
     }
 
     //if you want use user custom RouteAble Class for Routing 
     // fill prepare func like this 
     public override func prepare () {
-        let index = trevi.store ( self )
-        index.get ( "/" ) { req, res in
+        let index = self
+        index.get ( "/bye" ) { req, res in
             return res.send("bye~!")
         }
 

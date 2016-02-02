@@ -9,14 +9,18 @@
 import Foundation
 
 public typealias HttpCallback = ( ( Request, Response) -> Bool )
+public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
 public class Http {
     
-    private var httpCallback: HttpCallback?
-    private var socket = HttpSocket ()
+    private var socket : HttpSocket!
     private var mwManager = MiddlewareManager.sharedInstance ()
-    public init () {
+    private var listener : EventListener!
     
+    var prepare = PreparedData()
+    var totalLength = 0
+
+    public init () {
     }
 
     /**
@@ -32,12 +36,12 @@ public class Http {
      * @return {Http} self
      * @public
      */
-    public func createServer ( requireModule: RouteAble... ) -> Http {
+    public func createServer ( requireModule: RoutAble... ) -> Http {
         for rm in requireModule {
+            socket = HttpSocket(rm.eventListener!)
             rm.makeChildRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }
-        receivedRequestCallback();
         return self
     }
     
@@ -57,10 +61,11 @@ public class Http {
      * @public
      */
     public func createServer ( callBacks: CallBack... ) -> Http {
+        receivedRequestCallback()
+        socket = HttpSocket(listener)
         for cb in callBacks {
             mwManager.enabledMiddlwareList.append ( cb )
         }
-        receivedRequestCallback();
         return self
     }
     
@@ -81,7 +86,6 @@ public class Http {
      * @public
      */
     public func listen ( port: __uint16_t ) throws {
-        
         try socket.startListening( port )
                 
         if true {
@@ -101,13 +105,30 @@ public class Http {
      *
      * @private
      */
-    private func receivedRequestCallback() {
-        socket.httpCallback = {
-            req,res in
-            self.mwManager.handleRequest(req,res)
-            return false
+    private func receivedRequestCallback(){
+        
+        listener = MainListener()
+        
+        listener.on("data") { info in
+            var req : Request?
+            if let params = info.params {
+                let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
+                let data = strData! as String
+                 req = Request(data)
+                
+                if let req = req {
+                    
+                    let res = Response( socket: ClientSocket ( socket: info.stream! ) )
+                    res.method = req.method
+                    
+                    if let connection = req.header[Connection]{
+                        res.header[Connection] = connection
+                    }
+                    
+                    self.mwManager.handleRequest(req, res)
+                }
+
+            }
         }
     }
-    
-
 }

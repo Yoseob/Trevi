@@ -24,7 +24,33 @@ public class Router: Middleware {
         name = .Router
     }
 
+    
+    //Singleton lazy
+    struct StaticInstance {
+        static var dispatchToken: dispatch_once_t = 0
+        static var instance:      Router?
+    }
+    
+    //instance Singleton
+    public class func sharedInstance () -> Router {
+        dispatch_once ( &StaticInstance.dispatchToken ) {
+            StaticInstance.instance = Router ()
+        }
+        return StaticInstance.instance!
+    }
+    
+
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
+        let req: Request  = params.req
+        let res: Response = params.res
+        if let target = self.route ( req.path ) where target.method == req.method {
+            req.parseParam( target )
+            for cb in target.callbacks {
+                if cb ( req, res ) == true {
+                    return true
+                }
+            }
+        }
         return false
     }
     
