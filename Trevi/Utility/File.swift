@@ -8,6 +8,12 @@
 
 import Foundation
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
+
 public enum FileError: ErrorType {
     case ReadingError( msg:String )
     case WritingError( msg:String )
@@ -16,131 +22,16 @@ public enum FileError: ErrorType {
 
 public class File {
     
+    private static let BUFSIZE = 1024
+    
     /**
-     Returns a data object initialized by reading into it the data from the file specified by a given path.
-     A data object initialized by reading into it the data from the file specified by path.
+     Returns the full pathname for the resource identified by the path. The full pathname for the resource file.
      
      - Parameter path: The name of the file or path of the file from which to read data.
-     - Parameter option: A mask that specifies options for reading the data. Constant components are described in “NSDataReadingOptions”.
      
-     - Throws: `FileError.ReadingError` if can't open the file specified by `path`.
-     
-     - Returns: A data object initialized by reading into it the data from the file specified by path.
+     - Returns: The full pathname for the resource file.
      */
-
-    let filemgr = NSFileManager.defaultManager()
-    
-    public func createFile(path : String){
-        filemgr.createFileAtPath(path, contents: nil, attributes: nil)
-    }
-    
-    public func existsFile(path : String){
-    
-        if filemgr.fileExistsAtPath(path) {
-            print("File exists")
-        } else {
-            print("File not found")
-        }
-    }
-    func removeFile(path:String){
-        do {
-            try filemgr.removeItemAtPath(path)
-        } catch {
-//            let ioError = error as NSError
-//            FileError.FileOpenError ( msg: ioError.localizedDescription )
-        }
-    }
-    
-    func write(filePath: String, data: String, encoding: UInt = NSUTF8StringEncoding ){
-        let file: NSFileHandle? = NSFileHandle(forUpdatingAtPath: filePath)
-        if file != nil {
-           writeImpliment(file!, data: data, encoding: encoding)
-        } else {
-            createFile(filePath)
-            writeImpliment(NSFileHandle(forUpdatingAtPath: filePath)!, data: data, encoding: encoding)
-        }
-    }
-    
-    func read(filePath: String, encoding: UInt = NSUTF8StringEncoding ) -> String {
-        let file: NSFileHandle? = NSFileHandle(forReadingAtPath: filePath)
-        return String(data: (file?.readDataToEndOfFile())!, encoding: encoding)!
-    }
-    
-    private func writeImpliment(file: NSFileHandle, data: String, encoding: UInt = NSUTF8StringEncoding ){
-        file.seekToEndOfFile()
-        let data = (data as NSString).dataUsingEncoding(encoding)
-        file.writeData(data!)
-        file.closeFile()
-    }
-    
-    func closeFile(){
-        
-    }
-    // Reading
-    
-        static func read ( from path: String, option: NSDataReadingOptions = [] ) throws -> NSData {
-        do {
-            let contents = try NSData( contentsOfFile: path, options: option )
-            return contents
-        } catch {
-            let ioError = error as NSError
-            throw FileError.ReadingError ( msg: ioError.localizedDescription )
-        }
-    }
-
-    /**
-     Writes the bytes in the receiver to the file specified by a given path.
-     
-     - Parameter data: The data to be written.
-     - Parameter path: The location to which to write the receiver's bytes.
-     - Parameter options: A mask that specifies options for writing the data. Constant components are described in “NSDataWritingOptions”.
-     
-     - Throws: `FileError.WritingError` if can't write the data on the file specified by `path`.
-     */
-    static func write ( data: NSData, to path: String, option: NSDataWritingOptions = [] ) throws {
-        do {
-            try data.writeToFile( path, options: option )
-        } catch {
-            let ioError = error as NSError
-            throw FileError.WritingError ( msg: ioError.localizedDescription )
-        }
-    }
-    
-    /**
-     Writes the string data with encoding in the receiver to the file specified by a given path.
-     
-     - Parameter data: The data to be written.
-     - Parameter path: The location to which to write the receiver's bytes.
-     - Parameter encoding: An encoding for encode data.
-     - Parameter options: A mask that specifies options for writing the data. Constant components are described in “NSDataWritingOptions”.
-     
-     - Throws:
-        - `FileError.TypeConvertError` if can't convert the data to String with encoding.
-        - `FileError.WritingError` if can't write the data on the file specified by `path`.
-     */
-    static func write ( data: String, to path: String, encoding: NSStringEncoding, option: NSDataWritingOptions = [] ) throws {
-        guard let converted = data.dataUsingEncoding( encoding ) else {
-            throw FileError.TypeConvertError ( msg: "Unable converting to NSData with \(encoding)" )
-        }
-        
-        do {
-            try converted.writeToFile( path, options: option )
-        } catch {
-            let ioError = error as NSError
-            throw FileError.WritingError ( msg: ioError.localizedDescription )
-        }
-    }
-    
-    // Get real path from bundle file
-    
-    /**
-    Returns the full pathname for the resource identified by the path. The full pathname for the resource file.
-    
-    - Parameter path: The name of the file or path of the file from which to read data.
-    
-    - Returns: The full pathname for the resource file.
-    */
-    static func getRealPath( path : String ) -> String {
+    public static func getRealPath ( path : String ) -> String {
         
         let _path: String!;
         if path.characters.last == "/" {
@@ -162,5 +53,113 @@ public class File {
             return path
         }
     }
-
+    
+    // On success (all requested permissions granted), zero is returned.
+    // On error (at least one bit in mode asked for a permission that is denied, or some other error occurred), -1 is returned, and errno is set appropriately.
+    public static func isExist ( path : String ) -> Bool {
+        #if os(Linux)
+            if Glibc.access( path, F_OK ) == 0 {
+                return true     // exists
+            } else {
+                return false    // not found
+            }
+        #else
+            if Darwin.access( path, F_OK ) == 0 {
+                return true     // exists
+            } else {
+                return false    // not found
+            }
+        #endif
+    }
+    
+    public static func create ( path : String ) -> Bool {
+        #if os(Linux)
+            let fd = Glibc.open(path, O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
+        #else
+            let fd = Darwin.open(path, O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
+        #endif
+        if fd == -1 {
+            print( "ERROR : File create failed" )
+            return false
+        }
+        close (fd);
+        return true
+    }
+    
+    // On success, zero is returned. On error, -1 is returned, and errno is set appropriately.
+    public static func remove( path : String ) -> Int32 {
+        #if os(Linux)
+            return Glibc.remove( path )
+        #else
+            return Darwin.remove( path )
+        #endif
+    }
+    
+    public static func read ( filePath: String, option: Int32 = O_RDONLY ) -> NSData? {
+        
+        let fd = open( filePath, option|O_RDONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
+        if fd == -1 {
+            print( "ERROR : File open failed" )
+            return nil
+        }
+        
+        let buf = UnsafeMutablePointer<Int8>.alloc(BUFSIZE)
+        var data = NSMutableData();
+        
+        #if os(Linux)
+            var readn = Glibc.read(fd, buf, BUFSIZE)
+            while readn > 0 {
+                data.appendBytes(buf, length: readn)
+                readn = Glibc.read(fd, buf, BUFSIZE)
+            }
+        #else
+            var readn = Darwin.read(fd, buf, BUFSIZE)
+            while readn > 0 {
+                data.appendBytes(buf, length: readn)
+                readn = Darwin.read(fd, buf, BUFSIZE)
+            }
+        #endif
+        
+        // Close file
+        close (fd);
+        
+        return data
+    }
+    
+    public static func write ( filePath: String, data: UnsafePointer<Void>, size: Int, var option: Int32 = O_WRONLY ) -> Bool {
+        
+        #if os(Linux)
+            if Glibc.access( filePath, F_OK ) != 0 {
+                option |= O_CREAT
+            }
+            
+            let fd = Glibc.open( filePath, option|O_WRONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
+            if fd == -1 {
+                print( "ERROR : File open failed" )
+                return false
+            }
+            
+            if size == Glibc.write( fd, data, size ) {
+                return true
+            } else {
+                return false
+            }
+        #else
+            if Darwin.access( filePath, F_OK ) != 0 {
+                option |= O_CREAT
+            }
+            
+            let fd = Darwin.open( filePath, option|O_WRONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
+            if fd == -1 {
+                print( "ERROR : File open failed" )
+                return false
+            }
+            
+            if size == Darwin.write( fd, data, size ) {
+                return true
+            } else {
+                return false
+            }
+        #endif
+    }
 }
