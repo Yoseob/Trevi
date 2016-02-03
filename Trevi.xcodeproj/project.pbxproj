@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		231489CC1C627BDB00D1AF27 /* LimeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231489CB1C627BDB00D1AF27 /* LimeRequest.swift */; };
+		231489CE1C627E6400D1AF27 /* LimeRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231489CD1C627E6400D1AF27 /* LimeRequest.swift */; };
 		232299941C61E00D003E44AB /* Lime.h in Headers */ = {isa = PBXBuildFile; fileRef = 232299931C61E00D003E44AB /* Lime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		232299981C61E00D003E44AB /* Lime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232299911C61E00D003E44AB /* Lime.framework */; };
 		232299991C61E00D003E44AB /* Lime.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 232299911C61E00D003E44AB /* Lime.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -93,7 +93,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		231489CB1C627BDB00D1AF27 /* LimeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimeRequest.swift; sourceTree = "<group>"; };
+		231489CD1C627E6400D1AF27 /* LimeRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimeRequest.swift; sourceTree = "<group>"; };
 		232299911C61E00D003E44AB /* Lime.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Lime.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		232299931C61E00D003E44AB /* Lime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lime.h; sourceTree = "<group>"; };
 		232299951C61E00D003E44AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -198,8 +198,8 @@
 				232299A61C61E36E003E44AB /* HttpParser.swift */,
 				232299A41C61E09A003E44AB /* PreparedData.swift */,
 				2322999E1C61E048003E44AB /* Lime.swift */,
-				231489CB1C627BDB00D1AF27 /* LimeRequest.swift */,
 				232299A81C622ABA003E44AB /* LimeResponse.swift */,
+				231489CD1C627E6400D1AF27 /* LimeRequest.swift */,
 			);
 			path = Lime;
 			sourceTree = "<group>";
@@ -537,7 +537,7 @@
 				232299A51C61E09A003E44AB /* PreparedData.swift in Sources */,
 				232299A71C61E36E003E44AB /* HttpParser.swift in Sources */,
 				232299A91C622ABA003E44AB /* LimeResponse.swift in Sources */,
-				231489CC1C627BDB00D1AF27 /* LimeRequest.swift in Sources */,
+				231489CE1C627E6400D1AF27 /* LimeRequest.swift in Sources */,
 				232299A11C61E048003E44AB /* Lime.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
