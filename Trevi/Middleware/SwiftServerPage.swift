@@ -89,44 +89,37 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: The swift source codes which are converted from SSP file with arguments.
      */
     private final func convertToSwift ( from ssp: String, with args: [String:String] ) -> String {
-        guard let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [ .CaseInsensitive ] ) else {
-            print ( "Error parsing data." )
-            return ""
-        }
-
         var swiftCode: String = ""
-
         for key in args.keys {
             swiftCode += "var \(key) = \"\(args[key]!)\"\n"
         }
 
         var startIdx = ssp.startIndex
-
-        for match in regex.matchesInString ( ssp, options: [], range: NSMakeRange ( 0, ssp.length () ) ) {
-            let tagRange      = match.rangeAtIndex ( 0 )
-            let contentsRange = match.rangeAtIndex ( 2 )
+        
+        let searched = searchWithRegularExpression( ssp, pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [.CaseInsensitive] )
+        for dict in searched {
             let swiftTag, htmlTag: String
-
-            if ssp.substring ( match.rangeAtIndex ( 1 ).location, length: match.rangeAtIndex ( 1 ).length ) == "<%=" {
-                swiftTag = "print(\(ssp.substring ( contentsRange.location, length: contentsRange.length )), terminator:\"\")"
+            
+            if dict["$1"]!.text == "<%=" {
+                swiftTag = "print(\(dict["$2"]!.text), terminator:\"\")"
             } else {
-                swiftTag = ssp.substring ( contentsRange.location, length: contentsRange.length )
+                swiftTag = dict["$2"]!.text
             }
-
-            htmlTag = ssp[startIdx ..< ssp.startIndex.advancedBy ( tagRange.location )]
-            .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
-            .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
-            .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
-
+            
+            htmlTag = ssp[startIdx ..< ssp.startIndex.advancedBy ( dict["$0"]!.range.location )]
+                .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
+                .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
+                .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
+            
             swiftCode += "print(\"\(htmlTag)\", terminator:\"\")\n\(swiftTag)\n"
-
-            startIdx = ssp.startIndex.advancedBy ( tagRange.location + tagRange.length )
+            
+            startIdx = ssp.startIndex.advancedBy ( dict["$0"]!.range.location + dict["$0"]!.range.length )
         }
 
         let htmlTag = ssp[startIdx ..< ssp.endIndex]
-        .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
-        .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
-        .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
+            .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
+            .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
+            .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
 
         return (swiftCode + "print(\"\(htmlTag)\")\n")
     }

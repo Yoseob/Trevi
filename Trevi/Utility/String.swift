@@ -66,3 +66,28 @@ extension String {
 //        }
     }
 }
+
+/**
+ - Parameter string: The string to search.
+ - Parameter pattern: The regular expression pattern to compile.
+ - Parameter options: The regular expression options that are applied to the expression during matching. See NSRegularExpressionOptions for possible values.
+ 
+ - Returns: An array of tuples that include NSRange and String which are searched with regular expression.
+ */
+func searchWithRegularExpression ( string: String, pattern: String, options: NSRegularExpressionOptions = [] ) -> [[String : (range: NSRange, text: String)]] {
+    var searched = [[String : (range: NSRange, text: String)]]()
+    
+    if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: pattern, options: options ) {
+        for matches in regex.matchesInString ( string, options: [], range: NSMakeRange( 0, string.characters.count ) ) {
+            var group = [String : (range: NSRange, text: String)]()
+            for idx in 0 ..< matches.numberOfRanges {
+                let range = matches.rangeAtIndex( idx )
+                group.updateValue((matches.rangeAtIndex(idx), string[string.startIndex.advancedBy(range.location) ..< string.startIndex.advancedBy(range.location + range.length)]), forKey: "$\(idx)")
+            }
+            searched.append(group)
+        }
+    }
+    
+    return searched
+}
+
