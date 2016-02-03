@@ -1,5 +1,5 @@
-//
-//  TreviResponse.swift
+
+//  Request.swift
 //  Trevi
 //
 //  Created by LeeYoseob on 2016. 2. 2..
@@ -7,15 +7,12 @@
 //
 
 import Foundation
-
-public class TreviResponse : Response{
-    
+import Trevi
+public class LimeRequest : Request{
     public override init() {
         super.init()
     }
-    
-    public override init(socket: ClientSocket) {
-        super.init(socket: socket)
+    public override init(_ headerStr: String) {
+        super.init(headerStr)
     }
-    
 }

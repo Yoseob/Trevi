@@ -16,7 +16,7 @@ import Foundation
 
 public class RoutAble: Require {
 
-    public var superPath: String?
+    public var superPath: String? = ""
     public var router = Router.sharedInstance()
     public var eventListener : EventListener?
 
@@ -179,7 +179,6 @@ public class RoutAble: Require {
         if superPath != "" && path == "/" {
             completePath = superPath!
         }
-        print(completePath)
         router.appendRoute ( completePath, Route ( method: type, completePath, callback ) );
         return self
     }

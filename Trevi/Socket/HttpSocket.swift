@@ -119,7 +119,7 @@ public class HttpSocket {
         
         let readData : ReceivedParams = stream.read()
         
-        var info = EventInfo()
+        let info = EventInfo()
         info.params = readData
         info.stream = stream
         listener?.emit("data", info)

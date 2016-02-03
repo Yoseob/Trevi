@@ -7,16 +7,16 @@
 //
 
 import Foundation
-
+import Trevi
 /*
     One of the Middleware class to the path to ensure that able to handle the user defined url
     However, it's not find the path to the running is trevi all save the path at this class when the server is starting on the go.
     This class is real class router's functioning.
 */
 
-public class Trevi : RoutAble{
+public class Lime : RoutAble{
     
-    private var httpParser = HttpParser()
+    private let httpParser = HttpParser()
     
     public  override init () {
         super.init()

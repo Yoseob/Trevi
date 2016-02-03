@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import Trevi
 /*
 
     PreparedData is make request and response after read all of data from client
@@ -18,9 +18,9 @@ public class PreparedData {
     //The content-length of the body
     private var content_length = 0
     
-    public var req : TreviRequest?
+    public var req : LimeRequest?
     
-    private var filemanager  = File()
+//    private var filemanager = File()
     
     private var traceBodyString : String = ""
     
@@ -29,7 +29,7 @@ public class PreparedData {
     var bodyBuff = ""
     private var boundry : String?
     
-    init(){
+    public init(){
     
     }
     
@@ -51,7 +51,10 @@ public class PreparedData {
         let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
         var data = strData! as String
         var headerLength = 0;
-        //print("\(data)   end")
+        
+        if let _ = req{
+            dispatchBodyData(data)
+        }
         //header
         if data.containsString("HTTP/1."){
             req = nil
@@ -79,11 +82,6 @@ public class PreparedData {
                 data = buff
             }
         }
-        
-        if(data.length() > 0){
-            dispatchBodyData(data)
-        }
-        
         return (content_length,headerLength)
     }
     
@@ -139,7 +137,7 @@ public class PreparedData {
                 if boundryCount == 2{
                     boundryCount--;
                     //move file IO connector
-                    print(bodyBuff)
+//                    print(bodyBuff)
                     bodyBuff = ""
                 }
             }else{
@@ -189,12 +187,12 @@ public class PreparedData {
      * @private
      */
 
-    private func setupRequest ( hData: String ) -> TreviRequest {
-        return TreviRequest( hData )
+    private func setupRequest ( hData: String ) -> LimeRequest {
+        return LimeRequest( hData )
     }
     
-    private func setupResponse ( socket: ClientSocket ) -> TreviResponse {
-        let res = TreviResponse( socket: socket )
+    private func setupResponse ( socket: ClientSocket ) -> LimeResponse {
+        let res = LimeResponse( socket: socket )
         res.method = self.req!.method
         //connection header
         if let connection = req?.header[Connection]{

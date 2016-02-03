@@ -12,9 +12,10 @@ import Foundation
 public typealias Listener  = (EventInfo) -> Void
 public typealias Stream = ConnectedSocket<IPv4>
 
-public struct EventInfo{
-    var stream : Stream?
-    var params : ReceivedParams?
+public class EventInfo{
+    public init(){}
+    public var stream : Stream?
+    public var params : ReceivedParams?
 }
 
 //Http Server call name "data" when received Stream Data,
@@ -32,6 +33,7 @@ public protocol EventListener{
 
 
 public struct MainListener {
+    public init(){}
     public var eListners = [String:Listener]()
 }
 

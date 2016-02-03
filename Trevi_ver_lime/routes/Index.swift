@@ -21,10 +21,7 @@ public class Index: RoutAble {
 
 
         index.get ( "/", { req, res in
-            // Do any..
-            return false
-            }, { req, res in
-                return res.render("index.ssp", args: [ "title" : "Trevi" ])
+            return res.render("index.ssp", args: [ "title" : "Trevi" ])
         })
 
         index.post ("/json" ) { req, res in

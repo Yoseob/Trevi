@@ -22,6 +22,8 @@ public enum FileError: ErrorType {
 
 public class File {
     
+    public init(){}
+    
     private static let BUFSIZE = 1024
     
     /**

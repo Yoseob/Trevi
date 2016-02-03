@@ -7,26 +7,26 @@
 //
 
 import Foundation
-
+import Trevi
 
 public class HttpParser{
     
-    var eventListener : EventListener?
-    var prepare = PreparedData()
+    let prepare = PreparedData()
+    var eventListener: EventListener?
     var totalLength = 0
 
     public init(){}
-    public convenience init(elistener : EventListener){
+    public convenience init(elistener: EventListener){
         self.init()
         eventListener = elistener
     }
     
-    public func appendData(info : EventInfo) ->Int {
+    public func appendData(info: EventInfo) ->Int {
         
         if let readData = info.params {
             self.totalLength += readData.length
             if readData.length > 0 {
-                let (contentLength, headerLength) = self.prepare.appendReadData(readData)
+                let (contentLength, headerLength) = prepare.appendReadData(readData)
                 if contentLength > headerLength{
                     self.totalLength -= headerLength
                 }
@@ -44,10 +44,11 @@ public class HttpParser{
         self.totalLength = 0
     }
     
-    private func shootRequest(stream : Stream){
+    private func shootRequest(stream: Stream){
         let httpClient = ClientSocket ( socket: stream )
         //@Danger
-        MiddlewareManager.sharedInstance ().handleRequest(self.prepare.handleRequest(httpClient))
+        
+        MiddlewareManager.sharedInstance ().handleRequest(prepare.handleRequest(httpClient))
         reset()
     }
     

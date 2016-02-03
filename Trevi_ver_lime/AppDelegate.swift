@@ -8,7 +8,7 @@
 
 import Cocoa
 import Trevi
-
+import Lime
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -16,26 +16,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
               
         let server = Http ()
 
-        let trevi = Trevi()
+        let lime = Lime()
         
-        trevi.use(BodyParser())
+        lime.use(BodyParser())
         
-        trevi.use(Favicon())
+        lime.use(Favicon())
         
-        trevi.use(SwiftServerPage())
+        lime.use(SwiftServerPage())
         
-        trevi.use(ServeStatic())
+        lime.use("/",Root())
+
+        lime.use(ServeStatic())
         
-        trevi.use("/index",Root())
-        
-        trevi.use(){ req, res in
+        lime.use(){ req, res in
             res.status = 404
             return res.send ("404 Pages Not Found")
         }
     
         do {
             
-            try server.createServer ( trevi ).listen (8080)
+            try server.createServer ( lime ).listen (8080)
             
         } catch {
 

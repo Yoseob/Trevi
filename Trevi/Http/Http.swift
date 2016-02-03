@@ -9,18 +9,18 @@
 import Foundation
 
 public typealias HttpCallback = ( ( Request, Response) -> Bool )
+
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
+public typealias CallBack = ( Request, Response ) -> Bool // will remove next
 public class Http {
     
     private var socket : HttpSocket!
-    private var mwManager = MiddlewareManager.sharedInstance ()
+    private let mwManager = MiddlewareManager.sharedInstance ()
     private var listener : EventListener!
     
-    var prepare = PreparedData()
-    var totalLength = 0
-
     public init () {
+    
     }
 
     /**

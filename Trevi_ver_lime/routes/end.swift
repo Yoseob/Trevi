@@ -23,6 +23,8 @@ public class End: RoutAble {
         index.get ( "/bye" ) { req, res in
             return res.send("bye~!")
         }
-
+        index.get ( "/" ) { req, res in
+            return res.send("/end/root")
+        }
     }
 }

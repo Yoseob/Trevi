@@ -25,7 +25,7 @@ public enum StringError: ErrorType {
     case UnsupportedEncodingError
 }
 
-extension String {
+public extension String {
     
     func length () -> Int {
         return self.characters.count
