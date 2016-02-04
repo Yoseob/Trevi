@@ -43,8 +43,8 @@ public class HttpSocket {
     
     var listener : EventListener?
     
-    // Set closeTime to terminate connection with a client after the time from last client request.
-    var closeTime: __uint64_t?
+    // If set closeTime a client will be disconnected withn closeTime.
+    var closeTime: UInt64?
     
     init(){
         
@@ -53,7 +53,6 @@ public class HttpSocket {
     public init(ip : String? = nil){
         self.ip = ip
     }
-
     
     public init( _ eListener : EventListener? = nil){
         self.listener = eListener
