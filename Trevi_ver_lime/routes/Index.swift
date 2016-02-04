@@ -23,7 +23,7 @@ public class Index: RouteAble {
             // Do any..
             return false
             }, { req, res in
-                return res.render("index.ssp", args: [ "title" : "Trevi" ])
+                return res.render(File.getResourcePath("index.ssp"), args: [ "title" : "Trevi" ])
         })
 
         index.post ("/json" ) { req, res in

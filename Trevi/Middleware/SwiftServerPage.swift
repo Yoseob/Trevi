@@ -38,8 +38,7 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
     public func render ( path: String ) -> String {
-        
-        return render( path, args: [:] )
+        return render(path, args: [:])
     }
     
     /**
@@ -51,12 +50,10 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
     public func render ( path: String, args: [String:String] ) -> String {
-        
-        guard let data = load ( path ) else {
+        guard let data = load (path) else {
             return ""
         }
-        
-        return compile ( path, code: convertToSwift ( from: data, with: args ) )!
+        return compile (path, code: convertToSwift(from: data, with: args))!
     }
     
     /**
@@ -67,15 +64,12 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by data from the file specified by path.
      */
     private final func load ( path: String ) -> String? {
-        
-        guard let data = File.read ( File.getRealPath( path )) else {
+        guard let data = File.read(path) else {
             return nil
         }
-        
-        guard let str = String( data: data, encoding: NSUTF8StringEncoding ) else {
+        guard let str = String(data: data, encoding: NSUTF8StringEncoding) else {
             return nil
         }
-        
         return str
     }
     

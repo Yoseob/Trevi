@@ -20,6 +20,17 @@ public enum FileError: ErrorType {
     case TypeConvertError( msg:String )
 }
 
+public enum FileType {
+    case RegularFile
+    case Directory
+    case CharacterDevice
+    case BlockDevice
+    case FIFO
+    case SymbolicLink
+    case Socket
+    case Unknown
+}
+
 public class File {
     
     private static let BUFSIZE = 1024
@@ -31,31 +42,14 @@ public class File {
      
      - Returns: The full pathname for the resource file.
      */
-    public static func getRealPath ( path : String ) -> String {
-        
-        let _path: String!;
-        if path.characters.last == "/" {
-            _path = path[ path.startIndex ..< path.endIndex.advancedBy(-1) ]
-        } else {
-            _path = path
+    public static func getResourcePath ( path : String ) -> String {
+        let comp = path.componentsSeparatedByString( "/" )
+        if let rsrcPath = NSBundle.mainBundle().pathForResource( comp.last!, ofType: nil ) {
+            return rsrcPath
         }
-        
-        guard let filename = _path.componentsSeparatedByString( "/" ).last else {
-            return path
-        }
-        let nameElement = filename.componentsSeparatedByString( "." )
-        if nameElement.count == 2 {
-            guard let bundlePath = NSBundle.mainBundle().pathForResource( nameElement[0], ofType: nameElement.count > 1 ? nameElement[1] : "" ) else {
-                return path
-            }
-            return bundlePath
-        } else {
-            return path
-        }
+        return path
     }
     
-    // On success (all requested permissions granted), zero is returned.
-    // On error (at least one bit in mode asked for a permission that is denied, or some other error occurred), -1 is returned, and errno is set appropriately.
     public static func isExist ( path : String ) -> Bool {
         #if os(Linux)
             if Glibc.access( path, F_OK ) == 0 {
@@ -72,6 +66,80 @@ public class File {
         #endif
     }
     
+    public static func isReadable ( path : String ) -> Bool {
+        #if os(Linux)
+            if Glibc.access( path, R_OK ) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #else
+            if Darwin.access( path, R_OK ) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #endif
+    }
+    
+    public static func isWritable ( path : String ) -> Bool {
+        #if os(Linux)
+            if Glibc.access( path, W_OK ) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #else
+            if Darwin.access( path, W_OK ) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #endif
+    }
+    
+    public static func isExecutable ( path : String ) -> Bool {
+        #if os(Linux)
+            if Glibc.access( path, X_OK ) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #else
+            if Darwin.access( path, X_OK ) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #endif
+    }
+    
+    public static func getType ( path : String ) -> FileType? {
+        let path_stat = UnsafeMutablePointer<stat>.alloc(1)
+        
+        #if os(Linux)
+            if Glibc.stat(path, path_stat) == -1 {
+                print( "ERROR : File type check failed" )
+                return nil
+            }        #else
+            if Darwin.stat(path, path_stat) == -1 {
+                print( "ERROR : File type check failed" )
+                return nil
+            }
+        #endif
+        
+        switch path_stat.memory.st_mode & S_IFMT {
+        case S_IFREG: return FileType.RegularFile
+        case S_IFDIR: return FileType.Directory
+        case S_IFBLK: return FileType.BlockDevice
+        case S_IFCHR: return FileType.CharacterDevice
+        case S_IFIFO: return FileType.FIFO
+        case S_IFLNK: return FileType.SymbolicLink
+        case S_IFSOCK: return FileType.Socket
+        default: return FileType.Unknown
+        }
+    }
+    
     public static func create ( path : String ) -> Bool {
         #if os(Linux)
             let fd = Glibc.open(path, O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
@@ -86,7 +154,9 @@ public class File {
         return true
     }
     
-    // On success, zero is returned. On error, -1 is returned, and errno is set appropriately.
+    /**
+     - Returns: On success, zero is returned. On error, -1 is returned, and errno is set appropriately.
+     */
     public static func remove( path : String ) -> Int32 {
         #if os(Linux)
             return Glibc.remove( path )
@@ -96,41 +166,59 @@ public class File {
     }
     
     public static func read ( filePath: String, option: Int32 = O_RDONLY ) -> NSData? {
-        
-        let fd = open( filePath, option|O_RDONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
-        if fd == -1 {
-            print( "ERROR : File open failed" )
-            return nil
-        }
-        
-        let buf = UnsafeMutablePointer<Int8>.alloc(BUFSIZE)
-        var data = NSMutableData();
-        
         #if os(Linux)
+            if Glibc.access( filePath, R_OK ) == -1 {
+                return nil
+            }
+            
+            let buf = UnsafeMutablePointer<Int8>.alloc(BUFSIZE)
+            var data = NSMutableData();
+            
+            let fd = open( filePath, option|O_RDONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
+            if fd == -1 {
+                print( "ERROR : File open failed" )
+                return nil
+            }
+            
             var readn = Glibc.read(fd, buf, BUFSIZE)
             while readn > 0 {
                 data.appendBytes(buf, length: readn)
                 readn = Glibc.read(fd, buf, BUFSIZE)
             }
+            
+            Glibc.close(fd);
         #else
+            if Darwin.access( filePath, R_OK ) == -1 {
+                return nil
+            }
+            
+            let buf = UnsafeMutablePointer<Int8>.alloc(BUFSIZE)
+            let data = NSMutableData();
+            
+            let fd = open( filePath, option|O_RDONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
+            if fd == -1 {
+                print( "ERROR : File open failed" )
+                return nil
+            }
+            
             var readn = Darwin.read(fd, buf, BUFSIZE)
             while readn > 0 {
                 data.appendBytes(buf, length: readn)
                 readn = Darwin.read(fd, buf, BUFSIZE)
             }
+            
+            Darwin.close(fd);
         #endif
-        
-        // Close file
-        close (fd);
         
         return data
     }
     
     public static func write ( filePath: String, data: UnsafePointer<Void>, size: Int, var option: Int32 = O_WRONLY ) -> Bool {
-        
         #if os(Linux)
             if Glibc.access( filePath, F_OK ) != 0 {
                 option |= O_CREAT
+            } else if Glibc.access( filePath, W_OK ) != 0 {
+                return false
             }
             
             let fd = Glibc.open( filePath, option|O_WRONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
@@ -139,14 +227,14 @@ public class File {
                 return false
             }
             
-            if size == Glibc.write( fd, data, size ) {
-                return true
-            } else {
-                return false
-            }
+            let written = Glibc.write( fd, data, size )
+            
+            Glibc.close(fd);
         #else
             if Darwin.access( filePath, F_OK ) != 0 {
                 option |= O_CREAT
+            } else if Darwin.access( filePath, W_OK ) != 0 {
+                return false
             }
             
             let fd = Darwin.open( filePath, option|O_WRONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
@@ -155,11 +243,15 @@ public class File {
                 return false
             }
             
-            if size == Darwin.write( fd, data, size ) {
-                return true
-            } else {
-                return false
-            }
+            let written = Darwin.write( fd, data, size )
+            
+            Darwin.close(fd);
         #endif
+        
+        if size == written {
+            return true
+        } else {
+            return false
+        }
     }
 }

@@ -24,17 +24,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //I think middleware setting at instance of Http Class 
         // server.use(Favicon()) or server.set(Favicon())
         
-        
         //'use' func call for use middleware
         lime.use(BodyParser())
         
         lime.use(Favicon())
         
+        lime.use(ServeStatic(path: "/Users/zero2hex/Documents/www"))
+        
         lime.use(SwiftServerPage())
         
         lime.use(trevi) // it is important to routing
-        
-        lime.use(ServeStatic()) // it is important to routing
         
         lime.use(){ req, res in
             res.status = 404
