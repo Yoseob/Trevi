@@ -30,7 +30,7 @@ public class ClientSocket {
         socket.close ()
     }
     
-    public func closeAfter( seconds : __uint64_t ) {
+    public func closeAfter( seconds : UInt64 ) {
         socket.setTimeout(seconds)
     }
 }
@@ -80,7 +80,7 @@ public class HttpSocket {
      
      - Parameter port: Server port setting.
      */
-    public func startListening ( port : __uint16_t ) throws {
+    public func startListening ( port : UInt16 ) throws {
         
         var address : IPv4 {
             get{

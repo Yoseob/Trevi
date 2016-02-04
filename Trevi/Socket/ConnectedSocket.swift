@@ -6,7 +6,11 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-import Darwin
+#if os(Linux)
+    import SwiftGlibc
+#else
+    import Darwin
+#endif
 
 let ClientBufferSize = 4096
 
@@ -60,7 +64,11 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         
         self.cancelTimeout()
         eventHandle.cancelEvent()
-        Darwin.shutdown(fd, SHUT_RD)
+        #if os(Linux)
+            shutdown(self.fd, 0)
+        #else
+            shutdown(self.fd, SHUT_RD)
+        #endif
         
         if eventHandle.isWriting() {
             return
@@ -76,7 +84,11 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     */
     public func read() -> (buffer: UnsafeMutablePointer<CChar>, length: Int) {
         let readBufferPtr = UnsafeMutablePointer<CChar>(bufferPtr)
-        let readBufferLen = Darwin.read(fd, bufferPtr, bufferLen)
+        #if os(Linux)
+            let readBufferLen = SwiftGlibc.read(self.fd, bufferPtr, bufferLen)
+        #else
+            let readBufferLen = Darwin.read(self.fd, bufferPtr, bufferLen)
+        #endif
         
         guard readBufferLen >= 0 else {
             bufferPtr[0] = 0
@@ -116,7 +128,7 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
      
      - Parameter seconds: Time(Seconds).
      */
-    public func setTimeout(seconds : __uint64_t) {
+    public func setTimeout(seconds : UInt64) {
         self.cancelTimeout()
         timeout = Timer(interval: seconds, leeway: 1, queue: serverModel.readQueue)
         
