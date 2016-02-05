@@ -31,9 +31,11 @@ public class ServeStatic: Middleware {
         let res: Response = params.res
         
         let filepath = "\(basePath)\(req.path)"
-        if let type = File.getType(filepath) where type == FileType.RegularFile || type == FileType.SymbolicLink {
-            if let data = File.read(filepath) {
-                return res.send(data)
+        if File.isExist(filepath) {
+            if let type = File.getType(filepath) where type == FileType.RegularFile || type == FileType.SymbolicLink {
+                if let data = File.read(filepath) {
+                    return res.send(data)
+                }
             }
         }
         

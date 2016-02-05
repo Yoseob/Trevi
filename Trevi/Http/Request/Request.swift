@@ -12,7 +12,14 @@ public class Request {
     
     // HTTP method like GET, POST.
     public var method: HTTPMethodType = HTTPMethodType.UNDEFINED
-    public var version   = String ()
+    
+    public var httpVersionMajor : String? = "1"
+    
+    public var httpVersionMinor : String? = "1"
+    
+    public var version : String{
+        return "\(httpVersionMajor).\(httpVersionMinor)"
+    }
     
     // Original HTTP data include header & body
     public var headerString: String! {
@@ -80,9 +87,16 @@ public class Request {
             if let method = HTTPMethodType ( rawValue: requestLineElements[0] ) {
                 self.method = method
             }
+            
+            let httpProtocolString = requestLineElements.last!
+            let versionComponents: [String] = httpProtocolString.componentsSeparatedByString( "/" )
+            let version: [String] = versionComponents.last!.componentsSeparatedByString( "." )
+            
+            httpVersionMajor = version.first!
+            httpVersionMinor = version.last!
+            
             parseUrl( requestLineElements[1] )
             parseHeader( requestHeader )
-    
         }
     }
     

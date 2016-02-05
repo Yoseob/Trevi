@@ -5,9 +5,11 @@
 //  Created by JangTaehwan on 2015. 12. 7..
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
-
-import Darwin
-import Dispatch
+#if os(Linux)
+    import SwiftGlibc
+#else
+    import Darwin
+#endif
 
 /**
  * ListenSocket class
@@ -28,8 +30,11 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      - Returns:   If bind function succeeds, calls super.init(). However, if it fails, returns nil.
      */
     public init?(address : T, queue : dispatch_queue_t = serverModel.acceptQueue) {
-        
-        let fd = socket(T.domain, SOCK_STREAM, 0)
+        #if os(Linux)
+            let fd = SwiftGlibc.socket(T.domain, Int32(SOCK_STREAM.rawValue), 0)
+        #else
+            let fd = Darwin.socket(T.domain, SOCK_STREAM, 0)
+        #endif
         
         super.init(fd: fd, address: address)
         eventHandle = EventHandler(fd: fd, queue: queue)
@@ -57,7 +62,11 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
     public func listen(backlog : Int32 = 50) -> Bool {
         guard !isListening else { return false }
         
-        let status = Darwin.listen(fd, backlog)
+        #if os(Linux)
+            let status = SwiftGlibc.listen(self.fd, backlog)
+        #else
+            let status = Darwin.listen(self.fd, backlog)
+        #endif
         guard status == 0 else { return false }
         
         log.info("Server listens on ip : \(self.address.ip()), port : \(self.address.port())")
@@ -80,7 +89,12 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         let clientFd = withUnsafeMutablePointer(&clientAddr) {
             ptr -> Int32 in
             let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
-            return Darwin.accept(self.fd, addrPtr, &clientAddrLen);
+            
+            #if os(Linux)
+                return SwiftGlibc.accept(self.fd, addrPtr,  &clientAddrLen)
+            #else
+                return Darwin.accept(self.fd, addrPtr,  &clientAddrLen)
+            #endif
         }
         
         return (clientFd, clientAddr)

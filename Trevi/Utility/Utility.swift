@@ -8,8 +8,6 @@
 
 import Foundation
 
-public typealias CallBack = ( Request, Response ) -> Bool // will remove next
-
 extension NSDate {
     struct Date {
         static let formatter = NSDateFormatter()

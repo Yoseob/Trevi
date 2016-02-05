@@ -9,21 +9,18 @@
 import Foundation
 import Trevi
 
-public class Index: RouteAble {
+public class Index: RoutAble {
 
     public override init () {
         super.init ()
     }
 
     public override func prepare () {
-        let index = trevi.store ( self )
 
+        let index = self
 
         index.get ( "/", { req, res in
-            // Do any..
-            return false
-            }, { req, res in
-                return res.render(File.getResourcePath("index.ssp"), args: [ "title" : "Trevi" ])
+            return res.render(File.getResourcePath("index.ssp"), args: [ "title" : "Trevi" ])
         })
 
         index.post ("/json" ) { req, res in

@@ -7,7 +7,7 @@
 //  Copyright © 2015년 JangTaehwan. All rights reserved.
 //
 
-#include <fcntl.h>
+#include <sys/fcntl.h>
 
 int swift_fcntl(int fd, int cmd, int arg) {
     return fcntl(fd, cmd, arg);

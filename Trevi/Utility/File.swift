@@ -33,6 +33,8 @@ public enum FileType {
 
 public class File {
     
+    public init(){}
+    
     private static let BUFSIZE = 1024
     
     /**
@@ -115,13 +117,14 @@ public class File {
     }
     
     public static func getType ( path : String ) -> FileType? {
-        let path_stat = UnsafeMutablePointer<stat>.alloc(1)
+        var path_stat = UnsafeMutablePointer<stat>.alloc(1)
         
         #if os(Linux)
             if Glibc.stat(path, path_stat) == -1 {
                 print( "ERROR : File type check failed" )
                 return nil
-            }        #else
+            }
+        #else
             if Darwin.stat(path, path_stat) == -1 {
                 print( "ERROR : File type check failed" )
                 return nil

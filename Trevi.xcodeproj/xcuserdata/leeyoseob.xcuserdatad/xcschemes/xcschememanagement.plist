@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
+		<key>Lime.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 		<key>Trevi.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -22,6 +27,11 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>232299901C61E00D003E44AB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>239411D21C0C2DA3001B9B07</key>
 		<dict>
 			<key>primary</key>

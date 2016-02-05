@@ -30,38 +30,36 @@ public class ClientSocket {
         socket.close ()
     }
     
-    public func closeAfter( seconds : __uint64_t ) {
+    public func closeAfter( seconds : UInt64 ) {
         socket.setTimeout(seconds)
     }
 }
 
 
-public protocol RequestHandler{
-    func beginHandle(req : Request , _ res :Response )
-}
-
-/**
- * HttpSocket class
- *
- * Set http server model and manage http client connections.
- * Dispatch a request handle event.
- *
- */
-public class HttpSocket : RequestHandler {
+public class HttpSocket {
     
-    let ip : String?
+    var ip : String?
     var listenSocket : ListenSocket<IPv4>!
     
-    var httpCallback : HttpCallback?
-    var prepare = PreparedData()
-    var totalLength = 0
+    var listener : EventListener?
     
-    // If set closeTime a client will be disconnected withn closeTime.
+    // Set closeTime to terminate connection with a client after the time from last client request.
     var closeTime: __uint64_t?
+    
+    init(){
+        
+    }
     
     public init(ip : String? = nil){
         self.ip = ip
     }
+
+    
+    public init( _ eListener : EventListener? = nil){
+        self.listener = eListener
+        self.ip = nil
+    }
+    
     
      /**
      Set server model by input dispatch queues.
@@ -82,7 +80,7 @@ public class HttpSocket : RequestHandler {
      
      - Parameter port: Server port setting.
      */
-    public func startListening ( port : __uint16_t ) throws {
+    public func startListening ( port : UInt16 ) throws {
         
         var address : IPv4 {
             get{
@@ -100,15 +98,13 @@ public class HttpSocket : RequestHandler {
             return
         }
         
-        prepare.requestHandler = self
-        
         listenSocket.listenClientReadEvent () {
             client in
             
             if let time = self.closeTime {
                 client.setTimeout(time)
             }
-            return self.prepareRequest(client)
+            return self.readDataHandler(client)
         }
         
         self.listenSocket = listenSocket
@@ -118,27 +114,18 @@ public class HttpSocket : RequestHandler {
         self.listenSocket.close ()
     }
     
-    public func beginHandle(req : Request , _ res :Response) {
-        self.httpCallback! ( req, res )
-        self.prepare.dInit()
-    }
     
-    private func prepareRequest(client : ConnectedSocket<IPv4>) -> Int{
-        let readData = client.read()
-        self.totalLength += readData.length
+    private func readDataHandler(stream : Stream) ->Int{
         
-        if readData.length > 0 {
-            let (contentLength, headerLength) = self.prepare.appendReadData(readData)
-            
-            if contentLength > headerLength{
-                self.totalLength -= headerLength
-            }
-            if self.totalLength >= contentLength || contentLength == 0{
-                let httpClient = ClientSocket ( socket: client )
-                self.prepare.handleRequest(httpClient)
-            }
-        }
-
+        let readData : ReceivedParams = stream.read()
+        
+        let info = EventInfo()
+        info.params = readData
+        info.stream = stream
+        listener?.emit("data", info)
+        
         return readData.length
+
+ 
     }
 }

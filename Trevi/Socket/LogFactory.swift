@@ -6,8 +6,6 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 
-import Dispatch
-
 public let log : LogFactory = LogFactory.sharedInstance
 
 public class LogFactory{
