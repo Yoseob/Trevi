@@ -20,7 +20,7 @@ public class Index: RoutAble {
         let index = self
 
         index.get ( "/", { req, res in
-            return res.render(File.getResourcePath("index.ssp"), args: [ "title" : "Trevi" ])
+            return res.render(getResourcePath("index.ssp"), args: [ "title" : "Trevi" ])
         })
 
         index.post ("/json" ) { req, res in

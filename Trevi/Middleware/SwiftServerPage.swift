@@ -53,7 +53,10 @@ public class SwiftServerPage: Middleware, Renderer {
         guard let data = load (path) else {
             return ""
         }
-        return compile (path, code: convertToSwift(from: data, with: args))!
+        guard let compiled = compile (path, code: convertToSwift(from: data, with: args)) else {
+            return ""
+        }
+        return compiled
     }
     
     /**
@@ -64,9 +67,12 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by data from the file specified by path.
      */
     private final func load ( path: String ) -> String? {
-        guard let data = File.read(path) else {
+        let file = Readable(path: path)
+        file.open()
+        guard let data = file.readAll() else {
             return nil
         }
+        file.close()
         guard let str = String(data: data, encoding: NSUTF8StringEncoding) else {
             return nil
         }
@@ -127,12 +133,14 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: Compiled data from the swift codes
      */
     private final func compile ( path: String, code: String ) -> String? {
-        if !File.write( "\(path).swift", data : code, size: code.characters.count, option: O_TRUNC ) {
+        let file = Writable(path: "\(path).swift", option: O_CREAT|O_TRUNC)
+        file.open()
+        if file.write(code, size: code.characters.count) < 0 {
             return nil
-        } else {
-            return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
-                .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
-                .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
         }
+        file.close()
+        return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
+            .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+            .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
     }
 }

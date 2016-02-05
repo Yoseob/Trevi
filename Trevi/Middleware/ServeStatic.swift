@@ -29,14 +29,16 @@ public class ServeStatic: Middleware {
     public func operateCommand (params: MiddlewareParams) -> Bool {
         let req: Request  = params.req
         let res: Response = params.res
-        
-        let filepath = "\(basePath)\(req.path)"
-        if File.isExist(filepath) {
-            if let type = File.getType(filepath) where type == FileType.RegularFile || type == FileType.SymbolicLink {
-                if let data = File.read(filepath) {
-                    return res.send(data)
-                }
+
+        let file = Readable(path: "\(basePath)\(req.path)")
+        if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
+            file.open()
+            let data = NSMutableData()
+            while let read = file.read() {
+                data.appendData(read)
             }
+            file.close()
+            return res.send(data)
         }
         
         return false
