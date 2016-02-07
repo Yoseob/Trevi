@@ -9,6 +9,7 @@
     import SwiftGlibc
 #else
     import Darwin
+    import Libuv
 #endif
 
 /**
@@ -129,22 +130,26 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
             
             guard listen(backlog) else { return false }
             
-            self.eventHandle.dispatchReadEvent() {
-                _ in
-                
-                let (clientFd, clientAddr) = self.accept()
-                
-                let clientSocket = ConnectedSocket<T>(fd: clientFd, address: clientAddr)
-                
-                guard clientSocket != nil else {
-                    log.error("Cannot create client socket")
-                    return 0
-                }
-        
-                clientCallback(clientSocket!)
-                
-                return 42
-            }
+            // Libuv readable test code
+            let uvPoll : LibuvPoll  = LibuvPoll(fd: self.fd , loop: uv_default_loop() , domain: AF_INET)
+            uvPoll.readableTest()
+      
+//            self.eventHandle.dispatchReadEvent() {
+//                _ in
+//                
+//                let (clientFd, clientAddr) = self.accept()
+//                
+//                let clientSocket = ConnectedSocket<T>(fd: clientFd, address: clientAddr)
+//                
+//                guard clientSocket != nil else {
+//                    log.error("Cannot create client socket")
+//                    return 0
+//                }
+//        
+//                clientCallback(clientSocket!)
+//                
+//                return 42
+//            }
             
             return true
     }
