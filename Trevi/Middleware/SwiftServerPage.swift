@@ -67,12 +67,14 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by data from the file specified by path.
      */
     private final func load ( path: String ) -> String? {
-        let file = Readable(path: path)
-        file.open()
-        guard let data = file.readAll() else {
-            return nil
+        let file = Readable(fileAtPath: path).open()
+        var buffer = [UInt8](count: 8, repeatedValue: 0)
+        let data = NSMutableData()
+        while file.status == .Open {
+            let result: Int = file.read(&buffer, maxLength: buffer.count)
+            data.appendBytes(buffer, length: result)
         }
-        file.close()
+        
         guard let str = String(data: data, encoding: NSUTF8StringEncoding) else {
             return nil
         }
@@ -133,12 +135,8 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: Compiled data from the swift codes
      */
     private final func compile ( path: String, code: String ) -> String? {
-        let file = Writable(path: "\(path).swift", option: O_CREAT|O_TRUNC)
-        file.open()
-        if file.write(code, size: code.characters.count) < 0 {
-            return nil
-        }
-        file.close()
+        let file = Writable(fileAtPath: "\(path).swift", option: O_CREAT|O_TRUNC).open()
+        file.write(UnsafePointer<UInt8>(code.dataUsingEncoding(NSUTF8StringEncoding)!.bytes), maxLength: code.characters.count)
         return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
             .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
             .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 #if os(Linux)
     import Glibc
 #else
@@ -23,6 +22,17 @@ public enum FileType: String {
     case SymbolicLink = "FileTypeSymbolicLink"
     case Socket = "FileTypeSocket"
     case Unknown = "FileTypeUnknown"
+}
+
+public enum FileStatus : UInt {
+    case NotOpen
+    case Opening
+    case Open
+    case Reading
+    case Writing
+    case AtEnd
+    case Closed
+    case Error
 }
 
 /**
@@ -41,19 +51,17 @@ public func getResourcePath(path: String) -> String {
 }
 
 public class File {
-    let path: String
-    let type: FileType
+    public let path: String
+    public let type: FileType
+    public var status: FileStatus!
+    
     private var option: Int32
     private var fd: Int32
-    private let bufSize: Int
-    private let buf: UnsafeMutablePointer<Int8>
     
-    init (path: String, bufSize: Int = 255, option: Int32 = O_RDWR) {
-        self.path = path
+    init (fileAtPath: String, option: Int32 = O_RDWR) {
+        self.path = fileAtPath
         self.option = option
         self.fd = -1
-        self.bufSize = bufSize
-        self.buf = UnsafeMutablePointer<Int8>.alloc(bufSize)
         
         // set file type
         var s = stat()
@@ -96,11 +104,11 @@ public class File {
         }
     }
     
-    final func isClosed() -> Bool {
+    public func isClosed() -> Bool {
         return fd < 0 ? true : false
     }
     
-    final func isExist() -> Bool {
+    public func isExist() -> Bool {
         #if os(Linux)
             if Glibc.access(path, F_OK) == 0 {
                 return true
@@ -116,7 +124,8 @@ public class File {
         #endif
     }
     
-    final func open() -> File? {
+    public func open() -> File? {
+        status = .Opening
         if !isClosed() {
             print("ERROR : File alreay opened")
             return nil
@@ -129,20 +138,24 @@ public class File {
         #endif
         if fd == -1 {
             print("ERROR : File open failed")
+            status = .NotOpen
             return nil
         }
+        
+        status = .Open
         return self
     }
     
-    final func close() -> File? {
+    public func close() -> File? {
         if isClosed() {
-            print("ERROR : File alreay closed : \(fd)")
+            print("ERROR : File alreay closed")
             return nil
         }
         
         #if os(Linux)
             if Glibc.close(fd) == 0 {
                 fd = -1
+                status = .Closed
                 return self
             } else {
                 return nil
@@ -150,6 +163,7 @@ public class File {
         #else
             if Darwin.close(fd) == 0 {
                 fd = -1
+                status = .Closed
                 return self
             } else {
                 return nil
@@ -160,7 +174,7 @@ public class File {
     /**
      - Returns: On success, zero is returned. On error, -1 is returned, and errno is set appropriately.
      */
-    final func remove() -> Int32 {
+    public func remove() -> Int32 {
         #if os(Linux)
             return Glibc.remove(path)
         #else
@@ -172,19 +186,19 @@ public class File {
 public class Readable: File {
     private var readEnd: Bool = false
     
-    override init(path: String, bufSize: Int = 255, option: Int32 = O_RDONLY) {
-        super.init(path: path, bufSize: bufSize, option: option|O_RDONLY&(~(O_WRONLY|O_RDWR)))
+    override init(fileAtPath path: String, option: Int32 = O_RDONLY) {
+        super.init(fileAtPath: path, option: option|O_RDONLY&(~(O_WRONLY|O_RDWR)))
     }
     
     public func isReadable() -> Bool {
         #if os(Linux)
-            if Glibc.access(path, R_OK) == 0 {
+            if fd > -1 && Glibc.access(path, R_OK) == 0 {
                 return true
             } else {
                 return false
             }
         #else
-            if Darwin.access(path, R_OK) == 0 {
+            if fd > -1 && Darwin.access(path, R_OK) == 0 {
                 return true
             } else {
                 return false
@@ -192,72 +206,53 @@ public class Readable: File {
         #endif
     }
     
-    public final func read(option: Int32 = O_RDONLY) -> NSData? {
+    public override func open() -> Readable {
+        super.open()
+        return self
+    }
+    
+    public func read(buffer: UnsafeMutablePointer<UInt8>, maxLength len: Int) -> Int {
         if isClosed() {
-            print("ERROR: File not opened")
-            return nil
+            print("ERROR: Not opened")
+            return -1
         }
         if !isReadable() {
-            print("ERROR: File is not writable")
-            return nil
+            print("ERROR: Not readable")
+            return -1
         }
         
+        status = .Reading
         #if os(Linux)
-            let readn = Glibc.read(fd, buf, bufSize)
+            let readn = Glibc.read(fd, buffer, len)
         #else
-            let readn = Darwin.read(fd, buf, bufSize)
+            let readn = Darwin.read(fd, buffer, len)
         #endif
-        if readn > 0 {
-            return NSData(bytesNoCopy: buf, length: readn)
+        if readn == 0 {
+            status = .AtEnd
+        } else if readn > 0 {
+            status = .Open
         } else {
-            return nil
+            status = .Error
         }
-    }
-    
-    public final func readAll() -> NSData? {
-        if isClosed() {
-            print("ERROR: File not opened")
-            return nil
-        }
-        if !isReadable() {
-            print("ERROR: File is not writable")
-            return nil
-        }
-        
-        let data = NSMutableData();
-        #if os(Linux)
-            var readn = Glibc.read(fd, buf, bufSize)
-            while readn > 0 {
-                data.appendBytes(buf, length: readn)
-                readn = Glibc.read(fd, buf, bufSize)
-            }
-        #else
-            var readn = Darwin.read(fd, buf, bufSize)
-            while readn > 0 {
-                data.appendBytes(buf, length: readn)
-                readn = Darwin.read(fd, buf, bufSize)
-            }
-        #endif
-        
-        return data
+        return readn
     }
 }
 
 public class Writable: File {
     
-    override init(path: String, bufSize: Int = 255, option: Int32 = O_WRONLY) {
-        super.init(path: path, bufSize: bufSize, option: option|O_WRONLY&(~(O_RDONLY|O_RDWR)))
+    override init(fileAtPath path: String, option: Int32 = O_WRONLY) {
+        super.init(fileAtPath: path, option: option|O_WRONLY&(~(O_RDONLY|O_RDWR)))
     }
     
     public func isWritable() -> Bool {
         #if os(Linux)
-            if Glibc.access(path, W_OK) == 0 {
+            if fd > -1 && Glibc.access(path, W_OK) == 0 {
                 return true
             } else {
                 return false
             }
         #else
-            if Darwin.access(path, W_OK) == 0 {
+            if fd > -1 && Darwin.access(path, W_OK) == 0 {
                 return true
             } else {
                 return false
@@ -265,21 +260,32 @@ public class Writable: File {
         #endif
     }
     
-    public final func write (data: UnsafePointer<Void>, size: Int) -> Int {
+    public override func open() -> Writable {
+        super.open()
+        return self
+    }
+    
+    public func write(buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
         if isClosed() {
-            print("ERROR: File not opened")
+            print("ERROR: Not opened")
             return 0
         }
         if !isWritable() {
-            print("ERROR: File is not writable")
+            print("ERROR: Not writable")
             return 0
         }
         
+        status = .Writing
         #if os(Linux)
-            let written = Glibc.write(fd, data, size)
+            let written = Glibc.write(fd, buffer, len)
         #else
-            let written =  Darwin.write(fd, data, size)
+            let written = Darwin.write(fd, buffer, len)
         #endif
+        if written > -1 {
+            status = .Open
+        } else {
+            status = .Error
+        }
         return written
     }
 }

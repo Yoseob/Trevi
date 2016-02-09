@@ -29,15 +29,17 @@ public class ServeStatic: Middleware {
     public func operateCommand (params: MiddlewareParams) -> Bool {
         let req: Request  = params.req
         let res: Response = params.res
-
-        let file = Readable(path: "\(basePath)\(req.path)")
+        
+        let file = Readable(fileAtPath: "\(basePath)\(req.path)")
         if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
-            file.open()
+            var buffer = [UInt8](count: 8, repeatedValue: 0)
             let data = NSMutableData()
-            while let read = file.read() {
-                data.appendData(read)
+            
+            file.open()
+            while file.status == .Open {
+                let result: Int = file.read(&buffer, maxLength: buffer.count)
+                data.appendBytes(buffer, length: result)
             }
-            file.close()
             return res.send(data)
         }
         
