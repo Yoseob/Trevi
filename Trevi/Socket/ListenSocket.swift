@@ -131,9 +131,10 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
             guard listen(backlog) else { return false }
             
             // Libuv readable test code
-            let uvPoll : LibuvPoll  = LibuvPoll(fd: self.fd , loop: uv_default_loop() , domain: AF_INET)
+            let uvPoll : Libuv = Libuv(fd: self.fd)
+            print(self.fd)
             uvPoll.readableTest()
-      
+           
 //            self.eventHandle.dispatchReadEvent() {
 //                _ in
 //                

@@ -57,10 +57,13 @@
 		DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A21C1E092400974327 /* InetAddress.swift */; };
 		DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A41C1E098400974327 /* UnixBridge.c */; };
 		DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF76B5271C30176F005E5391 /* HttpSocket.swift */; };
+		DF90F6491C69F74300AC5D71 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF90F6461C69F74300AC5D71 /* libuv.a */; };
 		DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDFC9EF1C2F582A00862331 /* Timer.swift */; };
+		DFF0F9F81C67812A000E470B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF0F9F71C67812A000E470B /* AppDelegate.swift */; };
+		DFF0F9FA1C67812A000E470B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFF0F9F91C67812A000E470B /* Assets.xcassets */; };
+		DFF0F9FD1C67812A000E470B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = DFF0F9FB1C67812A000E470B /* MainMenu.xib */; };
+		DFF0FA021C678209000E470B /* Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; };
 		DFFBC9851C639EB20003575A /* Libuv.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFBC9841C639EB20003575A /* Libuv.swift */; };
-		DFFBC9871C639EE90003575A /* Linked in Resources */ = {isa = PBXBuildFile; fileRef = DFFBC9861C639EE90003575A /* Linked */; };
-		DFFBC98E1C63A07B0003575A /* libuv.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = DFFBC98D1C63A07B0003575A /* libuv.1.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -149,10 +152,14 @@
 		DF3B81A21C1E092400974327 /* InetAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InetAddress.swift; sourceTree = "<group>"; };
 		DF3B81A41C1E098400974327 /* UnixBridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UnixBridge.c; sourceTree = "<group>"; };
 		DF76B5271C30176F005E5391 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
+		DF90F6461C69F74300AC5D71 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = Linked/libuv.a; sourceTree = "<group>"; };
 		DFDFC9EF1C2F582A00862331 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		DFF0F9F51C67812A000E470B /* EchoServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DFF0F9F71C67812A000E470B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DFF0F9F91C67812A000E470B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DFF0F9FC1C67812A000E470B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		DFF0F9FE1C67812A000E470B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DFFBC9841C639EB20003575A /* Libuv.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libuv.swift; sourceTree = "<group>"; };
-		DFFBC9861C639EE90003575A /* Linked */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Linked; path = /Users/Ingyure/Documents/XcodeProjects/Trevi/Trevi/Linked; sourceTree = "<absolute>"; };
-		DFFBC98D1C63A07B0003575A /* libuv.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libuv.1.dylib; path = Linked/libuv.1.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,7 +174,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFFBC98E1C63A07B0003575A /* libuv.1.dylib in Frameworks */,
+				DF90F6491C69F74300AC5D71 /* libuv.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,16 +186,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DFF0F9F21C67812A000E470B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFF0FA021C678209000E470B /* Trevi.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2322997F1C60FA3C003E44AB /* lib */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
 		232299921C61E00D003E44AB /* Lime */ = {
 			isa = PBXGroup;
 			children = (
@@ -253,6 +261,7 @@
 				239411D51C0C2DA3001B9B07 /* Trevi */,
 				239411E31C0C2E19001B9B07 /* Trevi_ver_lime */,
 				232299921C61E00D003E44AB /* Lime */,
+				DFF0F9F61C67812A000E470B /* EchoServer */,
 				239411D41C0C2DA3001B9B07 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -263,6 +272,7 @@
 				239411D31C0C2DA3001B9B07 /* Trevi.framework */,
 				239411E21C0C2E19001B9B07 /* Trevi_ver_lime.app */,
 				232299911C61E00D003E44AB /* Lime.framework */,
+				DFF0F9F51C67812A000E470B /* EchoServer.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -270,7 +280,6 @@
 		239411D51C0C2DA3001B9B07 /* Trevi */ = {
 			isa = PBXGroup;
 			children = (
-				2322997F1C60FA3C003E44AB /* lib */,
 				23351DF01C1DE75700BB54FB /* Http */,
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
 				23351DF91C1DE7CA00BB54FB /* Require */,
@@ -278,8 +287,8 @@
 				239412031C0C45CA001B9B07 /* Route */,
 				239411F81C0C2E81001B9B07 /* Socket */,
 				239411D61C0C2DA3001B9B07 /* Trevi.h */,
+				DF90F6461C69F74300AC5D71 /* libuv.a */,
 				239411D81C0C2DA3001B9B07 /* Info.plist */,
-				DFFBC98D1C63A07B0003575A /* libuv.1.dylib */,
 			);
 			path = Trevi;
 			sourceTree = "<group>";
@@ -389,6 +398,17 @@
 			path = views;
 			sourceTree = "<group>";
 		};
+		DFF0F9F61C67812A000E470B /* EchoServer */ = {
+			isa = PBXGroup;
+			children = (
+				DFF0F9F71C67812A000E470B /* AppDelegate.swift */,
+				DFF0F9F91C67812A000E470B /* Assets.xcassets */,
+				DFF0F9FB1C67812A000E470B /* MainMenu.xib */,
+				DFF0F9FE1C67812A000E470B /* Info.plist */,
+			);
+			path = EchoServer;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -467,6 +487,23 @@
 			productReference = 239411E21C0C2E19001B9B07 /* Trevi_ver_lime.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DFF0F9F41C67812A000E470B /* EchoServer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DFF0FA011C67812A000E470B /* Build configuration list for PBXNativeTarget "EchoServer" */;
+			buildPhases = (
+				DFF0F9F11C67812A000E470B /* Sources */,
+				DFF0F9F21C67812A000E470B /* Frameworks */,
+				DFF0F9F31C67812A000E470B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EchoServer;
+			productName = EchoServer;
+			productReference = DFF0F9F51C67812A000E470B /* EchoServer.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -486,6 +523,9 @@
 					239411E11C0C2E19001B9B07 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					DFF0F9F41C67812A000E470B = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 				};
 			};
 			buildConfigurationList = 239411CD1C0C2DA3001B9B07 /* Build configuration list for PBXProject "Trevi" */;
@@ -504,6 +544,7 @@
 				239411D21C0C2DA3001B9B07 /* Trevi */,
 				239411E11C0C2E19001B9B07 /* Trevi_ver_lime */,
 				232299901C61E00D003E44AB /* Lime */,
+				DFF0F9F41C67812A000E470B /* EchoServer */,
 			);
 		};
 /* End PBXProject section */
@@ -520,7 +561,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DFFBC9871C639EE90003575A /* Linked in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,6 +574,15 @@
 				23973D611C25AB3B00FBB8E7 /* sky.jpeg in Resources */,
 				90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */,
 				90BEEE661C2F5155009A8DA8 /* style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DFF0F9F31C67812A000E470B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFF0F9FA1C67812A000E470B /* Assets.xcassets in Resources */,
+				DFF0F9FD1C67812A000E470B /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -602,6 +651,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DFF0F9F11C67812A000E470B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DFF0F9F81C67812A000E470B /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -624,6 +681,14 @@
 				239411EB1C0C2E19001B9B07 /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DFF0F9FB1C67812A000E470B /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DFF0F9FC1C67812A000E470B /* Base */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -756,6 +821,7 @@
 		239411DC1C0C2DA3001B9B07 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -770,13 +836,12 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Trevi/Linked",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Linked";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SKIP_INSTALL = YES;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "$(PROJECT_DIR)/Trevi/Modules";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -784,6 +849,7 @@
 		239411DD1C0C2DA3001B9B07 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -798,13 +864,11 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Trevi/Linked",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Linked";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = "$(PROJECT_DIR)/Trevi/Modules";
 			};
 			name = Release;
 		};
@@ -834,6 +898,30 @@
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi-ver-lime";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		DFF0F9FF1C67812A000E470B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = EchoServer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jang.EchoServer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DFF0FA001C67812A000E470B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = EchoServer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jang.EchoServer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -873,6 +961,15 @@
 			buildConfigurations = (
 				239411EF1C0C2E19001B9B07 /* Debug */,
 				239411F01C0C2E19001B9B07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DFF0FA011C67812A000E470B /* Build configuration list for PBXNativeTarget "EchoServer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFF0F9FF1C67812A000E470B /* Debug */,
+				DFF0FA001C67812A000E470B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
