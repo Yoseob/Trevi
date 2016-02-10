@@ -50,7 +50,6 @@
 		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
 		DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81961C1E08C500974327 /* ConnectedSocket.swift */; };
 		DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81971C1E08C500974327 /* EventHandler.swift */; };
-		DF3B819E1C1E08C500974327 /* ListenSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81981C1E08C500974327 /* ListenSocket.swift */; };
 		DF3B819F1C1E08C500974327 /* LogFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81991C1E08C500974327 /* LogFactory.swift */; };
 		DF3B81A01C1E08C500974327 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B819A1C1E08C500974327 /* Socket.swift */; };
 		DF3B81A11C1E08C500974327 /* SocketUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B819B1C1E08C500974327 /* SocketUtility.swift */; };
@@ -58,6 +57,7 @@
 		DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A41C1E098400974327 /* UnixBridge.c */; };
 		DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF76B5271C30176F005E5391 /* HttpSocket.swift */; };
 		DF90F6491C69F74300AC5D71 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF90F6461C69F74300AC5D71 /* libuv.a */; };
+		DF940B041C6B6B0C00996FAB /* ListenSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF940B031C6B6B0C00996FAB /* ListenSocket.swift */; };
 		DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDFC9EF1C2F582A00862331 /* Timer.swift */; };
 		DFF0F9F81C67812A000E470B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF0F9F71C67812A000E470B /* AppDelegate.swift */; };
 		DFF0F9FA1C67812A000E470B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DFF0F9F91C67812A000E470B /* Assets.xcassets */; };
@@ -145,7 +145,6 @@
 		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		DF3B81961C1E08C500974327 /* ConnectedSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedSocket.swift; sourceTree = "<group>"; };
 		DF3B81971C1E08C500974327 /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
-		DF3B81981C1E08C500974327 /* ListenSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenSocket.swift; sourceTree = "<group>"; };
 		DF3B81991C1E08C500974327 /* LogFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFactory.swift; sourceTree = "<group>"; };
 		DF3B819A1C1E08C500974327 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		DF3B819B1C1E08C500974327 /* SocketUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketUtility.swift; sourceTree = "<group>"; };
@@ -153,6 +152,7 @@
 		DF3B81A41C1E098400974327 /* UnixBridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UnixBridge.c; sourceTree = "<group>"; };
 		DF76B5271C30176F005E5391 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
 		DF90F6461C69F74300AC5D71 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = Linked/libuv.a; sourceTree = "<group>"; };
+		DF940B031C6B6B0C00996FAB /* ListenSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenSocket.swift; sourceTree = "<group>"; };
 		DFDFC9EF1C2F582A00862331 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		DFF0F9F51C67812A000E470B /* EchoServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DFF0F9F71C67812A000E470B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -314,7 +314,7 @@
 			children = (
 				DF3B819A1C1E08C500974327 /* Socket.swift */,
 				DF3B81A21C1E092400974327 /* InetAddress.swift */,
-				DF3B81981C1E08C500974327 /* ListenSocket.swift */,
+				DF940B031C6B6B0C00996FAB /* ListenSocket.swift */,
 				DF3B81961C1E08C500974327 /* ConnectedSocket.swift */,
 				DF76B5271C30176F005E5391 /* HttpSocket.swift */,
 				DF3B81971C1E08C500974327 /* EventHandler.swift */,
@@ -620,7 +620,6 @@
 				906E50B11C11DB9A005937A8 /* File.swift in Sources */,
 				DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */,
 				239412121C0C513C001B9B07 /* BodyParser.swift in Sources */,
-				DF3B819E1C1E08C500974327 /* ListenSocket.swift in Sources */,
 				DF3B81931C1E086400974327 /* Http.swift in Sources */,
 				23351DF51C1DE75700BB54FB /* Request.swift in Sources */,
 				DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */,
@@ -630,6 +629,7 @@
 				2368EACA1C1C9060007DB033 /* Route.swift in Sources */,
 				DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */,
 				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,
+				DF940B041C6B6B0C00996FAB /* ListenSocket.swift in Sources */,
 				906E50B71C121225005937A8 /* String.swift in Sources */,
 				236E53D91C1235130076ED36 /* Favicon.swift in Sources */,
 				236E53E71C1835570076ED36 /* Json.swift in Sources */,

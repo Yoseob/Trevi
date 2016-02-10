@@ -5,12 +5,15 @@
 //  Created by JangTaehwan on 2015. 12. 7..
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
+
+
 #if os(Linux)
     import SwiftGlibc
 #else
     import Darwin
-    import Libuv
 #endif
+
+import Libuv
 
 /**
  * ListenSocket class
@@ -22,7 +25,7 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
     
     var isListening : Bool = false
     
-     /**
+    /**
      Create a listen socket.
      
      - Parameter address: A address family for this socket.
@@ -52,8 +55,8 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
     deinit {
         self.close()
     }
-   
-     /**
+    
+    /**
      Listen client sockets.
      
      - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
@@ -75,8 +78,8 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         
         return self.isListening
     }
-     
-     /**
+    
+    /**
      Accept client request.
      
      - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
@@ -101,24 +104,24 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
         return (clientFd, clientAddr)
     }
     
-     /**
+    /**
      Listen client sockets, and dispatch client event.
      
-     Example: 
-        let server: ListenSocket? = ListenSocket(address: IPv4(port: 8080))
+     Example:
+     let server: ListenSocket? = ListenSocket(address: IPv4(port: 8080))
      
-        server!.listenClientEvent() {
-            clientSocket in
+     server!.listenClientEvent() {
+     clientSocket in
      
-            clientSocket.eventHandle.dispatchReadEvent(){
+     clientSocket.eventHandle.dispatchReadEvent(){
      
-                let (count, buffer) = clientSocket.read()
+     let (count, buffer) = clientSocket.read()
      
-               clientSocket.write(buffer, length: count, queue: dispatch_get_main_queue())
+     clientSocket.write(buffer, length: count, queue: dispatch_get_main_queue())
      
-               return count
-            }
-       }
+     return count
+     }
+     }
      
      - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
      - Parameter clientCallback: Client socket's callback after it is created.
@@ -130,27 +133,26 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
             
             guard listen(backlog) else { return false }
             
-            // Libuv readable test code
+            // Libuv readable test code. Should be modified and moved to Socket class' property.
             let uvPoll : Libuv = Libuv(fd: self.fd)
-            print(self.fd)
             uvPoll.readableTest()
-           
-//            self.eventHandle.dispatchReadEvent() {
-//                _ in
-//                
-//                let (clientFd, clientAddr) = self.accept()
-//                
-//                let clientSocket = ConnectedSocket<T>(fd: clientFd, address: clientAddr)
-//                
-//                guard clientSocket != nil else {
-//                    log.error("Cannot create client socket")
-//                    return 0
-//                }
-//        
-//                clientCallback(clientSocket!)
-//                
-//                return 42
-//            }
+            
+            //            self.eventHandle.dispatchReadEvent() {
+            //                _ in
+            //
+            //                let (clientFd, clientAddr) = self.accept()
+            //
+            //                let clientSocket = ConnectedSocket<T>(fd: clientFd, address: clientAddr)
+            //
+            //                guard clientSocket != nil else {
+            //                    log.error("Cannot create client socket")
+            //                    return 0
+            //                }
+            //
+            //                clientCallback(clientSocket!)
+            //
+            //                return 42
+            //            }
             
             return true
     }
@@ -161,19 +163,19 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      Example:
      let server: ListenSocket? = ListenSocket(address: IPv4(port: 8080))
      
-        server!.listenClientReadEvent() {
-            clientSocket in
+     server!.listenClientReadEvent() {
+     clientSocket in
      
-            let (length, buffer) = clientSocket.read()
+     let (length, buffer) = clientSocket.read()
      
-            clientSocket.write(buffer, length: length, queue: dispatch_get_main_queue())
+     clientSocket.write(buffer, length: length, queue: dispatch_get_main_queue())
      
-            return count
-      }
+     return count
+     }
      
      - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
      - Parameter clientReadCallback: Client socket's read callback when a client socket get a request.
-            In this closure, you should return read length, so if 0 value return socket will be closed.
+     In this closure, you should return read length, so if 0 value return socket will be closed.
      - Returns:  Success or failure
      */
     public func listenClientReadEvent(backlog : Int32 = 50,

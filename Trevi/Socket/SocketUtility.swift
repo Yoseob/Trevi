@@ -12,6 +12,17 @@
     import Darwin
 #endif
 
+// Section lock code
+//            var mutex = pthread_mutex_t()
+//            pthread_mutex_init(&mutex, nil)
+//            pthread_mutex_lock(&mutex)
+//            pthread_mutex_unlock(&mutex)
+
+//public struct curl_context_s {
+//    let poll_handle : uv_poll_t
+//    let sockfd : Int32
+//}
+
 // Get String from the pointer
 public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
     var idx = block

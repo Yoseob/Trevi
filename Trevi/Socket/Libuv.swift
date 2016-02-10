@@ -11,25 +11,15 @@ import Libuv
 public typealias uv_loop_ptr = UnsafeMutablePointer<uv_loop_t>
 public typealias uv_poll_ptr = UnsafeMutablePointer<uv_poll_t>
 
-public typealias uv_callback = @convention(c) (UnsafeMutablePointer<uv_poll_s>, Int32, Int32) -> ()
-
-
-//public struct curl_context_s {
-//    let poll_handle : uv_poll_t
-//    let sockfd : Int32
-//}
-
 public class Libuv {
     
     let fd : Int32
     var loop : uv_loop_ptr
     var handle : uv_poll_ptr
-
-//    lazy var swiftCallback : @convention(c) (UnsafeMutablePointer<uv_poll_s>, Int32, Int32) -> Void = {
-//         ptr, first, second in
-//        Darwin.accept(6, UnsafeMutablePointer<sockaddr>(), UnsafeMutablePointer<socklen_t>())
-//        print("readable \(first), \(second)")
-//    }
+    
+    // uv_poll_cb  =  @convention(c) (UnsafeMutablePointer<uv_poll_s>, Int32, Int32) -> ()
+    var readCallback : uv_poll_cb! = nil
+    var writeCallback : uv_poll_cb! = nil
     
     public init(fd : Int32, loop : uv_loop_ptr = uv_default_loop()) {
         self.fd = fd
@@ -47,25 +37,40 @@ public class Libuv {
     }
     
     // Testing readable / writable event
-    // uv_poll_cb  =  @convention(c) (UnsafeMutablePointer<uv_poll_s>, Int32, Int32) -> ()
-    public func readableTest(){
+    public func readableTest() -> Bool {
         
-        uv_poll_start(self.handle, Int32(UV_READABLE.rawValue)) {
-            ptr, first, second in
-//            var mutex = pthread_mutex_t()
-//            pthread_mutex_init(&mutex, nil)
-//            pthread_mutex_lock(&mutex)
+        self.readCallback = {
+            pollPtr, first, second in
             
-            var tfd : uv_os_fd_t = uv_os_fd_t()
-            uv_fileno(UnsafeMutablePointer<uv_handle_t>(ptr), &tfd)
-            print(tfd)
+            var pfd : uv_os_fd_t = uv_os_fd_t()
+            uv_fileno(UnsafeMutablePointer<uv_handle_t>(pollPtr), &pfd)
             
-            Darwin.accept(tfd, UnsafeMutablePointer<sockaddr>(), UnsafeMutablePointer<socklen_t>())
-            print("readable \(first), \(second)")
+            var caddr = IPv4()
+            var caddrLen = socklen_t(IPv4.length)
             
-//            pthread_mutex_unlock(&mutex)
+            let cfd = withUnsafeMutablePointer(&caddr) {
+                ptr -> Int32 in
+                let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
+                
+                #if os(Linux)
+                    return SwiftGlibc.accept(pfd, addrPtr, &caddrLen)
+                #else
+                    return Darwin.accept(pfd, addrPtr, &caddrLen)
+                #endif
+            }
+            
+            let cSocket = ConnectedSocket<IPv4>(fd: cfd, address: caddr)
+            print(cSocket!.nonblock)
+            print("New client fd : \(cfd), address : \(cSocket!.address.ip())")
         }
-        self.runLoop()
+        
+        if let callback = self.readCallback {
+            uv_poll_start(self.handle, Int32(UV_READABLE.rawValue), callback)
+            self.runLoop()
+            return true
+        }
+        log.error("Libuv read callback is not set. Please set the read callback before execute this function.")
+        return false
     }
     
     public func writableTest(){

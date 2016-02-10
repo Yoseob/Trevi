@@ -50,7 +50,7 @@ public class Socket<T: InetAddress> {
     public init(fd : Int32, address : InetAddress, nonblock : Bool = true) {
         self.fd = fd
         self.address = address
-        self.nonblock = nonblock
+//        self.nonblock = nonblock
     }
     
      /**
