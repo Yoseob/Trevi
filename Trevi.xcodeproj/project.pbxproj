@@ -47,6 +47,15 @@
 		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
 		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
 		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
+		AC1C68451C6CEF8300682F7D /* libuv.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1C683B1C6CEF8300682F7D /* libuv.1.dylib */; };
+		AC1C68461C6CEF8300682F7D /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1C683C1C6CEF8300682F7D /* libuv.a */; };
+		AC1C68471C6CEF8300682F7D /* uv-darwin.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C683E1C6CEF8300682F7D /* uv-darwin.h */; };
+		AC1C68481C6CEF8300682F7D /* uv-errno in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1C683F1C6CEF8300682F7D /* uv-errno */; };
+		AC1C68491C6CEF8300682F7D /* uv-errno.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68401C6CEF8300682F7D /* uv-errno.h */; };
+		AC1C684A1C6CEF8300682F7D /* uv-threadpool.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68411C6CEF8300682F7D /* uv-threadpool.h */; };
+		AC1C684B1C6CEF8300682F7D /* uv-unix.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68421C6CEF8300682F7D /* uv-unix.h */; };
+		AC1C684C1C6CEF8300682F7D /* uv-version.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68431C6CEF8300682F7D /* uv-version.h */; };
+		AC1C684D1C6CEF8300682F7D /* uv.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68441C6CEF8300682F7D /* uv.h */; };
 		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
 		DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81961C1E08C500974327 /* ConnectedSocket.swift */; };
 		DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81971C1E08C500974327 /* EventHandler.swift */; };
@@ -136,6 +145,16 @@
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
+		AC1C683B1C6CEF8300682F7D /* libuv.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libuv.1.dylib; sourceTree = "<group>"; };
+		AC1C683C1C6CEF8300682F7D /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
+		AC1C683D1C6CEF8300682F7D /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		AC1C683E1C6CEF8300682F7D /* uv-darwin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-darwin.h"; sourceTree = "<group>"; };
+		AC1C683F1C6CEF8300682F7D /* uv-errno */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "uv-errno"; sourceTree = "<group>"; };
+		AC1C68401C6CEF8300682F7D /* uv-errno.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-errno.h"; sourceTree = "<group>"; };
+		AC1C68411C6CEF8300682F7D /* uv-threadpool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-threadpool.h"; sourceTree = "<group>"; };
+		AC1C68421C6CEF8300682F7D /* uv-unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-unix.h"; sourceTree = "<group>"; };
+		AC1C68431C6CEF8300682F7D /* uv-version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-version.h"; sourceTree = "<group>"; };
+		AC1C68441C6CEF8300682F7D /* uv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uv.h; sourceTree = "<group>"; };
 		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		DF3B81961C1E08C500974327 /* ConnectedSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedSocket.swift; sourceTree = "<group>"; };
 		DF3B81971C1E08C500974327 /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
@@ -161,6 +180,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC1C68481C6CEF8300682F7D /* uv-errno in Frameworks */,
+				AC1C68461C6CEF8300682F7D /* libuv.a in Frameworks */,
+				AC1C68451C6CEF8300682F7D /* libuv.1.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,13 +197,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2322997F1C60FA3C003E44AB /* lib */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
 		232299921C61E00D003E44AB /* Lime */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,7 +278,7 @@
 		239411D51C0C2DA3001B9B07 /* Trevi */ = {
 			isa = PBXGroup;
 			children = (
-				2322997F1C60FA3C003E44AB /* lib */,
+				AC1C683A1C6CEF8300682F7D /* Libuv */,
 				23351DF01C1DE75700BB54FB /* Http */,
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
 				23351DF91C1DE7CA00BB54FB /* Require */,
@@ -380,6 +395,23 @@
 			path = views;
 			sourceTree = "<group>";
 		};
+		AC1C683A1C6CEF8300682F7D /* Libuv */ = {
+			isa = PBXGroup;
+			children = (
+				AC1C683B1C6CEF8300682F7D /* libuv.1.dylib */,
+				AC1C683C1C6CEF8300682F7D /* libuv.a */,
+				AC1C683D1C6CEF8300682F7D /* module.modulemap */,
+				AC1C683E1C6CEF8300682F7D /* uv-darwin.h */,
+				AC1C683F1C6CEF8300682F7D /* uv-errno */,
+				AC1C68401C6CEF8300682F7D /* uv-errno.h */,
+				AC1C68411C6CEF8300682F7D /* uv-threadpool.h */,
+				AC1C68421C6CEF8300682F7D /* uv-unix.h */,
+				AC1C68431C6CEF8300682F7D /* uv-version.h */,
+				AC1C68441C6CEF8300682F7D /* uv.h */,
+			);
+			path = Libuv;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -395,7 +427,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC1C68471C6CEF8300682F7D /* uv-darwin.h in Headers */,
 				239411D71C0C2DA3001B9B07 /* Trevi.h in Headers */,
+				AC1C68491C6CEF8300682F7D /* uv-errno.h in Headers */,
+				AC1C684B1C6CEF8300682F7D /* uv-unix.h in Headers */,
+				AC1C684C1C6CEF8300682F7D /* uv-version.h in Headers */,
+				AC1C684A1C6CEF8300682F7D /* uv-threadpool.h in Headers */,
+				AC1C684D1C6CEF8300682F7D /* uv.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,10 +796,14 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"${SRCROOT}/$(PROJECT_PATH)**",
+					"$(PROJECT_DIR)/Trevi/Libuv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = /usr/local/module;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/$(PROJECT_PATH)**";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -784,10 +826,14 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"${SRCROOT}/$(PROJECT_PATH)**",
+					"$(PROJECT_DIR)/Trevi/Libuv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = /usr/local/module;
+				SWIFT_INCLUDE_PATHS = "${SRCROOT}/$(PROJECT_PATH)**";
 			};
 			name = Release;
 		};
