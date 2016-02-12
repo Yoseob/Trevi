@@ -14,6 +14,8 @@
 
 let ClientBufferSize = 4096
 
+public var ClientCallback : (ConnectedSocket -> Int)!
+
 /**
  * ConnectedSocket class
  *
@@ -22,7 +24,11 @@ let ClientBufferSize = 4096
  * Should add connect function.
  *
  */
-public class ConnectedSocket<T: InetAddress> : Socket<T> {
+public func ==(lhs: ConnectedSocket, rhs: ConnectedSocket) -> Bool {
+    return lhs.fd == rhs.fd
+}
+
+public class ConnectedSocket : Socket<IPv4>, Hashable {
     
     var bufferPtr  = UnsafeMutablePointer<CChar>.alloc(ClientBufferSize + 2)
     var bufferLen : Int = ClientBufferSize
@@ -31,6 +37,11 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
     var isClosing : Bool = false
     
     public var timeout : Timer! = nil
+    
+    public var hashValue: Int {
+        return Int(self.fd)
+    }
+
     
      /**
      After accept, create a client socket.
@@ -41,7 +52,7 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
      
      - Returns:  If bind function succeeds, create a client socket. However, if it fails, returns nil.
      */
-    public init?(fd : Int32, address : T, queue : dispatch_queue_t = serverModel.readQueue) {
+    public init?(fd : Int32, address : IPv4, queue : dispatch_queue_t = serverModel.readQueue) {
         
         super.init(fd: fd, address: address)
         eventHandle = EventHandler(fd: fd, queue: queue)
@@ -52,8 +63,9 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         guard optStatus && isHandlerCreated else { return nil }
     }
     deinit {
-//        log.debug("Connected Socket closed")
+        log.debug("Connected Socket closed")
         bufferPtr.dealloc(bufferLen + 2)
+        clientMap.removeValueForKey(self.fd)
         self.close()
     }
     
@@ -65,9 +77,9 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         self.cancelTimeout()
         eventHandle.cancelEvent()
         #if os(Linux)
-            shutdown(self.fd, 0)
+            SwiftGlibc.shutdown(self.fd, 0)
         #else
-            shutdown(self.fd, SHUT_RD)
+            Darwin.shutdown(self.fd, SHUT_RD)
         #endif
         
         if eventHandle.isWriting() {
@@ -75,6 +87,12 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
         }
         
         super.close()
+    }
+    
+    public func addClientCallback(){
+        let uvPoll : Libuv = Libuv(fd: self.fd)
+        uvPoll.runReadCallback()
+        
     }
     
     /**
@@ -109,12 +127,14 @@ public class ConnectedSocket<T: InetAddress> : Socket<T> {
      - Returns:  Success or failure
      */
     public func write<M>(buffer: UnsafePointer<M>, length : Int) -> Bool {
-            
-            let status = eventHandle.dispatchWriteEvent(buffer, length : length) {
-                if self.isClosing { self.close() }
-            }
-            
-            return status
+        
+//        var req = uv_stream_t()
+        
+        let status = eventHandle.dispatchWriteEvent(buffer, length : length) {
+            if self.isClosing { self.close() }
+        }
+        
+        return status
     }
     
     public func write(data : NSData) -> Bool {

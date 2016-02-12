@@ -18,6 +18,7 @@ public class Libuv {
     var handle : uv_poll_ptr
     
     // uv_poll_cb  =  @convention(c) (UnsafeMutablePointer<uv_poll_s>, Int32, Int32) -> ()
+    var acceptCallback : uv_poll_cb! = nil
     var readCallback : uv_poll_cb! = nil
     var writeCallback : uv_poll_cb! = nil
     
@@ -26,8 +27,8 @@ public class Libuv {
         self.loop = loop
         self.handle = uv_poll_ptr.alloc(1)
         
-        uv_loop_init(self.loop)
-        uv_poll_init(self.loop, self.handle, self.fd)
+//        uv_loop_init(self.loop)
+        //uv_poll_init(self.loop, self.handle, self.fd)
         uv_poll_init_socket(self.loop, self.handle, self.fd)
     }
     
@@ -37,9 +38,9 @@ public class Libuv {
     }
     
     // Testing readable / writable event
-    public func readableTest() -> Bool {
+    public func runAcceptCallback() -> Bool {
         
-        self.readCallback = {
+        self.acceptCallback = {
             pollPtr, first, second in
             
             var pfd : uv_os_fd_t = uv_os_fd_t()
@@ -59,16 +60,54 @@ public class Libuv {
                 #endif
             }
             
-            let cSocket = ConnectedSocket<IPv4>(fd: cfd, address: caddr)
-            print(cSocket!.nonblock)
-            print("New client fd : \(cfd), address : \(cSocket!.address.ip())")
+            let cSocket : ConnectedSocket! = ConnectedSocket(fd: cfd, address: caddr)
+            clientMap[cfd] = cSocket
+            
+            print("New client fd : \(cfd), address : \(cSocket.address.ip())")
+            
+            let uvPoll : Libuv = Libuv(fd: cfd)
+            uvPoll.runReadCallback()
+            
         }
         
-        if let callback = self.readCallback {
+        if let callback = self.acceptCallback {
             uv_poll_start(self.handle, Int32(UV_READABLE.rawValue), callback)
             self.runLoop()
             return true
         }
+        log.error("Libuv read callback is not set. Please set the read callback before execute this function.")
+        return false
+    }
+    
+    public func runReadCallback() -> Bool {
+        
+        self.readCallback = {
+            pollPtr, first, second in
+            
+            print(blockToUTF8String(uv_err_name(errno)))
+            
+            var cfd : uv_os_fd_t = uv_os_fd_t()
+            uv_fileno(UnsafeMutablePointer<uv_handle_t>(pollPtr), &cfd)
+            
+            let cSocket : ConnectedSocket! = clientMap[cfd]
+            guard cSocket != nil else {
+                print("clientMap error")
+                return
+            }
+            
+            if globalClientCallback(cSocket) <= 0 {
+                uv_poll_stop(pollPtr)
+                cSocket.close()
+            }
+        }
+        
+        if let callback = self.readCallback {
+            uv_poll_start(self.handle, Int32(UV_READABLE.rawValue), callback)
+            
+            self.runLoop()
+            return true
+        }
+        
         log.error("Libuv read callback is not set. Please set the read callback before execute this function.")
         return false
     }

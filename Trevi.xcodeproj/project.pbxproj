@@ -47,6 +47,8 @@
 		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
 		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
 		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
+		DF264D441C6C87ED00C450BA /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF264D431C6C87ED00C450BA /* HttpServer.swift */; };
+		DF264D461C6CAF6A00C450BA /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF264D451C6CAF6A00C450BA /* Async.swift */; };
 		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
 		DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81961C1E08C500974327 /* ConnectedSocket.swift */; };
 		DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81971C1E08C500974327 /* EventHandler.swift */; };
@@ -56,7 +58,6 @@
 		DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A21C1E092400974327 /* InetAddress.swift */; };
 		DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A41C1E098400974327 /* UnixBridge.c */; };
 		DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF76B5271C30176F005E5391 /* HttpSocket.swift */; };
-		DF90F6491C69F74300AC5D71 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF90F6461C69F74300AC5D71 /* libuv.a */; };
 		DF940B041C6B6B0C00996FAB /* ListenSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF940B031C6B6B0C00996FAB /* ListenSocket.swift */; };
 		DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDFC9EF1C2F582A00862331 /* Timer.swift */; };
 		DFF0F9F81C67812A000E470B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF0F9F71C67812A000E470B /* AppDelegate.swift */; };
@@ -142,6 +143,8 @@
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
+		DF264D431C6C87ED00C450BA /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
+		DF264D451C6CAF6A00C450BA /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
 		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		DF3B81961C1E08C500974327 /* ConnectedSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedSocket.swift; sourceTree = "<group>"; };
 		DF3B81971C1E08C500974327 /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
@@ -151,7 +154,6 @@
 		DF3B81A21C1E092400974327 /* InetAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InetAddress.swift; sourceTree = "<group>"; };
 		DF3B81A41C1E098400974327 /* UnixBridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UnixBridge.c; sourceTree = "<group>"; };
 		DF76B5271C30176F005E5391 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
-		DF90F6461C69F74300AC5D71 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libuv.a; path = Linked/libuv.a; sourceTree = "<group>"; };
 		DF940B031C6B6B0C00996FAB /* ListenSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenSocket.swift; sourceTree = "<group>"; };
 		DFDFC9EF1C2F582A00862331 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		DFF0F9F51C67812A000E470B /* EchoServer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoServer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,7 +176,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF90F6491C69F74300AC5D71 /* libuv.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,7 +288,6 @@
 				239412031C0C45CA001B9B07 /* Route */,
 				239411F81C0C2E81001B9B07 /* Socket */,
 				239411D61C0C2DA3001B9B07 /* Trevi.h */,
-				DF90F6461C69F74300AC5D71 /* libuv.a */,
 				239411D81C0C2DA3001B9B07 /* Info.plist */,
 			);
 			path = Trevi;
@@ -312,11 +312,13 @@
 		239411F81C0C2E81001B9B07 /* Socket */ = {
 			isa = PBXGroup;
 			children = (
+				DF264D451C6CAF6A00C450BA /* Async.swift */,
 				DF3B819A1C1E08C500974327 /* Socket.swift */,
 				DF3B81A21C1E092400974327 /* InetAddress.swift */,
 				DF940B031C6B6B0C00996FAB /* ListenSocket.swift */,
 				DF3B81961C1E08C500974327 /* ConnectedSocket.swift */,
 				DF76B5271C30176F005E5391 /* HttpSocket.swift */,
+				DF264D431C6C87ED00C450BA /* HttpServer.swift */,
 				DF3B81971C1E08C500974327 /* EventHandler.swift */,
 				DFFBC9841C639EB20003575A /* Libuv.swift */,
 				DFDFC9EF1C2F582A00862331 /* Timer.swift */,
@@ -607,6 +609,7 @@
 			files = (
 				23961CDC1C5F5C9300F8EF64 /* EventListener.swift in Sources */,
 				2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */,
+				DF264D441C6C87ED00C450BA /* HttpServer.swift in Sources */,
 				DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */,
 				236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */,
 				DFFBC9851C639EB20003575A /* Libuv.swift in Sources */,
@@ -617,6 +620,7 @@
 				23351DFC1C1DE7CA00BB54FB /* Require.swift in Sources */,
 				DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */,
 				23351DF61C1DE75700BB54FB /* Response.swift in Sources */,
+				DF264D461C6CAF6A00C450BA /* Async.swift in Sources */,
 				906E50B11C11DB9A005937A8 /* File.swift in Sources */,
 				DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */,
 				239412121C0C513C001B9B07 /* BodyParser.swift in Sources */,
@@ -836,12 +840,12 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Linked";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Modules";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SKIP_INSTALL = YES;
-				"SWIFT_INCLUDE_PATHS[arch=*]" = "$(PROJECT_DIR)/Trevi/Modules";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Modules/";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -864,11 +868,11 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Linked";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Modules";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				"SWIFT_INCLUDE_PATHS[arch=*]" = "$(PROJECT_DIR)/Trevi/Modules";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Modules/";
 			};
 			name = Release;
 		};

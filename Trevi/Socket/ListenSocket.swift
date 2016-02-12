@@ -21,9 +21,7 @@ import Libuv
  * Manage a tcp listen socket, and accept client socket.
  *
  */
-public class ListenSocket<T: InetAddress> : Socket<T> {
-    
-    var isListening : Bool = false
+public class ListenSocket : Socket<IPv4> {
     
     /**
      Create a listen socket.
@@ -33,11 +31,11 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      
      - Returns:   If bind function succeeds, calls super.init(). However, if it fails, returns nil.
      */
-    public init?(address : T, queue : dispatch_queue_t = serverModel.acceptQueue) {
+    public init?(address : IPv4, queue : dispatch_queue_t = serverModel.acceptQueue) {
         #if os(Linux)
-            let fd = SwiftGlibc.socket(T.domain, Int32(SOCK_STREAM.rawValue), 0)
+            let fd = SwiftGlibc.socket(IPv4.domain, Int32(SOCK_STREAM.rawValue), 0)
         #else
-            let fd = Darwin.socket(T.domain, SOCK_STREAM, 0)
+            let fd = Darwin.socket(IPv4.domain, SOCK_STREAM, 0)
         #endif
         
         super.init(fd: fd, address: address)
@@ -54,54 +52,6 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
     }
     deinit {
         self.close()
-    }
-    
-    /**
-     Listen client sockets.
-     
-     - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
-     
-     - Returns:  Success or failure
-     */
-    public func listen(backlog : Int32 = 50) -> Bool {
-        guard !isListening else { return false }
-        
-        #if os(Linux)
-            let status = SwiftGlibc.listen(self.fd, backlog)
-        #else
-            let status = Darwin.listen(self.fd, backlog)
-        #endif
-        guard status == 0 else { return false }
-        
-        log.info("Server listens on ip : \(self.address.ip()), port : \(self.address.port())")
-        self.isListening = true
-        
-        return self.isListening
-    }
-    
-    /**
-     Accept client request.
-     
-     - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
-     
-     - Returns: (Client's file descriptor, Client's address family)
-     */
-    public func accept() -> (Int32, T) {
-        var clientAddr    = T()
-        var clientAddrLen = socklen_t(T.length)
-        
-        let clientFd = withUnsafeMutablePointer(&clientAddr) {
-            ptr -> Int32 in
-            let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
-            
-            #if os(Linux)
-                return SwiftGlibc.accept(self.fd, addrPtr,  &clientAddrLen)
-            #else
-                return Darwin.accept(self.fd, addrPtr,  &clientAddrLen)
-            #endif
-        }
-        
-        return (clientFd, clientAddr)
     }
     
     /**
@@ -129,13 +79,14 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      - Returns:  Success or failure
      */
     public func listenClientEvent(backlog : Int32 = 50,
-        clientCallback: (ConnectedSocket<T>) -> Void) -> Bool {
+        clientCallback: (ConnectedSocket) -> Int) -> Bool {
             
             guard listen(backlog) else { return false }
             
+            globalClientCallback = clientCallback
             // Libuv readable test code. Should be modified and moved to Socket class' property.
             let uvPoll : Libuv = Libuv(fd: self.fd)
-            uvPoll.readableTest()
+            uvPoll.runAcceptCallback()
             
             //            self.eventHandle.dispatchReadEvent() {
             //                _ in
@@ -179,15 +130,16 @@ public class ListenSocket<T: InetAddress> : Socket<T> {
      - Returns:  Success or failure
      */
     public func listenClientReadEvent(backlog : Int32 = 50,
-        clientReadCallback: (ConnectedSocket<T>) -> Int) -> Bool {
+        clientReadCallback: (ConnectedSocket) -> Int) -> Bool {
             
-            let status = listenClientEvent(backlog) {
-                clientSocket in
-                
-                clientSocket.eventHandle.dispatchReadEvent(){
-                    return clientReadCallback(clientSocket)
-                }
-            }
-            return status
+            
+//            let status = listenClientEvent(backlog) {
+//                clientSocket in
+//                
+//                clientSocket.eventHandle.dispatchReadEvent(){
+//                    return clientReadCallback(clientSocket)
+//                }
+//            }
+            return false//status
     }
 }

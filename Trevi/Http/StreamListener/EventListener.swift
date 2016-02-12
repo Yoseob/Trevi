@@ -10,7 +10,7 @@ import Foundation
 
 
 public typealias Listener  = (EventInfo) -> Void
-public typealias Stream = ConnectedSocket<IPv4>
+public typealias Stream = ConnectedSocket
 
 public class EventInfo{
     public init(){}

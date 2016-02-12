@@ -33,18 +33,14 @@ public class Socket<T: InetAddress> {
     // ReadEvent will be set according with socket's non-block state.
     public var eventHandle : EventHandler! = nil {
         didSet{
-            if self.nonblock {
-                self.eventHandle.readEvent = NonBlockingRead()
-            }
-            else {
-                self.eventHandle.readEvent = BlockingRead()
-            }
+            self.eventHandle.readEvent = NonBlockingRead()
         }
     }
     
     // Socket states.
     public var isCreated : Bool { return fd >= 0 }
     public var isBound : Bool = false
+    public var isListening : Bool = false
     public var isHandlerCreated : Bool { return eventHandle != nil }
     
     public init(fd : Int32, address : InetAddress, nonblock : Bool = true) {
@@ -114,6 +110,55 @@ public class Socket<T: InetAddress> {
         
         return isBound
     }
+    
+    /**
+     Accept client request.
+     
+     - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
+     
+     - Returns: (Client's file descriptor, Client's address family)
+     */
+    public func accept() -> (Int32, T) {
+        var clientAddr    = T()
+        var clientAddrLen = socklen_t(T.length)
+        
+        let clientFd = withUnsafeMutablePointer(&clientAddr) {
+            ptr -> Int32 in
+            let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
+            
+            #if os(Linux)
+                return SwiftGlibc.accept(self.fd, addrPtr,  &clientAddrLen)
+            #else
+                return Darwin.accept(self.fd, addrPtr,  &clientAddrLen)
+            #endif
+        }
+        
+        return (clientFd, clientAddr)
+    }
+    
+    /**
+     Listen client sockets.
+     
+     - Parameter backlog: Backlog queue setting. Handle client's concurrent connect requests.
+     
+     - Returns:  Success or failure
+     */
+    public func listen(backlog : Int32 = 50) -> Bool {
+        guard !isListening else { return false }
+        
+        #if os(Linux)
+            let status = SwiftGlibc.listen(self.fd, backlog)
+        #else
+            let status = Darwin.listen(self.fd, backlog)
+        #endif
+        guard status == 0 else { return false }
+        
+        log.info("Server listens on ip : \(self.address.ip()), port : \(self.address.port())")
+        self.isListening = true
+        
+        return self.isListening
+    }
+    
 }
 
 // Socket options.
@@ -145,7 +190,7 @@ public enum SocketOption {
     }
 }
 
-extension Socket{
+extension Socket {
     
      /**
      Set various sockets' option.
@@ -166,9 +211,9 @@ extension Socket{
             let bufferLen = socklen_t(sizeof(Int32))
             
             #if os(Linux)
-                let status  = SwiftGlibc.setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
+                let status  = SwiftGlibc.setsockopt(self.fd, SOL_SOCKET, name, &buffer, bufferLen)
             #else
-                let status  = Darwin.setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
+                let status  = Darwin.setsockopt(self.fd, SOL_SOCKET, name, &buffer, bufferLen)
             #endif
             
             if status == -1 {
@@ -210,33 +255,5 @@ extension Socket{
             return status
         }
         return buffer
-    }
-}
-
-// Socket Flags and Socket's blocking or non-blocking setting.
-extension Socket {
-    public var flags : Int32 {
-        get {
-            return swift_fcntl(fd, F_GETFL, 0)
-        }
-        set {
-            if swift_fcntl(fd, F_SETFL, Int32(newValue)) == -1 {
-                log.error("Socket fcntl set error")
-            }
-        }
-    }
-    
-    public var nonblock : Bool {
-        get {
-            return (flags & O_NONBLOCK) != 0 ? true : false
-        }
-        set {
-            if newValue {
-                flags |= O_NONBLOCK
-            }
-            else {
-                flags = flags & ~O_NONBLOCK
-            }
-        }
     }
 }

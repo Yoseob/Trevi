@@ -15,9 +15,9 @@
 public class ClientSocket {
     
     let ip : String
-    weak var socket : ConnectedSocket<IPv4>!
+    weak var socket : ConnectedSocket!
     
-    public init( socket : ConnectedSocket<IPv4> ){
+    public init( socket : ConnectedSocket ){
         self.socket = socket
         self.ip = socket.address.ip()
     }
@@ -39,7 +39,7 @@ public class ClientSocket {
 public class HttpSocket {
     
     var ip : String?
-    var listenSocket : ListenSocket<IPv4>!
+    var listenSocket : ListenSocket!
     
     var listener : EventListener?
     
@@ -92,7 +92,7 @@ public class HttpSocket {
             }
         }
         
-        guard let listenSocket = ListenSocket<IPv4> ( address: address) else {
+        guard let listenSocket = ListenSocket ( address: address) else {
             log.error("Could not create ListenSocket on ip : \(self.ip), port : \(port))")
             return
         }
@@ -114,7 +114,7 @@ public class HttpSocket {
     }
     
     
-    private func readDataHandler(stream : Stream) ->Int{
+    private func readDataHandler(stream : Stream) -> Int {
         
         let readData : ReceivedParams = stream.read()
         
