@@ -12,6 +12,8 @@
     import Darwin
 #endif
 
+    import Libuv
+
 let ClientBufferSize = 4096
 
 public var ClientCallback : (ConnectedSocket -> Int)!
@@ -128,7 +130,7 @@ public class ConnectedSocket : Socket<IPv4>, Hashable {
      */
     public func write<M>(buffer: UnsafePointer<M>, length : Int) -> Bool {
         
-//        var req = uv_stream_t()
+        var req = uv_stream_t()
         
         let status = eventHandle.dispatchWriteEvent(buffer, length : length) {
             if self.isClosing { self.close() }
