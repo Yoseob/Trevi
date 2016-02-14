@@ -11,6 +11,67 @@ import Libuv
 public typealias uv_loop_ptr = UnsafeMutablePointer<uv_loop_t>
 public typealias uv_poll_ptr = UnsafeMutablePointer<uv_poll_t>
 
+// Stream
+public struct write_req_t {
+    let req: uv_write_t
+    var buf: uv_buf_t
+}
+
+public func alloc_buffer(handle: UnsafeMutablePointer<uv_handle_t>, _ suggested_size: Int, _ buf: UnsafeMutablePointer<uv_buf_t>) -> Void {
+    print("alloc_buffer: start")
+    buf.initialize(uv_buf_init(UnsafeMutablePointer<Int8>.alloc(suggested_size), UInt32(suggested_size)))
+}
+
+public func write_data(dest: UnsafeMutablePointer<uv_stream_t>, _ size: Int, _ buf: uv_buf_t, _ cb: uv_write_cb) -> Void {
+    print("write_data: start")
+    let req = UnsafeMutablePointer<write_req_t>.alloc(1)
+    req.memory.buf = uv_buf_init(UnsafeMutablePointer<Int8>.alloc(size), UInt32(size))
+    memcpy(req.memory.buf.base, buf.base, size)
+    uv_write(UnsafeMutablePointer<uv_write_t>(req), dest, &req.memory.buf, 1, cb)
+}
+
+public func free_write_req(req: UnsafeMutablePointer<uv_write_t>) {
+    let write_req = UnsafeMutablePointer<write_req_t>(req)
+    write_req.memory.buf.base.dealloc(write_req.memory.buf.len)
+    write_req.dealloc(1)
+}
+
+public func on_write(req: UnsafeMutablePointer<uv_write_t>, status: Int32) -> Void {
+    print("on_write")
+    free_write_req(req)
+}
+
+public func echo_read(stream: UnsafeMutablePointer<uv_stream_t>, _ nread: Int, _ buf: UnsafePointer<uv_buf_t>) -> Void {
+    print("echo_read: start, nread: \(nread)")
+    if nread < 0 {
+        if Int32(nread) == UV_EOF.rawValue {
+            print("echo_read: end of file, closing")
+        }
+    } else if (nread > 0) {
+        print("echo_read: reading data, write data")
+        write_data(UnsafeMutablePointer<uv_stream_t>(stream), nread, buf.memory, on_write)
+    }
+    
+    if buf.memory.len > 0 {
+        print("echo_read: freeing buffer")
+        buf.memory.base.dealloc(buf.memory.len)
+    }
+}
+
+public func readstart(ptr : UnsafeMutablePointer<uv_stream_t>, alloc_cb: uv_alloc_cb, read_cb: uv_read_cb) throws {
+    uv_read_start(ptr, alloc_cb, read_cb)
+}
+// Stream end
+
+// tcp wrap
+
+public func getTcpHandle(fd :  uv_os_sock_t) -> UnsafeMutablePointer<uv_tcp_t> {
+    let handle : UnsafeMutablePointer<uv_tcp_t> = UnsafeMutablePointer<uv_tcp_t>.alloc(1)
+    uv_tcp_init(uv_default_loop(), handle)
+    uv_tcp_open(handle, fd)
+    return handle
+}
+
 public class Libuv {
     
     let fd : Int32
@@ -65,8 +126,17 @@ public class Libuv {
             
             print("New client fd : \(cfd), address : \(cSocket.address.ip())")
             
-            let uvPoll : Libuv = Libuv(fd: cfd)
-            uvPoll.runReadCallback()
+//            let uvPoll : Libuv = Libuv(fd: cfd)
+//            uvPoll.runReadCallback()
+            do{
+                let handle : UnsafeMutablePointer<uv_tcp_t> =  getTcpHandle(cfd)
+                try readstart(UnsafeMutablePointer<uv_stream_t>(handle), alloc_cb: alloc_buffer, read_cb: echo_read)
+            }
+            catch{
+                print("error")
+//                uv_poll_stop(pollPtr)
+                cSocket.close()
+            }
             
         }
         
@@ -84,8 +154,6 @@ public class Libuv {
         self.readCallback = {
             pollPtr, first, second in
             
-            print(blockToUTF8String(uv_err_name(errno)))
-            
             var cfd : uv_os_fd_t = uv_os_fd_t()
             uv_fileno(UnsafeMutablePointer<uv_handle_t>(pollPtr), &cfd)
             
@@ -95,10 +163,22 @@ public class Libuv {
                 return
             }
             
-            if globalClientCallback(cSocket) <= 0 {
+            do{
+                let handle : UnsafeMutablePointer<uv_tcp_t> =  UnsafeMutablePointer<uv_tcp_t>.alloc(1)
+                uv_tcp_init(uv_default_loop(), handle)
+                uv_tcp_open(handle, cfd)
+                try readstart(UnsafeMutablePointer<uv_stream_t>(handle), alloc_cb: alloc_buffer, read_cb: echo_read)
+            }
+            catch{
+                print("error")
                 uv_poll_stop(pollPtr)
                 cSocket.close()
             }
+            
+//            if globalClientCallback(cSocket) <= 0 {
+//                uv_poll_stop(pollPtr)
+//                cSocket.close()
+//            }
         }
         
         if let callback = self.readCallback {
