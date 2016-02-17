@@ -23,7 +23,7 @@
  */
  
 // Should abstract Socket states.
-public class Socket<T: InetAddress> {
+public class Socket {
     
     // Socket properties.
     public let fd : Int32
@@ -59,9 +59,9 @@ public class Socket<T: InetAddress> {
      */
     public convenience init?(address : InetAddress, type : Int32){
         #if os(Linux)
-            let fd = SwiftGlibc.socket(T.domain, Int32(SOCK_STREAM.rawValue), 0)
+            let fd = SwiftGlibc.socket(address.domain(), Int32(SOCK_STREAM.rawValue), 0)
         #else
-            let fd = Darwin.socket(T.domain, SOCK_STREAM, 0)
+            let fd = Darwin.socket(address.domain(), SOCK_STREAM, 0)
         #endif
         
         guard fd > 0 else {
@@ -97,7 +97,7 @@ public class Socket<T: InetAddress> {
         
         let status = withUnsafePointer(&address) { ptr -> Int32 in
             let name = UnsafePointer<sockaddr>(ptr)
-            let nameLen = socklen_t(T.length)
+            let nameLen = socklen_t(address.length())
             
             #if os(Linux)
                 return SwiftGlibc.bind(self.fd, name, nameLen)
@@ -118,9 +118,9 @@ public class Socket<T: InetAddress> {
      
      - Returns: (Client's file descriptor, Client's address family)
      */
-    public func accept() -> (Int32, T) {
-        var clientAddr    = T()
-        var clientAddrLen = socklen_t(T.length)
+    public func accept() -> (Int32, InetAddress) {
+        var clientAddr    = IPv4()
+        var clientAddrLen = socklen_t(self.address.length())
         
         let clientFd = withUnsafeMutablePointer(&clientAddr) {
             ptr -> Int32 in
@@ -159,35 +159,6 @@ public class Socket<T: InetAddress> {
         return self.isListening
     }
     
-}
-
-// Socket options.
-public enum SocketOption {
-    case BROADCAST(Bool),
-    DEBUG(Bool),
-    DONTROUTE(Bool),
-    OOBINLINE(Bool),
-    REUSEADDR(Bool),
-    KEEPALIVE(Bool),
-    NOSIGPIPE(Bool),
-    
-    SNDBUF(Int32),
-    RCVBUF(Int32)
-    
-    var match : (name : Int32, value : Int32) {
-        switch self {
-        case .BROADCAST(let value) :   return (SO_BROADCAST, Int32(value.hashValue))
-        case .DEBUG(let value) :            return (SO_DEBUG, Int32(value.hashValue))
-        case .DONTROUTE(let value) :   return (SO_DONTROUTE, Int32(value.hashValue))
-        case .OOBINLINE(let value) :      return (SO_OOBINLINE, Int32(value.hashValue))
-        case .REUSEADDR(let value):     return (SO_REUSEADDR, Int32(value.hashValue))
-        case .KEEPALIVE(let value) :      return (SO_KEEPALIVE, Int32(value.hashValue))
-        case .NOSIGPIPE(let value) :      return (SO_NOSIGPIPE, Int32(value.hashValue))
-            
-        case .SNDBUF(let value):            return (SO_SNDBUF, value)
-        case .RCVBUF(let value):            return (SO_RCVBUF, value)
-        }
-    }
 }
 
 extension Socket {

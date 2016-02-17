@@ -13,11 +13,11 @@
 #endif
 
 public protocol InetAddress {
-    static var domain : Int32 { get }
-    static var length : UInt8 { get }
+    func domain() -> Int32
+    func length() -> UInt8
     func ip() -> String
     func port() -> in_port_t
-    init()
+    init() 
 }
 
 // IPv4 address extention.
@@ -30,16 +30,38 @@ extension in_addr {
     }
 }
 
+
+//  Consider to change address family structure or remove InetAddress.swift by using Libuv Tcp module.
+public enum AddressType {
+    case IPv4, IPv6
+    
+    var domain : Int32 {
+        switch self {
+        case .IPv4 : return AF_INET
+        case .IPv6 : return AF_INET6
+        }
+    }
+    
+    var length : UInt8 {
+        switch self {
+        case .IPv4 : return UInt8(sizeof(sockaddr_in))
+        case .IPv6 : return UInt8(sizeof(sockaddr_in6))
+        }
+    }
+}
+
 extension sockaddr_in : InetAddress {
     
-    public static let domain = AF_INET
-    public static let length = UInt8(sizeof(IPv4))
+    public func domain() -> Int32 { return AF_INET }
+    
+    public func length() -> UInt8 { return UInt8(sizeof(IPv4)) }
+    
     public func ip() -> String {
         return blockToUTF8String(inet_ntoa(sin_addr))
     }
     public func port() -> in_port_t { return  in_port_t(self.sin_port.bigEndian) }
     
-    public init(ip : String, port : UInt16) {
+    public init(ip : String, port : UInt16) throws {
         #if os(Linux)
         #else
         sin_len = UInt8(sizeof(sockaddr_in))
@@ -69,8 +91,10 @@ public typealias IPv6 = sockaddr_in6
 
 extension sockaddr_in6 : InetAddress {
     
-    public static let domain = AF_INET6
-    public static let length = UInt8(sizeof(IPv6))
+    public func domain() -> Int32 { return AF_INET6 }
+    
+    public func length() -> UInt8 { return UInt8(sizeof(IPv6)) }
+    
     public func ip() -> String {
         return ""
     }

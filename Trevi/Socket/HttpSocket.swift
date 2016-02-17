@@ -17,7 +17,7 @@ public class ClientSocket {
     let ip : String
     weak var socket : ConnectedSocket!
     
-    public init( socket : ConnectedSocket ){
+    public init (socket : ConnectedSocket) {
         self.socket = socket
         self.ip = socket.address.ip()
     }
@@ -81,10 +81,15 @@ public class HttpSocket {
      */
     public func startListening ( port : UInt16 ) throws {
         
-        var address : IPv4 {
+        var address : IPv4! {
             get{
                 if let ip = self.ip{
-                    return IPv4(ip: ip, port: port)
+                    do{
+                        return try IPv4(ip: ip, port: port)
+                    }
+                    catch {
+                        return nil
+                    }
                 }
                 else{
                     return IPv4(port: port)
@@ -103,6 +108,9 @@ public class HttpSocket {
             if let time = self.closeTime {
                 client.setTimeout(time)
             }
+            
+            
+            
             return self.readDataHandler(client)
         }
         
@@ -114,7 +122,7 @@ public class HttpSocket {
     }
     
     
-    private func readDataHandler(stream : Stream) -> Int {
+    private func readDataHandler(stream : SocketStream) -> Int {
         
         let readData : ReceivedParams = stream.read()
         

@@ -13,15 +13,13 @@
     import Darwin
 #endif
 
-import Libuv
-
 /**
  * ListenSocket class
  *
  * Manage a tcp listen socket, and accept client socket.
  *
  */
-public class ListenSocket : Socket<IPv4> {
+public class ListenSocket : Socket {
     
     /**
      Create a listen socket.
@@ -31,11 +29,11 @@ public class ListenSocket : Socket<IPv4> {
      
      - Returns:   If bind function succeeds, calls super.init(). However, if it fails, returns nil.
      */
-    public init?(address : IPv4, queue : dispatch_queue_t = serverModel.acceptQueue) {
+    public init?(address : InetAddress, queue : dispatch_queue_t = serverModel.acceptQueue) {
         #if os(Linux)
-            let fd = SwiftGlibc.socket(IPv4.domain, Int32(SOCK_STREAM.rawValue), 0)
+            let fd = SwiftGlibc.socket(address.domain(), Int32(SOCK_STREAM.rawValue), 0)
         #else
-            let fd = Darwin.socket(IPv4.domain, SOCK_STREAM, 0)
+            let fd = Darwin.socket(address.domain(), SOCK_STREAM, 0)
         #endif
         
         super.init(fd: fd, address: address)
