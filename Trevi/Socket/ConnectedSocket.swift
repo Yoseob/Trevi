@@ -12,8 +12,6 @@
     import Darwin
 #endif
 
-    import Libuv
-
 let ClientBufferSize = 4096
 
 public var ClientCallback : (ConnectedSocket -> Int)!
@@ -30,7 +28,7 @@ public func ==(lhs: ConnectedSocket, rhs: ConnectedSocket) -> Bool {
     return lhs.fd == rhs.fd
 }
 
-public class ConnectedSocket : Socket<IPv4>, Hashable {
+public class ConnectedSocket : Socket, Hashable {
     
     var bufferPtr  = UnsafeMutablePointer<CChar>.alloc(ClientBufferSize + 2)
     var bufferLen : Int = ClientBufferSize
@@ -54,7 +52,7 @@ public class ConnectedSocket : Socket<IPv4>, Hashable {
      
      - Returns:  If bind function succeeds, create a client socket. However, if it fails, returns nil.
      */
-    public init?(fd : Int32, address : IPv4, queue : dispatch_queue_t = serverModel.readQueue) {
+    public init?(fd : Int32, address : InetAddress, queue : dispatch_queue_t = serverModel.readQueue) {
         
         super.init(fd: fd, address: address)
         eventHandle = EventHandler(fd: fd, queue: queue)
@@ -129,8 +127,6 @@ public class ConnectedSocket : Socket<IPv4>, Hashable {
      - Returns:  Success or failure
      */
     public func write<M>(buffer: UnsafePointer<M>, length : Int) -> Bool {
-        
-        var req = uv_stream_t()
         
         let status = eventHandle.dispatchWriteEvent(buffer, length : length) {
             if self.isClosing { self.close() }

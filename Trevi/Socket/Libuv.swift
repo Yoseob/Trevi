@@ -8,8 +8,8 @@
 
 import Libuv
 
-public typealias uv_loop_ptr = UnsafeMutablePointer<uv_loop_t>
-public typealias uv_poll_ptr = UnsafeMutablePointer<uv_poll_t>
+
+// Libuv test file
 
 // Stream
 public struct write_req_t {
@@ -18,13 +18,14 @@ public struct write_req_t {
 }
 
 public func alloc_buffer(handle: UnsafeMutablePointer<uv_handle_t>, _ suggested_size: Int, _ buf: UnsafeMutablePointer<uv_buf_t>) -> Void {
-    print("alloc_buffer: start")
+    print("al")
     buf.initialize(uv_buf_init(UnsafeMutablePointer<Int8>.alloc(suggested_size), UInt32(suggested_size)))
 }
 
 public func write_data(dest: UnsafeMutablePointer<uv_stream_t>, _ size: Int, _ buf: uv_buf_t, _ cb: uv_write_cb) -> Void {
-    print("write_data: start")
+    
     let req = UnsafeMutablePointer<write_req_t>.alloc(1)
+    
     req.memory.buf = uv_buf_init(UnsafeMutablePointer<Int8>.alloc(size), UInt32(size))
     memcpy(req.memory.buf.base, buf.base, size)
     uv_write(UnsafeMutablePointer<uv_write_t>(req), dest, &req.memory.buf, 1, cb)
@@ -37,23 +38,27 @@ public func free_write_req(req: UnsafeMutablePointer<uv_write_t>) {
 }
 
 public func on_write(req: UnsafeMutablePointer<uv_write_t>, status: Int32) -> Void {
-    print("on_write")
+    print("========on_write=========")
     free_write_req(req)
 }
 
 public func echo_read(stream: UnsafeMutablePointer<uv_stream_t>, _ nread: Int, _ buf: UnsafePointer<uv_buf_t>) -> Void {
     print("echo_read: start, nread: \(nread)")
+    
     if nread < 0 {
         if Int32(nread) == UV_EOF.rawValue {
-            print("echo_read: end of file, closing")
+            print(buf.memory.len)
+            print("")
+            print("======= echo_read: end of file, closing ======")
+            print("")
         }
-    } else if (nread > 0) {
-        print("echo_read: reading data, write data")
+    }
+    else if (nread > 0) {
+        print(blockToString(buf.memory.base, length: nread))
         write_data(UnsafeMutablePointer<uv_stream_t>(stream), nread, buf.memory, on_write)
     }
     
     if buf.memory.len > 0 {
-        print("echo_read: freeing buffer")
         buf.memory.base.dealloc(buf.memory.len)
     }
 }
@@ -61,6 +66,7 @@ public func echo_read(stream: UnsafeMutablePointer<uv_stream_t>, _ nread: Int, _
 public func readstart(ptr : UnsafeMutablePointer<uv_stream_t>, alloc_cb: uv_alloc_cb, read_cb: uv_read_cb) throws {
     uv_read_start(ptr, alloc_cb, read_cb)
 }
+
 // Stream end
 
 // tcp wrap
@@ -108,7 +114,7 @@ public class Libuv {
             uv_fileno(UnsafeMutablePointer<uv_handle_t>(pollPtr), &pfd)
             
             var caddr = IPv4()
-            var caddrLen = socklen_t(IPv4.length)
+            var caddrLen = socklen_t(caddr.length())
             
             let cfd = withUnsafeMutablePointer(&caddr) {
                 ptr -> Int32 in
