@@ -16,7 +16,7 @@ import Trevi
 
 public class Lime : RoutAble{
     
-    private let httpParser = HttpParser()
+    private let httpParser = LimePrepare()
     
     public  override init () {
         super.init()

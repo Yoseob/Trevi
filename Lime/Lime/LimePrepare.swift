@@ -1,20 +1,20 @@
 //
-//  HttpParser.swift
+//  LimePrepare.swift
 //  Trevi
 //
-//  Created by LeeYoseob on 2016. 2. 2..
+//  Created by LeeYoseob on 2016. 2. 17..
 //  Copyright © 2016년 LeeYoseob. All rights reserved.
 //
+
 
 import Foundation
 import Trevi
 
-public class HttpParser{
-    
-    let prepare = PreparedData()
+public class LimePrepare {
+    let prepare = PreparedHttp()
     var eventListener: EventListener?
     var totalLength = 0
-
+    
     public init(){}
     public convenience init(elistener: EventListener){
         self.init()
@@ -47,10 +47,7 @@ public class HttpParser{
     private func shootRequest(stream: Stream){
         let httpClient = ClientSocket ( socket: stream )
         //@Danger
-        
         MiddlewareManager.sharedInstance ().handleRequest(prepare.handleRequest(httpClient))
         reset()
     }
-    
-    
 }

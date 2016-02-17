@@ -113,8 +113,9 @@ public class HttpSocket {
     public func disconnect () {
         self.listenSocket.close ()
     }
-    
-    
+}
+
+extension HttpSocket{
     private func readDataHandler(stream : Stream) ->Int{
         
         let readData : ReceivedParams = stream.read()
@@ -125,7 +126,8 @@ public class HttpSocket {
         listener?.emit("data", info)
         
         return readData.length
-
- 
+        
+        
     }
+
 }

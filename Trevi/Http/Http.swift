@@ -13,6 +13,16 @@ public typealias HttpCallback = ( ( Request, Response) -> Bool )
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
 public typealias CallBack = ( Request, Response ) -> Bool // will remove next
+
+
+class TreviServer: MainListener{
+    init(requestListener: Any){
+
+    }
+}
+
+
+
 public class Http {
     
     private var socket : HttpSocket!
@@ -23,6 +33,19 @@ public class Http {
     
     }
 
+    
+    /*
+        TEST
+    */
+    public func createServer_Test ( requestListener: Any... ) -> Http {
+        for rm in requestListener {
+        }
+        return self
+    }
+    
+    public func test(){
+    
+    }
     /**
      * Create Server base on RouteAble Model, maybe it able to use many Middleware
      * end return self
@@ -98,7 +121,10 @@ public class Http {
     public func stopListening () {
         socket.disconnect ()
     }
-    
+}
+
+
+extension Http{
     /**
      * Register request callback function
      * request received delegate middleware manager
@@ -114,20 +140,17 @@ public class Http {
             if let params = info.params {
                 let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
                 let data = strData! as String
-                 req = Request(data)
+                req = Request(data)
                 
                 if let req = req {
-                    
                     let res = Response( socket: ClientSocket ( socket: info.stream! ) )
                     res.method = req.method
-                    
                     if let connection = req.header[Connection]{
                         res.header[Connection] = connection
                     }
-                    
                     self.mwManager.handleRequest(req, res)
                 }
-
+                
             }
         }
     }
