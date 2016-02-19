@@ -18,6 +18,11 @@ public class EventInfo{
     public var params: ReceivedParams?
 }
 
+
+/* will removed never use */
+
+
+
 //Http Server call name "data" when received Stream Data,
 //So if you want custom event Listener register event name both "data"
 public protocol EventListener{

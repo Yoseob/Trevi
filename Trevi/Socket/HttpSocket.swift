@@ -50,14 +50,15 @@ public class HttpSocket {
         
     }
     
-    public init(ip : String? = nil){
+    init(ip : String? = nil){
+
         self.ip = ip
     }
 
     
-    public init( _ eListener : EventListener? = nil){
+    init( _ eListener : EventListener? = nil){
         self.listener = eListener
-        self.ip = nil
+        self.ip = "8080"
     }
     
     
