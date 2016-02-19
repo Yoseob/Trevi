@@ -30,26 +30,6 @@ extension in_addr {
     }
 }
 
-
-//  Consider to change address family structure or remove InetAddress.swift by using Libuv Tcp module.
-public enum AddressType {
-    case IPv4, IPv6
-    
-    var domain : Int32 {
-        switch self {
-        case .IPv4 : return AF_INET
-        case .IPv6 : return AF_INET6
-        }
-    }
-    
-    var length : UInt8 {
-        switch self {
-        case .IPv4 : return UInt8(sizeof(sockaddr_in))
-        case .IPv6 : return UInt8(sizeof(sockaddr_in6))
-        }
-    }
-}
-
 extension sockaddr_in : InetAddress {
     
     public func domain() -> Int32 { return AF_INET }
@@ -96,11 +76,31 @@ extension sockaddr_in6 : InetAddress {
     public func length() -> UInt8 { return UInt8(sizeof(IPv6)) }
     
     public func ip() -> String {
-        return ""
+        let buffer = UnsafeMutablePointer<Int8>.alloc(Int(INET6_ADDRSTRLEN))
+        
+        var address = self.sin6_addr
+        
+        inet_ntop(AF_INET6, &address, buffer, socklen_t(INET6_ADDRSTRLEN))
+        
+        return blockToUTF8String(buffer)
     }
+    
     public func port() -> in_port_t { return in_port_t(self.sin6_port.bigEndian) }
     
-    public init(ip : in6_addr = IN6ADDR_ANY, port : UInt16 = 0) {
+    public init(ip : String, port : UInt16) {
+        #if os(Linux)
+        #else
+            sin6_len = UInt8(sizeof(sockaddr_in6))
+        #endif
+        sin6_family = sa_family_t(AF_INET6)
+        sin6_port = in_port_t(port.bigEndian)
+        sin6_flowinfo = 0
+        sin6_addr = in6_addr()
+        inet_pton(AF_INET6, ip, &(sin6_addr))
+        sin6_scope_id = 0
+    }
+    
+    public init(ip : in6_addr = IN6ADDR_ANY, port : UInt16) {
         #if os(Linux)
         #else
         sin6_len = UInt8(sizeof(sockaddr_in6))

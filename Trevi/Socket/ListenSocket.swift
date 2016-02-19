@@ -81,7 +81,7 @@ public class ListenSocket : Socket {
             
             guard listen(backlog) else { return false }
             
-            globalClientCallback = clientCallback
+//            globalClientCallback = clientCallback
             // Libuv readable test code. Should be modified and moved to Socket class' property.
             let uvPoll : Libuv = Libuv(fd: self.fd)
             uvPoll.runAcceptCallback()

@@ -65,7 +65,7 @@ public class ConnectedSocket : Socket, Hashable {
     deinit {
         log.debug("Connected Socket closed")
         bufferPtr.dealloc(bufferLen + 2)
-        clientMap.removeValueForKey(self.fd)
+//        clientMap.removeValueForKey(self.fd)
         self.close()
     }
     
