@@ -47,9 +47,6 @@
 		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
 		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
 		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
-		DF0900D91C6ECFBD008CA6F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0900D81C6ECFBD008CA6F0 /* AppDelegate.swift */; };
-		DF0900DB1C6ECFBD008CA6F0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DF0900DA1C6ECFBD008CA6F0 /* Assets.xcassets */; };
-		DF0900DE1C6ECFBD008CA6F0 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = DF0900DC1C6ECFBD008CA6F0 /* MainMenu.xib */; };
 		DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; };
 		DF0900F11C6EDD3F008CA6F0 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0900EF1C6EDD3F008CA6F0 /* libuv.a */; };
 		DF264D461C6CAF6A00C450BA /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF264D451C6CAF6A00C450BA /* Async.swift */; };
@@ -150,10 +147,6 @@
 		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF0900D81C6ECFBD008CA6F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DF0900DA1C6ECFBD008CA6F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		DF0900DD1C6ECFBD008CA6F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		DF0900DF1C6ECFBD008CA6F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DF0900EF1C6EDD3F008CA6F0 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
 		DF0900F01C6EDD3F008CA6F0 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		DF264D451C6CAF6A00C450BA /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
@@ -276,7 +269,6 @@
 				239411D51C0C2DA3001B9B07 /* Trevi */,
 				239411E31C0C2E19001B9B07 /* Trevi_ver_lime */,
 				232299921C61E00D003E44AB /* Lime */,
-				DF0900D71C6ECFBD008CA6F0 /* EchoTest */,
 				239411D41C0C2DA3001B9B07 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -418,17 +410,6 @@
 				90BEEE5F1C259FD7009A8DA8 /* index.ssp */,
 			);
 			path = views;
-			sourceTree = "<group>";
-		};
-		DF0900D71C6ECFBD008CA6F0 /* EchoTest */ = {
-			isa = PBXGroup;
-			children = (
-				DF0900D81C6ECFBD008CA6F0 /* AppDelegate.swift */,
-				DF0900DA1C6ECFBD008CA6F0 /* Assets.xcassets */,
-				DF0900DC1C6ECFBD008CA6F0 /* MainMenu.xib */,
-				DF0900DF1C6ECFBD008CA6F0 /* Info.plist */,
-			);
-			path = EchoTest;
 			sourceTree = "<group>";
 		};
 		DF0900EE1C6EDD3F008CA6F0 /* Libuv */ = {
@@ -612,8 +593,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF0900DB1C6ECFBD008CA6F0 /* Assets.xcassets in Resources */,
-				DF0900DE1C6ECFBD008CA6F0 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -693,7 +672,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF0900D91C6ECFBD008CA6F0 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,14 +697,6 @@
 				239411EB1C0C2E19001B9B07 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		DF0900DC1C6ECFBD008CA6F0 /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DF0900DD1C6ECFBD008CA6F0 /* Base */,
-			);
-			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
