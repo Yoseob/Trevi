@@ -10,46 +10,80 @@ import Libuv
 
 public class Tcp : Stream {
     
-    public let fd : uv_os_sock_t
-    public var address : InetAddress
-    
     public let tcpHandle : uv_tcp_ptr
     
-    public init (fd : uv_os_fd_t, address : InetAddress) {
-        self.fd = fd
-        self.address = address
+    public init () {
+        
         self.tcpHandle = uv_tcp_ptr.alloc(1)
         
         uv_tcp_init(uv_default_loop(), self.tcpHandle)
-        
-        // It sets fd to non-block.
-        uv_tcp_open(self.tcpHandle, self.fd)
-        
+    
         super.init(streamHandle : uv_stream_ptr(self.tcpHandle))
     }
     
-    public convenience init (address : InetAddress) {
-        
-        #if os(Linux)
-            let fd = SwiftGlibc.socket(address.domain(), Int32(SOCK_STREAM.rawValue), 0)
-        #else
-            let fd = Darwin.socket(address.domain(), SOCK_STREAM, 0)
-        #endif
-        
-        self.init(fd : fd, address : address)
-    }
-    
     deinit {
-        
+        print("Tcp deinit")
     }
     
 }
 
 
 
-// Tcp static properties and methods
+// Tcp static functions.
 
 extension Tcp {
+    
+    public static func open (handle : uv_tcp_ptr, fd : uv_os_fd_t) {
+        
+        // It sets fd to non-block.
+        uv_tcp_open(handle, fd)
+    }
+    
+    public static func bind(handle : uv_tcp_ptr, address: String, port: Int32) {
+        var sockaddr = sockaddr_in()
+        
+        let error = withUnsafeMutablePointer(&sockaddr) { (ptr) -> Int32 in
+            uv_ip4_addr(address, port, ptr)
+            return uv_tcp_bind(handle , UnsafePointer(ptr), 0)
+        }
+        
+        if error != 0 {
+            // Should handle error
+        }
+    }
+    
+    public static func bind6(handle : uv_tcp_ptr, address: String, port: Int32) {
+        var sockaddr = sockaddr_in6()
+        
+        let error = withUnsafeMutablePointer(&sockaddr) { (ptr) -> Int32 in
+            uv_ip6_addr(address, port, ptr)
+            return uv_tcp_bind(handle , UnsafePointer(ptr), 0)
+        }
+        
+        if error != 0 {
+            // Should handle error
+        }
+    }
+    
+    public static func listen(handle : uv_stream_ptr, backlog : Int32 = 50) {
+        
+        let error = uv_listen(handle, backlog, Tcp.onConnection)
+        
+        if error != 0 {
+            // Should handle error
+        }
+        
+    }
+    
+    public static func connect(handle : uv_tcp_ptr) {
+        let request = uv_connect_ptr.alloc(1)
+        let address = Tcp.getSocketName(handle)
+        let error = uv_tcp_connect(request, handle, address, Tcp.afterConnect)
+        
+        if error != 0 {
+            // Should handle error
+        }
+    }
     
     //  Enable / disable Nagle’s algorithm.
     public static func setNoDelay (handle : uv_tcp_ptr, enable : Int32) {
@@ -67,99 +101,52 @@ extension Tcp {
         uv_tcp_simultaneous_accepts(handle, enable)
     }
     
-    public static func close (fd : uv_os_fd_t) {
-        #if os(Linux)
-            SwiftGlibc.close(fd)
-        #else
-            Darwin.close(fd)
-        #endif
+    public static func getSocketName(handle : uv_tcp_ptr) -> sockaddr_ptr {
+        
+        var len = Int32(sizeof(sockaddr))
+        let name = sockaddr_ptr.alloc(Int(len))
+        
+        uv_tcp_getsockname(handle, name, &len)
+        
+        return name
     }
     
-    public static func bind (fd : uv_os_fd_t, var address : InetAddress)  -> Bool {
+    public static func getPeerName(handle : uv_tcp_ptr) -> sockaddr_ptr {
         
-        let status = withUnsafePointer(&address) { ptr -> Int32 in
-            let name = UnsafePointer<sockaddr>(ptr)
-            let nameLen = socklen_t(address.length())
-            
-            #if os(Linux)
-                return SwiftGlibc.bind(fd, name, nameLen)
-            #else
-                return Darwin.bind(fd, name, nameLen)
-            #endif
+        var len = Int32(sizeof(sockaddr))
+        let name = sockaddr_ptr.alloc(Int(len))
+        
+        uv_tcp_getpeername(handle, name, &len)
+        
+        return name
+    }
+    
+}
+
+
+// Tcp static callbacks.
+
+extension Tcp {
+    
+    public static var onConnection : uv_connection_cb = { (handle, status) in
+        
+        var client = Tcp()
+        
+        if uv_accept(handle, client.streamHandle) != 0 {
+            return
         }
         
-        return status == 0
-    }
-    
-    public static func accept(fd : uv_os_fd_t) -> (Int32, InetAddress) {
-            
-        var clientAddr  = IPv4()
-        var clientAddrLen = socklen_t(clientAddr.length())
-        
-        let clientFd = withUnsafeMutablePointer(&clientAddr) {
-            ptr -> Int32 in
-            let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
-            
-            #if os(Linux)
-                return SwiftGlibc.accept(fd, addrPtr,  &clientAddrLen)
-            #else
-                return Darwin.accept(fd, addrPtr,  &clientAddrLen)
-            #endif
-        }
-        
-        return (clientFd, clientAddr)
-    }
-    
-    public static func listen(fd : uv_os_fd_t, backlog : Int32 = 50) -> Bool {
-        
-        #if os(Linux)
-            let status = SwiftGlibc.listen(fd, backlog)
-        #else
-            let status = Darwin.listen(fd, backlog)
-        #endif
-      
-        return status == 0
-    }
-    
-    public static func setSocketOption (fd : uv_os_fd_t, options: [SocketOption]?) -> Bool {
-        if options == nil { return false }
-        
-        for option in options!{
-            let name = option.match.name
-            var buffer = option.match.value
-            let bufferLen = socklen_t(sizeof(Int32))
-            
-            #if os(Linux)
-                let status  = SwiftGlibc.setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
-            #else
-                let status  = Darwin.setsockopt(fd, SOL_SOCKET, name, &buffer, bufferLen)
-            #endif
-            
-            if status == -1 {
-                log.error("Failed to set socket option : \(option), value : \(buffer)")
-                return false
+        if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {
+            if let callback =  wrap.event.onConnection {
+                callback(client.streamHandle)
             }
         }
-        return true
+        
+        client.readStart()
     }
     
-    public static func getSocketOption(fd : uv_os_fd_t, option: SocketOption) -> Int32 {
-        let name = option.match.name
-        var buffer = Int32(0)
-        var bufferLen = socklen_t(sizeof(Int32))
+    public static var afterConnect : uv_connect_cb = { (request, status) in
         
-        #if os(Linux)
-            let status  = SwiftGlibc.getsockopt(fd, SOL_SOCKET, name, &buffer, &bufferLen)
-        #else
-            let status  = Darwin.getsockopt(fd, SOL_SOCKET, name, &buffer, &bufferLen)
-        #endif
-        
-        if status == -1 {
-            log.error("Failed to get socket option name : \(name)")
-            return status
-        }
-        
-        return buffer
     }
 }
 
@@ -190,6 +177,53 @@ public enum SocketOption {
         case .SNDBUF(let value):            return (SO_SNDBUF, value)
         case .RCVBUF(let value):            return (SO_RCVBUF, value)
         }
+    }
+}
+
+
+// Socket option functions.
+extension Tcp {
+    
+    public static func setSocketOption (handle : uv_tcp_ptr, options: [SocketOption]?) -> Bool {
+        if options == nil { return false }
+        
+        for option in options!{
+            let name = option.match.name
+            var buffer = option.match.value
+            let bufferLen = socklen_t(sizeof(Int32))
+            
+            #if os(Linux)
+                let status  = SwiftGlibc.setsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, bufferLen)
+            #else
+                let status  = Darwin.setsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, bufferLen)
+            #endif
+            
+            if status == -1 {
+                log.error("Failed to set socket option : \(option), value : \(buffer)")
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    public static func getSocketOption(handle : uv_tcp_ptr, option: SocketOption) -> Int32 {
+        let name = option.match.name
+        var buffer = Int32(0)
+        var bufferLen = socklen_t(sizeof(Int32))
+        
+        #if os(Linux)
+            let status  = SwiftGlibc.getsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, &bufferLen)
+        #else
+            let status  = Darwin.getsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, &bufferLen)
+        #endif
+        
+        if status == -1 {
+            log.error("Failed to get socket option name : \(name)")
+            return status
+        }
+        
+        return buffer
     }
 }
 

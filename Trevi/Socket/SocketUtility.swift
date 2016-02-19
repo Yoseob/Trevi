@@ -23,6 +23,36 @@
 //    let sockfd : Int32
 //}
 
+public typealias sockaddr_ptr = UnsafeMutablePointer<sockaddr>
+
+// Reference form
+// https://developer.apple.com/library/ios/samplecode/SimpleTunnel/Listings/tunnel_server_UDPServerConnection_swift.html
+
+func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> (host: String, port: Int)? {
+    let socketAddress = UnsafePointer<sockaddr>(socketAddressPointer).memory
+    
+    switch Int32(socketAddress.sa_family) {
+    case AF_INET:
+        var socketAddressInet = UnsafePointer<sockaddr_in>(socketAddressPointer).memory
+        let length = Int(INET_ADDRSTRLEN) + 2
+        var buffer = [CChar](count: length, repeatedValue: 0)
+        let hostCString = inet_ntop(AF_INET, &socketAddressInet.sin_addr, &buffer, socklen_t(length))
+        let port = Int(UInt16(socketAddressInet.sin_port).byteSwapped)
+        return (String.fromCString(hostCString)!, port)
+        
+    case AF_INET6:
+        var socketAddressInet6 = UnsafePointer<sockaddr_in6>(socketAddressPointer).memory
+        let length = Int(INET6_ADDRSTRLEN) + 2
+        var buffer = [CChar](count: length, repeatedValue: 0)
+        let hostCString = inet_ntop(AF_INET6, &socketAddressInet6.sin6_addr, &buffer, socklen_t(length))
+        let port = Int(UInt16(socketAddressInet6.sin6_port).byteSwapped)
+        return (String.fromCString(hostCString)!, port)
+        
+    default:
+        return nil
+    }
+}
+
 // Get String from the pointer
 public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
     var idx = block

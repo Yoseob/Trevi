@@ -18,7 +18,6 @@ public struct write_req_t {
 }
 
 public func alloc_buffer(handle: UnsafeMutablePointer<uv_handle_t>, _ suggested_size: Int, _ buf: UnsafeMutablePointer<uv_buf_t>) -> Void {
-    print("al")
     buf.initialize(uv_buf_init(UnsafeMutablePointer<Int8>.alloc(suggested_size), UInt32(suggested_size)))
 }
 
@@ -51,6 +50,8 @@ public func echo_read(stream: UnsafeMutablePointer<uv_stream_t>, _ nread: Int, _
             print("")
             print("======= echo_read: end of file, closing ======")
             print("")
+            
+            Handle.dictionary[uv_handle_ptr(stream)] = nil
         }
     }
     else if (nread > 0) {
@@ -63,7 +64,7 @@ public func echo_read(stream: UnsafeMutablePointer<uv_stream_t>, _ nread: Int, _
     }
 }
 
-public func readstart(ptr : UnsafeMutablePointer<uv_stream_t>, alloc_cb: uv_alloc_cb, read_cb: uv_read_cb) throws {
+public func readstart(ptr : UnsafeMutablePointer<uv_stream_t>, alloc_cb: uv_alloc_cb, read_cb: uv_read_cb) {
     uv_read_start(ptr, alloc_cb, read_cb)
 }
 
@@ -128,21 +129,12 @@ public class Libuv {
             }
             
             let cSocket : ConnectedSocket! = ConnectedSocket(fd: cfd, address: caddr)
-            clientMap[cfd] = cSocket
             
             print("New client fd : \(cfd), address : \(cSocket.address.ip())")
             
-//            let uvPoll : Libuv = Libuv(fd: cfd)
-//            uvPoll.runReadCallback()
-            do{
-                let handle : UnsafeMutablePointer<uv_tcp_t> =  getTcpHandle(cfd)
-                try readstart(UnsafeMutablePointer<uv_stream_t>(handle), alloc_cb: alloc_buffer, read_cb: echo_read)
-            }
-            catch{
-                print("error")
-//                uv_poll_stop(pollPtr)
-                cSocket.close()
-            }
+            
+            let handle : UnsafeMutablePointer<uv_tcp_t> =  getTcpHandle(cfd)
+            readstart(UnsafeMutablePointer<uv_stream_t>(handle), alloc_cb: alloc_buffer, read_cb: echo_read)
             
         }
         
@@ -163,28 +155,13 @@ public class Libuv {
             var cfd : uv_os_fd_t = uv_os_fd_t()
             uv_fileno(UnsafeMutablePointer<uv_handle_t>(pollPtr), &cfd)
             
-            let cSocket : ConnectedSocket! = clientMap[cfd]
-            guard cSocket != nil else {
-                print("clientMap error")
-                return
-            }
-            
-            do{
-                let handle : UnsafeMutablePointer<uv_tcp_t> =  UnsafeMutablePointer<uv_tcp_t>.alloc(1)
-                uv_tcp_init(uv_default_loop(), handle)
-                uv_tcp_open(handle, cfd)
-                try readstart(UnsafeMutablePointer<uv_stream_t>(handle), alloc_cb: alloc_buffer, read_cb: echo_read)
-            }
-            catch{
-                print("error")
-                uv_poll_stop(pollPtr)
-                cSocket.close()
-            }
-            
-//            if globalClientCallback(cSocket) <= 0 {
-//                uv_poll_stop(pollPtr)
-//                cSocket.close()
-//            }
+         
+           
+            let handle : UnsafeMutablePointer<uv_tcp_t> =  UnsafeMutablePointer<uv_tcp_t>.alloc(1)
+            uv_tcp_init(uv_default_loop(), handle)
+            uv_tcp_open(handle, cfd)
+            readstart(UnsafeMutablePointer<uv_stream_t>(handle), alloc_cb: alloc_buffer, read_cb: echo_read)
+           
         }
         
         if let callback = self.readCallback {
@@ -209,7 +186,6 @@ public class Libuv {
         //uv_loop_configure(self.loop, UV_LOOP_BLOCK_SIGNAL)
         uv_run(self.loop, UV_RUN_DEFAULT)
     }
-    
     
     // test error log, should be modified.
     public func printError(){
