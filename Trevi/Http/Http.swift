@@ -55,7 +55,44 @@ public class EventEmitter{
 protocol httpStream {}
 
 public class IncomingMessage: httpStream{
-    init(){}
+    
+    public var socket: AnyObject!
+    public var connection: AnyObject!
+    
+    // HTTP header
+    public var header = [ String: String ] ()
+    
+    public var httpVersionMajor: String? = "1"
+    
+    public var httpVersionMinor: String? = "1"
+    
+    public var version : String{
+        return "\(httpVersionMajor).\(httpVersionMinor)"
+    }
+    
+    // Seperated path by component from the requested url
+    public var pathComponent: [String] = [ String ] ()
+    
+    //server only 
+    public var url: String!{
+        didSet {
+            let segment = self.url.componentsSeparatedByString ( "/" )
+            for seg in segment {
+                pathComponent.append ( seg )
+            }
+        }
+    }
+
+    //response only 
+    public var statusCode: String!
+    public var client: AnyObject!
+    
+    init(socket: AnyObject){
+        self.socket = socket
+        self.connection = socket
+        self.client = socket
+        
+    }
 }
 
 
@@ -66,6 +103,7 @@ public class ServerResponse{
 
 public class TreviServer: EventEmitter{
     
+    private var parser: HttpParser!
     private var socket: HttpSocket!
     private var requestListener: Any!
     
@@ -104,6 +142,42 @@ public class TreviServer: EventEmitter{
         
         */
         
+        
+        if parser == nil {
+            parser = HttpParser()
+            self.parserSetup()
+        }
+        
+        func ondata(){
+        
+            parser.execute()
+            
+        }
+        
+        func onend(){
+            parser = nil
+        }
+        
+    }
+    
+    func parserSetup(){
+        
+        parser.onHeader = {
+            
+        }
+        
+        parser.onHeaderComplete = { info in
+            self.parser.incoming = IncomingMessage(socket: self.parser.socket)
+        }
+        
+        parser.onBody = {
+            //parser.incoming.push ()
+        }
+        
+        parser.onBodyComplete = {
+            
+        }
+        
     }
     
     /**
@@ -127,6 +201,12 @@ public class TreviServer: EventEmitter{
         socket.disconnect ()
     }
 }
+
+
+
+
+
+
 
 
 public class Http {

@@ -23,8 +23,6 @@ public class PreparedHttp {
 //    private var filemanager = File()
     
     private var traceBodyString : String = ""
-    
-    
     var boundryCount = 0
     var bodyBuff = ""
     private var boundry : String?
