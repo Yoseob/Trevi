@@ -6,8 +6,8 @@
 //  Copyright © 2016년 LeeYoseob. All rights reserved.
 //
 
-import Cocoa
 import Trevi
+import Cocoa
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -17,32 +17,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
-        let port : __uint16_t = 1337
-        let server: ListenSocket? = ListenSocket(address: IPv4(port: port))
+        let port : Int32 = 1337
         
-        guard server != nil else {
-            print("Server did not created")
-            return
-        }
+        let server : Net = Net(port: port)
+        server.startServer()
         
-        let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-        print("Main thread: \(tid)")
-        
-        server!.listenClientEvent(){
-            client in
-            
-            let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
-            print("Read thread: \(tid)")
-            print("")
-            
-            let (buffer, length) = client.read()
-                        
-            print("length: \(length)")
-            print(blockToString(buffer, length: length))
-            
-            return length
-        
-        }
+//        let server: ListenSocket? = ListenSocket(address: IPv4(port: port))
+//        
+//        guard server != nil else {
+//            print("Server did not created")
+//            return
+//        }
+//        
+//        let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
+//        print("Main thread: \(tid)")
+//        
+//        server!.listenClientEvent(){
+//            client in
+//            
+//            let tid : mach_port_t = pthread_mach_thread_np(pthread_self())
+//            print("Read thread: \(tid)")
+//            print("")
+//            
+//            let (buffer, length) = client.read()
+//                        
+//            print("length: \(length)")
+//            print(blockToString(buffer, length: length))
+//            
+//            return length
+//        
+//        }
 
     }
 
