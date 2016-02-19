@@ -8,11 +8,207 @@
 
 import Foundation
 
-public typealias HttpCallback = ( ( Request, Response) -> Bool )
+public typealias HttpCallback = ( ( Request, Response ) -> Bool )
 
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
 public typealias CallBack = ( Request, Response ) -> Bool // will remove next
+
+
+
+
+public class EventEmitter{
+    var events = [String:Any]()
+    
+    init(){}
+    
+    func on(name: String, _ emitter: Any){
+        events[name] = emitter
+    }
+    
+    func emit(name: String, _ arg : Any...){
+        let emitter = events[name]
+        
+        
+        switch emitter {
+        case let ra as RoutAble:
+            if arg.count == 2{
+                let req = arg[0] as! Request
+                let res = arg[1] as! Response
+                ra.handleRequest(req, res)
+            }
+            break
+        case let cb as HttpCallback:
+            if arg.count == 2{
+                let req = arg[0] as! Request
+                let res = arg[1] as! Response
+                cb(req,res)
+            }
+            break
+        default:
+            break
+        }
+    }
+}
+
+//temp class
+protocol httpStream {}
+
+public class IncomingMessage: httpStream{
+    
+    public var socket: AnyObject!
+    public var connection: AnyObject!
+    
+    // HTTP header
+    public var header = [ String: String ] ()
+    
+    public var httpVersionMajor: String? = "1"
+    
+    public var httpVersionMinor: String? = "1"
+    
+    public var version : String{
+        return "\(httpVersionMajor).\(httpVersionMinor)"
+    }
+    
+    // Seperated path by component from the requested url
+    public var pathComponent: [String] = [ String ] ()
+    
+    //server only 
+    public var url: String!{
+        didSet {
+            let segment = self.url.componentsSeparatedByString ( "/" )
+            for seg in segment {
+                pathComponent.append ( seg )
+            }
+        }
+    }
+
+    //response only 
+    public var statusCode: String!
+    public var client: AnyObject!
+    
+    init(socket: AnyObject){
+        self.socket = socket
+        self.connection = socket
+        self.client = socket
+        
+    }
+}
+
+
+public class ServerResponse{
+    init(){}
+}
+
+
+public class TreviServer: EventEmitter{
+    
+    private var parser: HttpParser!
+    private var socket: HttpSocket!
+    private var requestListener: Any!
+    
+    init(requestListener: Any){
+        super.init()
+        self.requestListener = requestListener
+        
+        socket = HttpSocket(nil)
+        
+        self.on("request", requestListener) // Not fixed calling time
+        
+        self.on("listening", onlistening) //when server start listening client socket, Should called this callback
+        
+        self.on("connection", connectionListener) // when Client Socket accepted
+    }
+    
+    func onlistening(){
+        switch requestListener {
+        case let ra as RoutAble:
+            ra.makeChildRoute(ra.superPath!, module:ra)
+            break
+        case let cb as HttpCallback:
+            print(cb)
+            break
+        default:
+            break
+        }
+    }
+    
+    func connectionListener(socket: Any /* this socket client socket or stream */){
+        
+        /*
+            /* start // never fixed */
+            first socket.onread  binding listener
+            // parse road data and parsing, not figureout Request, Response just parse
+        
+        */
+        
+        
+        if parser == nil {
+            parser = HttpParser()
+            self.parserSetup()
+        }
+        
+        func ondata(){
+        
+            parser.execute()
+            
+        }
+        
+        func onend(){
+            parser = nil
+        }
+        
+    }
+    
+    func parserSetup(){
+        
+        parser.onHeader = {
+            
+        }
+        
+        parser.onHeaderComplete = { info in
+            self.parser.incoming = IncomingMessage(socket: self.parser.socket)
+        }
+        
+        parser.onBody = {
+            //parser.incoming.push ()
+        }
+        
+        parser.onBodyComplete = {
+            
+        }
+        
+    }
+    
+    /**
+     * Set port, Begin Server and listen socket
+     *
+     * @param {Int} port
+     * @public
+     */
+    public func listen ( port: __uint16_t ) throws {
+
+        try socket.startListening( port )
+        
+        if true {
+            while true {
+                NSRunLoop.mainRunLoop ().run ()
+            }
+        }
+    }
+    
+    public func stopListening () {
+        socket.disconnect ()
+    }
+}
+
+
+
+
+
+
+
+
 public class Http {
     
     private var socket : HttpSocket!
@@ -22,8 +218,16 @@ public class Http {
     public init () {
     
     }
-
-    /**
+    /*
+        TEST
+        will modify any type that suport routable, CallBack and Adapt TreviServer Model
+    */
+    public func createServer_Test ( requestListener: Any... ) -> TreviServer{
+        let server = TreviServer(requestListener: requestListener)
+        return server
+    }
+    
+   /**
      * Create Server base on RouteAble Model, maybe it able to use many Middleware
      * end return self
      *
@@ -39,7 +243,7 @@ public class Http {
     public func createServer ( requireModule: RoutAble... ) -> Http {
         for rm in requireModule {
             socket = HttpSocket(rm.eventListener!)
-            rm.makeChildRoute(rm.superPath!, module:requireModule)
+            rm.makeChildsRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }
         return self
@@ -60,7 +264,7 @@ public class Http {
      * @return {Http} self
      * @public
      */
-    public func createServer ( callBacks: CallBack... ) -> Http {
+    public func createServer ( callBacks: HttpCallback... ) -> Http {
         receivedRequestCallback()
         socket = HttpSocket(listener)
         for cb in callBacks {
@@ -98,7 +302,10 @@ public class Http {
     public func stopListening () {
         socket.disconnect ()
     }
-    
+}
+
+
+extension Http{
     /**
      * Register request callback function
      * request received delegate middleware manager
@@ -114,20 +321,17 @@ public class Http {
             if let params = info.params {
                 let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
                 let data = strData! as String
-                 req = Request(data)
+                req = Request(data)
                 
                 if let req = req {
-                    
                     let res = Response( socket: ClientSocket ( socket: info.stream! ) )
                     res.method = req.method
-                    
                     if let connection = req.header[Connection]{
                         res.header[Connection] = connection
                     }
-                    
                     self.mwManager.handleRequest(req, res)
                 }
-
+                
             }
         }
     }

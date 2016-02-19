@@ -70,7 +70,7 @@ public class Request {
     public init ( _ headerStr: String ) {
         self.path = String ()
         self.headerString = headerStr
-        parse ()
+        parse()
     }
     
     private final func parse () {
@@ -125,7 +125,10 @@ public class Request {
             }
         }
     }
-    
+}
+
+
+extension Request{
     public func parseParam ( route: Route ) {
         for params in route.paramsPos {
             self.params.updateValue( pathComponent[ params.1 ], forKey: params.0 )

@@ -13,18 +13,16 @@ import Trevi
     PreparedData is make request and response after read all of data from client
 
 */
-public class PreparedData {
+public class PreparedHttp {
     
     //The content-length of the body
     private var content_length = 0
     
-    public var req : LimeRequest?
+    public var req : Request?
     
 //    private var filemanager = File()
     
     private var traceBodyString : String = ""
-    
-    
     var boundryCount = 0
     var bodyBuff = ""
     private var boundry : String?
@@ -137,7 +135,7 @@ public class PreparedData {
                 if boundryCount == 2{
                     boundryCount--;
                     //move file IO connector
-//                    print(bodyBuff)
+//                    print(bodyBuff)`
                     bodyBuff = ""
                 }
             }else{
@@ -187,12 +185,12 @@ public class PreparedData {
      * @private
      */
 
-    private func setupRequest ( hData: String ) -> LimeRequest {
-        return LimeRequest( hData )
+    private func setupRequest ( hData: String ) -> Request {
+        return Request( hData )
     }
     
-    private func setupResponse ( socket: ClientSocket ) -> LimeResponse {
-        let res = LimeResponse( socket: socket )
+    private func setupResponse ( socket: ClientSocket ) -> Response {
+        let res = Response( socket: socket )
         res.method = self.req!.method
         //connection header
         if let connection = req?.header[Connection]{

@@ -17,3 +17,8 @@ public class LimeResponse : Response{
     }
 
 }
+
+
+extension Response{
+    
+}

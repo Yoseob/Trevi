@@ -12,8 +12,7 @@
 		232299981C61E00D003E44AB /* Lime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232299911C61E00D003E44AB /* Lime.framework */; };
 		232299991C61E00D003E44AB /* Lime.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 232299911C61E00D003E44AB /* Lime.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		232299A11C61E048003E44AB /* Lime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322999E1C61E048003E44AB /* Lime.swift */; };
-		232299A51C61E09A003E44AB /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A41C61E09A003E44AB /* PreparedData.swift */; };
-		232299A71C61E36E003E44AB /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A61C61E36E003E44AB /* HttpParser.swift */; };
+		232299A51C61E09A003E44AB /* PreparedHttp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A41C61E09A003E44AB /* PreparedHttp.swift */; };
 		232299A91C622ABA003E44AB /* LimeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A81C622ABA003E44AB /* LimeResponse.swift */; };
 		23351DF51C1DE75700BB54FB /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DF21C1DE75700BB54FB /* Request.swift */; };
 		23351DF61C1DE75700BB54FB /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DF41C1DE75700BB54FB /* Response.swift */; };
@@ -24,6 +23,8 @@
 		236E53D91C1235130076ED36 /* Favicon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D81C1235130076ED36 /* Favicon.swift */; };
 		236E53E21C1726450076ED36 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E11C1726450076ED36 /* Router.swift */; };
 		236E53E71C1835570076ED36 /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E61C1835570076ED36 /* Json.swift */; };
+		236FC9C31C74363500F9E191 /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236FC9C21C74363500F9E191 /* HttpParser.swift */; };
+		236FC9C51C7436D100F9E191 /* LimePrepare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236FC9C41C7436D100F9E191 /* LimePrepare.swift */; };
 		239411D71C0C2DA3001B9B07 /* Trevi.h in Headers */ = {isa = PBXBuildFile; fileRef = 239411D61C0C2DA3001B9B07 /* Trevi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E41C0C2E19001B9B07 /* AppDelegate.swift */; };
 		239411E71C0C2E19001B9B07 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E61C0C2E19001B9B07 /* ViewController.swift */; };
@@ -108,8 +109,7 @@
 		232299931C61E00D003E44AB /* Lime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lime.h; sourceTree = "<group>"; };
 		232299951C61E00D003E44AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2322999E1C61E048003E44AB /* Lime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lime.swift; sourceTree = "<group>"; };
-		232299A41C61E09A003E44AB /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
-		232299A61C61E36E003E44AB /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
+		232299A41C61E09A003E44AB /* PreparedHttp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedHttp.swift; sourceTree = "<group>"; };
 		232299A81C622ABA003E44AB /* LimeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimeResponse.swift; sourceTree = "<group>"; };
 		23351DF21C1DE75700BB54FB /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		23351DF41C1DE75700BB54FB /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -120,6 +120,8 @@
 		236E53D81C1235130076ED36 /* Favicon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
 		236E53E11C1726450076ED36 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		236E53E61C1835570076ED36 /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
+		236FC9C21C74363500F9E191 /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
+		236FC9C41C7436D100F9E191 /* LimePrepare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimePrepare.swift; sourceTree = "<group>"; };
 		239411D31C0C2DA3001B9B07 /* Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		239411D61C0C2DA3001B9B07 /* Trevi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Trevi.h; sourceTree = "<group>"; };
 		239411D81C0C2DA3001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -218,11 +220,11 @@
 		2322999D1C61E048003E44AB /* Lime */ = {
 			isa = PBXGroup;
 			children = (
-				232299A61C61E36E003E44AB /* HttpParser.swift */,
-				232299A41C61E09A003E44AB /* PreparedData.swift */,
+				232299A41C61E09A003E44AB /* PreparedHttp.swift */,
 				2322999E1C61E048003E44AB /* Lime.swift */,
 				232299A81C622ABA003E44AB /* LimeResponse.swift */,
 				231489CD1C627E6400D1AF27 /* LimeRequest.swift */,
+				236FC9C41C7436D100F9E191 /* LimePrepare.swift */,
 			);
 			path = Lime;
 			sourceTree = "<group>";
@@ -232,6 +234,7 @@
 			children = (
 				23961CDA1C5F5C5D00F8EF64 /* StreamListener */,
 				DF3B81901C1E086400974327 /* Http.swift */,
+				236FC9C21C74363500F9E191 /* HttpParser.swift */,
 				23351DF71C1DE78F00BB54FB /* HttpProtocol.swift */,
 				23351DF11C1DE75700BB54FB /* Request */,
 				23351DF31C1DE75700BB54FB /* Response */,
@@ -603,8 +606,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				232299A51C61E09A003E44AB /* PreparedData.swift in Sources */,
-				232299A71C61E36E003E44AB /* HttpParser.swift in Sources */,
+				236FC9C51C7436D100F9E191 /* LimePrepare.swift in Sources */,
+				232299A51C61E09A003E44AB /* PreparedHttp.swift in Sources */,
 				232299A91C622ABA003E44AB /* LimeResponse.swift in Sources */,
 				231489CE1C627E6400D1AF27 /* LimeRequest.swift in Sources */,
 				232299A11C61E048003E44AB /* Lime.swift in Sources */,
@@ -633,6 +636,7 @@
 				906E50B11C11DB9A005937A8 /* File.swift in Sources */,
 				DF380C2B1C744F07001488C9 /* Tcp.swift in Sources */,
 				DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */,
+				236FC9C31C74363500F9E191 /* HttpParser.swift in Sources */,
 				239412121C0C513C001B9B07 /* BodyParser.swift in Sources */,
 				DF380C271C74441B001488C9 /* Handle.swift in Sources */,
 				DF3B81931C1E086400974327 /* Http.swift in Sources */,
