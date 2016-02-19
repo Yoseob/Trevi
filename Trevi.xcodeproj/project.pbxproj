@@ -57,7 +57,6 @@
 		DF380C271C74441B001488C9 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF380C261C74441B001488C9 /* Handle.swift */; };
 		DF380C291C744480001488C9 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF380C281C744480001488C9 /* Stream.swift */; };
 		DF380C2B1C744F07001488C9 /* Tcp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF380C2A1C744F07001488C9 /* Tcp.swift */; };
-		DF380C351C74C278001488C9 /* EchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF380C2C1C746FC0001488C9 /* EchoServer.swift */; };
 		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
 		DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81961C1E08C500974327 /* ConnectedSocket.swift */; };
 		DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81971C1E08C500974327 /* EventHandler.swift */; };
@@ -69,6 +68,7 @@
 		DF5FF2D51C770BDD001C034D /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF5FF2D41C770BDD001C034D /* Event.swift */; };
 		DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF76B5271C30176F005E5391 /* HttpSocket.swift */; };
 		DF940B041C6B6B0C00996FAB /* ListenSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF940B031C6B6B0C00996FAB /* ListenSocket.swift */; };
+		DFA8311E1C777DB0008BCFCE /* Net.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA8311D1C777DB0008BCFCE /* Net.swift */; };
 		DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDFC9EF1C2F582A00862331 /* Timer.swift */; };
 		DFFBC9851C639EB20003575A /* Libuv.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFBC9841C639EB20003575A /* Libuv.swift */; };
 /* End PBXBuildFile section */
@@ -161,7 +161,6 @@
 		DF380C261C74441B001488C9 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
 		DF380C281C744480001488C9 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		DF380C2A1C744F07001488C9 /* Tcp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tcp.swift; sourceTree = "<group>"; };
-		DF380C2C1C746FC0001488C9 /* EchoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EchoServer.swift; sourceTree = "<group>"; };
 		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		DF3B81961C1E08C500974327 /* ConnectedSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedSocket.swift; sourceTree = "<group>"; };
 		DF3B81971C1E08C500974327 /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
@@ -173,6 +172,7 @@
 		DF5FF2D41C770BDD001C034D /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		DF76B5271C30176F005E5391 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
 		DF940B031C6B6B0C00996FAB /* ListenSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenSocket.swift; sourceTree = "<group>"; };
+		DFA8311D1C777DB0008BCFCE /* Net.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Net.swift; sourceTree = "<group>"; };
 		DFDFC9EF1C2F582A00862331 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		DFFBC9841C639EB20003575A /* Libuv.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libuv.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -334,6 +334,7 @@
 				DF76B5271C30176F005E5391 /* HttpSocket.swift */,
 				DF3B81971C1E08C500974327 /* EventHandler.swift */,
 				DFDFC9EF1C2F582A00862331 /* Timer.swift */,
+				DFA8311D1C777DB0008BCFCE /* Net.swift */,
 				DFFBC9841C639EB20003575A /* Libuv.swift */,
 				DF264D451C6CAF6A00C450BA /* Async.swift */,
 				DF5FF2D41C770BDD001C034D /* Event.swift */,
@@ -422,7 +423,6 @@
 		DF0900D71C6ECFBD008CA6F0 /* EchoTest */ = {
 			isa = PBXGroup;
 			children = (
-				DF380C2C1C746FC0001488C9 /* EchoServer.swift */,
 				DF0900D81C6ECFBD008CA6F0 /* AppDelegate.swift */,
 				DF0900DA1C6ECFBD008CA6F0 /* Assets.xcassets */,
 				DF0900DC1C6ECFBD008CA6F0 /* MainMenu.xib */,
@@ -664,6 +664,7 @@
 				236E53E21C1726450076ED36 /* Router.swift in Sources */,
 				906E50B51C121202005937A8 /* System.swift in Sources */,
 				2368EACA1C1C9060007DB033 /* Route.swift in Sources */,
+				DFA8311E1C777DB0008BCFCE /* Net.swift in Sources */,
 				DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */,
 				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,
 				DF940B041C6B6B0C00996FAB /* ListenSocket.swift in Sources */,
@@ -672,7 +673,6 @@
 				236E53E71C1835570076ED36 /* Json.swift in Sources */,
 				2394120D1C0C4A5C001B9B07 /* RoutAble.swift in Sources */,
 				DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */,
-				DF380C351C74C278001488C9 /* EchoServer.swift in Sources */,
 				DF3B81A11C1E08C500974327 /* SocketUtility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
