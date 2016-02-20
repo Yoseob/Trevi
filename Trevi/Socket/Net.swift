@@ -30,22 +30,22 @@ func onClose(handle : uv_handle_ptr) {
     print("Client closed.")
 }
 
-public class Net {
+public class Net: EventEmitter {
     
     let ip : String
-    let port : Int32
+    var port : Int32
     
     let server : Tcp
     
     
-    public init(ip : String = "127.0.0.1", port : Int32) {
+    public init(ip : String = "127.0.0.1") {
         self.ip = ip
-        self.port = port
+        self.port = 8080
         self.server = Tcp()
     }
     
-    public func startServer() -> Bool {
-        
+    public func listen(port: Int32){
+        self.port = port
         self.server.event.onConnection = { client in
             
             onConnection(client)
@@ -70,7 +70,7 @@ public class Net {
         
         uv_run(uv_default_loop(), UV_RUN_DEFAULT)
         
-        return true
+
     }
     
 }

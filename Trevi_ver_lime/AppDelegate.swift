@@ -33,16 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return res.send ("404 Pages Not Found")
         }
         
-    
-        do {
-            
-            try server.createServer ( lime ).listen (8080)
-            
-//            try server.createServer_Test(lime).listen(8080)
-            
-        } catch {
-
-        }
+        server.createServer_Test({ req, res in }).listen(8080)
+     
     }
 
     func applicationWillTerminate ( aNotification: NSNotification ) {

@@ -101,13 +101,13 @@ public class ServerResponse{
 }
 
 
-public class TreviServer: EventEmitter{
+public class TreviServer: Net{
     
     private var parser: HttpParser!
     private var socket: HttpSocket!
     private var requestListener: Any!
     
-    init(requestListener: Any){
+    init(requestListener: Any!){
         super.init()
         self.requestListener = requestListener
         
@@ -180,26 +180,6 @@ public class TreviServer: EventEmitter{
         
     }
     
-    /**
-     * Set port, Begin Server and listen socket
-     *
-     * @param {Int} port
-     * @public
-     */
-    public func listen ( port: __uint16_t ) throws {
-
-        try socket.startListening( port )
-        
-        if true {
-            while true {
-                NSRunLoop.mainRunLoop ().run ()
-            }
-        }
-    }
-    
-    public func stopListening () {
-        socket.disconnect ()
-    }
 }
 
 
@@ -222,7 +202,7 @@ public class Http {
         TEST
         will modify any type that suport routable, CallBack and Adapt TreviServer Model
     */
-    public func createServer_Test ( requestListener: Any... ) -> TreviServer{
+    public func createServer_Test ( requestListener: ( AnyObject, AnyObject )->()) -> Net{
         let server = TreviServer(requestListener: requestListener)
         return server
     }
