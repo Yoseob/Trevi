@@ -44,7 +44,7 @@ public class LimePrepare {
         self.totalLength = 0
     }
     
-    private func shootRequest(stream: Stream){
+    private func shootRequest(stream: SocketStream){
         let httpClient = ClientSocket ( socket: stream )
         //@Danger
         MiddlewareManager.sharedInstance ().handleRequest(prepare.handleRequest(httpClient))
