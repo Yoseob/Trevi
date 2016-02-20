@@ -28,7 +28,7 @@ public class Lime : RoutAble{
         if path == "/"{
             path = ""
         }
-        return makeChildRoute (path, module: module )
+        return makeChildsRoute (path, module: module )
     }
 
     private func registerRequestEventListener() {

@@ -51,7 +51,7 @@ public class RoutAble: Require {
         if path == "/"{
             path = ""
         }
-        return makeChildRoute (path, module: module )
+        return makeChildsRoute (path, module: module )
     }
     /**
      * Set middlewares type of function or middleware.
