@@ -84,17 +84,6 @@ public class Response :Sender{
     
     private var internalStatus : StatusCode = .OK
 
-    public var socket : ClientSocket?
-
-    public var  renderer: Renderer?
-
-    public init(){
-    }
-
-    public init ( socket: ClientSocket ) {
-        self.socket = socket   // if render , send , template func is called call self.socket.send(AnyOnject)
-    }
-    
 
     
     /**
@@ -145,9 +134,7 @@ public class Response :Sender{
             _args = args as! [String:String]
         }
         
-        if let data = renderer?.render ( filename, args: _args ) {
-            bodyString = data;
-        }
+        
         
         //this function called when rand html. forced change content-type = text/html
         // should add control flow  filename.css or filename.js filename.html etc 
@@ -177,10 +164,6 @@ public class Response :Sender{
     public func end () ->Bool{
         let headerData       = prepareHeader ()
         let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
-        socket!.sendData ( sendData )
-        if header[Connection] != "keep-alive"{
-            socket!.close()
-        }
         return true
     }
 

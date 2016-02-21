@@ -8,41 +8,38 @@
 
 import Libuv
 
-var ClientSocketArchiver = [uv_stream_ptr: TestClientSocket]()
+var ClientSocketArchiver = [uv_stream_ptr: Socket]()
 
 
-public class TestClientSocket: EventEmitter{ // should be inherited stream, eventEmitter
+public class Socket: EventEmitter{ // should be inherited stream, eventEmitter
     public var handle: uv_stream_ptr!
     public var ondata: (( uv_buf_const_ptr, Int )->Void)?
-    public init(handle : uv_stream_ptr){
+    public var onend: ((Void)->(Void))?
+    
+    public init(handle: uv_stream_ptr){
         self.handle = handle
     }
     
+    public func close(){
+        Handle.close(uv_handle_ptr(handle))
+    }
 }
 
 
-func onConnection(handle : uv_stream_ptr) {
-    let addressInfo = Tcp.getPeerName(uv_tcp_ptr(handle))
-    let (ip, port) = getEndpointFromSocketAddress(addressInfo)!
+func onConnection(handle : uv_stream_ptr , _ EE: EventEmitter) {
+//    let addressInfo = Tcp.getPeerName(uv_tcp_ptr(handle))
+//    let (ip, port) = getEndpointFromSocketAddress(addressInfo)!
     
-    print("New client!  ip : \(ip), port : \(port).")
+    let socket = Socket(handle: handle)
+    ClientSocketArchiver[handle] = socket
+    EE.emit("connection", socket)
+//    print("New client!  ip : \(ip), port : \(port).")
 }
 
 func onRead(handle : uv_stream_ptr, nread: Int, bufs: uv_buf_const_ptr) -> Void {
-
-    
     let socket = ClientSocketArchiver[handle]
     socket?.ondata!(bufs,nread)
-//    print(blockToString(bufs.memory.base, length: nread))
-//    let result = "123123123"
-//    if let cString = result.cStringUsingEncoding(NSUTF8StringEncoding) {
-//        let buf = UnsafeMutablePointer<uv_buf_t>.alloc(1)
-//        buf.memory = uv_buf_init(UnsafeMutablePointer<Int8>(cString), UInt32(cString.count))
-//
-//    }
-//        Tcp.doWrite(bufs, count: UInt32(nread), sendHandle: handle)
-//    
-//    
+
 }
 
 
@@ -56,10 +53,11 @@ func write(string: String, handle : uv_stream_ptr) {
 }
 
 func onClose(handle : uv_handle_ptr) {
-//    ClientSocketArchiver.removeValueForKey(<#T##key: Hashable##Hashable#>)
-    //remove what
     print("Client closed.")
-    
+    let socket = ClientSocketArchiver[uv_stream_ptr(handle)]
+    ClientSocketArchiver.removeValueForKey(uv_stream_ptr(handle))
+    socket!.onend!()
+
 }
 
 
@@ -80,22 +78,15 @@ public class Net: EventEmitter {
         self.server = Tcp()
     }
     
-    
-    public func close(){
-        
-    }
-    
+   
     public func listen(port: Int32){
         self.port = port
+        
+        self.emit("listening")
+        
         self.server.event.onConnection = { client in
             
-            onConnection(client)
-            
-            
-            let socket = TestClientSocket(handle: client)
-            ClientSocketArchiver[client] = socket
-            self.emit("connection", socket)
-            
+            onConnection(client, self)
             // Set client event
             if let wrap = Handle.dictionary[uv_handle_ptr(client)] {
                 
@@ -107,16 +98,8 @@ public class Net: EventEmitter {
         Tcp.bind(self.server.tcpHandle, address : self.ip, port: self.port)
         
         Tcp.listen(uv_stream_ptr(self.server.tcpHandle))
-        
-        
-        let addressInfo = Tcp.getSocketName(self.server.tcpHandle)
-        let (ip, port) = getEndpointFromSocketAddress(addressInfo)!
-        
-        print("Http Server starts ip : \(ip), port : \(port).")
-        
+    
         uv_run(uv_default_loop(), UV_RUN_DEFAULT)
-        
-
     }
     
 }

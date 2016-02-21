@@ -199,7 +199,7 @@ extension Tcp {
             #endif
             
             if status == -1 {
-                log.error("Failed to set socket option : \(option), value : \(buffer)")
+                print("Failed to set socket option : \(option), value : \(buffer)")
                 return false
             }
         }
@@ -219,7 +219,7 @@ extension Tcp {
         #endif
         
         if status == -1 {
-            log.error("Failed to get socket option name : \(name)")
+            print("Failed to get socket option name : \(name)")
             return status
         }
         

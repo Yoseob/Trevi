@@ -24,7 +24,7 @@ public struct HeaderInfo{
 public class HttpParser{
     
     public var incoming: IncomingMessage!
-    public var socket: TestClientSocket!
+    public var socket: Socket!
     
     public var onHeader: ((Void) -> (Void))?
     public var onHeaderComplete: ((HeaderInfo) -> Void)?
@@ -97,7 +97,6 @@ public class HttpParser{
             }else{
                 trace += fields[_idx]
             }
-//            print("\(fields[_idx]) , \(fields[_idx].length())")
         }
     }
     

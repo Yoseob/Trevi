@@ -35,10 +35,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         server.createServer_Test({ req, res in
             
-            print("hello new trevi \(req.path)")
+            for (k,v) in req.header {
+                print("\(k) : \(v)")
+            }
             
-            res.write("hello new trevi")
+            res.write(NSData(contentsOfFile:NSBundle.mainBundle().pathForResource("sky", ofType: "jpeg")!)!)
             res.end()
+            
         
         }).listen(8080)
      

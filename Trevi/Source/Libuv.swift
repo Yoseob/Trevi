@@ -111,30 +111,6 @@ public class Libuv {
         self.acceptCallback = {
             pollPtr, first, second in
             
-            var pfd : uv_os_fd_t = uv_os_fd_t()
-            uv_fileno(UnsafeMutablePointer<uv_handle_t>(pollPtr), &pfd)
-            
-            var caddr = IPv4()
-            var caddrLen = socklen_t(caddr.length())
-            
-            let cfd = withUnsafeMutablePointer(&caddr) {
-                ptr -> Int32 in
-                let addrPtr = UnsafeMutablePointer<sockaddr>(ptr)
-                
-                #if os(Linux)
-                    return SwiftGlibc.accept(pfd, addrPtr, &caddrLen)
-                #else
-                    return Darwin.accept(pfd, addrPtr, &caddrLen)
-                #endif
-            }
-            
-            let cSocket : ConnectedSocket! = ConnectedSocket(fd: cfd, address: caddr)
-            
-            print("New client fd : \(cfd), address : \(cSocket.address.ip())")
-            
-            
-            let handle : UnsafeMutablePointer<uv_tcp_t> =  getTcpHandle(cfd)
-            readstart(UnsafeMutablePointer<uv_stream_t>(handle), alloc_cb: alloc_buffer, read_cb: echo_read)
             
         }
         
@@ -143,7 +119,7 @@ public class Libuv {
             self.runLoop()
             return true
         }
-        log.error("Libuv read callback is not set. Please set the read callback before execute this function.")
+        
         return false
     }
     
@@ -171,7 +147,6 @@ public class Libuv {
             return true
         }
         
-        log.error("Libuv read callback is not set. Please set the read callback before execute this function.")
         return false
     }
     

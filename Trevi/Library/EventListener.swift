@@ -10,11 +10,11 @@ import Foundation
 
 
 public typealias Listener  = (EventInfo) -> Void
-public typealias SocketStream = ConnectedSocket
+
 
 public class EventInfo{
     public init(){}
-    public var stream : SocketStream?
+
     public var params : ReceivedParams?
 }
 

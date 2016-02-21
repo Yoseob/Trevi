@@ -6,7 +6,7 @@
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
 import Libuv
-import Foundation
+
 
 public typealias HttpCallback = ( ( IncomingMessage, ServerResponse ) -> Void )
 
@@ -16,6 +16,7 @@ public typealias CallBack = ( Request, Response ) -> Bool // will remove next
 
 public typealias emitable = (AnyObject) -> Void
 
+public typealias noParamsEmitable = (Void) -> Void
 
 
 public class EventEmitter{
@@ -29,8 +30,7 @@ public class EventEmitter{
     
     func emit(name: String, _ arg : AnyObject...){
         let emitter = events[name]
-        
-        
+
         switch emitter {
         case let ra as RoutAble:
             if arg.count == 2{
@@ -47,12 +47,14 @@ public class EventEmitter{
             }
             break
         case let cb as emitable:
-            
             if arg.count == 1 {
                 cb(arg.first!)
             }else {
                 cb(arg)
             }
+            break
+        case let cb as noParamsEmitable:
+            cb()
             break
         default:
             
@@ -75,13 +77,12 @@ func write(data: NSData, handle : uv_stream_ptr) {
     let buf = UnsafeMutablePointer<uv_buf_t>.alloc(1)
     buf.memory = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), UInt32(data.length))
     uv_write(req, handle, UnsafePointer<uv_buf_t>(buf), 1, writeAfter)
-    
 }
 
 public class OutgoingMessage: httpStream{
     
-    var socket: TestClientSocket!
-    public var connection: TestClientSocket!
+    var socket: Socket!
+    public var connection: Socket!
     
     public var header: [String: String]!
     public var shouldKeepAlive = false
@@ -93,8 +94,12 @@ public class OutgoingMessage: httpStream{
     
     public func _end(data: NSData, encoding: Any! = nil){
         write(data, handle: self.socket.handle)
-    }
+        
+        if shouldKeepAlive == false {
+            self.socket.close()
+        }
 
+    }
 }
 
 
@@ -109,6 +114,8 @@ public class ServerResponse: OutgoingMessage{
     private var headerData: String?
     private var _body: String?
     
+    private var _bodyData = NSData()
+    
     private var testResString = ""
     
     public var status: Int!{
@@ -117,7 +124,7 @@ public class ServerResponse: OutgoingMessage{
         }
     }
     
-    public init(socket: TestClientSocket) {
+    public init(socket: Socket) {
         super.init(socket: socket)
         self._body = ""
         testResString = ""
@@ -126,8 +133,9 @@ public class ServerResponse: OutgoingMessage{
     public func end(){
         let hData: NSData = self.prepareHeader()
         let result: NSMutableData = NSMutableData(data: hData)
-        result.appendData( _body!.dataUsingEncoding ( NSUTF8StringEncoding )!)
-        testResString += _body!
+//        result.appendData( _body!.dataUsingEncoding ( NSUTF8StringEncoding )!)
+        result.appendData(_bodyData)
+//        testResString += _body!
         
         print(testResString)
         
@@ -139,9 +147,10 @@ public class ServerResponse: OutgoingMessage{
     }
     
     //will move outgoingMessage
-    public func write(data: String, encoding: String! = nil){
-        header[Content_Type] = "text/plain;charset=utf-8"
-        self._body? += data
+    public func write(data: NSData, encoding: String! = nil){
+        header[Content_Type] = "image/jpeg" //"text/plain;charset=utf-8"
+//        self._body? += data
+        self._bodyData = data
         status = 200
     }
 
@@ -156,9 +165,10 @@ public class ServerResponse: OutgoingMessage{
         header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
         
-        if let body = _body  {
-            header[Content_Length] = "\(body.characters.count)" // replace bodyString length
-        }
+        header[Content_Length] = "\(_bodyData.length)" // replace bodyString length
+//        if let body = _bodyData  {
+//            header[Content_Length] = "\(_bodyData.length)" // replace bodyString length
+//        }
         
         var headerString = headerData
         if headerString == nil{
@@ -166,7 +176,7 @@ public class ServerResponse: OutgoingMessage{
         }
 
         headerString! += dictionaryToString ( header )
-        
+    
         testResString += headerString!
         return headerString!.dataUsingEncoding ( NSUTF8StringEncoding )!
     }
@@ -191,9 +201,9 @@ public class ServerResponse: OutgoingMessage{
 
 public class IncomingMessage: httpStream{
     
-    public var socket: TestClientSocket!
+    public var socket: Socket!
     
-    public var connection: TestClientSocket!
+    public var connection: Socket!
     
     // HTTP header
     public var header: [ String: String ]!
@@ -243,7 +253,7 @@ public class IncomingMessage: httpStream{
     public var statusCode: String!
     public var client: AnyObject!
     
-    init(socket: TestClientSocket){
+    init(socket: Socket){
         self.socket = socket
         self.connection = socket
         self.client = socket
@@ -254,7 +264,7 @@ public class IncomingMessage: httpStream{
 public class TreviServer: Net{
     
     private var parser: HttpParser!
-    private var socket: HttpSocket!
+
     private var requestListener: Any!
     
     init(requestListener: Any!){
@@ -269,12 +279,15 @@ public class TreviServer: Net{
     }
     
     func onlistening(){
+        
+        
+        print("Http Server starts ip : \(ip), port : \(port).")
+        
         switch requestListener {
         case let ra as RoutAble:
             ra.makeChildRoute(ra.superPath!, module:ra)
             break
         case let cb as HttpCallback:
-            print(cb)
             break
         default:
             break
@@ -282,11 +295,9 @@ public class TreviServer: Net{
     }
     
     
-    
-    func connectionListener(sock: AnyObject /* this socket client socket or stream */){
+    func connectionListener(sock: AnyObject){
 
-        let socket = sock as! TestClientSocket
-        
+        let socket = sock as! Socket
         if parser == nil {
             parser = HttpParser()
             parser.socket = socket
@@ -296,23 +307,24 @@ public class TreviServer: Net{
         socket.ondata = { buf, nread in
             self.parser.execute(buf,length: nread)
         }
-        
-        func onend(){
-            parser = nil
+    
+        socket.onend = {
+            self.parser = nil
         }
+
         
         parser.onIncoming = { req in
             
-            
             let res = ServerResponse(socket: req.socket)
-            
             res.socket = req.socket
+            res.connection = req.socket
             
-            if let connection = req.header[Connection] where Connection == "keep-alive" {
+            
+            if let connection = req.header[Connection] where connection == "keep-alive" {
+                
                 res.header[Connection] = connection
                 res.shouldKeepAlive = true
             }
-            
             self.emit("request", req ,res)
         }
         
@@ -353,7 +365,7 @@ public class TreviServer: Net{
 
 public class Http {
     
-    private var socket : HttpSocket!
+
     private let mwManager = MiddlewareManager.sharedInstance ()
     private var listener : EventListener!
     
@@ -384,7 +396,7 @@ public class Http {
      */
     public func createServer ( requireModule: RoutAble... ) -> Http {
         for rm in requireModule {
-            socket = HttpSocket(rm.eventListener!)
+
             rm.makeChildsRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }
@@ -408,7 +420,7 @@ public class Http {
      */
     public func createServer ( callBacks: HttpCallback... ) -> Http {
         receivedRequestCallback()
-        socket = HttpSocket(listener)
+
         for cb in callBacks {
             mwManager.enabledMiddlwareList.append ( cb )
         }
@@ -425,25 +437,7 @@ public class Http {
         mwManager.enabledMiddlwareList.append(mw)
     }
     
-    /**
-     * Set port, Begin Server and listen socket
-     *
-     * @param {Int} port
-     * @public
-     */
-    public func listen ( port: __uint16_t ) throws {
-        try socket.startListening( port )
-                
-        if true {
-            while true {
-                NSRunLoop.mainRunLoop ().run ()
-            }
-        }
-    }
 
-    public func stopListening () {
-        socket.disconnect ()
-    }
 }
 
 
@@ -466,7 +460,7 @@ extension Http{
                 req = Request(data)
                 
                 if let req = req {
-                    let res = Response( socket: ClientSocket ( socket: info.stream! ) )
+                    let res = Response()
                     res.method = req.method
                     if let connection = req.header[Connection]{
                         res.header[Connection] = connection
