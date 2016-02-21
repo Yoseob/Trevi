@@ -11,7 +11,7 @@ import Libuv
 var ClientSocketArchiver = [uv_stream_ptr: Socket]()
 
 
-public class Socket: EventEmitter{ // should be inherited stream, eventEmitter
+public class Socket: EventEmitter { // should be inherited stream, eventEmitter
     public var handle: uv_stream_ptr!
     public var ondata: (( uv_buf_const_ptr, Int )->Void)?
     public var onend: ((Void)->(Void))?
@@ -45,6 +45,7 @@ func onRead(handle : uv_stream_ptr, nread: Int, bufs: uv_buf_const_ptr) -> Void 
 
 func write(string: String, handle : uv_stream_ptr) {
     let req : uv_write_ptr = uv_write_ptr.alloc(1)
+ 
     if let cString = string.cStringUsingEncoding(NSUTF8StringEncoding) {
         let buf = UnsafeMutablePointer<uv_buf_t>.alloc(1)
         buf.memory = uv_buf_init(UnsafeMutablePointer<Int8>(cString), UInt32(cString.count))
@@ -55,13 +56,10 @@ func write(string: String, handle : uv_stream_ptr) {
 func onClose(handle : uv_handle_ptr) {
     print("Client closed.")
     let socket = ClientSocketArchiver[uv_stream_ptr(handle)]
+ 
     ClientSocketArchiver.removeValueForKey(uv_stream_ptr(handle))
     socket!.onend!()
-
 }
-
-
-
 
 
 public class Net: EventEmitter {
@@ -70,7 +68,6 @@ public class Net: EventEmitter {
     var port : Int32
     
     let server : Tcp
-    
     
     public init(ip : String = "127.0.0.1") {
         self.ip = ip

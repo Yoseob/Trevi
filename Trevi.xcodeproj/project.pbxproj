@@ -59,7 +59,7 @@
 		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
 		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
 		DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; };
-		DF0900F11C6EDD3F008CA6F0 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0900EF1C6EDD3F008CA6F0 /* libuv.a */; };
+		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,8 +150,8 @@
 		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF0900EF1C6EDD3F008CA6F0 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
-		DF0900F01C6EDD3F008CA6F0 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
+		DF732EE01C799737000B12E8 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,7 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF0900F11C6EDD3F008CA6F0 /* libuv.a in Frameworks */,
+				DF732EE71C799737000B12E8 /* libuv.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,14 +231,15 @@
 		2354414F1C79800300E90A97 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				235441501C79800300E90A97 /* Async.swift */,
+				DF732EDE1C799737000B12E8 /* Libuv */,
 				235441511C79800300E90A97 /* Event.swift */,
 				235441521C79800300E90A97 /* Handle.swift */,
-				235441531C79800300E90A97 /* Libuv.swift */,
-				235441541C79800300E90A97 /* LibuvUtility.swift */,
-				235441551C79800300E90A97 /* SocketUtility.swift */,
 				235441561C79800300E90A97 /* Stream.swift */,
 				235441571C79800300E90A97 /* Tcp.swift */,
+				235441501C79800300E90A97 /* Async.swift */,
+				235441541C79800300E90A97 /* LibuvUtility.swift */,
+				235441551C79800300E90A97 /* SocketUtility.swift */,
+				235441531C79800300E90A97 /* Libuv.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -269,7 +270,6 @@
 			children = (
 				2354414F1C79800300E90A97 /* Source */,
 				2354413A1C797FFA00E90A97 /* Library */,
-				DF0900EE1C6EDD3F008CA6F0 /* Libuv */,
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
 				239412091C0C46CE001B9B07 /* Utility */,
 				239411D61C0C2DA3001B9B07 /* Trevi.h */,
@@ -347,11 +347,11 @@
 			path = views;
 			sourceTree = "<group>";
 		};
-		DF0900EE1C6EDD3F008CA6F0 /* Libuv */ = {
+		DF732EDE1C799737000B12E8 /* Libuv */ = {
 			isa = PBXGroup;
 			children = (
-				DF0900EF1C6EDD3F008CA6F0 /* libuv.a */,
-				DF0900F01C6EDD3F008CA6F0 /* module.modulemap */,
+				DF732EDF1C799737000B12E8 /* libuv.a */,
+				DF732EE01C799737000B12E8 /* module.modulemap */,
 			);
 			path = Libuv;
 			sourceTree = "<group>";
@@ -771,12 +771,15 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Trevi/Libuv",
+					"$(PROJECT_DIR)/Trevi/Source/Libuv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Source/Libuv";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -799,11 +802,14 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Trevi/Libuv",
+					"$(PROJECT_DIR)/Trevi/Source/Libuv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Source/Libuv";
 			};
 			name = Release;
 		};
