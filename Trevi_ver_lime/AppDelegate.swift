@@ -33,7 +33,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return res.send ("404 Pages Not Found")
         }
         
-        server.createServer_Test({ req, res in }).listen(8080)
+        server.createServer_Test({ req, res in
+            
+            print("hello new trevi \(req.path)")
+            
+            res.write("hello new trevi")
+            res.end()
+        
+        }).listen(8080)
      
     }
 
