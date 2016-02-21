@@ -33,14 +33,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             res.status = 404
             return res.send ("404 Pages Not Found")
         }
-    
-        do {
+        
+        server.createServer_Test({ req, res in
             
-            try server.createServer ( lime ).listen (8080)
+            for (k,v) in req.header {
+                print("\(k) : \(v)")
+            }
             
-        } catch {
-
-        }
+            res.write(NSData(contentsOfFile:NSBundle.mainBundle().pathForResource("sky", ofType: "jpeg")!)!)
+            res.end()
+            
+        
+        }).listen(8080)
+     
     }
 
     func applicationWillTerminate ( aNotification: NSNotification ) {

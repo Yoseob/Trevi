@@ -12,29 +12,40 @@
 		232299981C61E00D003E44AB /* Lime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 232299911C61E00D003E44AB /* Lime.framework */; };
 		232299991C61E00D003E44AB /* Lime.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 232299911C61E00D003E44AB /* Lime.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		232299A11C61E048003E44AB /* Lime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322999E1C61E048003E44AB /* Lime.swift */; };
-		232299A51C61E09A003E44AB /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A41C61E09A003E44AB /* PreparedData.swift */; };
-		232299A71C61E36E003E44AB /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A61C61E36E003E44AB /* HttpParser.swift */; };
+		232299A51C61E09A003E44AB /* PreparedHttp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A41C61E09A003E44AB /* PreparedHttp.swift */; };
 		232299A91C622ABA003E44AB /* LimeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A81C622ABA003E44AB /* LimeResponse.swift */; };
-		23351DF51C1DE75700BB54FB /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DF21C1DE75700BB54FB /* Request.swift */; };
-		23351DF61C1DE75700BB54FB /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DF41C1DE75700BB54FB /* Response.swift */; };
-		23351DF81C1DE78F00BB54FB /* HttpProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DF71C1DE78F00BB54FB /* HttpProtocol.swift */; };
-		23351DFC1C1DE7CA00BB54FB /* Require.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23351DFA1C1DE7CA00BB54FB /* Require.swift */; };
-		2368EACA1C1C9060007DB033 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2368EAC91C1C9060007DB033 /* Route.swift */; };
+		235441451C797FFA00E90A97 /* EventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413B1C797FFA00E90A97 /* EventListener.swift */; };
+		235441461C797FFA00E90A97 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413C1C797FFA00E90A97 /* Http.swift */; };
+		235441471C797FFA00E90A97 /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413D1C797FFA00E90A97 /* HttpParser.swift */; };
+		235441481C797FFA00E90A97 /* HttpProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413E1C797FFA00E90A97 /* HttpProtocol.swift */; };
+		235441491C797FFA00E90A97 /* Net.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413F1C797FFA00E90A97 /* Net.swift */; };
+		2354414A1C797FFA00E90A97 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441401C797FFA00E90A97 /* Request.swift */; };
+		2354414B1C797FFA00E90A97 /* Require.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441411C797FFA00E90A97 /* Require.swift */; };
+		2354414C1C797FFA00E90A97 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441421C797FFA00E90A97 /* Response.swift */; };
+		2354414D1C797FFA00E90A97 /* RoutAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441431C797FFA00E90A97 /* RoutAble.swift */; };
+		2354414E1C797FFA00E90A97 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441441C797FFA00E90A97 /* Route.swift */; };
+		235441581C79800300E90A97 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441501C79800300E90A97 /* Async.swift */; };
+		235441591C79800300E90A97 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441511C79800300E90A97 /* Event.swift */; };
+		2354415A1C79800300E90A97 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441521C79800300E90A97 /* Handle.swift */; };
+		2354415B1C79800300E90A97 /* Libuv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441531C79800300E90A97 /* Libuv.swift */; };
+		2354415C1C79800300E90A97 /* LibuvUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441541C79800300E90A97 /* LibuvUtility.swift */; };
+		2354415D1C79800300E90A97 /* SocketUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441551C79800300E90A97 /* SocketUtility.swift */; };
+		2354415E1C79800300E90A97 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441561C79800300E90A97 /* Stream.swift */; };
+		2354415F1C79800300E90A97 /* Tcp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441571C79800300E90A97 /* Tcp.swift */; };
 		236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D61C12198D0076ED36 /* MiddlewareManager.swift */; };
 		236E53D91C1235130076ED36 /* Favicon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D81C1235130076ED36 /* Favicon.swift */; };
 		236E53E21C1726450076ED36 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E11C1726450076ED36 /* Router.swift */; };
 		236E53E71C1835570076ED36 /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E61C1835570076ED36 /* Json.swift */; };
+		236FC9C51C7436D100F9E191 /* LimePrepare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236FC9C41C7436D100F9E191 /* LimePrepare.swift */; };
 		239411D71C0C2DA3001B9B07 /* Trevi.h in Headers */ = {isa = PBXBuildFile; fileRef = 239411D61C0C2DA3001B9B07 /* Trevi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E41C0C2E19001B9B07 /* AppDelegate.swift */; };
 		239411E71C0C2E19001B9B07 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E61C0C2E19001B9B07 /* ViewController.swift */; };
 		239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 239411E81C0C2E19001B9B07 /* Assets.xcassets */; };
 		239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239411EA1C0C2E19001B9B07 /* Main.storyboard */; };
 		2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
-		2394120D1C0C4A5C001B9B07 /* RoutAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120C1C0C4A5C001B9B07 /* RoutAble.swift */; };
 		239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120F1C0C4FEB001B9B07 /* Middleware.swift */; };
 		239412121C0C513C001B9B07 /* BodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412111C0C513C001B9B07 /* BodyParser.swift */; };
 		239412141C0DECC2001B9B07 /* Root.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412131C0DECC2001B9B07 /* Root.swift */; };
-		23961CDC1C5F5C9300F8EF64 /* EventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23961CDB1C5F5C9300F8EF64 /* EventListener.swift */; };
 		23973D611C25AB3B00FBB8E7 /* sky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 23973D601C25AB3B00FBB8E7 /* sky.jpeg */; };
 		23D2F39E1C1DA4A000F0C784 /* end.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2F3971C1DA4A000F0C784 /* end.swift */; };
 		23D2F39F1C1DA4A000F0C784 /* Index.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D2F3981C1DA4A000F0C784 /* Index.swift */; };
@@ -47,26 +58,8 @@
 		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
 		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
 		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
-		AC1C68451C6CEF8300682F7D /* libuv.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1C683B1C6CEF8300682F7D /* libuv.1.dylib */; };
-		AC1C68461C6CEF8300682F7D /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1C683C1C6CEF8300682F7D /* libuv.a */; };
-		AC1C68471C6CEF8300682F7D /* uv-darwin.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C683E1C6CEF8300682F7D /* uv-darwin.h */; };
-		AC1C68481C6CEF8300682F7D /* uv-errno in Frameworks */ = {isa = PBXBuildFile; fileRef = AC1C683F1C6CEF8300682F7D /* uv-errno */; };
-		AC1C68491C6CEF8300682F7D /* uv-errno.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68401C6CEF8300682F7D /* uv-errno.h */; };
-		AC1C684A1C6CEF8300682F7D /* uv-threadpool.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68411C6CEF8300682F7D /* uv-threadpool.h */; };
-		AC1C684B1C6CEF8300682F7D /* uv-unix.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68421C6CEF8300682F7D /* uv-unix.h */; };
-		AC1C684C1C6CEF8300682F7D /* uv-version.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68431C6CEF8300682F7D /* uv-version.h */; };
-		AC1C684D1C6CEF8300682F7D /* uv.h in Headers */ = {isa = PBXBuildFile; fileRef = AC1C68441C6CEF8300682F7D /* uv.h */; };
-		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
-		DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81961C1E08C500974327 /* ConnectedSocket.swift */; };
-		DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81971C1E08C500974327 /* EventHandler.swift */; };
-		DF3B819E1C1E08C500974327 /* ListenSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81981C1E08C500974327 /* ListenSocket.swift */; };
-		DF3B819F1C1E08C500974327 /* LogFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81991C1E08C500974327 /* LogFactory.swift */; };
-		DF3B81A01C1E08C500974327 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B819A1C1E08C500974327 /* Socket.swift */; };
-		DF3B81A11C1E08C500974327 /* SocketUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B819B1C1E08C500974327 /* SocketUtility.swift */; };
-		DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A21C1E092400974327 /* InetAddress.swift */; };
-		DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A41C1E098400974327 /* UnixBridge.c */; };
-		DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF76B5271C30176F005E5391 /* HttpSocket.swift */; };
-		DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDFC9EF1C2F582A00862331 /* Timer.swift */; };
+		DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; };
+		DF0900F11C6EDD3F008CA6F0 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0900EF1C6EDD3F008CA6F0 /* libuv.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,18 +100,31 @@
 		232299931C61E00D003E44AB /* Lime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lime.h; sourceTree = "<group>"; };
 		232299951C61E00D003E44AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2322999E1C61E048003E44AB /* Lime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lime.swift; sourceTree = "<group>"; };
-		232299A41C61E09A003E44AB /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
-		232299A61C61E36E003E44AB /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
+		232299A41C61E09A003E44AB /* PreparedHttp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedHttp.swift; sourceTree = "<group>"; };
 		232299A81C622ABA003E44AB /* LimeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimeResponse.swift; sourceTree = "<group>"; };
-		23351DF21C1DE75700BB54FB /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
-		23351DF41C1DE75700BB54FB /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
-		23351DF71C1DE78F00BB54FB /* HttpProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpProtocol.swift; sourceTree = "<group>"; };
-		23351DFA1C1DE7CA00BB54FB /* Require.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Require.swift; sourceTree = "<group>"; };
-		2368EAC91C1C9060007DB033 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		2354413B1C797FFA00E90A97 /* EventListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListener.swift; sourceTree = "<group>"; };
+		2354413C1C797FFA00E90A97 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
+		2354413D1C797FFA00E90A97 /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
+		2354413E1C797FFA00E90A97 /* HttpProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpProtocol.swift; sourceTree = "<group>"; };
+		2354413F1C797FFA00E90A97 /* Net.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Net.swift; sourceTree = "<group>"; };
+		235441401C797FFA00E90A97 /* Request.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
+		235441411C797FFA00E90A97 /* Require.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Require.swift; sourceTree = "<group>"; };
+		235441421C797FFA00E90A97 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		235441431C797FFA00E90A97 /* RoutAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutAble.swift; sourceTree = "<group>"; };
+		235441441C797FFA00E90A97 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
+		235441501C79800300E90A97 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		235441511C79800300E90A97 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		235441521C79800300E90A97 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
+		235441531C79800300E90A97 /* Libuv.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libuv.swift; sourceTree = "<group>"; };
+		235441541C79800300E90A97 /* LibuvUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibuvUtility.swift; sourceTree = "<group>"; };
+		235441551C79800300E90A97 /* SocketUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketUtility.swift; sourceTree = "<group>"; };
+		235441561C79800300E90A97 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		235441571C79800300E90A97 /* Tcp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tcp.swift; sourceTree = "<group>"; };
 		236E53D61C12198D0076ED36 /* MiddlewareManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiddlewareManager.swift; sourceTree = "<group>"; };
 		236E53D81C1235130076ED36 /* Favicon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favicon.swift; sourceTree = "<group>"; };
 		236E53E11C1726450076ED36 /* Router.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		236E53E61C1835570076ED36 /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
+		236FC9C41C7436D100F9E191 /* LimePrepare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimePrepare.swift; sourceTree = "<group>"; };
 		239411D31C0C2DA3001B9B07 /* Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		239411D61C0C2DA3001B9B07 /* Trevi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Trevi.h; sourceTree = "<group>"; };
 		239411D81C0C2DA3001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -129,11 +135,9 @@
 		239411EB1C0C2E19001B9B07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		239411ED1C0C2E19001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
-		2394120C1C0C4A5C001B9B07 /* RoutAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutAble.swift; sourceTree = "<group>"; };
 		2394120F1C0C4FEB001B9B07 /* Middleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
 		239412111C0C513C001B9B07 /* BodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParser.swift; sourceTree = "<group>"; };
 		239412131C0DECC2001B9B07 /* Root.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Root.swift; sourceTree = "<group>"; };
-		23961CDB1C5F5C9300F8EF64 /* EventListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListener.swift; sourceTree = "<group>"; };
 		23973D601C25AB3B00FBB8E7 /* sky.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sky.jpeg; sourceTree = "<group>"; };
 		23D2F3971C1DA4A000F0C784 /* end.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = end.swift; sourceTree = "<group>"; };
 		23D2F3981C1DA4A000F0C784 /* Index.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Index.swift; sourceTree = "<group>"; };
@@ -145,27 +149,9 @@
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
-		AC1C683B1C6CEF8300682F7D /* libuv.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libuv.1.dylib; sourceTree = "<group>"; };
-		AC1C683C1C6CEF8300682F7D /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
-		AC1C683D1C6CEF8300682F7D /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		AC1C683E1C6CEF8300682F7D /* uv-darwin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-darwin.h"; sourceTree = "<group>"; };
-		AC1C683F1C6CEF8300682F7D /* uv-errno */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = "uv-errno"; sourceTree = "<group>"; };
-		AC1C68401C6CEF8300682F7D /* uv-errno.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-errno.h"; sourceTree = "<group>"; };
-		AC1C68411C6CEF8300682F7D /* uv-threadpool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-threadpool.h"; sourceTree = "<group>"; };
-		AC1C68421C6CEF8300682F7D /* uv-unix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-unix.h"; sourceTree = "<group>"; };
-		AC1C68431C6CEF8300682F7D /* uv-version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "uv-version.h"; sourceTree = "<group>"; };
-		AC1C68441C6CEF8300682F7D /* uv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uv.h; sourceTree = "<group>"; };
-		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
-		DF3B81961C1E08C500974327 /* ConnectedSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedSocket.swift; sourceTree = "<group>"; };
-		DF3B81971C1E08C500974327 /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
-		DF3B81981C1E08C500974327 /* ListenSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenSocket.swift; sourceTree = "<group>"; };
-		DF3B81991C1E08C500974327 /* LogFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFactory.swift; sourceTree = "<group>"; };
-		DF3B819A1C1E08C500974327 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
-		DF3B819B1C1E08C500974327 /* SocketUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketUtility.swift; sourceTree = "<group>"; };
-		DF3B81A21C1E092400974327 /* InetAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InetAddress.swift; sourceTree = "<group>"; };
-		DF3B81A41C1E098400974327 /* UnixBridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UnixBridge.c; sourceTree = "<group>"; };
-		DF76B5271C30176F005E5391 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
-		DFDFC9EF1C2F582A00862331 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF0900EF1C6EDD3F008CA6F0 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
+		DF0900F01C6EDD3F008CA6F0 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,9 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC1C68481C6CEF8300682F7D /* uv-errno in Frameworks */,
-				AC1C68461C6CEF8300682F7D /* libuv.a in Frameworks */,
-				AC1C68451C6CEF8300682F7D /* libuv.1.dylib in Frameworks */,
+				DF0900F11C6EDD3F008CA6F0 /* libuv.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +175,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				232299981C61E00D003E44AB /* Lime.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF0900D31C6ECFBD008CA6F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,49 +202,45 @@
 		2322999D1C61E048003E44AB /* Lime */ = {
 			isa = PBXGroup;
 			children = (
-				232299A61C61E36E003E44AB /* HttpParser.swift */,
-				232299A41C61E09A003E44AB /* PreparedData.swift */,
+				232299A41C61E09A003E44AB /* PreparedHttp.swift */,
 				2322999E1C61E048003E44AB /* Lime.swift */,
 				232299A81C622ABA003E44AB /* LimeResponse.swift */,
 				231489CD1C627E6400D1AF27 /* LimeRequest.swift */,
+				236FC9C41C7436D100F9E191 /* LimePrepare.swift */,
 			);
 			path = Lime;
 			sourceTree = "<group>";
 		};
-		23351DF01C1DE75700BB54FB /* Http */ = {
+		2354413A1C797FFA00E90A97 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				23961CDA1C5F5C5D00F8EF64 /* StreamListener */,
-				DF3B81901C1E086400974327 /* Http.swift */,
-				23351DF71C1DE78F00BB54FB /* HttpProtocol.swift */,
-				23351DF11C1DE75700BB54FB /* Request */,
-				23351DF31C1DE75700BB54FB /* Response */,
+				2354413B1C797FFA00E90A97 /* EventListener.swift */,
+				2354413C1C797FFA00E90A97 /* Http.swift */,
+				2354413D1C797FFA00E90A97 /* HttpParser.swift */,
+				2354413E1C797FFA00E90A97 /* HttpProtocol.swift */,
+				2354413F1C797FFA00E90A97 /* Net.swift */,
+				235441401C797FFA00E90A97 /* Request.swift */,
+				235441411C797FFA00E90A97 /* Require.swift */,
+				235441421C797FFA00E90A97 /* Response.swift */,
+				235441431C797FFA00E90A97 /* RoutAble.swift */,
+				235441441C797FFA00E90A97 /* Route.swift */,
 			);
-			path = Http;
+			path = Library;
 			sourceTree = "<group>";
 		};
-		23351DF11C1DE75700BB54FB /* Request */ = {
+		2354414F1C79800300E90A97 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				23351DF21C1DE75700BB54FB /* Request.swift */,
+				235441501C79800300E90A97 /* Async.swift */,
+				235441511C79800300E90A97 /* Event.swift */,
+				235441521C79800300E90A97 /* Handle.swift */,
+				235441531C79800300E90A97 /* Libuv.swift */,
+				235441541C79800300E90A97 /* LibuvUtility.swift */,
+				235441551C79800300E90A97 /* SocketUtility.swift */,
+				235441561C79800300E90A97 /* Stream.swift */,
+				235441571C79800300E90A97 /* Tcp.swift */,
 			);
-			path = Request;
-			sourceTree = "<group>";
-		};
-		23351DF31C1DE75700BB54FB /* Response */ = {
-			isa = PBXGroup;
-			children = (
-				23351DF41C1DE75700BB54FB /* Response.swift */,
-			);
-			path = Response;
-			sourceTree = "<group>";
-		};
-		23351DF91C1DE7CA00BB54FB /* Require */ = {
-			isa = PBXGroup;
-			children = (
-				23351DFA1C1DE7CA00BB54FB /* Require.swift */,
-			);
-			path = Require;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		239411C91C0C2DA3001B9B07 = {
@@ -271,6 +259,7 @@
 				239411D31C0C2DA3001B9B07 /* Trevi.framework */,
 				239411E21C0C2E19001B9B07 /* Trevi_ver_lime.app */,
 				232299911C61E00D003E44AB /* Lime.framework */,
+				DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -278,13 +267,11 @@
 		239411D51C0C2DA3001B9B07 /* Trevi */ = {
 			isa = PBXGroup;
 			children = (
-				AC1C683A1C6CEF8300682F7D /* Libuv */,
-				23351DF01C1DE75700BB54FB /* Http */,
+				2354414F1C79800300E90A97 /* Source */,
+				2354413A1C797FFA00E90A97 /* Library */,
+				DF0900EE1C6EDD3F008CA6F0 /* Libuv */,
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
-				23351DF91C1DE7CA00BB54FB /* Require */,
 				239412091C0C46CE001B9B07 /* Utility */,
-				239412031C0C45CA001B9B07 /* Route */,
-				239411F81C0C2E81001B9B07 /* Socket */,
 				239411D61C0C2DA3001B9B07 /* Trevi.h */,
 				239411D81C0C2DA3001B9B07 /* Info.plist */,
 			);
@@ -305,33 +292,6 @@
 				239411ED1C0C2E19001B9B07 /* Info.plist */,
 			);
 			path = Trevi_ver_lime;
-			sourceTree = "<group>";
-		};
-		239411F81C0C2E81001B9B07 /* Socket */ = {
-			isa = PBXGroup;
-			children = (
-				DF3B819A1C1E08C500974327 /* Socket.swift */,
-				DF3B81A21C1E092400974327 /* InetAddress.swift */,
-				DF3B81981C1E08C500974327 /* ListenSocket.swift */,
-				DF3B81961C1E08C500974327 /* ConnectedSocket.swift */,
-				DF76B5271C30176F005E5391 /* HttpSocket.swift */,
-				DF3B81971C1E08C500974327 /* EventHandler.swift */,
-				DFDFC9EF1C2F582A00862331 /* Timer.swift */,
-				DF3B819B1C1E08C500974327 /* SocketUtility.swift */,
-				DF3B81991C1E08C500974327 /* LogFactory.swift */,
-				DF3B81A41C1E098400974327 /* UnixBridge.c */,
-			);
-			path = Socket;
-			sourceTree = "<group>";
-		};
-		239412031C0C45CA001B9B07 /* Route */ = {
-			isa = PBXGroup;
-			children = (
-				2368EAC91C1C9060007DB033 /* Route.swift */,
-				2394120C1C0C4A5C001B9B07 /* RoutAble.swift */,
-			);
-			name = Route;
-			path = Router;
 			sourceTree = "<group>";
 		};
 		239412091C0C46CE001B9B07 /* Utility */ = {
@@ -358,14 +318,6 @@
 				90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */,
 			);
 			path = Middleware;
-			sourceTree = "<group>";
-		};
-		23961CDA1C5F5C5D00F8EF64 /* StreamListener */ = {
-			isa = PBXGroup;
-			children = (
-				23961CDB1C5F5C9300F8EF64 /* EventListener.swift */,
-			);
-			path = StreamListener;
 			sourceTree = "<group>";
 		};
 		23D2F3941C1DA4A000F0C784 /* public */ = {
@@ -395,19 +347,11 @@
 			path = views;
 			sourceTree = "<group>";
 		};
-		AC1C683A1C6CEF8300682F7D /* Libuv */ = {
+		DF0900EE1C6EDD3F008CA6F0 /* Libuv */ = {
 			isa = PBXGroup;
 			children = (
-				AC1C683B1C6CEF8300682F7D /* libuv.1.dylib */,
-				AC1C683C1C6CEF8300682F7D /* libuv.a */,
-				AC1C683D1C6CEF8300682F7D /* module.modulemap */,
-				AC1C683E1C6CEF8300682F7D /* uv-darwin.h */,
-				AC1C683F1C6CEF8300682F7D /* uv-errno */,
-				AC1C68401C6CEF8300682F7D /* uv-errno.h */,
-				AC1C68411C6CEF8300682F7D /* uv-threadpool.h */,
-				AC1C68421C6CEF8300682F7D /* uv-unix.h */,
-				AC1C68431C6CEF8300682F7D /* uv-version.h */,
-				AC1C68441C6CEF8300682F7D /* uv.h */,
+				DF0900EF1C6EDD3F008CA6F0 /* libuv.a */,
+				DF0900F01C6EDD3F008CA6F0 /* module.modulemap */,
 			);
 			path = Libuv;
 			sourceTree = "<group>";
@@ -427,13 +371,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AC1C68471C6CEF8300682F7D /* uv-darwin.h in Headers */,
 				239411D71C0C2DA3001B9B07 /* Trevi.h in Headers */,
-				AC1C68491C6CEF8300682F7D /* uv-errno.h in Headers */,
-				AC1C684B1C6CEF8300682F7D /* uv-unix.h in Headers */,
-				AC1C684C1C6CEF8300682F7D /* uv-version.h in Headers */,
-				AC1C684A1C6CEF8300682F7D /* uv-threadpool.h in Headers */,
-				AC1C684D1C6CEF8300682F7D /* uv.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,6 +434,23 @@
 			productReference = 239411E21C0C2E19001B9B07 /* Trevi_ver_lime.app */;
 			productType = "com.apple.product-type.application";
 		};
+		DF0900D51C6ECFBD008CA6F0 /* EchoTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DF0900E01C6ECFBD008CA6F0 /* Build configuration list for PBXNativeTarget "EchoTest" */;
+			buildPhases = (
+				DF0900D21C6ECFBD008CA6F0 /* Sources */,
+				DF0900D31C6ECFBD008CA6F0 /* Frameworks */,
+				DF0900D41C6ECFBD008CA6F0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EchoTest;
+			productName = EchoTest;
+			productReference = DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -515,6 +470,9 @@
 					239411E11C0C2E19001B9B07 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
+					DF0900D51C6ECFBD008CA6F0 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 				};
 			};
 			buildConfigurationList = 239411CD1C0C2DA3001B9B07 /* Build configuration list for PBXProject "Trevi" */;
@@ -533,6 +491,7 @@
 				239411D21C0C2DA3001B9B07 /* Trevi */,
 				239411E11C0C2E19001B9B07 /* Trevi_ver_lime */,
 				232299901C61E00D003E44AB /* Lime */,
+				DF0900D51C6ECFBD008CA6F0 /* EchoTest */,
 			);
 		};
 /* End PBXProject section */
@@ -565,6 +524,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DF0900D41C6ECFBD008CA6F0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -572,8 +538,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				232299A51C61E09A003E44AB /* PreparedData.swift in Sources */,
-				232299A71C61E36E003E44AB /* HttpParser.swift in Sources */,
+				236FC9C51C7436D100F9E191 /* LimePrepare.swift in Sources */,
+				232299A51C61E09A003E44AB /* PreparedHttp.swift in Sources */,
 				232299A91C622ABA003E44AB /* LimeResponse.swift in Sources */,
 				231489CE1C627E6400D1AF27 /* LimeRequest.swift in Sources */,
 				232299A11C61E048003E44AB /* Lime.swift in Sources */,
@@ -584,36 +550,36 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23961CDC1C5F5C9300F8EF64 /* EventListener.swift in Sources */,
 				2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */,
-				DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */,
+				235441451C797FFA00E90A97 /* EventListener.swift in Sources */,
+				2354415C1C79800300E90A97 /* LibuvUtility.swift in Sources */,
+				2354415A1C79800300E90A97 /* Handle.swift in Sources */,
+				235441491C797FFA00E90A97 /* Net.swift in Sources */,
+				2354415E1C79800300E90A97 /* Stream.swift in Sources */,
 				236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */,
-				23351DF81C1DE78F00BB54FB /* HttpProtocol.swift in Sources */,
-				DF3B81A01C1E08C500974327 /* Socket.swift in Sources */,
+				2354414C1C797FFA00E90A97 /* Response.swift in Sources */,
 				906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */,
 				90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */,
-				23351DFC1C1DE7CA00BB54FB /* Require.swift in Sources */,
-				DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */,
-				23351DF61C1DE75700BB54FB /* Response.swift in Sources */,
 				906E50B11C11DB9A005937A8 /* File.swift in Sources */,
-				DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */,
+				2354414A1C797FFA00E90A97 /* Request.swift in Sources */,
 				239412121C0C513C001B9B07 /* BodyParser.swift in Sources */,
-				DF3B819E1C1E08C500974327 /* ListenSocket.swift in Sources */,
-				DF3B81931C1E086400974327 /* Http.swift in Sources */,
-				23351DF51C1DE75700BB54FB /* Request.swift in Sources */,
-				DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */,
-				DF3B819F1C1E08C500974327 /* LogFactory.swift in Sources */,
 				236E53E21C1726450076ED36 /* Router.swift in Sources */,
 				906E50B51C121202005937A8 /* System.swift in Sources */,
-				2368EACA1C1C9060007DB033 /* Route.swift in Sources */,
-				DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */,
 				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,
+				2354414E1C797FFA00E90A97 /* Route.swift in Sources */,
+				235441581C79800300E90A97 /* Async.swift in Sources */,
 				906E50B71C121225005937A8 /* String.swift in Sources */,
+				235441591C79800300E90A97 /* Event.swift in Sources */,
+				2354414D1C797FFA00E90A97 /* RoutAble.swift in Sources */,
+				2354414B1C797FFA00E90A97 /* Require.swift in Sources */,
+				2354415B1C79800300E90A97 /* Libuv.swift in Sources */,
 				236E53D91C1235130076ED36 /* Favicon.swift in Sources */,
 				236E53E71C1835570076ED36 /* Json.swift in Sources */,
-				2394120D1C0C4A5C001B9B07 /* RoutAble.swift in Sources */,
-				DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */,
-				DF3B81A11C1E08C500974327 /* SocketUtility.swift in Sources */,
+				235441471C797FFA00E90A97 /* HttpParser.swift in Sources */,
+				235441461C797FFA00E90A97 /* Http.swift in Sources */,
+				2354415F1C79800300E90A97 /* Tcp.swift in Sources */,
+				235441481C797FFA00E90A97 /* HttpProtocol.swift in Sources */,
+				2354415D1C79800300E90A97 /* SocketUtility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,6 +592,13 @@
 				239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */,
 				23D2F39E1C1DA4A000F0C784 /* end.swift in Sources */,
 				23D2F39F1C1DA4A000F0C784 /* Index.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF0900D21C6ECFBD008CA6F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -733,6 +706,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = /usr/local/module/;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -773,6 +747,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				"SWIFT_INCLUDE_PATHS[arch=*]" = /usr/local/module/;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -781,9 +756,9 @@
 		239411DC1C0C2DA3001B9B07 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -796,14 +771,12 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"${SRCROOT}/$(PROJECT_PATH)**",
-					"$(PROJECT_DIR)/Trevi/Libuv",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "${SRCROOT}/$(PROJECT_PATH)**";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -811,9 +784,9 @@
 		239411DD1C0C2DA3001B9B07 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -826,14 +799,11 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"${SRCROOT}/$(PROJECT_PATH)**",
-					"$(PROJECT_DIR)/Trevi/Libuv",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "${SRCROOT}/$(PROJECT_PATH)**";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
 			};
 			name = Release;
 		};
@@ -863,6 +833,30 @@
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi-ver-lime";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		DF0900E11C6ECFBD008CA6F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = EchoTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jang.EchoTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DF0900E21C6ECFBD008CA6F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = EchoTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.jang.EchoTest;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -902,6 +896,15 @@
 			buildConfigurations = (
 				239411EF1C0C2E19001B9B07 /* Debug */,
 				239411F01C0C2E19001B9B07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DF0900E01C6ECFBD008CA6F0 /* Build configuration list for PBXNativeTarget "EchoTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DF0900E11C6ECFBD008CA6F0 /* Debug */,
+				DF0900E21C6ECFBD008CA6F0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

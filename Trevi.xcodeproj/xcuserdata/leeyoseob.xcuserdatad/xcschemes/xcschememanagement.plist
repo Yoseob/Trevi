@@ -11,16 +11,22 @@
 		</dict>
 		<key>Lime.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
 		<key>Trevi.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
 		<key>Trevi_ver_lime.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
@@ -43,6 +49,11 @@
 			<true/>
 		</dict>
 		<key>23973D841C25AE7400FBB8E7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>DF0900D51C6ECFBD008CA6F0</key>
 		<dict>
 			<key>primary</key>
 			<true/>

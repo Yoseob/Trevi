@@ -58,6 +58,8 @@ public class MiddlewareManager {
      * @public
      */
     private func matchType ( obj: Any, params: MiddlewareParams ) -> Bool {
+        
+        
         var ret: Bool = false;
         switch obj {
         case let mw as Middleware:

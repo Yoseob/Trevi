@@ -51,7 +51,7 @@ public class RoutAble: Require {
         if path == "/"{
             path = ""
         }
-        return makeChildRoute (path, module: module )
+        return makeChildsRoute (path, module: module )
     }
     /**
      * Set middlewares type of function or middleware.
@@ -164,7 +164,8 @@ public class RoutAble: Require {
     public func unlink(){}
     
 
-    public func makeChildRoute ( path: String, module: [AnyObject] ) -> RoutAble {
+    //wille deprecate
+    public func makeChildsRoute ( path: String, module: [AnyObject] ) -> RoutAble {
         let _ = module.map({ (obj) -> RoutAble in
             let ma = (obj as! RoutAble)
             ma.superPath = (self.superPath)! + path
@@ -174,6 +175,14 @@ public class RoutAble: Require {
         return self
     }
 
+    public func makeChildRoute ( path: String, module: AnyObject ) -> RoutAble {
+        let ma = (module as! RoutAble)
+        ma.superPath = (self.superPath)! + path
+        ma.prepare ()
+        return ma
+    }
+
+    
     private func registerCompleteRoutePath ( type: HTTPMethodType, path: String, callback: [CallBack] ) -> RoutAble {
         var completePath = superPath! + path;
         if superPath != "" && path == "/" {
@@ -182,4 +191,52 @@ public class RoutAble: Require {
         router.appendRoute ( completePath, Route ( method: type, completePath, callback ) );
         return self
     }
+}
+
+extension RoutAble{
+    /**
+     *
+     * Handling request and operate middleware stacked in(at?) list
+     * if matched suitable module or middleware, that should return false to stop operate next thing
+     *
+     *
+     * @param {Request} request
+     * @param {Response} response
+     * @public
+     */
+    public func handleRequest ( request: Request, _ response: Response ) {
+        let containerRoute = Route ()
+        for middleware in middlewareList {
+            let isNextMd = matchType ( middleware, params: MiddlewareParams ( request, response, containerRoute ) )
+            if isNextMd == true {
+                return
+            }
+        }
+    }
+    
+    /**
+     *
+     * Operate after matching type of module
+     *
+     *
+     * @param {Any | Middleware | CallBack} obj
+     * @param {MiddlewareParams} params
+     * @public
+     */
+    private func matchType ( obj: Any, params: MiddlewareParams ) -> Bool {
+        
+        
+        var ret: Bool = false;
+        switch obj {
+        case let mw as Middleware:
+            ret = mw.operateCommand ( params )
+        case let cb as CallBack:
+            ret = cb ( params.req, params.res )
+        default:
+            break
+            
+        }
+        return ret
+    }
+
 }

@@ -16,7 +16,7 @@ import Trevi
 
 public class Lime : RoutAble{
     
-    private let httpParser = HttpParser()
+//    private let httpParser = LimePrepare()
     
     public  override init () {
         super.init()
@@ -28,13 +28,13 @@ public class Lime : RoutAble{
         if path == "/"{
             path = ""
         }
-        return makeChildRoute (path, module: module )
+        return makeChildsRoute (path, module: module )
     }
 
     private func registerRequestEventListener() {
         eventListener = MainListener()
         eventListener!.on("data") { info in
-            self.httpParser.appendData(info)
+//            self.httpParser.appendData(info)
         }
     }
 }
