@@ -34,16 +34,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return res.send ("404 Pages Not Found")
         }
         
-        server.createServer_Test({ req, res in
-            
-            for (k,v) in req.header {
-                print("\(k) : \(v)")
-            }
-            
-            res.write(NSData(contentsOfFile:NSBundle.mainBundle().pathForResource("sky", ofType: "jpeg")!)!)
+        server.createServer({ req, res in
+            res.write("hello Trevi")
             res.end()
-            
-        
         }).listen(8080)
      
     }

@@ -21,9 +21,28 @@ public class Handle {
         self.event = Event()
         Handle.dictionary[self.handle] = self
     }
+    
     deinit {
-        print("Handle deinit")
+//        print("Handle deinit")
         Handle.close(self.handle)
+    }
+    
+}
+
+
+// Handle event inner class
+
+extension Handle {
+    
+    public class Event {
+        
+        var onClose : ((uv_handle_ptr)->())!
+        var onAlloc : Any!
+        var onRead : ((uv_stream_ptr, Int, uv_buf_const_ptr)->())!
+        var afterShutdown : Any!
+        var afterWrite : Any!
+        var onConnection : (uv_stream_ptr -> ())!
+        var afterConnect : Any!
     }
 }
 
@@ -36,7 +55,7 @@ extension Handle {
         uv_ref(handle)
     }
     
-    public static func unref(handle : uv_handle_ptr){
+    public static func unref(handle : uv_handle_ptr) {
         uv_unref(handle)
     }
     
@@ -68,7 +87,7 @@ extension Handle {
 }
 
 
-// Handle static functions.
+// Handle static callbacks.
 
 extension Handle {
     

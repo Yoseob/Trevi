@@ -25,11 +25,9 @@
 		2354414D1C797FFA00E90A97 /* RoutAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441431C797FFA00E90A97 /* RoutAble.swift */; };
 		2354414E1C797FFA00E90A97 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441441C797FFA00E90A97 /* Route.swift */; };
 		235441581C79800300E90A97 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441501C79800300E90A97 /* Async.swift */; };
-		235441591C79800300E90A97 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441511C79800300E90A97 /* Event.swift */; };
 		2354415A1C79800300E90A97 /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441521C79800300E90A97 /* Handle.swift */; };
 		2354415B1C79800300E90A97 /* Libuv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441531C79800300E90A97 /* Libuv.swift */; };
 		2354415C1C79800300E90A97 /* LibuvUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441541C79800300E90A97 /* LibuvUtility.swift */; };
-		2354415D1C79800300E90A97 /* SocketUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441551C79800300E90A97 /* SocketUtility.swift */; };
 		2354415E1C79800300E90A97 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441561C79800300E90A97 /* Stream.swift */; };
 		2354415F1C79800300E90A97 /* Tcp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441571C79800300E90A97 /* Tcp.swift */; };
 		236E53D71C12198D0076ED36 /* MiddlewareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53D61C12198D0076ED36 /* MiddlewareManager.swift */; };
@@ -62,7 +60,9 @@
 		ACBB9EA11C7A1D7D00E58E31 /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */; };
 		ACBB9EA31C7A1D7D00E58E31 /* StreamWritable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */; };
 		DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; };
-		DF0900F11C6EDD3F008CA6F0 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF0900EF1C6EDD3F008CA6F0 /* libuv.a */; };
+		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
+		DF732EF11C799E65000B12E8 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF01C799E65000B12E8 /* Timer.swift */; };
+		DF732EF31C79B4DD000B12E8 /* Loop.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF21C79B4DD000B12E8 /* Loop.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,11 +116,9 @@
 		235441431C797FFA00E90A97 /* RoutAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutAble.swift; sourceTree = "<group>"; };
 		235441441C797FFA00E90A97 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		235441501C79800300E90A97 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
-		235441511C79800300E90A97 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		235441521C79800300E90A97 /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
 		235441531C79800300E90A97 /* Libuv.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Libuv.swift; sourceTree = "<group>"; };
 		235441541C79800300E90A97 /* LibuvUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibuvUtility.swift; sourceTree = "<group>"; };
-		235441551C79800300E90A97 /* SocketUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketUtility.swift; sourceTree = "<group>"; };
 		235441561C79800300E90A97 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		235441571C79800300E90A97 /* Tcp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tcp.swift; sourceTree = "<group>"; };
 		236E53D61C12198D0076ED36 /* MiddlewareManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiddlewareManager.swift; sourceTree = "<group>"; };
@@ -156,8 +154,10 @@
 		ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
 		ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamWritable.swift; sourceTree = "<group>"; };
 		DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DF0900EF1C6EDD3F008CA6F0 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
-		DF0900F01C6EDD3F008CA6F0 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
+		DF732EE01C799737000B12E8 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		DF732EF01C799E65000B12E8 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+		DF732EF21C79B4DD000B12E8 /* Loop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loop.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,7 +172,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DF0900F11C6EDD3F008CA6F0 /* libuv.a in Frameworks */,
+				DF732EE71C799737000B12E8 /* libuv.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,14 +240,15 @@
 		2354414F1C79800300E90A97 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				235441501C79800300E90A97 /* Async.swift */,
-				235441511C79800300E90A97 /* Event.swift */,
+				DF732EDE1C799737000B12E8 /* Libuv */,
 				235441521C79800300E90A97 /* Handle.swift */,
-				235441531C79800300E90A97 /* Libuv.swift */,
-				235441541C79800300E90A97 /* LibuvUtility.swift */,
-				235441551C79800300E90A97 /* SocketUtility.swift */,
+				DF732EF21C79B4DD000B12E8 /* Loop.swift */,
 				235441561C79800300E90A97 /* Stream.swift */,
 				235441571C79800300E90A97 /* Tcp.swift */,
+				235441501C79800300E90A97 /* Async.swift */,
+				DF732EF01C799E65000B12E8 /* Timer.swift */,
+				235441541C79800300E90A97 /* LibuvUtility.swift */,
+				235441531C79800300E90A97 /* Libuv.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -278,7 +279,6 @@
 			children = (
 				2354414F1C79800300E90A97 /* Source */,
 				2354413A1C797FFA00E90A97 /* Library */,
-				DF0900EE1C6EDD3F008CA6F0 /* Libuv */,
 				2394120E1C0C4FDA001B9B07 /* Middleware */,
 				239412091C0C46CE001B9B07 /* Utility */,
 				239411D61C0C2DA3001B9B07 /* Trevi.h */,
@@ -356,11 +356,11 @@
 			path = views;
 			sourceTree = "<group>";
 		};
-		DF0900EE1C6EDD3F008CA6F0 /* Libuv */ = {
+		DF732EDE1C799737000B12E8 /* Libuv */ = {
 			isa = PBXGroup;
 			children = (
-				DF0900EF1C6EDD3F008CA6F0 /* libuv.a */,
-				DF0900F01C6EDD3F008CA6F0 /* module.modulemap */,
+				DF732EDF1C799737000B12E8 /* libuv.a */,
+				DF732EE01C799737000B12E8 /* module.modulemap */,
 			);
 			path = Libuv;
 			sourceTree = "<group>";
@@ -577,11 +577,12 @@
 				906E50B51C121202005937A8 /* System.swift in Sources */,
 				239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */,
 				2354414E1C797FFA00E90A97 /* Route.swift in Sources */,
+				DF732EF11C799E65000B12E8 /* Timer.swift in Sources */,
 				235441581C79800300E90A97 /* Async.swift in Sources */,
 				906E50B71C121225005937A8 /* String.swift in Sources */,
-				235441591C79800300E90A97 /* Event.swift in Sources */,
 				2354414D1C797FFA00E90A97 /* RoutAble.swift in Sources */,
 				2354414B1C797FFA00E90A97 /* Require.swift in Sources */,
+				DF732EF31C79B4DD000B12E8 /* Loop.swift in Sources */,
 				2354415B1C79800300E90A97 /* Libuv.swift in Sources */,
 				236E53D91C1235130076ED36 /* Favicon.swift in Sources */,
 				236E53E71C1835570076ED36 /* Json.swift in Sources */,
@@ -591,7 +592,6 @@
 				2354415F1C79800300E90A97 /* Tcp.swift in Sources */,
 				ACBB9EA31C7A1D7D00E58E31 /* StreamWritable.swift in Sources */,
 				235441481C797FFA00E90A97 /* HttpProtocol.swift in Sources */,
-				2354415D1C79800300E90A97 /* SocketUtility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,12 +783,15 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Trevi/Libuv",
+					"$(PROJECT_DIR)/Trevi/Source/Libuv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Source/Libuv";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -811,11 +814,14 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/Trevi/Libuv",
+					"$(PROJECT_DIR)/Trevi/Source/Libuv",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Libuv";
+				SWIFT_INCLUDE_PATHS = "$(PROJECT_DIR)/Trevi/Source/Libuv";
 			};
 			name = Release;
 		};

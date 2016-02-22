@@ -30,7 +30,7 @@ public class EventEmitter{
     
     func emit(name: String, _ arg : AnyObject...){
         let emitter = events[name]
-
+        
         switch emitter {
         case let ra as RoutAble:
             if arg.count == 2{
@@ -67,18 +67,6 @@ public class EventEmitter{
 //temp class
 protocol httpStream {}
 
-func writeAfter(handle: UnsafeMutablePointer<uv_write_t>, status: Int32){
-    print("writeAfter")
-    
-}
-
-func write(data: NSData, handle : uv_stream_ptr) {
-    let req : uv_write_ptr = uv_write_ptr.alloc(1)
-    let buf = UnsafeMutablePointer<uv_buf_t>.alloc(1)
-    buf.memory = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), UInt32(data.length))
-    uv_write(req, handle, UnsafePointer<uv_buf_t>(buf), 1, writeAfter)
-}
-
 public class OutgoingMessage: httpStream{
     
     var socket: Socket!
@@ -87,73 +75,115 @@ public class OutgoingMessage: httpStream{
     public var header: [String: String]!
     public var shouldKeepAlive = false
     public var chunkEncoding = false
-
+    
     public init(socket: AnyObject){
         header = [String: String]()
     }
     
     public func _end(data: NSData, encoding: Any! = nil){
-        write(data, handle: self.socket.handle)
+        self.socket.write(data, handle: self.socket.handle)
         
         if shouldKeepAlive == false {
             self.socket.close()
         }
-
     }
 }
 
 
 public class ServerResponse: OutgoingMessage{
     
-    public var httpVersion: String!
+    public var httpVersion: String = ""
     public var url: String!
     public var method: String!
-    public var statusCode: String!
-
-    
-    private var headerData: String?
-    private var _body: String?
-    
-    private var _bodyData = NSData()
-    
-    private var testResString = ""
-    
-    public var status: Int!{
+    public var statusCode: Int!{
         didSet{
-            self.statusCode = StatusCode(rawValue: status)!.statusString()
+            self.status = StatusCode(rawValue: statusCode)!.statusString()
         }
     }
+    
+    private var _hasbody = false
+    
+    private var _body: String?{
+        didSet {
+            self._hasbody = true
+            header[Content_Type] = "text/plain;charset=utf-8"
+        }
+    }
+    
+    private var _bodyData: NSData! {
+        didSet{
+            self._hasbody = true
+            header[Content_Type] = ""
+        }
+    }
+    
+    //for dictionary
+    private var bodys: [ String: AnyObject ]?{
+        didSet{
+            self._hasbody = true
+            header[Content_Type] = "application/json"
+        }
+    }
+    
+    private var bodyData : NSData? {
+        if let dt = _bodyData{
+            return dt
+        }else if let bodyString = _body {
+            return bodyString.dataUsingEncoding(NSUTF8StringEncoding)!
+        }else if (bodys != nil)  {
+            let jsonData = try? NSJSONSerialization.dataWithJSONObject(bodys!, options:NSJSONWritingOptions(rawValue:0))
+            // if need jsonString, use it
+            // let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
+            return jsonData
+        }
+        return nil
+    }
+    
+    private var status: String!
+    
+    private var firstLine: String!
+    
     
     public init(socket: Socket) {
         super.init(socket: socket)
         self._body = ""
-        testResString = ""
     }
     
     public func end(){
         let hData: NSData = self.prepareHeader()
         let result: NSMutableData = NSMutableData(data: hData)
-//        result.appendData( _body!.dataUsingEncoding ( NSUTF8StringEncoding )!)
-        result.appendData(_bodyData)
-//        testResString += _body!
-        
-        print(testResString)
-        
+        result.appendData(self.bodyData!)
         self._end(result)
     }
     
     public func writeHead(statusCode: Int, headers: [String:String]! = nil){
-        headerData = "\(HttpProtocol) \(status) \(statusCode)" + CRLF
+        self.statusCode = statusCode
+        firstLine = "\(httpVersion) \(statusCode) \(status)" + CRLF
     }
     
     //will move outgoingMessage
-    public func write(data: NSData, encoding: String! = nil){
-        header[Content_Type] = "image/jpeg" //"text/plain;charset=utf-8"
-//        self._body? += data
-        self._bodyData = data
-        status = 200
+    public func write(data: AnyObject?, encoding: String! = nil, type: String! = ""){
+        
+        switch data {
+        case let str as String :
+            self._body = str
+        case let dt as NSData:
+            self._bodyData! = dt
+            if let t = type{
+                header[Content_Type] = t
+            }
+        case let dic as [String:AnyObject]:
+            self.bodys = dic
+        default:
+            break
+        }
+        if let _ = data{
+            self._hasbody = true
+            statusCode = 200
+        }
+        
     }
-
+    
     /**
      * Factory method fill header data
      *
@@ -161,23 +191,20 @@ public class ServerResponse: OutgoingMessage{
      * return {NSData} headerdata
      */
     private func prepareHeader () -> NSData {
+        
         header[Date] = NSDate.GtmString()
         header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
         
-        header[Content_Length] = "\(_bodyData.length)" // replace bodyString length
-//        if let body = _bodyData  {
-//            header[Content_Length] = "\(_bodyData.length)" // replace bodyString length
-//        }
-        
-        var headerString = headerData
-        if headerString == nil{
-            headerString = "\(HttpProtocol) \(status) \(statusCode)" + CRLF
+        if self._hasbody {
+            header[Content_Length] = "\(bodyData!.length)" // replace bodyString length
         }
 
+        if firstLine == nil{
+            firstLine = "\(httpVersion) \(statusCode) \(status)" + CRLF
+        }
+        var headerString = firstLine
         headerString! += dictionaryToString ( header )
-    
-        testResString += headerString!
         return headerString!.dataUsingEncoding ( NSUTF8StringEncoding )!
     }
     
@@ -208,9 +235,9 @@ public class IncomingMessage: httpStream{
     // HTTP header
     public var header: [ String: String ]!
     
-    public var httpVersionMajor: String? = "1"
+    public var httpVersionMajor: String = "1"
     
-    public var httpVersionMinor: String? = "1"
+    public var httpVersionMinor: String = "1"
     
     public var version : String{
         return "\(httpVersionMajor).\(httpVersionMinor)"
@@ -227,7 +254,7 @@ public class IncomingMessage: httpStream{
     
     public var path = ""
     
-    //server only 
+    //server only
     public var url: String!{
         didSet{
             self.path = (url.componentsSeparatedByString( "?" ) as [String])[0]
@@ -246,9 +273,9 @@ public class IncomingMessage: httpStream{
             }
         }
     }
-
-
-
+    
+    
+    
     //response only
     public var statusCode: String!
     public var client: AnyObject!
@@ -264,13 +291,13 @@ public class IncomingMessage: httpStream{
 public class TreviServer: Net{
     
     private var parser: HttpParser!
-
+    
     private var requestListener: Any!
     
     init(requestListener: Any!){
         super.init()
         self.requestListener = requestListener
-
+        
         self.on("request", requestListener) // Not fixed calling time
         
         self.on("listening", onlistening) //when server start listening client socket, Should called this callback
@@ -279,15 +306,11 @@ public class TreviServer: Net{
     }
     
     func onlistening(){
-        
-        
         print("Http Server starts ip : \(ip), port : \(port).")
         
         switch requestListener {
         case let ra as RoutAble:
             ra.makeChildRoute(ra.superPath!, module:ra)
-            break
-        case let cb as HttpCallback:
             break
         default:
             break
@@ -296,7 +319,7 @@ public class TreviServer: Net{
     
     
     func connectionListener(sock: AnyObject){
-
+        
         let socket = sock as! Socket
         if parser == nil {
             parser = HttpParser()
@@ -307,11 +330,10 @@ public class TreviServer: Net{
         socket.ondata = { buf, nread in
             self.parser.execute(buf,length: nread)
         }
-    
+        
         socket.onend = {
             self.parser = nil
         }
-
         
         parser.onIncoming = { req in
             
@@ -319,11 +341,13 @@ public class TreviServer: Net{
             res.socket = req.socket
             res.connection = req.socket
             
-            
+            res.httpVersion = "HTTP/"+req.version
             if let connection = req.header[Connection] where connection == "keep-alive" {
-                
                 res.header[Connection] = connection
                 res.shouldKeepAlive = true
+            }else{
+                res.header[Connection] = "close"
+                res.shouldKeepAlive = false
             }
             self.emit("request", req ,res)
         }
@@ -333,7 +357,6 @@ public class TreviServer: Net{
     func parserSetup(){
         
         parser.onHeader = {
-            
         }
         
         parser.onHeaderComplete = { info in
@@ -344,9 +367,8 @@ public class TreviServer: Net{
             incoming.httpVersionMinor = info.versionMinor
             incoming.url = info.url
             incoming.method = info.method
-
-            self.parser.incoming = incoming
             
+            self.parser.incoming = incoming
             self.parser.onIncoming!(incoming)
         }
         
@@ -365,23 +387,23 @@ public class TreviServer: Net{
 
 public class Http {
     
-
+    
     private let mwManager = MiddlewareManager.sharedInstance ()
     private var listener : EventListener!
     
     public init () {
-    
+        
     }
     /*
-        TEST
-        will modify any type that suport routable, CallBack and Adapt TreviServer Model
+    TEST
+    will modify any type that suport routable, CallBack and Adapt TreviServer Model
     */
-    public func createServer_Test ( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
+    public func createServer( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
         let server = TreviServer(requestListener: requestListener)
         return server
     }
     
-   /**
+    /**
      * Create Server base on RouteAble Model, maybe it able to use many Middleware
      * end return self
      *
@@ -396,7 +418,6 @@ public class Http {
      */
     public func createServer ( requireModule: RoutAble... ) -> Http {
         for rm in requireModule {
-
             rm.makeChildsRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }
@@ -419,8 +440,8 @@ public class Http {
      * @public
      */
     public func createServer ( callBacks: HttpCallback... ) -> Http {
-        receivedRequestCallback()
-
+        
+        
         for cb in callBacks {
             mwManager.enabledMiddlwareList.append ( cb )
         }
@@ -437,38 +458,6 @@ public class Http {
         mwManager.enabledMiddlwareList.append(mw)
     }
     
-
+    
 }
 
-
-extension Http{
-    /**
-     * Register request callback function
-     * request received delegate middleware manager
-     *
-     * @private
-     */
-    private func receivedRequestCallback(){
-        
-        listener = MainListener()
-        
-        listener.on("data") { info in
-            var req : Request?
-            if let params = info.params {
-                let (strData,_) = String.fromCStringRepairingIllFormedUTF8(params.buffer)
-                let data = strData! as String
-                req = Request(data)
-                
-                if let req = req {
-                    let res = Response()
-                    res.method = req.method
-                    if let connection = req.header[Connection]{
-                        res.header[Connection] = connection
-                    }
-                    self.mwManager.handleRequest(req, res)
-                }
-                
-            }
-        }
-    }
-}
