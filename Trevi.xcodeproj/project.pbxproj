@@ -718,7 +718,6 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				"SWIFT_INCLUDE_PATHS[arch=*]" = /usr/local/module/;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -759,7 +758,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				"SWIFT_INCLUDE_PATHS[arch=*]" = /usr/local/module/;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -783,10 +781,7 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Trevi/Libuv",
-					"$(PROJECT_DIR)/Trevi/Source/Libuv",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Source/Libuv";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
@@ -814,10 +809,7 @@
 				INFOPLIST_FILE = Trevi/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/Trevi/Libuv",
-					"$(PROJECT_DIR)/Trevi/Source/Libuv",
-				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/Trevi/Source/Libuv";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
