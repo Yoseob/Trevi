@@ -82,7 +82,6 @@ public class OutgoingMessage: httpStream{
     
     public func _end(data: NSData, encoding: Any! = nil){
         self.socket.write(data, handle: self.socket.handle)
-        
         if shouldKeepAlive == false {
             self.socket.close()
         }
@@ -372,7 +371,7 @@ public class TreviServer: Net{
             self.parser.onIncoming!(incoming)
         }
         
-        parser.onBody = {
+        parser.onBody = { body in
             //parser.incoming.push ()
         }
         
