@@ -183,7 +183,7 @@ public class File {
     }
 }
 
-public class Readable: File {
+public class ReadableFile: File {
     private var readEnd: Bool = false
     
     override init(fileAtPath path: String, option: Int32 = O_RDONLY) {
@@ -206,7 +206,7 @@ public class Readable: File {
         #endif
     }
     
-    public override func open() -> Readable {
+    public override func open() -> ReadableFile {
         super.open()
         return self
     }
@@ -238,7 +238,7 @@ public class Readable: File {
     }
 }
 
-public class Writable: File {
+public class WritableFile: File {
     
     override init(fileAtPath path: String, option: Int32 = O_WRONLY) {
         super.init(fileAtPath: path, option: option|O_WRONLY&(~(O_RDONLY|O_RDWR)))
@@ -260,7 +260,7 @@ public class Writable: File {
         #endif
     }
     
-    public override func open() -> Writable {
+    public override func open() -> WritableFile {
         super.open()
         return self
     }

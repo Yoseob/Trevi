@@ -30,7 +30,7 @@ public class ServeStatic: Middleware {
         let req: Request  = params.req
         let res: Response = params.res
         
-        let file = Readable(fileAtPath: "\(basePath)\(req.path)")
+        let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
         if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
             var buffer = [UInt8](count: 8, repeatedValue: 0)
             let data = NSMutableData()

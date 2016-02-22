@@ -67,7 +67,7 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by data from the file specified by path.
      */
     private final func load ( path: String ) -> String? {
-        let file = Readable(fileAtPath: path).open()
+        let file = ReadableFile(fileAtPath: path).open()
         var buffer = [UInt8](count: 8, repeatedValue: 0)
         let data = NSMutableData()
         while file.status == .Open {
@@ -135,7 +135,7 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: Compiled data from the swift codes
      */
     private final func compile ( path: String, code: String ) -> String? {
-        let file = Writable(fileAtPath: "\(path).swift", option: O_CREAT|O_TRUNC).open()
+        let file = WritableFile(fileAtPath: "\(path).swift", option: O_CREAT|O_TRUNC).open()
         file.write(UnsafePointer<UInt8>(code.dataUsingEncoding(NSUTF8StringEncoding)!.bytes), maxLength: code.characters.count)
         return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
             .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
