@@ -13,20 +13,36 @@ import Foundation
  */
 public class ServeStatic: Middleware {
     
-    public var name: MiddlewareName;
+    public var name: MiddlewareName
+    private let basePath: String
     
-    public init () {
+    public init (path: String) {
         name = .ServeStatic
+        
+        if let last = path.characters.last where last == "/" {
+            basePath = path[path.startIndex ..< path.endIndex.advancedBy(-1)]
+        } else {
+            basePath = path
+        }
     }
     
-    public func operateCommand ( params: MiddlewareParams ) -> Bool {
+    public func operateCommand (params: MiddlewareParams) -> Bool {
         let req: Request  = params.req
         let res: Response = params.res
         
-        guard let data = File.read( File.getRealPath( req.path ) ) else {
-            return false
+        let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
+        if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
+            var buffer = [UInt8](count: 8, repeatedValue: 0)
+            let data = NSMutableData()
+            
+            file.open()
+            while file.status == .Open {
+                let result: Int = file.read(&buffer, maxLength: buffer.count)
+                data.appendBytes(buffer, length: result)
+            }
+            return res.send(data)
         }
         
-        return res.send( data )
+        return false
     }
 }

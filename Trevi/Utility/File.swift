@@ -1,5 +1,5 @@
 //
-//  FileIO.swift
+//  File.swift
 //  Trevi
 //
 //  Created by SeungHyun Lee on 2015. 12. 5..
@@ -7,161 +7,285 @@
 //
 
 import Foundation
-
 #if os(Linux)
     import Glibc
 #else
     import Darwin
 #endif
 
-public enum FileError: ErrorType {
-    case ReadingError( msg:String )
-    case WritingError( msg:String )
-    case TypeConvertError( msg:String )
+public enum FileType: String {
+    case Regular = "FileTypeRegular"
+    case Directory = "FileTypeDirectory"
+    case CharacterDevice = "FileTypeCharacterDevice"
+    case BlockDevice = "FileTypeBlockDevice"
+    case FIFO = "FileTypeFIFO"
+    case SymbolicLink = "FileTypeSymbolicLink"
+    case Socket = "FileTypeSocket"
+    case Unknown = "FileTypeUnknown"
+}
+
+public enum FileStatus : UInt {
+    case NotOpen
+    case Opening
+    case Open
+    case Reading
+    case Writing
+    case AtEnd
+    case Closed
+    case Error
+}
+
+/**
+ Returns the full pathname for the resource identified by the path. The full pathname for the resource file.
+ 
+ - Parameter path: The name of the file or path of the file from which to read data.
+ 
+ - Returns: The full pathname for the resource file.
+ */
+public func getResourcePath(path: String) -> String {
+    let comp = path.componentsSeparatedByString( "/" )
+    if let rsrcPath = NSBundle.mainBundle().pathForResource(comp.last!, ofType: nil) {
+        return rsrcPath
+    }
+    return path
 }
 
 public class File {
+    public let path: String
+    public let type: FileType
+    public var status: FileStatus!
     
-    public init(){}
+    private var option: Int32
+    private var fd: Int32
     
-    private static let BUFSIZE = 1024
-    
-    /**
-     Returns the full pathname for the resource identified by the path. The full pathname for the resource file.
-     
-     - Parameter path: The name of the file or path of the file from which to read data.
-     
-     - Returns: The full pathname for the resource file.
-     */
-    public static func getRealPath ( path : String ) -> String {
+    init (fileAtPath: String, option: Int32 = O_RDWR) {
+        self.path = fileAtPath
+        self.option = option
+        self.fd = -1
         
-        let _path: String!;
-        if path.characters.last == "/" {
-            _path = path[ path.startIndex ..< path.endIndex.advancedBy(-1) ]
-        } else {
-            _path = path
-        }
-        
-        guard let filename = _path.componentsSeparatedByString( "/" ).last else {
-            return path
-        }
-        let nameElement = filename.componentsSeparatedByString( "." )
-        if nameElement.count == 2 {
-            guard let bundlePath = NSBundle.mainBundle().pathForResource( nameElement[0], ofType: nameElement.count > 1 ? nameElement[1] : "" ) else {
-                return path
-            }
-            return bundlePath
-        } else {
-            return path
-        }
-    }
-    
-    // On success (all requested permissions granted), zero is returned.
-    // On error (at least one bit in mode asked for a permission that is denied, or some other error occurred), -1 is returned, and errno is set appropriately.
-    public static func isExist ( path : String ) -> Bool {
+        // set file type
+        var s = stat()
         #if os(Linux)
-            if Glibc.access( path, F_OK ) == 0 {
-                return true     // exists
+            if Glibc.stat(path, &s) == 0 {
+                switch s.st_mode & S_IFMT {
+                case S_IFREG: type = FileType.Regular
+                case S_IFDIR: type = FileType.Directory
+                case S_IFBLK: type = FileType.BlockDevice
+                case S_IFCHR: type = FileType.CharacterDevice
+                case S_IFIFO: type = FileType.FIFO
+                case S_IFLNK: type = FileType.SymbolicLink
+                case S_IFSOCK: type = FileType.Socket
+                default: type = FileType.Unknown
+                }
             } else {
-                return false    // not found
+                type = FileType.Unknown
             }
         #else
-            if Darwin.access( path, F_OK ) == 0 {
-                return true     // exists
+            if Darwin.stat(path, &s) == 0 {
+                switch s.st_mode & S_IFMT {
+                case S_IFREG: type = FileType.Regular
+                case S_IFDIR: type = FileType.Directory
+                case S_IFBLK: type = FileType.BlockDevice
+                case S_IFCHR: type = FileType.CharacterDevice
+                case S_IFIFO: type = FileType.FIFO
+                case S_IFLNK: type = FileType.SymbolicLink
+                case S_IFSOCK: type = FileType.Socket
+                default: type = FileType.Unknown
+                }
             } else {
-                return false    // not found
+                type = FileType.Unknown
             }
         #endif
     }
     
-    public static func create ( path : String ) -> Bool {
-        #if os(Linux)
-            let fd = Glibc.open(path, O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
-        #else
-            let fd = Darwin.open(path, O_CREAT, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
-        #endif
-        if fd == -1 {
-            print( "ERROR : File create failed" )
-            return false
+    deinit {
+        if !isClosed() {
+            close()
         }
-        close (fd);
-        return true
     }
     
-    // On success, zero is returned. On error, -1 is returned, and errno is set appropriately.
-    public static func remove( path : String ) -> Int32 {
+    public func isClosed() -> Bool {
+        return fd < 0 ? true : false
+    }
+    
+    public func isExist() -> Bool {
         #if os(Linux)
-            return Glibc.remove( path )
+            if Glibc.access(path, F_OK) == 0 {
+                return true
+            } else {
+                return false
+            }
         #else
-            return Darwin.remove( path )
+            if Darwin.access(path, F_OK) == 0 {
+                return true
+            } else {
+                return false
+            }
         #endif
     }
     
-    public static func read ( filePath: String, option: Int32 = O_RDONLY ) -> NSData? {
-        
-        let fd = open( filePath, option|O_RDONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
-        if fd == -1 {
-            print( "ERROR : File open failed" )
+    public func open() -> File? {
+        status = .Opening
+        if !isClosed() {
+            print("ERROR : File alreay opened")
             return nil
         }
         
-        let buf = UnsafeMutablePointer<Int8>.alloc(BUFSIZE)
-        var data = NSMutableData();
-        
         #if os(Linux)
-            var readn = Glibc.read(fd, buf, BUFSIZE)
-            while readn > 0 {
-                data.appendBytes(buf, length: readn)
-                readn = Glibc.read(fd, buf, BUFSIZE)
-            }
+            fd = Glibc.open(path, option, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
         #else
-            var readn = Darwin.read(fd, buf, BUFSIZE)
-            while readn > 0 {
-                data.appendBytes(buf, length: readn)
-                readn = Darwin.read(fd, buf, BUFSIZE)
-            }
+            fd = Darwin.open(path, option, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
         #endif
+        if fd == -1 {
+            print("ERROR : File open failed")
+            status = .NotOpen
+            return nil
+        }
         
-        // Close file
-        close (fd);
-        
-        return data
+        status = .Open
+        return self
     }
     
-    public static func write ( filePath: String, data: UnsafePointer<Void>, size: Int, var option: Int32 = O_WRONLY ) -> Bool {
+    public func close() -> File? {
+        if isClosed() {
+            print("ERROR : File alreay closed")
+            return nil
+        }
         
         #if os(Linux)
-            if Glibc.access( filePath, F_OK ) != 0 {
-                option |= O_CREAT
+            if Glibc.close(fd) == 0 {
+                fd = -1
+                status = .Closed
+                return self
+            } else {
+                return nil
             }
-            
-            let fd = Glibc.open( filePath, option|O_WRONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
-            if fd == -1 {
-                print( "ERROR : File open failed" )
-                return false
+        #else
+            if Darwin.close(fd) == 0 {
+                fd = -1
+                status = .Closed
+                return self
+            } else {
+                return nil
             }
-            
-            if size == Glibc.write( fd, data, size ) {
+        #endif
+    }
+    
+    /**
+     - Returns: On success, zero is returned. On error, -1 is returned, and errno is set appropriately.
+     */
+    public func remove() -> Int32 {
+        #if os(Linux)
+            return Glibc.remove(path)
+        #else
+            return Darwin.remove(path)
+        #endif
+    }
+}
+
+public class ReadableFile: File {
+    private var readEnd: Bool = false
+    
+    override init(fileAtPath path: String, option: Int32 = O_RDONLY) {
+        super.init(fileAtPath: path, option: option|O_RDONLY&(~(O_WRONLY|O_RDWR)))
+    }
+    
+    public func isReadable() -> Bool {
+        #if os(Linux)
+            if fd > -1 && Glibc.access(path, R_OK) == 0 {
                 return true
             } else {
                 return false
             }
         #else
-            if Darwin.access( filePath, F_OK ) != 0 {
-                option |= O_CREAT
-            }
-            
-            let fd = Darwin.open( filePath, option|O_WRONLY, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH );
-            if fd == -1 {
-                print( "ERROR : File open failed" )
-                return false
-            }
-            
-            if size == Darwin.write( fd, data, size ) {
+            if fd > -1 && Darwin.access(path, R_OK) == 0 {
                 return true
             } else {
                 return false
             }
         #endif
+    }
+    
+    public override func open() -> ReadableFile {
+        super.open()
+        return self
+    }
+    
+    public func read(buffer: UnsafeMutablePointer<UInt8>, maxLength len: Int) -> Int {
+        if isClosed() {
+            print("ERROR: Not opened")
+            return -1
+        }
+        if !isReadable() {
+            print("ERROR: Not readable")
+            return -1
+        }
+        
+        status = .Reading
+        #if os(Linux)
+            let readn = Glibc.read(fd, buffer, len)
+        #else
+            let readn = Darwin.read(fd, buffer, len)
+        #endif
+        if readn == 0 {
+            status = .AtEnd
+        } else if readn > 0 {
+            status = .Open
+        } else {
+            status = .Error
+        }
+        return readn
+    }
+}
+
+public class WritableFile: File {
+    
+    override init(fileAtPath path: String, option: Int32 = O_WRONLY) {
+        super.init(fileAtPath: path, option: option|O_WRONLY&(~(O_RDONLY|O_RDWR)))
+    }
+    
+    public func isWritable() -> Bool {
+        #if os(Linux)
+            if fd > -1 && Glibc.access(path, W_OK) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #else
+            if fd > -1 && Darwin.access(path, W_OK) == 0 {
+                return true
+            } else {
+                return false
+            }
+        #endif
+    }
+    
+    public override func open() -> WritableFile {
+        super.open()
+        return self
+    }
+    
+    public func write(buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
+        if isClosed() {
+            print("ERROR: Not opened")
+            return 0
+        }
+        if !isWritable() {
+            print("ERROR: Not writable")
+            return 0
+        }
+        
+        status = .Writing
+        #if os(Linux)
+            let written = Glibc.write(fd, buffer, len)
+        #else
+            let written = Darwin.write(fd, buffer, len)
+        #endif
+        if written > -1 {
+            status = .Open
+        } else {
+            status = .Error
+        }
+        return written
     }
 }

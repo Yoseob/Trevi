@@ -26,7 +26,7 @@ public class Route {
         self.path = path
         self.callbacks = callback
 
-        getRegex()
+        parsePath()
     }
     
     init ( method: HTTPMethodType, path: String, routeAble: RoutAble... ) {
@@ -34,29 +34,26 @@ public class Route {
         self.path = path
 //        self.callback.append(callback);
         
-        getRegex()
+        parsePath()
     }
     
-    private final func getRegex() {
-        if self.path.length() == 1 {
-            self.regex = "^/$"
+    private final func parsePath() {
+        regex = "^\(path)(/|$)"
+        
+        if path.length() < 2 {
             return
         }
         
-        if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: ":([\(unreserved)\(gen_delims)\(sub_delims)]*?)(/|$)", options: [ .CaseInsensitive ] ) {
-            self.regex = "^\(self.path)/$"
-            for match in regex.matchesInString ( self.path, options: [], range: NSMakeRange( 0, self.path.length() ) ) {
-                let paramNameRange = match.rangeAtIndex ( 1 )
-                let paramName = self.path.substring(paramNameRange.location, length: paramNameRange.length)
-                self.regex = self.regex.stringByReplacingOccurrencesOfString ( ":\(paramName)", withString: "([\(unreserved)\\:\\?\\#\\[\\]\\@\(sub_delims);]*)" )
-                self.params.updateValue( "", forKey: paramName )
-            }
-        }
+        let pathComponent = path.componentsSeparatedByString("/")
         
-        let elements = self.path.componentsSeparatedByString ( "/" )
-        for key in params.keys {
-            for idx in 0 ..< elements.count where elements[idx] == ":\(key)" {
-                paramsPos.updateValue( idx, forKey: key)
+        for param in searchWithRegularExpression(path, pattern: ":([\(unreserved)\(gen_delims)\(sub_delims)]*?)(/|$)") {
+            // get regular expression for routing
+            regex = regex.stringByReplacingOccurrencesOfString ( ":\(param["$1"]!.text)", withString: "([\(unreserved)\\:\\?\\#\\[\\]\\@\(sub_delims);]*)" )
+            
+            // get path parameter
+            params.updateValue( "", forKey: param["$1"]!.text )
+            for idx in 0 ..< pathComponent.count where idx != 0 && pathComponent[idx] == ":\(param["$1"]!.text)" {
+                paramsPos.updateValue(idx - 1, forKey: param["$1"]!.text)
             }
         }
     }

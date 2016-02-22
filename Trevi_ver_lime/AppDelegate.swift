@@ -9,6 +9,7 @@
 import Cocoa
 import Trevi
 import Lime
+
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -22,11 +23,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(Favicon())
         
+        lime.use(ServeStatic(path: "/Users/zero2hex/Documents/www"))
+        
         lime.use(SwiftServerPage())
         
         lime.use("/",Root())
-
-        lime.use(ServeStatic())
         
         lime.use(){ req, res in
             res.status = 404

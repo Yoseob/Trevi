@@ -54,8 +54,8 @@ public class Request {
     public var path: String {
         didSet {
             let segment = self.path.componentsSeparatedByString ( "/" )
-            for seg in segment {
-                pathComponent.append ( seg )
+            for idx in 0 ..< segment.count where idx != 0 {
+                pathComponent.append ( segment[idx] )
             }
         }
     }
@@ -99,29 +99,28 @@ public class Request {
             parseHeader( requestHeader )
         }
     }
-    private final func parseHeader ( fields: [String] ) {
-        for _idx in 1 ..< fields.count {
-            if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
-                self.header[fieldSet[0].trim()] = fieldSet[1].trim();
+    
+    private final func parseUrl ( url: String ) {
+        var urlComp = url.componentsSeparatedByString("?")
+        
+        // Parsing request path
+        for searched in searchWithRegularExpression(urlComp[0], pattern: "(/\\.+/|/*)") {
+            urlComp[0] = urlComp[0].stringByReplacingOccurrencesOfString(searched["$1"]!.text, withString: "/")
+        }
+        path = urlComp[0].stringByReplacingOccurrencesOfString("/*", withString: "/")
+        
+        // Parsing url query by using regular expression.
+        if urlComp.count > 1 {
+            for searched in searchWithRegularExpression(urlComp[1], pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)") {
+                query.updateValue ( searched["$2"]!.text.stringByRemovingPercentEncoding!, forKey: searched["$1"]!.text.stringByRemovingPercentEncoding! )
             }
         }
     }
-
-    private final func parseUrl ( url: String ) {
-        // Parsing request path
-        self.path = (url.componentsSeparatedByString( "?" ) as [String])[0]
-        if self.path.characters.last != "/" {
-            self.path += "/"
-        }
-        
-        // Parsing url query by using regular expression.
-        if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)", options: [ .CaseInsensitive ] ) {
-            for match in regex.matchesInString ( url, options: [], range: NSMakeRange( 0, url.length() ) ) {
-                let keyRange   = match.rangeAtIndex( 1 )
-                let valueRange = match.rangeAtIndex( 2 )
-                let key   = url.substring ( keyRange.location, length: keyRange.length )
-                let value = url.substring ( valueRange.location, length: valueRange.length )
-                self.query.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
+    
+    private final func parseHeader ( fields: [String] ) {
+        for _idx in 1 ..< fields.count {
+            if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
+                header[fieldSet[0].trim()] = fieldSet[1].trim();
             }
         }
     }
