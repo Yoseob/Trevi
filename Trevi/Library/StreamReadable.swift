@@ -38,7 +38,7 @@ public class StreamReadableState {
 }
 
 public class StreamReadable: EventEmitter {
-    private var _state: StreamReadableState
+    var _state: StreamReadableState
     
     public override init() {
         _state = StreamReadableState()
@@ -172,7 +172,8 @@ public class StreamReadable: EventEmitter {
         return self
     }
     
-    override func on(name: String, _ emitter: Any) {
+    
+    public override func on(name: String, _ emitter: Any) {
         super.on(name, emitter)
         
         if name == "data" && _state.flowing {
@@ -235,9 +236,10 @@ private func addChunk(stream: StreamReadable, chunk: String?, addToFront: Bool) 
         if !addToFront {
             state.reading = false
         }
-        
+        state.flowing = true
         if (state.flowing && state.length == 0 && !state.sync) {
-            stream.emit("data", chunkBuf)
+            
+            stream.emit("data", String.fromCString(chunkBuf.data)!)
             stream.read(0)
         } else {
             state.length += chunkBuf.length

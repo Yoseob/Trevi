@@ -88,7 +88,8 @@ public class HttpParser{
             parseHeader( requestHeader )
             
             if trace.length() > 1 {
-                // push(trace)
+
+                onBody!(trace)
                 trace = ""
             }
         }

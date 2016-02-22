@@ -35,6 +35,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         server.createServer({ req, res in
+
+            func onData(chunk: String){
+                print(chunk)
+            }
+            req.on("data",onData)
+            
             res.write("hello Trevi")
             res.end()
         }).listen(8080)

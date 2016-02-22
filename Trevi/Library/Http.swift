@@ -16,10 +16,13 @@ public typealias CallBack = ( Request, Response ) -> Bool // will remove next
 
 public typealias emitable = (AnyObject) -> Void
 
-public typealias noParamsEmitable = (Void) -> Void
+public typealias noParamsEmitable = (String) -> Void
+
+typealias EmiiterType = ((AnyObject) -> Void)?
 
 
 public class EventEmitter{
+    
     var events = [String:Any]()
     
     init(){}
@@ -54,7 +57,9 @@ public class EventEmitter{
             }
             break
         case let cb as noParamsEmitable:
-            cb()
+            if arg.count == 1 {
+                cb(arg.first as! String)
+            }
             break
         default:
             
@@ -225,7 +230,7 @@ public class ServerResponse: OutgoingMessage{
 
 
 
-public class IncomingMessage: httpStream{
+public class IncomingMessage: StreamReadable{
     
     public var socket: Socket!
     
@@ -274,17 +279,23 @@ public class IncomingMessage: httpStream{
     }
     
     
-    
     //response only
     public var statusCode: String!
     public var client: AnyObject!
     
     init(socket: Socket){
+        super.init() 
         self.socket = socket
         self.connection = socket
         self.client = socket
     }
+    
+    public override func _read(n: Int) {
+        
+    }
 }
+
+
 
 
 public class TreviServer: Net{
@@ -372,7 +383,9 @@ public class TreviServer: Net{
         }
         
         parser.onBody = { body in
-            //parser.incoming.push ()
+            let incoming = self.parser.incoming
+            incoming.push(body)
+            
         }
         
         parser.onBodyComplete = {
