@@ -67,18 +67,6 @@ public class EventEmitter{
 //temp class
 protocol httpStream {}
 
-func writeAfter(handle: UnsafeMutablePointer<uv_write_t>, status: Int32){
-    print("writeAfter")
-    
-}
-
-func write(data: NSData, handle : uv_stream_ptr) {
-    let req : uv_write_ptr = uv_write_ptr.alloc(1)
-    let buf = UnsafeMutablePointer<uv_buf_t>.alloc(1)
-    buf.memory = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), UInt32(data.length))
-    uv_write(req, handle, UnsafePointer<uv_buf_t>(buf), 1, writeAfter)
-}
-
 public class OutgoingMessage: httpStream{
     
     var socket: Socket!
@@ -93,7 +81,7 @@ public class OutgoingMessage: httpStream{
     }
     
     public func _end(data: NSData, encoding: Any! = nil){
-        write(data, handle: self.socket.handle)
+        self.socket.write(data, handle: self.socket.handle)
         
         if shouldKeepAlive == false {
             self.socket.close()
