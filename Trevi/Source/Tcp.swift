@@ -22,7 +22,7 @@ public class Tcp : Stream {
     }
     
     deinit {
-        print("Tcp deinit")
+//        print("Tcp deinit")
     }
     
 }
@@ -65,14 +65,13 @@ extension Tcp {
         }
     }
     
-    public static func listen(handle : uv_stream_ptr, backlog : Int32 = 50) {
+    public static func listen(handle : uv_tcp_ptr, backlog : Int32 = 50) {
         
-        let error = uv_listen(handle, backlog, Tcp.onConnection)
+        let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
         
         if error != 0 {
             // Should handle error
         }
-        
     }
     
     public static func connect(handle : uv_tcp_ptr) {
@@ -151,7 +150,7 @@ extension Tcp {
 }
 
 
-// Socket options.
+
 public enum SocketOption {
     case BROADCAST(Bool),
     DEBUG(Bool),
@@ -182,6 +181,7 @@ public enum SocketOption {
 
 
 // Socket option functions.
+
 extension Tcp {
     
     public static func setSocketOption (handle : uv_tcp_ptr, options: [SocketOption]?) -> Bool {

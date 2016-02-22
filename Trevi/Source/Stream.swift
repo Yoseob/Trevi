@@ -19,6 +19,7 @@ public class Stream : Handle {
         self.streamHandle = streamHandle
         super.init(handle: uv_handle_ptr(streamHandle))
     }
+    
     deinit {
         
     }
@@ -39,13 +40,13 @@ public class Stream : Handle {
         return error
     }
     
-    public func doTryWrite(bufs: UnsafeMutablePointer<uv_buf_ptr>, count : UnsafeMutablePointer<UInt32>) -> Int32 {
+    public func doTryWrite(buffer: UnsafeMutablePointer<uv_buf_ptr>, count : UnsafeMutablePointer<UInt32>) -> Int32 {
         var error : Int32
         var written : Int32
-        var vbufs : uv_buf_ptr = bufs.memory
+        var vbuffer : uv_buf_ptr = buffer.memory
         var vcount : UInt32 = count.memory
         
-        error = uv_try_write(self.streamHandle, vbufs, vcount)
+        error = uv_try_write(self.streamHandle, vbuffer, vcount)
         
         guard  (error != UV_ENOSYS.rawValue && error != UV_EAGAIN.rawValue) else {
             return 0
@@ -55,50 +56,23 @@ public class Stream : Handle {
         }
         
         written = error
-        for ; vcount > 0 ; vbufs++, vcount-- {
+        for ; vcount > 0 ; vbuffer++, vcount-- {
             
-            if vbufs[0].len > Int(written) {
-                vbufs[0].base.initialize(vbufs[0].base[Int(written)])
-                vbufs[0].len -= Int(written)
+            if vbuffer[0].len > Int(written) {
+                vbuffer[0].base.initialize(vbuffer[0].base[Int(written)])
+                vbuffer[0].len -= Int(written)
                 written = 0
                 break;
             }
             else {
-                written -= vbufs[0].len;
+                written -= vbuffer[0].len;
             }
         }
         
-        bufs.memory = vbufs;
+        buffer.memory = vbuffer;
         count.memory = vcount;
         
         return 0
-    }
-    
-    
-    // Should be modified.
-    public static func doWrite(bufs: uv_buf_const_ptr, count : UInt32, sendHandle : uv_stream_ptr!) -> Int {
-        let req : uv_write_ptr = uv_write_ptr.alloc(1)
-        
-        let ret : Int32
-        
-        if let handle = sendHandle {
-            ret = uv_write2(req, sendHandle, bufs, count, handle, Stream.afterWrite)
-        }
-        else {
-            ret = uv_write(req, sendHandle, bufs, count, Stream.afterWrite)
-        }
-        
-        if bufs.memory.len > 0 {
-            bufs.memory.base.dealloc(bufs.memory.len)
-        }
-        
-        if ret == 0 {
-            // Should add count module
-            
-            //
-        }
-        
-        return 1
     }
     
 }
@@ -107,6 +81,37 @@ public class Stream : Handle {
 // Stream static functions.
 
 extension Stream {
+    
+    // Should be modified.
+    public static func doWrite(buffer: uv_buf_const_ptr, handle : uv_stream_ptr,
+        count : UInt32 = 1, sendHandle : uv_stream_ptr! = nil) -> Int {
+            
+        let request : uv_write_ptr = uv_write_ptr.alloc(1)
+        let error : Int32
+            
+//        Should add request module
+//        request.memory.bufs.memory = uv_buf_init(UnsafeMutablePointer<Int8>.alloc(size), UInt32(size))
+//        memcpy(request.memory.bufs.memory.base, buffer.memory.base, size)
+
+        if sendHandle != nil {
+            error = uv_write2(request, handle, buffer, count, sendHandle, Stream.afterWrite)
+        }
+        else {
+            error = uv_write(request, handle, buffer, count, Stream.afterWrite)
+        }
+        
+        if buffer.memory.len > 0 {
+            buffer.memory.base.dealloc(buffer.memory.len)
+        }
+        
+        if error == 0 {
+            // Should add count module
+            
+            //
+        }
+        
+        return 1
+    }
     
     public static func isReadable (handle : uv_stream_ptr) -> Bool {
 
@@ -174,11 +179,11 @@ extension Stream {
         if nread < 0 {
             if Int32(nread) == UV_EOF.rawValue {
                 Handle.close(uv_handle_ptr(handle))
-                print("")
-                print("======= echo_read: end of file, closing ======")
-                print("")
             }
-            print(nread)
+            else {
+                // Should handle error in here
+                
+            }
         }
         else if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {
             if let callback =  wrap.event.onRead {
@@ -190,13 +195,13 @@ extension Stream {
     
     public static var afterShutdown : uv_shutdown_cb = { (request, status) in
         // State after shutdown callback
+        
     }
     
     public static var afterWrite : uv_write_cb = { (request, status) in
-       
-        let writeRequest = UnsafeMutablePointer<write_req_t>(request)
-        writeRequest.memory.buf.base.dealloc(writeRequest.memory.buf.len)
-        writeRequest.dealloc(1)
+ 
+//        request.memory.bufs.memory.base.dealloc(request.memory.bufs.memory.len)
+        request.dealloc(1)
     }
     
     func onAfterWriteImpl() -> Void {
