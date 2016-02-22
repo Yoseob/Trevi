@@ -28,7 +28,7 @@ public class HttpParser{
     
     public var onHeader: ((Void) -> (Void))?
     public var onHeaderComplete: ((HeaderInfo) -> Void)?
-    public var onBody: ((Void) -> Void)?
+    public var onBody: ((String) -> Void)?
     public var onBodyComplete: ((Void) -> Void)?
     public var onIncoming: ((IncomingMessage) -> Void)?
     
