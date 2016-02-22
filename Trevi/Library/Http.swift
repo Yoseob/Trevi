@@ -104,7 +104,7 @@ public class OutgoingMessage: httpStream{
 
 public class ServerResponse: OutgoingMessage{
     
-    public var httpVersion: String!
+    public var httpVersion: String = ""
     public var url: String!
     public var method: String!
     public var statusCode: Int!{
@@ -120,10 +120,9 @@ public class ServerResponse: OutgoingMessage{
             self._hasbody = true
             header[Content_Type] = "text/plain;charset=utf-8"
         }
-        
     }
     
-    private var _bodyData: NSData! = NSData() {
+    private var _bodyData: NSData! {
         didSet{
             self._hasbody = true
             header[Content_Type] = ""
@@ -137,7 +136,6 @@ public class ServerResponse: OutgoingMessage{
             header[Content_Type] = "application/json"
         }
     }
-    
     
     private var bodyData : NSData? {
         if let dt = _bodyData{
@@ -177,6 +175,7 @@ public class ServerResponse: OutgoingMessage{
     
     //will move outgoingMessage
     public func write(data: AnyObject?, encoding: String! = nil, type: String! = ""){
+        
         switch data {
         case let str as String :
             self._body = str
@@ -204,6 +203,7 @@ public class ServerResponse: OutgoingMessage{
      * return {NSData} headerdata
      */
     private func prepareHeader () -> NSData {
+        
         header[Date] = NSDate.GtmString()
         header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
@@ -211,7 +211,7 @@ public class ServerResponse: OutgoingMessage{
         if self._hasbody {
             header[Content_Length] = "\(bodyData!.length)" // replace bodyString length
         }
-        
+
         if firstLine == nil{
             firstLine = "\(httpVersion) \(statusCode) \(status)" + CRLF
         }
@@ -247,9 +247,9 @@ public class IncomingMessage: httpStream{
     // HTTP header
     public var header: [ String: String ]!
     
-    public var httpVersionMajor: String? = "1"
+    public var httpVersionMajor: String = "1"
     
-    public var httpVersionMinor: String? = "1"
+    public var httpVersionMinor: String = "1"
     
     public var version : String{
         return "\(httpVersionMajor).\(httpVersionMinor)"
@@ -381,7 +381,6 @@ public class TreviServer: Net{
             incoming.method = info.method
             
             self.parser.incoming = incoming
-            
             self.parser.onIncoming!(incoming)
         }
         
@@ -411,7 +410,7 @@ public class Http {
     TEST
     will modify any type that suport routable, CallBack and Adapt TreviServer Model
     */
-    public func createServer_Test ( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
+    public func createServer( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
         let server = TreviServer(requestListener: requestListener)
         return server
     }
@@ -431,7 +430,6 @@ public class Http {
      */
     public func createServer ( requireModule: RoutAble... ) -> Http {
         for rm in requireModule {
-            
             rm.makeChildsRoute(rm.superPath!, module:requireModule)
             mwManager.enabledMiddlwareList += rm.middlewareList;
         }

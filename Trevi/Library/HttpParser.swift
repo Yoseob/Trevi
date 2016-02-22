@@ -39,29 +39,39 @@ public class HttpParser{
     //only body
     private var contentLength: Int = 0
     private var totalLength: Int = 0
-    
+    private var hasbody = false
+    private var endOfheader = false
     private var trace = ""
     
     private var headerString: String!{
         didSet{
-            parse()
+            headerParserBegin()
+        }
+    }
+    private var bodyString: String!{
+        didSet{
         }
     }
     
-    private var endOfheader = false
     
     public func execute(buf: uv_buf_const_ptr = nil, length: Int){
-    
         let readData = blockToUTF8String(buf.memory.base)
         
         if self.headerString == nil{
             self.headerInfo = HeaderInfo()
             self.headerString = readData
             self.onHeader!()
+        }else{
+            totalLength += length
+            
+            
+            if(totalLength >= contentLength){
+                onBodyComplete!()
+            }
         }
     }
     
-    private final func parse () {
+    private final func headerParserBegin () {
         let requestHeader: [String] = headerString.componentsSeparatedByString ( CRLF )
         let requestLineElements: [String] = requestHeader.first!.componentsSeparatedByString ( SP )
         
@@ -75,27 +85,33 @@ public class HttpParser{
             let version: [String] = versionComponents.last!.componentsSeparatedByString( "." )
             self.headerInfo.versionMajor = version.first!
             self.headerInfo.versionMinor = version.last!
-            
             parseHeader( requestHeader )
+            
+            if trace.length() > 1 {
+                // push(trace)
+                trace = ""
+            }
         }
-   
     }
+    
     private final func parseHeader ( fields: [String] ) {
         for _idx in 1 ..< fields.count {
-            
+
+            if endOfheader && fields[_idx].length() > 0 && hasbody{
+                self.trace += fields[_idx]
+            }
+
             if fields[_idx].length() == 0 && endOfheader == false{
                 self.onHeaderComplete!(self.headerInfo)
-
+                if let contentLength = self.headerInfo.header[Content_Length]{
+                    self.contentLength = Int(contentLength)!
+                    hasbody = true
+                }
                 endOfheader = true
-            }
-            if(endOfheader){
-                
             }
             
             if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
                 self.headerInfo.header[fieldSet[0].trim()] = fieldSet[1].trim();
-            }else{
-                trace += fields[_idx]
             }
         }
     }
