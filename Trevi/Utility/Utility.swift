@@ -28,3 +28,13 @@ extension NSDate {
         return  formatter.stringFromDate(date);
     }
 }
+
+func bridge<T : AnyObject>(obj : T) -> UnsafePointer<Void> {
+    return UnsafePointer(Unmanaged.passUnretained(obj).toOpaque())
+    // return unsafeAddressOf(obj) // ***
+}
+
+func bridge<T : AnyObject>(ptr : UnsafePointer<Void>) -> T {
+    return Unmanaged<T>.fromOpaque(COpaquePointer(ptr)).takeUnretainedValue()
+    // return unsafeBitCast(ptr, T.self) // ***
+}

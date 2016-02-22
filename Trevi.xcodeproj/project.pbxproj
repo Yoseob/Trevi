@@ -56,6 +56,9 @@
 		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
 		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
 		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
+		ACBB9E9F1C7A1D7D00E58E31 /* StreamReadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */; };
+		ACBB9EA11C7A1D7D00E58E31 /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */; };
+		ACBB9EA31C7A1D7D00E58E31 /* StreamWritable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */; };
 		DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; };
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF732EF11C799E65000B12E8 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF01C799E65000B12E8 /* Timer.swift */; };
@@ -147,6 +150,9 @@
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
+		ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamReadable.swift; sourceTree = "<group>"; };
+		ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
+		ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamWritable.swift; sourceTree = "<group>"; };
 		DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
 		DF732EE01C799737000B12E8 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -224,6 +230,9 @@
 				235441421C797FFA00E90A97 /* Response.swift */,
 				235441431C797FFA00E90A97 /* RoutAble.swift */,
 				235441441C797FFA00E90A97 /* Route.swift */,
+				ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */,
+				ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */,
+				ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -551,6 +560,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */,
+				ACBB9EA11C7A1D7D00E58E31 /* Buffer.swift in Sources */,
 				235441451C797FFA00E90A97 /* EventListener.swift in Sources */,
 				2354415C1C79800300E90A97 /* LibuvUtility.swift in Sources */,
 				2354415A1C79800300E90A97 /* Handle.swift in Sources */,
@@ -577,8 +587,10 @@
 				236E53D91C1235130076ED36 /* Favicon.swift in Sources */,
 				236E53E71C1835570076ED36 /* Json.swift in Sources */,
 				235441471C797FFA00E90A97 /* HttpParser.swift in Sources */,
+				ACBB9E9F1C7A1D7D00E58E31 /* StreamReadable.swift in Sources */,
 				235441461C797FFA00E90A97 /* Http.swift in Sources */,
 				2354415F1C79800300E90A97 /* Tcp.swift in Sources */,
+				ACBB9EA31C7A1D7D00E58E31 /* StreamWritable.swift in Sources */,
 				235441481C797FFA00E90A97 /* HttpProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

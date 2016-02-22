@@ -38,8 +38,7 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
     public func render ( path: String ) -> String {
-        
-        return render( path, args: [:] )
+        return render(path, args: [:])
     }
     
     /**
@@ -51,12 +50,13 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
     public func render ( path: String, args: [String:String] ) -> String {
-        
-        guard let data = load ( path ) else {
+        guard let data = load (path) else {
             return ""
         }
-        
-        return compile ( path, code: convertToSwift ( from: data, with: args ) )!
+        guard let compiled = compile (path, code: convertToSwift(from: data, with: args)) else {
+            return ""
+        }
+        return compiled
     }
     
     /**
@@ -67,15 +67,17 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by data from the file specified by path.
      */
     private final func load ( path: String ) -> String? {
-        
-        guard let data = File.read ( File.getRealPath( path )) else {
-            return nil
+        let file = ReadableFile(fileAtPath: path).open()
+        var buffer = [UInt8](count: 8, repeatedValue: 0)
+        let data = NSMutableData()
+        while file.status == .Open {
+            let result: Int = file.read(&buffer, maxLength: buffer.count)
+            data.appendBytes(buffer, length: result)
         }
         
-        guard let str = String( data: data, encoding: NSUTF8StringEncoding ) else {
+        guard let str = String(data: data, encoding: NSUTF8StringEncoding) else {
             return nil
         }
-        
         return str
     }
     
@@ -89,44 +91,37 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: The swift source codes which are converted from SSP file with arguments.
      */
     private final func convertToSwift ( from ssp: String, with args: [String:String] ) -> String {
-        guard let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [ .CaseInsensitive ] ) else {
-            print ( "Error parsing data." )
-            return ""
-        }
-
         var swiftCode: String = ""
-
         for key in args.keys {
             swiftCode += "var \(key) = \"\(args[key]!)\"\n"
         }
 
         var startIdx = ssp.startIndex
-
-        for match in regex.matchesInString ( ssp, options: [], range: NSMakeRange ( 0, ssp.length () ) ) {
-            let tagRange      = match.rangeAtIndex ( 0 )
-            let contentsRange = match.rangeAtIndex ( 2 )
+        
+        let searched = searchWithRegularExpression( ssp, pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [.CaseInsensitive] )
+        for dict in searched {
             let swiftTag, htmlTag: String
-
-            if ssp.substring ( match.rangeAtIndex ( 1 ).location, length: match.rangeAtIndex ( 1 ).length ) == "<%=" {
-                swiftTag = "print(\(ssp.substring ( contentsRange.location, length: contentsRange.length )), terminator:\"\")"
+            
+            if dict["$1"]!.text == "<%=" {
+                swiftTag = "print(\(dict["$2"]!.text), terminator:\"\")"
             } else {
-                swiftTag = ssp.substring ( contentsRange.location, length: contentsRange.length )
+                swiftTag = dict["$2"]!.text
             }
-
-            htmlTag = ssp[startIdx ..< ssp.startIndex.advancedBy ( tagRange.location )]
-            .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
-            .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
-            .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
-
+            
+            htmlTag = ssp[startIdx ..< ssp.startIndex.advancedBy ( dict["$0"]!.range.location )]
+                .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
+                .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
+                .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
+            
             swiftCode += "print(\"\(htmlTag)\", terminator:\"\")\n\(swiftTag)\n"
-
-            startIdx = ssp.startIndex.advancedBy ( tagRange.location + tagRange.length )
+            
+            startIdx = ssp.startIndex.advancedBy ( dict["$0"]!.range.location + dict["$0"]!.range.length )
         }
 
         let htmlTag = ssp[startIdx ..< ssp.endIndex]
-        .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
-        .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
-        .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
+            .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
+            .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
+            .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
 
         return (swiftCode + "print(\"\(htmlTag)\")\n")
     }
@@ -140,12 +135,10 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: Compiled data from the swift codes
      */
     private final func compile ( path: String, code: String ) -> String? {
-        if !File.write( "\(path).swift", data : code, size: code.characters.count, option: O_TRUNC ) {
-            return nil
-        } else {
-            return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
-                .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
-                .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
-        }
+        let file = WritableFile(fileAtPath: "\(path).swift", option: O_CREAT|O_TRUNC).open()
+        file.write(UnsafePointer<UInt8>(code.dataUsingEncoding(NSUTF8StringEncoding)!.bytes), maxLength: code.characters.count)
+        return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
+            .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+            .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
     }
 }
