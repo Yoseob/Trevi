@@ -186,7 +186,7 @@ public class File {
 public class ReadableFile: File {
     private var readEnd: Bool = false
     
-    override init(fileAtPath path: String, option: Int32 = O_RDONLY) {
+    public override init(fileAtPath path: String, option: Int32 = O_RDONLY) {
         super.init(fileAtPath: path, option: option|O_RDONLY&(~(O_WRONLY|O_RDWR)))
     }
     

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Trevi
 
 public class Request {
     
@@ -95,27 +96,27 @@ public class Request {
             httpVersionMajor = version.first!
             httpVersionMinor = version.last!
             
-            parseUrl( requestLineElements[1] )
+//            parseUrl( requestLineElements[1] )
             parseHeader( requestHeader )
         }
     }
     
-    private final func parseUrl ( url: String ) {
-        var urlComp = url.componentsSeparatedByString("?")
-        
-        // Parsing request path
-        for searched in searchWithRegularExpression(urlComp[0], pattern: "(/\\.+/|/*)") {
-            urlComp[0] = urlComp[0].stringByReplacingOccurrencesOfString(searched["$1"]!.text, withString: "/")
-        }
-        path = urlComp[0].stringByReplacingOccurrencesOfString("/*", withString: "/")
-        
-        // Parsing url query by using regular expression.
-        if urlComp.count > 1 {
-            for searched in searchWithRegularExpression(urlComp[1], pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)") {
-                query.updateValue ( searched["$2"]!.text.stringByRemovingPercentEncoding!, forKey: searched["$1"]!.text.stringByRemovingPercentEncoding! )
-            }
-        }
-    }
+//    private final func parseUrl ( url: String ) {
+//        var urlComp = url.componentsSeparatedByString("?")
+//        
+//        // Parsing request path
+//        for searched in searchWithRegularExpression(urlComp[0], pattern: "(/\\.+/|/*)") {
+//            urlComp[0] = urlComp[0].stringByReplacingOccurrencesOfString(searched["$1"]!.text, withString: "/")
+//        }
+//        path = urlComp[0].stringByReplacingOccurrencesOfString("/*", withString: "/")
+//        
+//        // Parsing url query by using regular expression.
+//        if urlComp.count > 1 {
+//            for searched in searchWithRegularExpression(urlComp[1], pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)") {
+//                query.updateValue ( searched["$2"]!.text.stringByRemovingPercentEncoding!, forKey: searched["$1"]!.text.stringByRemovingPercentEncoding! )
+//            }
+//        }
+//    }
     
     private final func parseHeader ( fields: [String] ) {
         for _idx in 1 ..< fields.count {

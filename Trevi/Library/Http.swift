@@ -14,8 +14,6 @@ public typealias NextCallback = ()->()
 
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
-public typealias CallBack = ( Request, Response ) -> Bool // will remove next
-
 public typealias emitable = (AnyObject) -> Void
 
 public typealias noParamsEvent = (Void) -> Void
@@ -43,13 +41,6 @@ public class EventEmitter{
         let emitter = events[name]
         
         switch emitter {
-        case let ra as RoutAble:
-            if arg.count == 2{
-                let req = arg[0] as! Request
-                let res = arg[1] as! Response
-                ra.handleRequest(req, res)
-            }
-            break
         case let cb as HttpCallback:
             if arg.count == 2{
                 let req = arg[0] as! IncomingMessage
@@ -419,10 +410,6 @@ public protocol ApplicationProtocol {
 
 public class Http {
     
-    
-    private let mwManager = MiddlewareManager.sharedInstance ()
-    private var listener : EventListener!
-    
     public init () {
         
     }
@@ -448,47 +435,13 @@ public class Http {
      * @return {Http} self
      * @public
      */
-    public func createServer ( requireModule: RoutAble... ) -> Http {
-        for rm in requireModule {
-            rm.makeChildsRoute(rm.superPath!, module:requireModule)
-            mwManager.enabledMiddlwareList += rm.middlewareList;
-        }
-        return self
-    }
-    
-    /**
-     * Create Server base on just single callback, after few time, modify can use many callback
-     * end return self.
-     *
-     * Examples:
-     *     http.createServer({  req,res in
-     *          return send("hello Trevi!")
-     *      }).listen(Port)
-     *
-     *
-     *
-     * @param {RouteAble} requireModule
-     * @return {Http} self
-     * @public
-     */
-    public func createServer ( callBacks: HttpCallback... ) -> Http {
-        
-        
-        for cb in callBacks {
-            mwManager.enabledMiddlwareList.append ( cb )
-        }
-        return self
-    }
-    
-    /**
-     * Add MiddleWare direct at Server
-     *
-     * @param {Middleware} mw
-     * @public
-     */
-    public func set( mw :  Middleware ...){
-        mwManager.enabledMiddlwareList.append(mw)
-    }
+//    public func createServer ( requireModule: RoutAble... ) -> Http {
+//        for rm in requireModule {
+//            rm.makeChildsRoute(rm.superPath!, module:requireModule)
+//            mwManager.enabledMiddlwareList += rm.middlewareList;
+//        }
+//        return self
+//    }
     
     
 }

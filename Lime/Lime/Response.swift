@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Trevi
 
 public protocol Sender{
     func send(data: AnyObject?) -> Bool
@@ -19,10 +20,7 @@ public class Response :Sender{
     
     public var header = [ String: String ] ()
     
-    //use fill statusline of header 
-    public var statusString: String {
-        return internalStatus.statusString ()
-    }
+
     public var statusCode: Int {
         return internalStatus.rawValue
     }
@@ -207,7 +205,7 @@ public class Response :Sender{
      * return {NSData} headerdata
      */
     private func prepareHeader () -> NSData {
-        header[Date] = NSDate.GtmString()
+//        header[Date] = NSDate.GtmString()
         header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
         
@@ -215,10 +213,10 @@ public class Response :Sender{
             header[Content_Length] = "\(bodyData.length)" // replace bodyString length
         }
         
-        var headerString = "\(HttpProtocol) \(statusCode) \(statusString)" + CRLF
-        headerString += dictionaryToString ( header )
-        return headerString.dataUsingEncoding ( NSUTF8StringEncoding )!
-
+//        var headerString = "\(HttpProtocol) \(statusCode) \(statusString)" + CRLF
+//        headerString += dictionaryToString ( header )
+//        return headerString.dataUsingEncoding ( NSUTF8StringEncoding )!
+        return NSData()
     }
 
     private func dictionaryToString ( dic: NSDictionary ) -> String! {

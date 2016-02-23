@@ -41,16 +41,17 @@ public class Router: Middleware {
     
 
     public func operateCommand ( params: MiddlewareParams ) -> Bool {
-        let req: Request  = params.req
-        let res: Response = params.res
-        if let target = self.route ( req.path ) where target.method == req.method {
-            req.parseParam( target )
-            for cb in target.callbacks {
-                if cb ( req, res ) == true {
-                    return true
-                }
-            }
-        }
+//        let req: Request  = params.req
+//        let res: Response = params.res
+//        if let target = self.route ( req.path ) where target.method == req.method {
+//            req.parseParam( target )
+//            for cb in target.callbacks {
+//                if cb ( req, res ) == true {
+//                    return true
+//                }
+//            }
+//        }
+//        return false
         return false
     }
     

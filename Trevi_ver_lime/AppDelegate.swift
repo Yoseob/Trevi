@@ -17,23 +17,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
               
         let server = Http ()
 
-        let lime = Lime()
-        
-        lime.use(BodyParser())
-        
-        lime.use(Favicon())
-        
-        lime.use(ServeStatic(path: "/Users/zero2hex/Documents/www"))
-        
-        lime.use(SwiftServerPage())
-        
-        lime.use("/",Root())
-        
-        lime.use(){ req, res in
-            res.status = 404
-            return res.send ("404 Pages Not Found")
-        }
-     
+//        let lime = Lime()
+//        
+//        lime.use(BodyParser())
+//        
+//        lime.use(Favicon())
+//        
+//        lime.use(ServeStatic(path: "/Users/zero2hex/Documents/www"))
+//        
+//        lime.use(SwiftServerPage())
+//
+//        lime.use("/",Root())
+//        
+//        lime.use(){ req, res in
+//            res.status = 404
+//            return res.send ("404 Pages Not Found")
+//        }
+//     
      
         server.createServer({ req, res in
 

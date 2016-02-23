@@ -12,7 +12,7 @@
 */
 
 import Foundation
-
+import Trevi
 
 public class RoutAble: Require {
 
@@ -81,7 +81,7 @@ public class RoutAble: Require {
      * @return
      * @public
      */
-    public func use ( middleware:CallBack ...)-> RoutAble {
+    public func use ( middleware: HttpCallback ...)-> RoutAble {
         for md in middleware {
             middlewareList.append ( md )
         }
@@ -107,38 +107,38 @@ public class RoutAble: Require {
 
     }
 
-    public func all ( path: String, _ callback: CallBack... ) -> RoutAble {
+    public func all ( path: String, _ callback: HttpCallback... ) -> RoutAble {
         registerCompleteRoutePath ( .GET, path: path, callback: callback )
         return registerCompleteRoutePath ( .POST, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func get ( path: String, _ callback: CallBack... ) -> RoutAble {
+    public func get ( path: String, _ callback: HttpCallback... ) -> RoutAble {
         return registerCompleteRoutePath ( .GET, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func post ( path: String, _ callback: CallBack... ) -> RoutAble {
+    public func post ( path: String, _ callback: HttpCallback... ) -> RoutAble {
         return registerCompleteRoutePath ( .POST, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func put ( path: String, _ callback: CallBack... ) -> RoutAble {
+    public func put ( path: String, _ callback: HttpCallback... ) -> RoutAble {
         return registerCompleteRoutePath ( .PUT, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func head ( path: String, _ callback: CallBack... ) -> RoutAble {
+    public func head ( path: String, _ callback: HttpCallback... ) -> RoutAble {
         return registerCompleteRoutePath ( .HEAD, path: path, callback: callback )
     }
     /**
      * Support http ver 1.1/1.0
      */
-    public func delete ( path: String, _ callback: CallBack... ) -> RoutAble {
+    public func delete ( path: String, _ callback: HttpCallback... ) -> RoutAble {
         return registerCompleteRoutePath ( .DELETE, path: path, callback: callback )
     }
     /**
@@ -183,7 +183,7 @@ public class RoutAble: Require {
     }
 
     
-    private func registerCompleteRoutePath ( type: HTTPMethodType, path: String, callback: [CallBack] ) -> RoutAble {
+    private func registerCompleteRoutePath ( type: HTTPMethodType, path: String, callback: [HttpCallback] ) -> RoutAble {
         var completePath = superPath! + path;
         if superPath != "" && path == "/" {
             completePath = superPath!
@@ -230,8 +230,8 @@ extension RoutAble{
         switch obj {
         case let mw as Middleware:
             ret = mw.operateCommand ( params )
-        case let cb as CallBack:
-            ret = cb ( params.req, params.res )
+//        case let cb as HttpCallback:
+//            ret = cb ( params.req, params.res )
         default:
             break
             
