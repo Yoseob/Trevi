@@ -38,3 +38,42 @@ public class Lime : RoutAble{
         }
     }
 }
+
+
+public class tLime: RoutAble{
+    
+    //    private let httpParser = LimePrepare()
+    
+    public  override init () {
+        super.init()
+        registerRequestEventListener()
+    }
+    
+    public override func use (var path : String = "" ,  _ module : RoutAble... ) -> RoutAble {
+        self.use(router)
+        if path == "/"{
+            path = ""
+        }
+        return makeChildsRoute (path, module: module )
+    }
+    
+    private func registerRequestEventListener() {
+        eventListener = MainListener()
+        eventListener!.on("data") { info in
+            //            self.httpParser.appendData(info)
+        }
+    }
+}
+
+
+
+extension tLime: ApplicationProtocol{
+    public func createApplication() -> Any {
+        
+        func handle(req: IncomingMessage,res: ServerResponse,next: NextCallback){
+//            self.handleRequest(<#T##request: Request##Request#>, <#T##response: Response##Response#>)
+        }
+        
+        return handle
+    }
+}

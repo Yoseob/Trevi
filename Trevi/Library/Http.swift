@@ -10,13 +10,17 @@ import Libuv
 
 public typealias HttpCallback = ( ( IncomingMessage, ServerResponse ) -> Void )
 
+public typealias NextCallback = ()->()
+
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
 public typealias CallBack = ( Request, Response ) -> Bool // will remove next
 
 public typealias emitable = (AnyObject) -> Void
 
-public typealias noParamsEmitable = (String) -> Void
+public typealias noParamsEvent = (Void) -> Void
+
+public typealias oneStringeEvent = (String) -> Void
 
 typealias EmiiterType = ((AnyObject) -> Void)?
 
@@ -29,6 +33,10 @@ public class EventEmitter{
     
     func on(name: String, _ emitter: Any){
         events[name] = emitter
+    }
+    
+    func removeEvent(name: String){
+        events.removeValueForKey(name)
     }
     
     func emit(name: String, _ arg : AnyObject...){
@@ -56,13 +64,17 @@ public class EventEmitter{
                 cb(arg)
             }
             break
-        case let cb as noParamsEmitable:
+        case let cb as oneStringeEvent:
             if arg.count == 1 {
                 cb(arg.first as! String)
             }
             break
-        default:
+        case let cb as noParamsEvent:
+            cb()
+            break
+
             
+        default:
             break
         }
     }
@@ -319,8 +331,11 @@ public class TreviServer: Net{
         print("Http Server starts ip : \(ip), port : \(port).")
         
         switch requestListener {
-        case let ra as RoutAble:
-            ra.makeChildRoute(ra.superPath!, module:ra)
+        case let ra as ApplicationProtocol:
+            let eventName = "request"
+            self.removeEvent(eventName)
+            self.on(eventName, ra.createApplication())
+            ra.createApplication()
             break
         default:
             break
@@ -392,6 +407,11 @@ public class TreviServer: Net{
             
         }
     }
+}
+
+
+public protocol ApplicationProtocol {
+    func createApplication() -> Any
 }
 
 
