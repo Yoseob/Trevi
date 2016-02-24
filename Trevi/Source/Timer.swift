@@ -13,11 +13,17 @@ public class Timer : Handle {
     public let timerhandle : uv_timer_ptr
     
     public init() {
+        print("init")
         self.timerhandle = uv_timer_ptr.alloc(1)
         uv_timer_init(uv_default_loop(), self.timerhandle)
         
         super.init(handle: uv_handle_ptr(self.timerhandle))
     }
+    deinit {
+        
+        print("deinit")
+    }
+    
 }
 
 
@@ -49,5 +55,12 @@ extension Timer {
     
     public static var onTimeout : uv_timer_cb = { (handle) in
         
+        print("ontimeout")
+        
+        if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {
+            if let callback =  wrap.event.onTimeout {
+                callback(handle)
+            }
+        }
     }
 }
