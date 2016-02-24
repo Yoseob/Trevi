@@ -54,6 +54,10 @@ public class _Route{
         print("dispatchs")
     }
     
+    public func handlesMethod(method: HTTPMethodType){
+
+    }
+    
     public init(method: HTTPMethodType, _ path: String){
         self.path = path
         self.methods.append(method)
@@ -67,11 +71,24 @@ public struct Option{
     }
 }
 
+public class RegExp{
+    public var fastSlash: Bool! // middleware only true
+    public var source: String! //regexp
+    public init(){
+        self.fastSlash = false
+        self.source = ""
+    }
+}
+
 public class Layer {
+    
     private var handle: HttpCallback?
     public var path: String!
+    public var regexp: RegExp!
     public var name: String!
     public var route: _Route?
+    public var params: [String: AnyObject]?
+    
     public init(path: String ,name: String? = nil, options: Option? = nil, fn: HttpCallback){
         handle = fn
         self.path = path
@@ -83,8 +100,36 @@ public class Layer {
         handle = module.handle
         self.path = path
         self.name = module.name.rawValue
+        
+        //create regexp
+        // temp 
+        if path == "/" {
+            regexp = RegExp()
+            regexp.fastSlash = true
+        }
+        
     }
     
+    public func handleRequest(req: IncomingMessage , res: ServerResponse, next: NextCallback){
+        let function = self.handle
+        function!(req,res,next)
+    }
+    public func match(path: String?) -> Bool{
+        
+        if path == nil {
+            self.params = nil
+            self.path = nil
+            return false
+        }
+        
+        if self.regexp!.fastSlash! {
+            self.path = ""
+            self.params = [String: AnyObject]()
+            return true
+        }
+        
+        return true
+    }
 }
 
 //test middleware
@@ -94,7 +139,8 @@ class Query: _Middleware {
     }
     
     func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
-        print(name.rawValue)
+        print(name)
+        next!()
     }
 }
 
@@ -106,11 +152,77 @@ public class _Router: _Middleware{
     
     public init(){}
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback? ) {
-        print(name.rawValue)
-        for md in stack {
-            md.handle!(req,res ,next)
-
+        print(name)
+        
+        var idx = 0
+        
+        func trimPrefix(layer: Layer , layerPath: String, path: String){
+            // do...what ...
+            
+            layer.handleRequest(req, res: res, next: nextHandle)
         }
+        
+        func nextHandle(){
+           
+            if idx > self.stack.count{
+                return
+            }
+        
+            let path = getPathname(req)
+            
+            var layer: Layer!
+            var match: Bool!
+            var route: _Route!
+        
+            while match != true && idx < stack.count{
+                layer = stack[idx++]
+                match = matchLayer(layer, path: path)
+                route = layer.route
+                
+                if (match != true) || (route == nil ) {
+                    continue
+                }
+                route.handlesMethod(HTTPMethodType(rawValue: req.method)!)
+            }
+            
+            if match == false {
+                // return done()
+            }
+            
+            if route != nil {
+                //req.route = route
+            }
+            
+            let layerPath = layer.path
+            
+            self.poccessParams(layer, paramsCalled: "", req: req, res: res) {  err in
+                if err != nil {
+                    return nextHandle()
+                }
+                
+                if route != nil {
+                    layer.handleRequest(req, res: res, next: nextHandle)
+                }
+                trimPrefix(layer, layerPath: layerPath, path: path)
+            }
+        }
+        nextHandle()
+
+    }
+    
+
+    
+    private func poccessParams(layer: Layer, paramsCalled: AnyObject, req: IncomingMessage, res: ServerResponse, cb:((String?)->())){
+        cb(nil)
+    }
+    
+    private func matchLayer(layer: Layer , path: String) -> Bool{
+        return layer.match(path)
+    }
+    
+    private func getPathname(req: IncomingMessage)-> String{
+        //should parsing req.url
+        return req.path
     }
     
     func use(path: String? = "/",  md: _Middleware){
@@ -201,7 +313,6 @@ public class Lime : _Routable{
     }
     
     private func lazyRouter(){
-        
         guard _router == nil else {
             return
         }

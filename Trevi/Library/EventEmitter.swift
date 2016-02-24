@@ -37,10 +37,11 @@ public class EventEmitter{
         
         switch emitter {
         case let cb as HttpCallback:
+            
             if arg.count == 2{
                 let req = arg[0] as! IncomingMessage
                 let res = arg[1] as! ServerResponse
-                cb(req,res, nil )
+                cb(req,res, nil)
             }
             break
         case let cb as emitable:

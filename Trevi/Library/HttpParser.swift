@@ -33,6 +33,8 @@ public class HttpParser{
     public var onIncoming: ((IncomingMessage) -> Void)?
     
     
+    public var date: NSDate = NSDate()
+    
     //only header
     public var headerInfo: HeaderInfo!
     

@@ -17,6 +17,7 @@ public class Favicon: _Middleware {
     }
 
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
-        
+        print(name)
+        next!()
     }
 }

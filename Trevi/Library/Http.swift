@@ -248,6 +248,8 @@ public class TreviServer: Net{
     
     private var parser: HttpParser!
     
+    private var parsers = [uv_stream_ptr:HttpParser!]()
+    
     private var requestListener: Any!
     
     init(requestListener: Any!){
@@ -278,20 +280,33 @@ public class TreviServer: Net{
     
     
     func connectionListener(sock: AnyObject){
-        
+    
         let socket = sock as! Socket
-        if parser == nil {
-            parser = HttpParser()
-            parser.socket = socket
-            self.parserSetup()
-        }
-        
+        parser = HttpParser()
+        parser.socket = socket
+        self.parserSetup()
+        parsers[socket.handle] = parser
+
         socket.ondata = { buf, nread in
-            self.parser.execute(buf,length: nread)
+            
+            if let _parser = self.parsers[socket.handle] {
+                _parser.execute(buf,length: nread)
+            }else{
+                print("no parser")
+            }
         }
         
         socket.onend = {
-            self.parser = nil
+            print("onend")
+            
+            var _parser = self.parsers[socket.handle]
+            _parser!.onBody = nil
+            _parser!.onBodyComplete = nil
+            _parser!.onHeader = nil
+            _parser!.onIncoming = nil
+            _parser!.onHeaderComplete = nil
+            _parser = nil
+            self.parsers.removeValueForKey(socket.handle)
         }
         
         parser.onIncoming = { req in
@@ -310,6 +325,7 @@ public class TreviServer: Net{
             }
             
             self.emit("request", req ,res)
+
         }
         
     }
@@ -317,6 +333,7 @@ public class TreviServer: Net{
     func parserSetup(){
         
         parser.onHeader = {
+        
         }
         
         parser.onHeaderComplete = { info in
@@ -373,7 +390,7 @@ public class Http {
      * @public
      */
 
-    public func createServer( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
+    public func createServer( requestListener: ( IncomingMessage, ServerResponse, NextCallback? )->()) -> Net{
         let server = TreviServer(requestListener: requestListener)
         return server
     }

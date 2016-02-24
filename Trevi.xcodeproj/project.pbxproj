@@ -294,7 +294,6 @@
 			children = (
 				2354414F1C79800300E90A97 /* Source */,
 				2354413A1C797FFA00E90A97 /* Library */,
-				2394120E1C0C4FDA001B9B07 /* Middleware */,
 				239412091C0C46CE001B9B07 /* Utility */,
 				239411D61C0C2DA3001B9B07 /* Trevi.h */,
 				239411D81C0C2DA3001B9B07 /* Info.plist */,
@@ -328,13 +327,6 @@
 				236E53E61C1835570076ED36 /* Json.swift */,
 			);
 			path = Utility;
-			sourceTree = "<group>";
-		};
-		2394120E1C0C4FDA001B9B07 /* Middleware */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Middleware;
 			sourceTree = "<group>";
 		};
 		23D2F3941C1DA4A000F0C784 /* public */ = {

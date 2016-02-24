@@ -21,25 +21,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(Favicon());
         
-        lime.use("root", Root())
+        lime.use("/root", Root())
   
         lime.use { (req, res, next) in
             print("function")
         }
-        
-        server.createServer(lime).listen(8080)
-/*
-        server.createServer({ req, res in
+  
+//        server.createServer(lime).listen(8080)
 
-            func onData(chunk: String){
-                print(chunk)
-            }
-            req.on("data",onData)
-            
+        server.createServer({ (req, res, next) in
             res.write("hello Trevi")
             res.end()
         }).listen(8080)
-*/
+
+
     }
 
     func applicationWillTerminate ( aNotification: NSNotification ) {
