@@ -43,8 +43,7 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
     }
     
     public func close() {
-        
-        Socket.dictionary[self.handle] = nil
+    
         Handle.close(uv_handle_ptr(handle))
     }
     
@@ -73,7 +72,6 @@ extension Socket {
     //    print("New client!  ip : \(ip), port : \(port).")
         
         let socket = Socket(handle: handle)
-        
         EE.emit("connection", socket)
         
     }
@@ -86,12 +84,14 @@ extension Socket {
     }
 
     public static func onClose(handle : uv_handle_ptr) {
-        print("onClose called")
+//        print("onClose called")
         
         if let wrap = Socket.dictionary[uv_stream_ptr(handle)] {
-     
-            Socket.dictionary.removeValueForKey(uv_stream_ptr(handle))
             wrap.onend!()
+            wrap.events.removeAll()
+            wrap.ondata = nil
+            wrap.onend = nil
+            Socket.dictionary.removeValueForKey(uv_stream_ptr(handle))
         }
     }
         
@@ -105,7 +105,7 @@ public class Net: EventEmitter {
     
     let server : Tcp
     
-    public init(ip : String = "127.0.0.1") {
+    public init(ip : String = "210.118.64.119") {
         self.ip = ip
         self.port = 8080
         self.server = Tcp()

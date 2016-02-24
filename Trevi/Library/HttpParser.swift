@@ -54,7 +54,10 @@ public class HttpParser{
         didSet{
         }
     }
-    
+    public init (){
+    }
+    deinit{
+    }
     
     public func execute(buf: uv_buf_const_ptr = nil, length: Int){
         let readData = blockToUTF8String(buf.memory.base)

@@ -23,6 +23,9 @@ public class EventEmitter{
     var events = [String:Any]()
     
     init(){}
+    deinit{
+        
+    }
     
     func on(name: String, _ emitter: Any){
         events[name] = emitter
