@@ -14,7 +14,7 @@
 		232299A11C61E048003E44AB /* Lime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322999E1C61E048003E44AB /* Lime.swift */; };
 		232299A51C61E09A003E44AB /* PreparedHttp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A41C61E09A003E44AB /* PreparedHttp.swift */; };
 		232299A91C622ABA003E44AB /* LimeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232299A81C622ABA003E44AB /* LimeResponse.swift */; };
-		235441451C797FFA00E90A97 /* EventListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413B1C797FFA00E90A97 /* EventListener.swift */; };
+		235441451C797FFA00E90A97 /* EventEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413B1C797FFA00E90A97 /* EventEmitter.swift */; };
 		235441461C797FFA00E90A97 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413C1C797FFA00E90A97 /* Http.swift */; };
 		235441471C797FFA00E90A97 /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413D1C797FFA00E90A97 /* HttpParser.swift */; };
 		235441481C797FFA00E90A97 /* HttpProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413E1C797FFA00E90A97 /* HttpProtocol.swift */; };
@@ -105,7 +105,7 @@
 		2322999E1C61E048003E44AB /* Lime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lime.swift; sourceTree = "<group>"; };
 		232299A41C61E09A003E44AB /* PreparedHttp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedHttp.swift; sourceTree = "<group>"; };
 		232299A81C622ABA003E44AB /* LimeResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LimeResponse.swift; sourceTree = "<group>"; };
-		2354413B1C797FFA00E90A97 /* EventListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventListener.swift; sourceTree = "<group>"; };
+		2354413B1C797FFA00E90A97 /* EventEmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventEmitter.swift; sourceTree = "<group>"; };
 		2354413C1C797FFA00E90A97 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		2354413D1C797FFA00E90A97 /* HttpParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpParser.swift; sourceTree = "<group>"; };
 		2354413E1C797FFA00E90A97 /* HttpProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpProtocol.swift; sourceTree = "<group>"; };
@@ -226,7 +226,7 @@
 		2354413A1C797FFA00E90A97 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				2354413B1C797FFA00E90A97 /* EventListener.swift */,
+				2354413B1C797FFA00E90A97 /* EventEmitter.swift */,
 				2354413C1C797FFA00E90A97 /* Http.swift */,
 				2354413D1C797FFA00E90A97 /* HttpParser.swift */,
 				2354413E1C797FFA00E90A97 /* HttpProtocol.swift */,
@@ -581,7 +581,7 @@
 			files = (
 				2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */,
 				ACBB9EA11C7A1D7D00E58E31 /* Buffer.swift in Sources */,
-				235441451C797FFA00E90A97 /* EventListener.swift in Sources */,
+				235441451C797FFA00E90A97 /* EventEmitter.swift in Sources */,
 				2354415C1C79800300E90A97 /* LibuvUtility.swift in Sources */,
 				2354415A1C79800300E90A97 /* Handle.swift in Sources */,
 				235441491C797FFA00E90A97 /* Net.swift in Sources */,

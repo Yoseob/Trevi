@@ -41,4 +41,5 @@ public enum MiddlewareName: String {
 public protocol Middleware {
     var name: MiddlewareName { get set }
     func operateCommand ( params: MiddlewareParams ) -> Bool
+    
 }

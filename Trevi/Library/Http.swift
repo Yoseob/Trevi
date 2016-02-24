@@ -8,68 +8,11 @@
 import Libuv
 
 
-public typealias HttpCallback = ( ( IncomingMessage, ServerResponse ) -> Void )
+public typealias HttpCallback = ( ( IncomingMessage, ServerResponse, NextCallback?) -> Void )
 
 public typealias NextCallback = ()->()
 
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
-
-public typealias emitable = (AnyObject) -> Void
-
-public typealias noParamsEvent = (Void) -> Void
-
-public typealias oneStringeEvent = (String) -> Void
-
-typealias EmiiterType = ((AnyObject) -> Void)?
-
-
-public class EventEmitter{
-    
-    var events = [String:Any]()
-    
-    init(){}
-    
-    func on(name: String, _ emitter: Any){
-        events[name] = emitter
-    }
-    
-    func removeEvent(name: String){
-        events.removeValueForKey(name)
-    }
-    
-    func emit(name: String, _ arg : AnyObject...){
-        let emitter = events[name]
-        
-        switch emitter {
-        case let cb as HttpCallback:
-            if arg.count == 2{
-                let req = arg[0] as! IncomingMessage
-                let res = arg[1] as! ServerResponse
-                cb(req,res)
-            }
-            break
-        case let cb as emitable:
-            if arg.count == 1 {
-                cb(arg.first!)
-            }else {
-                cb(arg)
-            }
-            break
-        case let cb as oneStringeEvent:
-            if arg.count == 1 {
-                cb(arg.first as! String)
-            }
-            break
-        case let cb as noParamsEvent:
-            cb()
-            break
-
-            
-        default:
-            break
-        }
-    }
-}
 
 
 //temp class
@@ -324,9 +267,9 @@ public class TreviServer: Net{
         switch requestListener {
         case let ra as ApplicationProtocol:
             let eventName = "request"
+            
             self.removeEvent(eventName)
             self.on(eventName, ra.createApplication())
-            ra.createApplication()
             break
         default:
             break
@@ -365,6 +308,7 @@ public class TreviServer: Net{
                 res.header[Connection] = "close"
                 res.shouldKeepAlive = false
             }
+            
             self.emit("request", req ,res)
         }
         
@@ -413,14 +357,7 @@ public class Http {
     public init () {
         
     }
-    /*
-    TEST
-    will modify any type that suport routable, CallBack and Adapt TreviServer Model
-    */
-    public func createServer( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
-        let server = TreviServer(requestListener: requestListener)
-        return server
-    }
+
     
     /**
      * Create Server base on RouteAble Model, maybe it able to use many Middleware
@@ -435,7 +372,18 @@ public class Http {
      * @return {Http} self
      * @public
      */
-//    public func createServer ( requireModule: RoutAble... ) -> Http {
+
+    public func createServer( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
+        let server = TreviServer(requestListener: requestListener)
+        return server
+    }
+    public func createServer( requestListener: Any) -> Net{
+        let server = TreviServer(requestListener: requestListener)
+        return server
+    }
+    
+    
+   //    public func createServer ( requireModule: RoutAble... ) -> Http {
 //        for rm in requireModule {
 //            rm.makeChildsRoute(rm.superPath!, module:requireModule)
 //            mwManager.enabledMiddlwareList += rm.middlewareList;
