@@ -22,10 +22,11 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         super.init()
         Socket.dictionary[handle] = self
         
-        print("socket init")
+//        print("socket init")
     }
-    deinit{
-        print("socket deinit")
+    deinit {
+        
+//        print("socket deinit")
     }
     
     
@@ -37,7 +38,8 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         
         Stream.doWrite(uv_buf_const_ptr(buffer), handle: handle)
         
-//        self.setTimeout(100){_ in 
+//        self.setTimeout(100){ [unowned self]
+//            _ in
 //            self.close()
 //        }
     }
@@ -105,7 +107,7 @@ public class Net: EventEmitter {
     
     let server : Tcp
     
-    public init(ip : String = "210.118.64.119") {
+    public init(ip : String = "0.0.0.0") {
         self.ip = ip
         self.port = 8080
         self.server = Tcp()
@@ -117,7 +119,8 @@ public class Net: EventEmitter {
         
         self.emit("listening")
         
-        self.server.event.onConnection = { client in
+        self.server.event.onConnection = { 
+            client in
             
             Socket.onConnection(client, self)
             
@@ -134,6 +137,7 @@ public class Net: EventEmitter {
         Tcp.listen(self.server.tcpHandle)
     
         uv_run(uv_default_loop(), UV_RUN_DEFAULT)
+        
     }
     
 }

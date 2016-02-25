@@ -25,7 +25,11 @@ public class Stream : Handle {
     }
     
     public func readStart() -> Int32 {
-        return uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
+        
+        //        Should add if state to set using work or not
+        //        return uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
+        
+        return uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
     }
     
     public func readStop() -> Int32 {
@@ -154,7 +158,7 @@ extension Stream {
 
 extension Stream {
     
-    public static var onAlloc : uv_alloc_cb! = { (_, size, buf) in
+    public static var onAlloc : uv_alloc_cb = { (_, size, buf) in
         buf.initialize(uv_buf_init(UnsafeMutablePointer.alloc(size), UInt32(size)))
     }
     
@@ -170,7 +174,7 @@ extension Stream {
         }
     }
     
-    public static var onRead : uv_read_cb! = { (handle, nread, buf) in
+    public static var onRead : uv_read_cb = { (handle, nread, buffer) in
         
 //        let wrap : Stream = Stream(streamHandle: uv_stream_ptr(handle.memory.data))
 //        var type : uv_handle_type = Stream.getHandleType(handle)
@@ -187,7 +191,7 @@ extension Stream {
         }
         else if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {
             if let callback =  wrap.event.onRead {
-                callback(handle , nread, buf)
+                callback(handle , nread, buffer)
             }
         }
         
@@ -201,6 +205,8 @@ extension Stream {
     public static var afterWrite : uv_write_cb = { (request, status) in
  
 //        request.memory.bufs.memory.base.dealloc(request.memory.bufs.memory.len)
+      
+        uv_cancel(uv_req_ptr(request))
         request.dealloc(1)
     }
     

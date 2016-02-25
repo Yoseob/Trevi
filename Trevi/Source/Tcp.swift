@@ -8,6 +8,12 @@
 
 import Libuv
 
+#if os(Linux)
+    import SwiftGlibc
+#else
+    import Darwin
+#endif
+
 public class Tcp : Stream {
     
     public let tcpHandle : uv_tcp_ptr
@@ -17,12 +23,12 @@ public class Tcp : Stream {
         self.tcpHandle = uv_tcp_ptr.alloc(1)
         
         uv_tcp_init(uv_default_loop(), self.tcpHandle)
-    
+        
         super.init(streamHandle : uv_stream_ptr(self.tcpHandle))
     }
     
     deinit {
-//        print("Tcp deinit")
+        
     }
     
 }
@@ -67,7 +73,9 @@ extension Tcp {
     
     public static func listen(handle : uv_tcp_ptr, backlog : Int32 = 50) {
         
-        let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
+//        Should add if state to set using work or not
+//        let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
+        let error = uv_listen(uv_stream_ptr(handle), backlog, Work.onConnection)
         
         if error != 0 {
             // Should handle error

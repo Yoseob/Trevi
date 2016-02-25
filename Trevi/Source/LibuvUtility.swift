@@ -9,6 +9,9 @@
 
 import Libuv
 
+
+public typealias void_ptr = UnsafeMutablePointer<Void>
+
 public typealias uv_any_handle_ptr = UnsafeMutablePointer<uv_any_handle>
 public typealias uv_handle_ptr = UnsafeMutablePointer<uv_handle_t>
 
@@ -28,6 +31,7 @@ public typealias uv_buf_const_ptr = UnsafePointer<uv_buf_t>
 
 public typealias uv_req_ptr = UnsafeMutablePointer<uv_req_t>
 public typealias uv_write_ptr = UnsafeMutablePointer<uv_write_t>
+public typealias uv_work_ptr = UnsafeMutablePointer<uv_work_t>
 
 
 public typealias sockaddr_ptr = UnsafeMutablePointer<sockaddr>
@@ -67,11 +71,13 @@ public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
     var idx = block
     var value = "" as String
     
+    if length <= 0 { return ""}
+    
     for _ in 0...length {
-        //if idx.memory > 31{
-        let c = String(format: "%c", idx.memory)
-        value += c
-        //}
+//        if idx.memory > 31{
+            let c = String(format: "%c", idx.memory)
+            value += c
+//        }
         idx++
     }
     return value
@@ -82,3 +88,10 @@ public func blockToUTF8String(block: UnsafePointer<CChar>) -> String {
     let value = k! as String
     return value
 }
+
+public func getThreadID() -> mach_port_t {
+    return pthread_mach_thread_np(pthread_self())
+    
+}
+
+
