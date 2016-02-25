@@ -44,7 +44,9 @@ public class Echo : Net {
             
         }
         
-        socket.onend = {}
+        socket.onend = {
+            print("Close thread : \(getThreadID())")
+        }
     }
     
 }

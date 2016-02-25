@@ -92,20 +92,14 @@ extension Stream {
             
         let request : uv_write_ptr = uv_write_ptr.alloc(1)
         let error : Int32
-            
-//        Should add request module
-//        request.memory.bufs.memory = uv_buf_init(UnsafeMutablePointer<Int8>.alloc(size), UInt32(size))
-//        memcpy(request.memory.bufs.memory.base, buffer.memory.base, size)
+        
+        request.memory.data = void_ptr(buffer)
 
         if sendHandle != nil {
             error = uv_write2(request, handle, buffer, count, sendHandle, Stream.afterWrite)
         }
         else {
             error = uv_write(request, handle, buffer, count, Stream.afterWrite)
-        }
-        
-        if buffer.memory.len > 0 {
-            buffer.memory.base.dealloc(buffer.memory.len)
         }
         
         if error == 0 {
@@ -204,8 +198,12 @@ extension Stream {
     
     public static var afterWrite : uv_write_cb = { (request, status) in
  
-//        request.memory.bufs.memory.base.dealloc(request.memory.bufs.memory.len)
-      
+        let buffer : uv_buf_const_ptr = uv_buf_const_ptr(request.memory.data)
+
+        if buffer.memory.len > 0 {
+            buffer.memory.base.dealloc(buffer.memory.len)
+        }
+        
         uv_cancel(uv_req_ptr(request))
         request.dealloc(1)
     }
