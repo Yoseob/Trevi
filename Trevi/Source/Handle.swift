@@ -23,8 +23,8 @@ public class Handle {
     }
     
     deinit {
-//        print("Handle deinit")
         Handle.close(self.handle)
+        self.handle.dealloc(1)
     }
     
 }
