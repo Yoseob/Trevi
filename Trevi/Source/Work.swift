@@ -42,7 +42,7 @@ extension Work {
         
         work.setWorkData( withUnsafeMutablePointer(&info){ void_ptr($0) } )
         
-        uv_queue_work( uv_default_loop(), work.workRequest, workConnection, Work.afterWork )
+        uv_queue_work( uv_default_loop(), work.workRequest, workConnection, afterWork )
     }
     
     struct readInfo {
@@ -58,7 +58,7 @@ extension Work {
         
         work.setWorkData( withUnsafeMutablePointer(&info){ void_ptr($0) } )
         
-        uv_queue_work( uv_default_loop(), work.workRequest, workRead, Work.afterWork )
+        uv_queue_work( uv_default_loop(), work.workRequest, workRead, afterWork )
     }
 }
 

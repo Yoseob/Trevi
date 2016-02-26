@@ -19,6 +19,8 @@ public class Echo : Net {
     
     public override func listen(port: Int32) {
         
+        filetest()
+        
         print("Echo Server starts ip : \(ip), port : \(port).")
         print("Main thread : \(getThreadID())")
         super.listen(port)
@@ -51,3 +53,26 @@ public class Echo : Net {
     
 }
 
+func filetest(){
+    
+    let fs : FsBase = FsBase()
+    
+    fs.events[UV_FS_OPEN] = {
+        request in
+
+        FsBase.read(request)
+    }
+    
+    fs.events[UV_FS_READ] = { request in
+        
+        let buffer = uv_buf_ptr(request.memory.data)
+        let length = request.memory.result
+        
+        print("Read length : \(length)")
+        print(blockToString(buffer.memory.base, length: length))
+        
+        FsBase.cleanup(request)
+    }
+    
+    FsBase.open(fs.fsRequest, path: "/Users/Ingyure/Documents/fstest.txt")
+}

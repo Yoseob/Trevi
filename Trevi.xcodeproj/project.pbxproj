@@ -68,6 +68,7 @@
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF732EF11C799E65000B12E8 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF01C799E65000B12E8 /* Timer.swift */; };
 		DF732EF31C79B4DD000B12E8 /* Loop.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF21C79B4DD000B12E8 /* Loop.swift */; };
+		DF843F121C80CAEF0078D69C /* FsBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF843F111C80CAEF0078D69C /* FsBase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,6 +170,7 @@
 		DF732EE01C799737000B12E8 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		DF732EF01C799E65000B12E8 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
 		DF732EF21C79B4DD000B12E8 /* Loop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loop.swift; sourceTree = "<group>"; };
+		DF843F111C80CAEF0078D69C /* FsBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FsBase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -257,6 +259,7 @@
 				235441521C79800300E90A97 /* Handle.swift */,
 				DF732EF21C79B4DD000B12E8 /* Loop.swift */,
 				DF4BE52B1C7F073800908A3D /* Work.swift */,
+				DF843F111C80CAEF0078D69C /* FsBase.swift */,
 				235441561C79800300E90A97 /* Stream.swift */,
 				235441571C79800300E90A97 /* Tcp.swift */,
 				235441501C79800300E90A97 /* Async.swift */,
@@ -601,6 +604,7 @@
 				2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */,
 				ACBB9EA11C7A1D7D00E58E31 /* Buffer.swift in Sources */,
 				DF4BE52C1C7F073800908A3D /* Work.swift in Sources */,
+				DF843F121C80CAEF0078D69C /* FsBase.swift in Sources */,
 				235441451C797FFA00E90A97 /* EventEmitter.swift in Sources */,
 				2354415C1C79800300E90A97 /* LibuvUtility.swift in Sources */,
 				2354415A1C79800300E90A97 /* Handle.swift in Sources */,
@@ -955,6 +959,7 @@
 				DF4BE5271C7ED32800908A3D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
