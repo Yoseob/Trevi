@@ -45,23 +45,34 @@ public class _Route{
     public var methods = [HTTPMethodType]()
     public var dispatch: HttpCallback? {
         didSet{
-            let layer = Layer(path: path!, name: "function", options: Option(end: true), fn: self.dispatch!)
+            let layer = Layer(path: path!, name: "anonymous", options: Option(end: true), fn: self.dispatch!)
             self.stack.append(layer)
         }
-    }
-    
-    public func dispatchs(req: IncomingMessage,res: ServerResponse,next: NextCallback?){
-        print("dispatchs")
-    }
-    
-    public func handlesMethod(method: HTTPMethodType){
-
     }
     
     public init(method: HTTPMethodType, _ path: String){
         self.path = path
         self.methods.append(method)
     }
+
+    public func dispatchs(req: IncomingMessage,res: ServerResponse,next: NextCallback?){
+        print("dispatchs")
+    }
+    
+    public func handlesMethod(method: HTTPMethodType) -> Bool{
+        for _mathod in methods {
+            if method == _mathod {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    public func options() -> [HTTPMethodType] {
+        return self.methods
+    }
+    
 }
 
 public struct Option{
@@ -78,6 +89,11 @@ public class RegExp{
         self.fastSlash = false
         self.source = ""
     }
+    public func exec(path: String) -> [String]{
+        var result = [String]()
+        result.append(path)
+        return result
+    }
 }
 
 public class Layer {
@@ -87,49 +103,82 @@ public class Layer {
     public var regexp: RegExp!
     public var name: String!
     public var route: _Route?
+    
+    public var keys: [String]? // params key ex path/:name , name is key
     public var params: [String: AnyObject]?
     
-    public init(path: String ,name: String? = nil, options: Option? = nil, fn: HttpCallback){
-        handle = fn
-        self.path = path
-        if let name = name{
-            self.name = name
-        }
-    }
-    public init(path: String, options: [String:String]? = nil, module: _Middleware){
-        handle = module.handle
-        self.path = path
-        self.name = module.name.rawValue
+    public init(path: String ,name: String? = "function", options: Option? = nil, fn: HttpCallback){
+        print("path : \(path), name : \(name!) , option: \(options)")
+        setupAfterInit(path, opt: options, name: name, fn: fn)
         
+    }
+    public init(path: String, options: Option? = nil, module: _Middleware){
+        print("path : \(path), name : \(module.name) , option: \(options)")
+        setupAfterInit(path, opt: options, name: module.name.rawValue, fn: module.handle)
+        
+    }
+    private func setupAfterInit(p: String, opt: Option? = nil, name: String?, fn: HttpCallback){
+        self.handle = fn
+        self.path = p
+        self.name = name
         //create regexp
-        // temp 
-        if path == "/" {
-            regexp = RegExp()
+        regexp = self.pathRegexp(path, option: opt)
+
+        if path == "/" && opt?.end == false {
             regexp.fastSlash = true
         }
+
+    }
+    
+    private func pathRegexp(path: String,option: Option!) -> RegExp{
+        keys = [String]() // create key, and append key when create regexp
         
+        // temp
+        return RegExp()
     }
     
     public func handleRequest(req: IncomingMessage , res: ServerResponse, next: NextCallback){
         let function = self.handle
         function!(req,res,next)
     }
+    
     public func match(path: String?) -> Bool{
         
-        if path == nil {
+        
+        guard path != nil else {
             self.params = nil
             self.path = nil
             return false
         }
         
-        if self.regexp!.fastSlash! {
+        guard (self.regexp.fastSlash) == false else {
             self.path = ""
             self.params = [String: AnyObject]()
             return true
         }
+
+        
+        var ret: [String]!  = self.regexp.exec(path!)
+
+        guard ret != nil else{
+            self.params = nil
+            self.path = nil
+            return false
+        }
+    
+        self.path = ret[0]
+        self.params = [String: AnyObject]()
+        ret.removeFirst()
+
+        for _ in ret {
+            //keys made when make regexp
+            //so fill params based on key, ret,
+            // !!!!!! keys , ret both should be same index per item
+        }
         
         return true
     }
+    
 }
 
 //test middleware
@@ -155,6 +204,7 @@ public class _Router: _Middleware{
         print(name)
         
         var idx = 0
+        var options = [HTTPMethodType:Int]()
         
         func trimPrefix(layer: Layer , layerPath: String, path: String){
             // do...what ...
@@ -182,15 +232,22 @@ public class _Router: _Middleware{
                 if (match != true) || (route == nil ) {
                     continue
                 }
-                route.handlesMethod(HTTPMethodType(rawValue: req.method)!)
+                
+                let method = HTTPMethodType(rawValue: req.method)!
+                let hasMethod = route.handlesMethod(method)
+                
+                if hasMethod && method == .OPTIONS {
+                    appendMethods(&options, src: route.options())
+                }
+                
             }
             
             if match == false {
-                // return done()
+//                 return done()
             }
             
             if route != nil {
-                //req.route = route
+                req.route = route
             }
             
             let layerPath = layer.path
@@ -207,10 +264,13 @@ public class _Router: _Middleware{
             }
         }
         nextHandle()
-
     }
     
-
+    private func appendMethods(inout dest: [HTTPMethodType:Int], src: [HTTPMethodType]){
+        for method in src {
+            dest[method] = 1
+        }
+    }
     
     private func poccessParams(layer: Layer, paramsCalled: AnyObject, req: IncomingMessage, res: ServerResponse, cb:((String?)->())){
         cb(nil)
@@ -226,12 +286,12 @@ public class _Router: _Middleware{
     }
     
     func use(path: String? = "/",  md: _Middleware){
-        stack.append(Layer(path: path!, module: md))
+        stack.append(Layer(path: path!, options: Option(end: false), module: md))
     }
     
     func use(fns: HttpCallback...){
         for fn in fns {
-            stack.append(Layer(path: "/", name: "function", options: nil, fn: fn))
+            stack.append(Layer(path: "/", name: "function", options: Option(end: false), fn: fn))
         }
     }
 
@@ -274,7 +334,7 @@ public class _Router: _Middleware{
         methods.append(method)
         let route = _Route(method: method, path)
         route.dispatch = callback
-        let layer = Layer(path: path, name: "function", options: Option(end: true), fn: route.dispatchs)
+        let layer = Layer(path: "/", name: "route", options: Option(end: false), fn: route.dispatchs)
         layer.route = route
         stack.append(layer)
     }
@@ -284,7 +344,7 @@ public class _Router: _Middleware{
 public class _Routable{
     private var _router: _Router!
     
-    public func use(path: String, _ middleware: _Require){
+    public func use(path: String = "/", _ middleware: _Require){
         let r = middleware.export()
         _router.use(path, md: r)
     }
@@ -293,7 +353,6 @@ public class _Routable{
     public func use(fn: HttpCallback){
         _router.use(fn)
     }
-    
 }
 
 
@@ -327,7 +386,6 @@ public class Lime : _Routable{
 
 }
 
-
 extension Lime: ApplicationProtocol{
     public func createApplication() -> Any {
         return self._router.handle
@@ -346,9 +404,10 @@ public class Root{
     public init(){
         router = lime.router
         
-        router.get("/") { ( req , res , next) -> Void in
+        router.get("/index") { ( req , res , next) -> Void in
             print("root get")
         }
+        
     }
 }
 
@@ -359,5 +418,16 @@ extension Root: _Require{
 }
 
 
+//extention incomingMessage for lime 
+extension IncomingMessage {
+    public var route: Route {
+        get {
+            return (self._route  as? Route)!
+        }
+        set{
+            self._route = newValue
+        }
+    }
+}
 
 
