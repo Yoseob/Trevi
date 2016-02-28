@@ -45,7 +45,7 @@ public class _Route{
     public var methods = [HTTPMethodType]()
     public var dispatch: HttpCallback? {
         didSet{
-            let layer = Layer(path: path!, name: "anonymous", options: Option(end: true), fn: self.dispatch!)
+            let layer = Layer(path: "", name: "anonymous", options: Option(end: true), fn: self.dispatch!)
             self.stack.append(layer)
         }
     }
@@ -56,7 +56,11 @@ public class _Route{
     }
 
     public func dispatchs(req: IncomingMessage,res: ServerResponse,next: NextCallback?){
-        print("dispatchs")
+
+        for layer in stack {
+            layer.handleRequest(req, res: res, next: next!)
+        }
+        
     }
     
     public func handlesMethod(method: HTTPMethodType) -> Bool{
@@ -89,9 +93,12 @@ public class RegExp{
         self.fastSlash = false
         self.source = ""
     }
-    public func exec(path: String) -> [String]{
+    public func exec(path: String) -> [String]?{
         var result = [String]()
         result.append(path)
+        
+        
+        
         return result
     }
 }
@@ -143,7 +150,6 @@ public class Layer {
     }
     
     public func match(path: String?) -> Bool{
-        
         
         guard path != nil else {
             self.params = nil
@@ -258,7 +264,7 @@ public class _Router: _Middleware{
                 }
                 
                 if route != nil {
-                    layer.handleRequest(req, res: res, next: nextHandle)
+                     layer.handleRequest(req, res: res, next: nextHandle)
                 }
                 trimPrefix(layer, layerPath: layerPath, path: path)
             }
@@ -303,19 +309,19 @@ public class _Router: _Middleware{
      * Support http ver 1.1/1.0
      */
     public func get (path: String, _ callback: HttpCallback) {
-        bind(path, callback , .GET)
+        boundDispatch(path, callback , .GET)
     }
     /**
      * Support http ver 1.1/1.0
      */
     public func post ( path: String, _ callback: HttpCallback ) {
-        bind(path, callback , .POST)
+        boundDispatch(path, callback , .POST)
     }
     /**
      * Support http ver 1.1/1.0
      */
     public func put ( path: String, _ callback: HttpCallback ) {
-        bind(path, callback , .PUT)
+        boundDispatch(path, callback , .PUT)
     }
     /**
      * Support http ver 1.1/1.0
@@ -330,11 +336,11 @@ public class _Router: _Middleware{
         
     }
     
-    private func bind(path: String, _ callback: HttpCallback, _ method: HTTPMethodType){
+    private func boundDispatch(path: String, _ callback: HttpCallback, _ method: HTTPMethodType){
         methods.append(method)
         let route = _Route(method: method, path)
         route.dispatch = callback
-        let layer = Layer(path: "/", name: "route", options: Option(end: false), fn: route.dispatchs)
+        let layer = Layer(path: path, name: "bound dispatch", options: Option(end: true), fn: route.dispatchs)
         layer.route = route
         stack.append(layer)
     }
@@ -406,6 +412,10 @@ public class Root{
         
         router.get("/index") { ( req , res , next) -> Void in
             print("root get")
+            
+        }
+        router.get("/lime") { ( req , res , next) -> Void in
+            print("lime get")
         }
         
     }
