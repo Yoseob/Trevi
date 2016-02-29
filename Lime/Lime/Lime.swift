@@ -87,19 +87,38 @@ public struct Option{
 }
 
 public class RegExp{
-    public var fastSlash: Bool! // middleware only true
-    public var source: String! //regexp
-    public init(){
+    public var fastSlash: Bool!     // middleware only true
+    public var source: String!      // Regular expression for path
+    var path: String?
+    
+    public init() {
         self.fastSlash = false
         self.source = ""
     }
-    public func exec(path: String) -> [String]?{
+    
+    public init(path: String) {
+        self.path = path
+        fastSlash = false
+        source = "^\\/*\(path)((\\/$)|$)"
+        if path.length() > 1 {
+            for param in searchWithRegularExpression(path, pattern: "(?:\\/+(\\w*)/[\(unreserved)\(gen_delims)\(sub_delims)]*)") {
+                source = source.stringByReplacingOccurrencesOfString(param["$0"]!.text, withString: "\(param["$1"]!.text)/[\(unreserved)\(gen_delims)\(sub_delims)]*")
+            }
+        }
+    }
+    
+    public func exec(path: String) -> [String]? {
         var result = [String]()
         result.append(path)
         
-        
-        
-        return result
+        // compare string with source(regex)
+        if path.isMatch(source) {
+            // seperate path by slash, put them in result
+            result.appendContentsOf(path.componentsSeparatedByString("/"))
+            return result
+        } else {
+            return nil
+        }
     }
 }
 
@@ -137,11 +156,18 @@ public class Layer {
 
     }
     
-    private func pathRegexp(path: String,option: Option!) -> RegExp{
-        keys = [String]() // create key, and append key when create regexp
+    private func pathRegexp(path: String, option: Option!) -> RegExp{
+        // create key, and append key when create regexp
+        keys = [String]()
         
-        // temp
-        return RegExp()
+        if path.length() > 1 {
+            for param in searchWithRegularExpression(path, pattern: "(?:\\/+?\\:(\\w*))") {
+                keys!.append(param["$1"]!.text)
+            }
+        }
+        print(keys)
+        
+        return RegExp(path: path)
     }
     
     public func handleRequest(req: IncomingMessage , res: ServerResponse, next: NextCallback){
@@ -414,10 +440,18 @@ public class Root{
             print("root get")
             
         }
+        
         router.get("/lime") { ( req , res , next) -> Void in
             print("lime get")
         }
         
+        router.get("/trevi/:param1") { ( req , res , next) -> Void in
+            print("[GET] /trevi/:praram")
+        }
+        
+        router.get("/trevi/:param1/:param2/end") { ( req , res , next) -> Void in
+            print("[GET] /trevi/:praram1/:param2/end")
+        }
     }
 }
 
