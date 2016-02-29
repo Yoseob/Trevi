@@ -59,7 +59,6 @@
 		ACBB9E9F1C7A1D7D00E58E31 /* StreamReadable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */; };
 		ACBB9EA11C7A1D7D00E58E31 /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */; };
 		ACBB9EA31C7A1D7D00E58E31 /* StreamWritable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */; };
-		DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; };
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF732EF11C799E65000B12E8 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF01C799E65000B12E8 /* Timer.swift */; };
 		DF732EF31C79B4DD000B12E8 /* Loop.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF21C79B4DD000B12E8 /* Loop.swift */; };
@@ -153,7 +152,6 @@
 		ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamReadable.swift; sourceTree = "<group>"; };
 		ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
 		ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamWritable.swift; sourceTree = "<group>"; };
-		DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
 		DF732EE01C799737000B12E8 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		DF732EF01C799E65000B12E8 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
@@ -181,14 +179,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				232299981C61E00D003E44AB /* Lime.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DF0900D31C6ECFBD008CA6F0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DF0900E31C6ED012008CA6F0 /* Trevi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,7 +274,6 @@
 				239411D31C0C2DA3001B9B07 /* Trevi.framework */,
 				239411E21C0C2E19001B9B07 /* Trevi_ver_lime.app */,
 				232299911C61E00D003E44AB /* Lime.framework */,
-				DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -443,23 +432,6 @@
 			productReference = 239411E21C0C2E19001B9B07 /* Trevi_ver_lime.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DF0900D51C6ECFBD008CA6F0 /* EchoTest */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DF0900E01C6ECFBD008CA6F0 /* Build configuration list for PBXNativeTarget "EchoTest" */;
-			buildPhases = (
-				DF0900D21C6ECFBD008CA6F0 /* Sources */,
-				DF0900D31C6ECFBD008CA6F0 /* Frameworks */,
-				DF0900D41C6ECFBD008CA6F0 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = EchoTest;
-			productName = EchoTest;
-			productReference = DF0900D61C6ECFBD008CA6F0 /* EchoTest.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -479,9 +451,6 @@
 					239411E11C0C2E19001B9B07 = {
 						CreatedOnToolsVersion = 7.1.1;
 					};
-					DF0900D51C6ECFBD008CA6F0 = {
-						CreatedOnToolsVersion = 7.2.1;
-					};
 				};
 			};
 			buildConfigurationList = 239411CD1C0C2DA3001B9B07 /* Build configuration list for PBXProject "Trevi" */;
@@ -500,7 +469,6 @@
 				239411D21C0C2DA3001B9B07 /* Trevi */,
 				239411E11C0C2E19001B9B07 /* Trevi_ver_lime */,
 				232299901C61E00D003E44AB /* Lime */,
-				DF0900D51C6ECFBD008CA6F0 /* EchoTest */,
 			);
 		};
 /* End PBXProject section */
@@ -530,13 +498,6 @@
 				23973D611C25AB3B00FBB8E7 /* sky.jpeg in Resources */,
 				90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */,
 				90BEEE661C2F5155009A8DA8 /* style.css in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DF0900D41C6ECFBD008CA6F0 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,13 +565,6 @@
 				239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */,
 				23D2F39E1C1DA4A000F0C784 /* end.swift in Sources */,
 				23D2F39F1C1DA4A000F0C784 /* Index.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DF0900D21C6ECFBD008CA6F0 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -847,30 +801,6 @@
 			};
 			name = Release;
 		};
-		DF0900E11C6ECFBD008CA6F0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = EchoTest/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jang.EchoTest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		DF0900E21C6ECFBD008CA6F0 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = EchoTest/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.jang.EchoTest;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -906,15 +836,6 @@
 			buildConfigurations = (
 				239411EF1C0C2E19001B9B07 /* Debug */,
 				239411F01C0C2E19001B9B07 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DF0900E01C6ECFBD008CA6F0 /* Build configuration list for PBXNativeTarget "EchoTest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DF0900E11C6ECFBD008CA6F0 /* Debug */,
-				DF0900E21C6ECFBD008CA6F0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
