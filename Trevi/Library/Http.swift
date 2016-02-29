@@ -229,6 +229,7 @@ public class IncomingMessage: StreamReadable{
                     self.query.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
                 }
             }
+            originUrl = url
         }
     }
     

@@ -106,7 +106,7 @@ public class RegExp{
 public class Layer {
     
     private var handle: HttpCallback?
-    public var path: String!
+    public var path: String! = ""
     public var regexp: RegExp!
     public var name: String!
     public var route: _Route?
@@ -211,15 +211,49 @@ public class _Router: _Middleware{
         
         var idx = 0
         var options = [HTTPMethodType:Int]()
+        var removed = ""
+        var slashAdd = false
         
+        var parantParams = req.params
+        var parantUrl = req.baseUrl
+        
+        req.baseUrl = parantUrl
+        req.originUrl = req.originUrl.length() == 0 ? req.url : req.originUrl
         func trimPrefix(layer: Layer , layerPath: String, path: String){
+            
+            let nextPrefix: String! = path.substring(layerPath.length(), length: 1)
+            
+            if nextPrefix != nil && nextPrefix != "/" {
+                //done error
+                return
+            }
+            
             // do...what ...
+            if layerPath.length() > 0 {
+                removed = layerPath
+                req.baseUrl = parantUrl
+                let removedPathLen = removed.length()
+                req.url = path.substring(removedPathLen-1, length: path.length() - removedPathLen)
+                
+                if req.url.substring(0, length: 1) != "/" {
+                    req.url = ("/"+req.url)
+                    slashAdd = true 
+                }
+                req.baseUrl = removed
+                
+            }
             
             layer.handleRequest(req, res: res, next: nextHandle)
         }
         
         func nextHandle(){
            
+            if removed.length() != 0 {
+                req.baseUrl = parantUrl
+                //req.url = ""
+                removed = ""
+            }
+            
             if idx > self.stack.count{
                 return
             }
@@ -248,8 +282,10 @@ public class _Router: _Middleware{
                 
             }
             
-            if match == false {
+            if match == nil || match == false {
 //                 return done()
+                print("done")
+                
             }
             
             if route != nil {
@@ -266,6 +302,7 @@ public class _Router: _Middleware{
                 if route != nil {
                      layer.handleRequest(req, res: res, next: nextHandle)
                 }
+                
                 trimPrefix(layer, layerPath: layerPath, path: path)
             }
         }
@@ -412,10 +449,12 @@ public class Root{
         
         router.get("/index") { ( req , res , next) -> Void in
             print("root get")
+            next!()
             
         }
         router.get("/lime") { ( req , res , next) -> Void in
             print("lime get")
+            next!()
         }
         
     }
