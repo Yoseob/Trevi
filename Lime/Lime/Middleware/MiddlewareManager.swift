@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import Trevi
 public class MiddlewareManager {
 
     public var enabledMiddlwareList = [ Any ] ()
@@ -64,8 +64,8 @@ public class MiddlewareManager {
         switch obj {
         case let mw as Middleware:
             ret = mw.operateCommand ( params )
-        case let cb as CallBack:
-            ret = cb ( params.req, params.res )
+//        case let cb as HttpCallback:
+//            ret = cb ( params.req, params.res )
         default:
             break
 

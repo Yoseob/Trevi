@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Trevi
+
 
 public protocol Renderer {
     func render ( filename: String ) -> String
@@ -50,13 +52,14 @@ public class SwiftServerPage: Middleware, Renderer {
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
     public func render ( path: String, args: [String:String] ) -> String {
-        guard let data = load (path) else {
-            return ""
-        }
-        guard let compiled = compile (path, code: convertToSwift(from: data, with: args)) else {
-            return ""
-        }
-        return compiled
+//        guard let data = load (path) else {
+//            return ""
+//        }
+//        guard let compiled = compile (path, code: convertToSwift(from: data, with: args)) else {
+//            return ""
+//        }
+//        return compiled
+        return ""
     }
     
     /**
@@ -90,6 +93,8 @@ public class SwiftServerPage: Middleware, Renderer {
      
      - Returns: The swift source codes which are converted from SSP file with arguments.
      */
+    
+    /*
     private final func convertToSwift ( from ssp: String, with args: [String:String] ) -> String {
         var swiftCode: String = ""
         for key in args.keys {
@@ -125,6 +130,8 @@ public class SwiftServerPage: Middleware, Renderer {
 
         return (swiftCode + "print(\"\(htmlTag)\")\n")
     }
+
+    */
     
     /**
      Get a compiled result of a swift codes.
@@ -134,6 +141,8 @@ public class SwiftServerPage: Middleware, Renderer {
      
      - Returns: Compiled data from the swift codes
      */
+    
+    /*
     private final func compile ( path: String, code: String ) -> String? {
         let file = WritableFile(fileAtPath: "\(path).swift", option: O_CREAT|O_TRUNC).open()
         file.write(UnsafePointer<UInt8>(code.dataUsingEncoding(NSUTF8StringEncoding)!.bytes), maxLength: code.characters.count)
@@ -141,4 +150,5 @@ public class SwiftServerPage: Middleware, Renderer {
             .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
             .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
     }
+    */
 }

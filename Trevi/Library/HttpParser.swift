@@ -28,10 +28,12 @@ public class HttpParser{
     
     public var onHeader: ((Void) -> (Void))?
     public var onHeaderComplete: ((HeaderInfo) -> Void)?
-    public var onBody: ((Void) -> Void)?
+    public var onBody: ((String) -> Void)?
     public var onBodyComplete: ((Void) -> Void)?
     public var onIncoming: ((IncomingMessage) -> Void)?
     
+    
+    public var date: NSDate = NSDate()
     
     //only header
     public var headerInfo: HeaderInfo!
@@ -52,7 +54,10 @@ public class HttpParser{
         didSet{
         }
     }
-    
+    public init (){
+    }
+    deinit{
+    }
     
     public func execute(buf: uv_buf_const_ptr = nil, length: Int){
         let readData = blockToUTF8String(buf.memory.base)
@@ -88,7 +93,8 @@ public class HttpParser{
             parseHeader( requestHeader )
             
             if trace.length() > 1 {
-                // push(trace)
+
+                onBody!(trace)
                 trace = ""
             }
         }

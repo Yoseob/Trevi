@@ -9,12 +9,15 @@
 
 import Libuv
 
+
+public typealias void_ptr = UnsafeMutablePointer<Void>
+public typealias sockaddr_ptr = UnsafeMutablePointer<sockaddr>
+
+
 public typealias uv_any_handle_ptr = UnsafeMutablePointer<uv_any_handle>
 public typealias uv_handle_ptr = UnsafeMutablePointer<uv_handle_t>
-
 public typealias uv_loop_ptr = UnsafeMutablePointer<uv_loop_t>
 public typealias uv_poll_ptr = UnsafeMutablePointer<uv_poll_t>
-public typealias uv_buf_ptr = UnsafeMutablePointer<uv_buf_t>
 public typealias uv_stream_ptr = UnsafeMutablePointer<uv_stream_t>
 public typealias uv_connect_ptr = UnsafeMutablePointer<uv_connect_t>
 public typealias uv_pipe_ptr = UnsafeMutablePointer<uv_pipe_t>
@@ -23,15 +26,27 @@ public typealias uv_shutdown_ptr = UnsafeMutablePointer<uv_shutdown_t>
 public typealias uv_timer_ptr = UnsafeMutablePointer<uv_timer_t>
 public typealias uv_async_ptr = UnsafeMutablePointer<uv_async_t>
 
-public typealias uv_buf_const_ptr = UnsafePointer<uv_buf_t>
-
 
 public typealias uv_req_ptr = UnsafeMutablePointer<uv_req_t>
 public typealias uv_write_ptr = UnsafeMutablePointer<uv_write_t>
+public typealias uv_work_ptr = UnsafeMutablePointer<uv_work_t>
+public typealias uv_fs_ptr = UnsafeMutablePointer<uv_fs_t>
 
 
-public typealias sockaddr_ptr = UnsafeMutablePointer<sockaddr>
+public typealias uv_buf_ptr = UnsafeMutablePointer<uv_buf_t>
+public typealias uv_buf_const_ptr = UnsafePointer<uv_buf_t>
 
+
+func ==(lhs: uv_fs_type, rhs: uv_fs_type) -> Bool {
+    return lhs.hashValue == rhs.hashValue
+}
+
+extension uv_fs_type : Hashable {
+    
+    public var hashValue: Int {
+        return Int(self.rawValue)
+    }
+}
 
 
 // Reference form
@@ -62,16 +77,22 @@ func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> (host: 
     }
 }
 
+public func uvErrorName() -> String {
+    return blockToUTF8String(uv_strerror(UV_EAGAIN.rawValue))
+}
+
 // Get String from the pointer
 public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
     var idx = block
     var value = "" as String
     
+    if length <= 0 { return ""}
+    
     for _ in 0...length {
-        //if idx.memory > 31{
-        let c = String(format: "%c", idx.memory)
-        value += c
-        //}
+//        if idx.memory > 31{
+            let c = String(format: "%c", idx.memory)
+            value += c
+//        }
         idx++
     }
     return value
@@ -82,3 +103,10 @@ public func blockToUTF8String(block: UnsafePointer<CChar>) -> String {
     let value = k! as String
     return value
 }
+
+public func getThreadID() -> mach_port_t {
+    return pthread_mach_thread_np(pthread_self())
+    
+}
+
+

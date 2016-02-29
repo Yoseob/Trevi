@@ -8,60 +8,11 @@
 import Libuv
 
 
-public typealias HttpCallback = ( ( IncomingMessage, ServerResponse ) -> Void )
+public typealias HttpCallback = ( ( IncomingMessage, ServerResponse, NextCallback?) -> Void )
+
+public typealias NextCallback = ()->()
 
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
-
-public typealias CallBack = ( Request, Response ) -> Bool // will remove next
-
-public typealias emitable = (AnyObject) -> Void
-
-public typealias noParamsEmitable = (Void) -> Void
-
-
-public class EventEmitter{
-    var events = [String:Any]()
-    
-    init(){}
-    
-    func on(name: String, _ emitter: Any){
-        events[name] = emitter
-    }
-    
-    func emit(name: String, _ arg : AnyObject...){
-        let emitter = events[name]
-        
-        switch emitter {
-        case let ra as RoutAble:
-            if arg.count == 2{
-                let req = arg[0] as! Request
-                let res = arg[1] as! Response
-                ra.handleRequest(req, res)
-            }
-            break
-        case let cb as HttpCallback:
-            if arg.count == 2{
-                let req = arg[0] as! IncomingMessage
-                let res = arg[1] as! ServerResponse
-                cb(req,res)
-            }
-            break
-        case let cb as emitable:
-            if arg.count == 1 {
-                cb(arg.first!)
-            }else {
-                cb(arg)
-            }
-            break
-        case let cb as noParamsEmitable:
-            cb()
-            break
-        default:
-            
-            break
-        }
-    }
-}
 
 
 //temp class
@@ -79,10 +30,12 @@ public class OutgoingMessage: httpStream{
     public init(socket: AnyObject){
         header = [String: String]()
     }
-    
+    deinit{
+        socket  = nil
+        connection = nil
+    }
     public func _end(data: NSData, encoding: Any! = nil){
         self.socket.write(data, handle: self.socket.handle)
-        
         if shouldKeepAlive == false {
             self.socket.close()
         }
@@ -148,7 +101,9 @@ public class ServerResponse: OutgoingMessage{
         super.init(socket: socket)
         self._body = ""
     }
-    
+    deinit{
+        
+    }
     public func end(){
         let hData: NSData = self.prepareHeader()
         let result: NSMutableData = NSMutableData(data: hData)
@@ -226,10 +181,9 @@ public class ServerResponse: OutgoingMessage{
 
 
 
-public class IncomingMessage: httpStream{
+public class IncomingMessage: StreamReadable{
     
     public var socket: Socket!
-    
     public var connection: Socket!
     
     // HTTP header
@@ -275,22 +229,37 @@ public class IncomingMessage: httpStream{
     }
     
     
-    
     //response only
     public var statusCode: String!
     public var client: AnyObject!
     
     init(socket: Socket){
+        super.init() 
         self.socket = socket
         self.connection = socket
         self.client = socket
+        
+    }
+    
+    deinit{
+        socket = nil
+        connection = nil
+        client = nil
+    }
+    
+    public override func _read(n: Int) {
+        
     }
 }
 
 
+
+
 public class TreviServer: Net{
     
-    private var parser: HttpParser!
+//    private var parser: HttpParser!
+    
+    private var parsers = [uv_stream_ptr:HttpParser!]()
     
     private var requestListener: Any!
     
@@ -304,38 +273,95 @@ public class TreviServer: Net{
         
         self.on("connection", connectionListener) // when Client Socket accepted
     }
-    
+    deinit{
+//        parser.socket = nil
+        parsers.removeAll()
+//        parser = nil
+    }
     func onlistening(){
         print("Http Server starts ip : \(ip), port : \(port).")
         
         switch requestListener {
-        case let ra as RoutAble:
-            ra.makeChildRoute(ra.superPath!, module:ra)
+        case let ra as ApplicationProtocol:
+            let eventName = "request"
+            
+            self.removeEvent(eventName)
+            self.on(eventName, ra.createApplication())
             break
         default:
             break
         }
     }
     
+    private func parser(socket: Socket) -> HttpParser{
+        return parsers[socket.handle]!
+    }
     
     func connectionListener(sock: AnyObject){
-        
+    
         let socket = sock as! Socket
-        if parser == nil {
-            parser = HttpParser()
-            parser.socket = socket
-            self.parserSetup()
+
+        func parserSetup(){
+            
+            parser(socket).onHeader = {
+                
+            }
+            
+            parser(socket).onHeaderComplete = { info in
+                let incoming = IncomingMessage(socket: self.parser(socket).socket)
+                
+                incoming.header = info.header
+                incoming.httpVersionMajor = info.versionMajor
+                incoming.httpVersionMinor = info.versionMinor
+                incoming.url = info.url
+                incoming.method = info.method
+                
+                self.parser(socket).incoming = incoming
+                self.parser(socket).onIncoming!(incoming)
+            }
+            
+            parser(socket).onBody = { body in
+                let incoming = self.parser(socket).incoming
+                incoming.push(body)
+                
+            }
+            
+            parser(socket).onBodyComplete = {
+                
+            }
         }
-        
+
+        parsers[socket.handle] = HttpParser()
+        let _parser = parser(socket)
+        _parser.socket = socket
+        parserSetup()
+
         socket.ondata = { buf, nread in
-            self.parser.execute(buf,length: nread)
+            
+            if let _parser = self.parsers[socket.handle] {
+                _parser.execute(buf,length: nread)
+            }else{
+                print("no parser")
+            }
         }
         
         socket.onend = {
-            self.parser = nil
+            
+//            self.parser = nil
+            var _parser = self.parsers[socket.handle]
+            _parser!.onBody = nil
+            _parser!.onBodyComplete = nil
+            _parser!.onHeader = nil
+            _parser!.onIncoming = nil
+            _parser!.onHeaderComplete = nil
+            _parser!.socket = nil
+            _parser!.incoming = nil
+            _parser = nil
+            self.parsers.removeValueForKey(socket.handle)
+            
         }
         
-        parser.onIncoming = { req in
+        parser(socket).onIncoming = { req in
             
             let res = ServerResponse(socket: req.socket)
             res.socket = req.socket
@@ -349,37 +375,17 @@ public class TreviServer: Net{
                 res.header[Connection] = "close"
                 res.shouldKeepAlive = false
             }
+            
             self.emit("request", req ,res)
+
         }
         
     }
-    
-    func parserSetup(){
-        
-        parser.onHeader = {
-        }
-        
-        parser.onHeaderComplete = { info in
-            let incoming = IncomingMessage(socket: self.parser.socket)
-            
-            incoming.header = info.header
-            incoming.httpVersionMajor = info.versionMajor
-            incoming.httpVersionMinor = info.versionMinor
-            incoming.url = info.url
-            incoming.method = info.method
-            
-            self.parser.incoming = incoming
-            self.parser.onIncoming!(incoming)
-        }
-        
-        parser.onBody = {
-            //parser.incoming.push ()
-        }
-        
-        parser.onBodyComplete = {
-            
-        }
-    }
+}
+
+
+public protocol ApplicationProtocol {
+    func createApplication() -> Any
 }
 
 
@@ -387,21 +393,10 @@ public class TreviServer: Net{
 
 public class Http {
     
-    
-    private let mwManager = MiddlewareManager.sharedInstance ()
-    private var listener : EventListener!
-    
     public init () {
         
     }
-    /*
-    TEST
-    will modify any type that suport routable, CallBack and Adapt TreviServer Model
-    */
-    public func createServer( requestListener: ( IncomingMessage, ServerResponse )->()) -> Net{
-        let server = TreviServer(requestListener: requestListener)
-        return server
-    }
+
     
     /**
      * Create Server base on RouteAble Model, maybe it able to use many Middleware
@@ -416,47 +411,24 @@ public class Http {
      * @return {Http} self
      * @public
      */
-    public func createServer ( requireModule: RoutAble... ) -> Http {
-        for rm in requireModule {
-            rm.makeChildsRoute(rm.superPath!, module:requireModule)
-            mwManager.enabledMiddlwareList += rm.middlewareList;
-        }
-        return self
+
+    public func createServer( requestListener: ( IncomingMessage, ServerResponse, NextCallback? )->()) -> Net{
+        let server = TreviServer(requestListener: requestListener)
+        return server
+    }
+    public func createServer( requestListener: Any) -> Net{
+        let server = TreviServer(requestListener: requestListener)
+        return server
     }
     
-    /**
-     * Create Server base on just single callback, after few time, modify can use many callback
-     * end return self.
-     *
-     * Examples:
-     *     http.createServer({  req,res in
-     *          return send("hello Trevi!")
-     *      }).listen(Port)
-     *
-     *
-     *
-     * @param {RouteAble} requireModule
-     * @return {Http} self
-     * @public
-     */
-    public func createServer ( callBacks: HttpCallback... ) -> Http {
-        
-        
-        for cb in callBacks {
-            mwManager.enabledMiddlwareList.append ( cb )
-        }
-        return self
-    }
     
-    /**
-     * Add MiddleWare direct at Server
-     *
-     * @param {Middleware} mw
-     * @public
-     */
-    public func set( mw :  Middleware ...){
-        mwManager.enabledMiddlwareList.append(mw)
-    }
+   //    public func createServer ( requireModule: RoutAble... ) -> Http {
+//        for rm in requireModule {
+//            rm.makeChildsRoute(rm.superPath!, module:requireModule)
+//            mwManager.enabledMiddlwareList += rm.middlewareList;
+//        }
+//        return self
+//    }
     
     
 }

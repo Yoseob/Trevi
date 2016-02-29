@@ -23,8 +23,8 @@ public class Handle {
     }
     
     deinit {
-//        print("Handle deinit")
         Handle.close(self.handle)
+        self.handle.dealloc(1)
     }
     
 }
@@ -43,6 +43,8 @@ extension Handle {
         var afterWrite : Any!
         var onConnection : (uv_stream_ptr -> ())!
         var afterConnect : Any!
+        var onTimeout : ((uv_timer_ptr)->())!
+        
     }
 }
 

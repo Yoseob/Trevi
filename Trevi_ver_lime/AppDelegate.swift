@@ -19,26 +19,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let lime = Lime()
         
-        lime.use(BodyParser())
+        lime.use(Favicon());
         
-        lime.use(Favicon())
-        
-        lime.use(ServeStatic(path: "/Users/zero2hex/Documents/www"))
-        
-        lime.use(SwiftServerPage())
-        
-        lime.use("/",Root())
-        
-        lime.use(){ req, res in
-            res.status = 404
-            return res.send ("404 Pages Not Found")
+        lime.use("/root", Root())
+  
+        lime.use { (req, res, next) in
+            print("function")
         }
-        
-        server.createServer({ req, res in
+  
+//        server.createServer(lime).listen(8080)
+
+        server.createServer({ (req, res, next) in
             res.write("hello Trevi")
             res.end()
         }).listen(8080)
-     
+
+
     }
 
     func applicationWillTerminate ( aNotification: NSNotification ) {

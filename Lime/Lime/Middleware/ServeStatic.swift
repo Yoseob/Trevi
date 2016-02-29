@@ -30,18 +30,18 @@ public class ServeStatic: Middleware {
         let req: Request  = params.req
         let res: Response = params.res
         
-        let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
-        if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
-            var buffer = [UInt8](count: 8, repeatedValue: 0)
-            let data = NSMutableData()
-            
-            file.open()
-            while file.status == .Open {
-                let result: Int = file.read(&buffer, maxLength: buffer.count)
-                data.appendBytes(buffer, length: result)
-            }
-            return res.send(data)
-        }
+//        let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
+//        if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
+//            var buffer = [UInt8](count: 8, repeatedValue: 0)
+//            let data = NSMutableData()
+//            
+//            file.open()
+//            while file.status == .Open {
+//                let result: Int = file.read(&buffer, maxLength: buffer.count)
+//                data.appendBytes(buffer, length: result)
+//            }
+//            return res.send(data)
+//        }
         
         return false
     }

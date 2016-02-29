@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import Trevi
+
 private protocol parseAble{
     func parse() -> [String:AnyObject!]!
 }

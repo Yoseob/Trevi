@@ -8,6 +8,12 @@
 
 import Libuv
 
+#if os(Linux)
+    import SwiftGlibc
+#else
+    import Darwin
+#endif
+
 public class Tcp : Stream {
     
     public let tcpHandle : uv_tcp_ptr
@@ -17,12 +23,12 @@ public class Tcp : Stream {
         self.tcpHandle = uv_tcp_ptr.alloc(1)
         
         uv_tcp_init(uv_default_loop(), self.tcpHandle)
-    
+        
         super.init(streamHandle : uv_stream_ptr(self.tcpHandle))
     }
     
     deinit {
-//        print("Tcp deinit")
+        
     }
     
 }
@@ -67,7 +73,9 @@ extension Tcp {
     
     public static func listen(handle : uv_tcp_ptr, backlog : Int32 = 50) {
         
-        let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
+//        Should add if state to set using work or not
+//        let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
+        let error = uv_listen(uv_stream_ptr(handle), backlog, Work.onConnection)
         
         if error != 0 {
             // Should handle error
@@ -148,82 +156,3 @@ extension Tcp {
         
     }
 }
-
-
-
-public enum SocketOption {
-    case BROADCAST(Bool),
-    DEBUG(Bool),
-    DONTROUTE(Bool),
-    OOBINLINE(Bool),
-    REUSEADDR(Bool),
-    KEEPALIVE(Bool),
-    NOSIGPIPE(Bool),
-    
-    SNDBUF(Int32),
-    RCVBUF(Int32)
-    
-    var match : (name : Int32, value : Int32) {
-        switch self {
-        case .BROADCAST(let value) :   return (SO_BROADCAST, Int32(value.hashValue))
-        case .DEBUG(let value) :            return (SO_DEBUG, Int32(value.hashValue))
-        case .DONTROUTE(let value) :   return (SO_DONTROUTE, Int32(value.hashValue))
-        case .OOBINLINE(let value) :      return (SO_OOBINLINE, Int32(value.hashValue))
-        case .REUSEADDR(let value):     return (SO_REUSEADDR, Int32(value.hashValue))
-        case .KEEPALIVE(let value) :      return (SO_KEEPALIVE, Int32(value.hashValue))
-        case .NOSIGPIPE(let value) :      return (SO_NOSIGPIPE, Int32(value.hashValue))
-            
-        case .SNDBUF(let value):            return (SO_SNDBUF, value)
-        case .RCVBUF(let value):            return (SO_RCVBUF, value)
-        }
-    }
-}
-
-
-// Socket option functions.
-
-extension Tcp {
-    
-    public static func setSocketOption (handle : uv_tcp_ptr, options: [SocketOption]?) -> Bool {
-        if options == nil { return false }
-        
-        for option in options!{
-            let name = option.match.name
-            var buffer = option.match.value
-            let bufferLen = socklen_t(sizeof(Int32))
-            
-            #if os(Linux)
-                let status  = SwiftGlibc.setsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, bufferLen)
-            #else
-                let status  = Darwin.setsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, bufferLen)
-            #endif
-            
-            if status == -1 {
-                print("Failed to set socket option : \(option), value : \(buffer)")
-                return false
-            }
-        }
-        
-        return true
-    }
-    
-    public static func getSocketOption(handle : uv_tcp_ptr, option: SocketOption) -> Int32 {
-        let name = option.match.name
-        var buffer = Int32(0)
-        var bufferLen = socklen_t(sizeof(Int32))
-        
-        #if os(Linux)
-            let status  = SwiftGlibc.getsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, &bufferLen)
-        #else
-            let status  = Darwin.getsockopt(getFD(uv_handle_ptr(handle)), SOL_SOCKET, name, &buffer, &bufferLen)
-        #endif
-        
-        if status == -1 {
-            print("Failed to get socket option name : \(name)")
-            return status
-        }
-        
-        return buffer
-    }
-}
-
