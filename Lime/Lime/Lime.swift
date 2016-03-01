@@ -89,7 +89,6 @@ public struct Option{
 public class RegExp{
     public var fastSlash: Bool!     // middleware only true
     public var source: String!      // Regular expression for path
-    var path: String?
     
     public init() {
         self.fastSlash = false
@@ -97,28 +96,36 @@ public class RegExp{
     }
     
     public init(path: String) {
-        self.path = path
         fastSlash = false
-        source = "^\\/*\(path)((\\/$)|$)"
         if path.length() > 1 {
-            for param in searchWithRegularExpression(path, pattern: "(?:\\/+(\\w*)/[\(unreserved)\(gen_delims)\(sub_delims)]*)") {
-                source = source.stringByReplacingOccurrencesOfString(param["$0"]!.text, withString: "\(param["$1"]!.text)/[\(unreserved)\(gen_delims)\(sub_delims)]*")
+            // remove if the first of url is slash
+            if path.characters.first == "/" {
+                source = "^\\/*\(path[path.startIndex.successor() ..< path.endIndex])/?$"
+            } else {
+                source = "^\\/*\(path)/?$"
+            }
+            
+            for param in searchWithRegularExpression(source, pattern: "(:[^\\/]+)") {
+                source = source.stringByReplacingOccurrencesOfString(param["$1"]!.text, withString: "([^\\/]+)")
             }
         }
     }
     
     public func exec(path: String) -> [String]? {
-        var result = [String]()
-        result.append(path)
+        var result: [String]? = nil
         
         // compare string with source(regex)
-        if path.isMatch(source) {
-            // seperate path by slash, put them in result
-            result.appendContentsOf(path.componentsSeparatedByString("/"))
-            return result
-        } else {
-            return nil
+        for param in searchWithRegularExpression(path, pattern: source) {
+            if result == nil {
+                result = [String]()
+            }
+            result!.append(path)
+            for idx in 1 ..< param.count {
+                result!.append(param["$\(idx)"]!.text)
+            }
         }
+        
+        return result
     }
 }
 
@@ -134,12 +141,10 @@ public class Layer {
     public var params: [String: AnyObject]?
     
     public init(path: String ,name: String? = "function", options: Option? = nil, fn: HttpCallback){
-        print("path : \(path), name : \(name!) , option: \(options)")
         setupAfterInit(path, opt: options, name: name, fn: fn)
         
     }
     public init(path: String, options: Option? = nil, module: _Middleware){
-        print("path : \(path), name : \(module.name) , option: \(options)")
         setupAfterInit(path, opt: options, name: module.name.rawValue, fn: module.handle)
         
     }
@@ -161,11 +166,10 @@ public class Layer {
         keys = [String]()
         
         if path.length() > 1 {
-            for param in searchWithRegularExpression(path, pattern: "(?:\\/+?\\:(\\w*))") {
+            for param in searchWithRegularExpression(path, pattern: ":([^\\/]*)") {
                 keys!.append(param["$1"]!.text)
             }
         }
-        print(keys)
         
         return RegExp(path: path)
     }
@@ -189,7 +193,6 @@ public class Layer {
             return true
         }
 
-        
         var ret: [String]!  = self.regexp.exec(path!)
 
         guard ret != nil else{
