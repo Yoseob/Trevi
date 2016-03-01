@@ -19,11 +19,12 @@ public class Echo : Net {
     
     public override func listen(port: Int32) {
         
-        filetest()
+//        fileStreamTest("/Users/Ingyure/Documents/fstest.txt")
         
         print("Echo Server starts ip : \(ip), port : \(port).")
         print("Main thread : \(getThreadID())")
         super.listen(port)
+        
     }
     
     
@@ -53,26 +54,43 @@ public class Echo : Net {
     
 }
 
-func filetest(){
-    
-    let fs : FsBase = FsBase()
-    
-    fs.events[UV_FS_OPEN] = {
-        request in
 
-        FsBase.read(request)
+
+func fileStreamTest(path : String){
+    
+    let filePipe = Pipe()
+    
+    filePipe.event.onRead = { (handle, nread, buffer) in
+        
+        print(nread)
+        
+        let infoPtr = UnsafeMutablePointer<FsBase.Info>(handle.memory.data)
+        
+        infoPtr.memory.nread += nread
+        
+        if infoPtr.memory.nread == Int(infoPtr.memory.size) {
+            
+            FsBase.close(infoPtr.memory.request)
+            Handle.close(uv_handle_ptr(handle))
+        }
+        
+        if buffer.memory.len > 0 {
+            
+            //            let writeHandle = Pipe()
+            //            FsBase.streamWriteFile(writeHandle.pipeHandle, buffer: buffer, path: "/Users/Ingyure/Documents/fswritetest.txt")
+            print(blockToString(buffer.memory.base, length: nread))
+            
+            buffer.memory.base.dealloc(buffer.memory.len)
+        }
+        
     }
     
-    fs.events[UV_FS_READ] = { request in
+    filePipe.event.onClose = { (handle) in
+        print("File pipe cloesing")
         
-        let buffer = uv_buf_ptr(request.memory.data)
-        let length = request.memory.result
-        
-        print("Read length : \(length)")
-        print(blockToString(buffer.memory.base, length: length))
-        
-        FsBase.cleanup(request)
     }
     
-    FsBase.open(fs.fsRequest, path: "/Users/Ingyure/Documents/fstest.txt")
+    FsBase.streamReadFile(filePipe.pipeHandle, path: path)
+    
 }
+
