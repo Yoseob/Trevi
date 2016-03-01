@@ -1,9 +1,10 @@
 
 
 ## Trevi
-Trevi is a minimal and flexible Swift web application server that provides Swift server page and MVC module.<br>
-Trevi uses and event-driven, non-blocking I/O model based on GCD.<br>
-Swift 2.0 and xCode 7.1.1 required or latest release.
+Fast, light web application server framwork for Swift. Trevi uses an event-driven, non-blocking I/O model based on libuv (https://github.com/libuv/libuv).<br>
+Trevi refers to node.js core modules and makes Trevi core modules similary to support node.js features. Trevi also hopes that node.js developers easily use and develop Trevi. <br><br>
+Lime is improved web framework for Trevi, and Lime refers to express. (Lime does not support many core modules in express yet.)
+
  
 ## Examples
 ```swift

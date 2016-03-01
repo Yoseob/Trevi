@@ -32,18 +32,6 @@ public class Stream : Handle {
         return uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
     }
     
-    public func readStop() -> Int32 {
-        return uv_read_stop(self.streamHandle)
-    }
-    
-    public func doShutDown(request : uv_shutdown_ptr) -> Int32 {
-        var error : Int32
-        
-        error = uv_shutdown(request, self.streamHandle, Stream.afterShutdown)
-        
-        return error
-    }
-    
     public func doTryWrite(buffer: UnsafeMutablePointer<uv_buf_ptr>, count : UnsafeMutablePointer<UInt32>) -> Int32 {
         var error : Int32
         var written : Int32
@@ -85,6 +73,29 @@ public class Stream : Handle {
 // Stream static functions.
 
 extension Stream {
+    
+    
+    public static func readStart(handle : uv_stream_ptr) -> Int32 {
+        
+        //        Should add if state to set using work or not
+        //        return uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
+        
+        return uv_read_start(handle, Stream.onAlloc, Stream.onRead)
+    }
+    
+    public func readStop(handle : uv_stream_ptr) -> Int32 {
+        return uv_read_stop(self.streamHandle)
+    }
+    
+    public static func doShutDown(handle : uv_stream_ptr) -> Int32 {
+        
+        let request = uv_shutdown_ptr.alloc(1)
+        var error : Int32
+        
+        error = uv_shutdown(request, handle, Stream.afterShutdown)
+        
+        return error
+    }
     
     // Should be modified.
     public static func doWrite(buffer: uv_buf_const_ptr, handle : uv_stream_ptr,
@@ -194,8 +205,12 @@ extension Stream {
     public static var afterShutdown : uv_shutdown_cb = { (request, status) in
         // State after shutdown callback
         
+        
+        request.dealloc(1)
     }
     
+    
+    // Should modify for file stream.
     public static var afterWrite : uv_write_cb = { (request, status) in
  
         let buffer : uv_buf_const_ptr = uv_buf_const_ptr(request.memory.data)
@@ -203,6 +218,8 @@ extension Stream {
         if buffer.memory.len > 0 {
             buffer.memory.base.dealloc(buffer.memory.len)
         }
+        
+        request.memory.data.dealloc(1)
         
         uv_cancel(uv_req_ptr(request))
         request.dealloc(1)

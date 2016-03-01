@@ -8,11 +8,6 @@
 
 import Libuv
 
-#if os(Linux)
-    import SwiftGlibc
-#else
-    import Darwin
-#endif
 
 public class Tcp : Stream {
     
