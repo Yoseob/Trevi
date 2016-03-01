@@ -89,7 +89,6 @@ public struct Option{
 public class RegExp{
     public var fastSlash: Bool!     // middleware only true
     public var source: String!      // Regular expression for path
-    var path: String?
     
     public init() {
         self.fastSlash = false
@@ -97,7 +96,6 @@ public class RegExp{
     }
     
     public init(path: String) {
-        self.path = path
         fastSlash = false
         source = "^\\/*\(path)"
 //        if path.length() > 1 {
@@ -120,6 +118,8 @@ public class RegExp{
             result = nil
             return nil
         }
+        
+        return result
     }
     
 
@@ -137,12 +137,10 @@ public class Layer {
     public var params: [String: AnyObject]?
     
     public init(path: String ,name: String? = "function", options: Option? = nil, fn: HttpCallback){
-        print("path : \(path), name : \(name!) , option: \(options)")
         setupAfterInit(path, opt: options, name: name, fn: fn)
         
     }
     public init(path: String, options: Option? = nil, module: _Middleware){
-        print("path : \(path), name : \(module.name) , option: \(options)")
         setupAfterInit(path, opt: options, name: module.name.rawValue, fn: module.handle)
         
     }
@@ -163,7 +161,7 @@ public class Layer {
         keys = [String]()
         
         if path.length() > 1 {
-            for param in searchWithRegularExpression(path, pattern: "(?:\\/+?\\:(\\w*))") {
+            for param in searchWithRegularExpression(path, pattern: ":([^\\/]*)") {
                 keys!.append(param["$1"]!.text)
             }
         }
