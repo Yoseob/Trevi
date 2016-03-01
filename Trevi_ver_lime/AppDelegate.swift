@@ -24,7 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use("/root", Root())
   
         lime.use { (req, res, next) in
-            print("err")
+            res.statusCode = 200
+            res.write("404 error")
+            res.end()
         }
         
 

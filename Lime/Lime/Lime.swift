@@ -85,10 +85,10 @@ public struct Option{
         self.end = end
     }
 }
-
-public class RegExp{
+public class RegExp {
     public var fastSlash: Bool!     // middleware only true
     public var source: String!      // Regular expression for path
+    public var originPath: String!
     
     public init() {
         self.fastSlash = false
@@ -97,32 +97,44 @@ public class RegExp{
     
     public init(path: String) {
         fastSlash = false
-        source = "^\\/*\(path)"
-//        if path.length() > 1 {
-//            for param in searchWithRegularExpression(path, pattern: "(?:\\/+(\\w*)/?[^\\/]*/?$)") {
-//                source = source.stringByReplacingOccurrencesOfString(param["$0"]!.text, withString: "\(param["$1"]!.text)/?[^\\/]+/?$")
-//            }
-//        }
+        originPath = path
+        
+        if path.length() > 1 {
+            // remove if the first of url is slash
+            if path.characters.first == "/" {
+                source = "^\\/*\(path[path.startIndex.successor() ..< path.endIndex])/?.*"
+            } else {
+                source = "^\\/*\(path)/?.*"
+            }
+            
+            for param in searchWithRegularExpression(source, pattern: "(:[^\\/]+)") {
+                source = source.stringByReplacingOccurrencesOfString(param["$1"]!.text, withString: "([^\\/]+)")
+            }
+            
+            for param in searchWithRegularExpression(originPath, pattern: "(:[^\\/]+)") {
+                originPath = originPath.stringByReplacingOccurrencesOfString(param["$1"]!.text, withString: ".*")
+            }
+        }
     }
     
     public func exec(path: String) -> [String]? {
-        var result: [String]! = [String]()
-        // compare string with source(regex)
-        if path.isMatch(source) {
-            result.append(self.path!)
-            // seperate path by slash, put them in result
-//            result.appendContentsOf(path.componentsSeparatedByString("/"))
-            return result
+        var result: [String]? = nil
+        
+        for param in searchWithRegularExpression(path, pattern: "(\(originPath))(?:.*)") {
+            if result == nil {
+                result = [String]()
+                result!.append(param["$1"]!.text)
+            }
             
-        } else {
-            result = nil
-            return nil
+            for params in searchWithRegularExpression(path, pattern: source) {
+                for idx in 1 ..< params.count {
+                    result!.append(params["$\(idx)"]!.text)
+                }
+            }
         }
         
         return result
     }
-    
-
 }
 
 public class Layer {
@@ -165,6 +177,7 @@ public class Layer {
                 keys!.append(param["$1"]!.text)
             }
         }
+        
         return RegExp(path: path)
     }
     
@@ -186,7 +199,7 @@ public class Layer {
             self.params = [String: AnyObject]()
             return true
         }
-        
+
         var ret: [String]!  = self.regexp.exec(path!)
 
         guard ret != nil else{
@@ -198,11 +211,16 @@ public class Layer {
         self.path = ret[0]
         self.params = [String: AnyObject]()
         ret.removeFirst()
-
-        for _ in ret {
-            //keys made when make regexp
-            //so fill params based on key, ret,
-            // !!!!!! keys , ret both should be same index per item
+        
+        var idx = 0
+        var key: String! = ""
+        for value in ret {
+            key = keys![idx++]
+            if key == nil {
+                break
+            }
+            params![key] = value
+            key = nil
         }
         
         return true
@@ -239,8 +257,10 @@ public class _Router: _Middleware{
         var parantParams = req.params
         var parantUrl = req.baseUrl
         var done = next
+        
         req.baseUrl = parantUrl
         req.originUrl = req.originUrl.length() == 0 ? req.url : req.originUrl
+        
         func trimPrefix(layer: Layer , layerPath: String, path: String){
             
             let nextPrefix: String! = path.substring(layerPath.length(), length: 1)
@@ -250,7 +270,6 @@ public class _Router: _Middleware{
                 return
             }
             
-            // do...what ...
             if layerPath.length() > 0 {
                 removed = layerPath
                 req.baseUrl = parantUrl
@@ -313,6 +332,9 @@ public class _Router: _Middleware{
                 req.route = route
             }
             
+            if layer.params != nil{
+                req.params = parantParams != nil ? mergeParams(layer.params, src: parantParams) : layer.params
+            }
             let layerPath = layer.path
             
             self.poccessParams(layer, paramsCalled: "", req: req, res: res) {  err in
@@ -328,6 +350,13 @@ public class _Router: _Middleware{
             }
         }
         nextHandle()
+    }
+    
+    private func mergeParams(var dest: [String: AnyObject]? , src: [String: AnyObject]?) -> [String: AnyObject]?{
+        for (k,v) in src! {
+            dest![k] = v
+        }
+        return dest
     }
     
     private func appendMethods(inout dest: [HTTPMethodType:Int], src: [HTTPMethodType]){
@@ -496,11 +525,6 @@ public class Root{
         
         router.get("/trevi/:param1") { ( req , res , next) -> Void in
             print("[GET] /trevi/:praram")
-        }
-        
-        router.get("/trevi/:param1/:param2/end") { ( req , res , next) -> Void in
-            print("[GET] /trevi/:praram1/:param2/end")
-            next!()
         }
     }
 }
