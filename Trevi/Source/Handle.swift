@@ -36,11 +36,13 @@ extension Handle {
     
     public class Event {
         
+        // Should be modified to standard type
+        
         var onClose : ((uv_handle_ptr)->())!
         var onAlloc : Any!
         var onRead : ((uv_stream_ptr, Int, uv_buf_const_ptr)->())!
         var afterShutdown : Any!
-        var afterWrite : Any!
+        var afterWrite : ((uv_req_ptr)->())!
         var onConnection : (uv_stream_ptr -> ())!
         var afterConnect : Any!
         var onTimeout : ((uv_timer_ptr)->())!
