@@ -99,27 +99,30 @@ public class RegExp{
     public init(path: String) {
         self.path = path
         fastSlash = false
-        source = "^\\/*\(path)((\\/$)|$)"
-        if path.length() > 1 {
-            for param in searchWithRegularExpression(path, pattern: "(?:\\/+(\\w*)/[\(unreserved)\(gen_delims)\(sub_delims)]*)") {
-                source = source.stringByReplacingOccurrencesOfString(param["$0"]!.text, withString: "\(param["$1"]!.text)/[\(unreserved)\(gen_delims)\(sub_delims)]*")
-            }
-        }
+        source = "^\\/*\(path)"
+//        if path.length() > 1 {
+//            for param in searchWithRegularExpression(path, pattern: "(?:\\/+(\\w*)/?[^\\/]*/?$)") {
+//                source = source.stringByReplacingOccurrencesOfString(param["$0"]!.text, withString: "\(param["$1"]!.text)/?[^\\/]+/?$")
+//            }
+//        }
     }
     
     public func exec(path: String) -> [String]? {
-        var result = [String]()
-        result.append(path)
-        
+        var result: [String]! = [String]()
         // compare string with source(regex)
         if path.isMatch(source) {
+            result.append(self.path!)
             // seperate path by slash, put them in result
-            result.appendContentsOf(path.componentsSeparatedByString("/"))
+//            result.appendContentsOf(path.componentsSeparatedByString("/"))
             return result
+            
         } else {
+            result = nil
             return nil
         }
     }
+    
+
 }
 
 public class Layer {
@@ -153,7 +156,6 @@ public class Layer {
         if path == "/" && opt?.end == false {
             regexp.fastSlash = true
         }
-
     }
     
     private func pathRegexp(path: String, option: Option!) -> RegExp{
@@ -165,8 +167,6 @@ public class Layer {
                 keys!.append(param["$1"]!.text)
             }
         }
-        print(keys)
-        
         return RegExp(path: path)
     }
     
@@ -188,7 +188,6 @@ public class Layer {
             self.params = [String: AnyObject]()
             return true
         }
-
         
         var ret: [String]!  = self.regexp.exec(path!)
 
@@ -220,7 +219,6 @@ class Query: _Middleware {
     }
     
     func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
-        print(name)
         next!()
     }
 }
@@ -233,7 +231,7 @@ public class _Router: _Middleware{
     
     public init(){}
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback? ) {
-        print(name)
+    
         
         var idx = 0
         var options = [HTTPMethodType:Int]()
@@ -242,7 +240,7 @@ public class _Router: _Middleware{
         
         var parantParams = req.params
         var parantUrl = req.baseUrl
-        
+        var done = next
         req.baseUrl = parantUrl
         req.originUrl = req.originUrl.length() == 0 ? req.url : req.originUrl
         func trimPrefix(layer: Layer , layerPath: String, path: String){
@@ -250,7 +248,7 @@ public class _Router: _Middleware{
             let nextPrefix: String! = path.substring(layerPath.length(), length: 1)
             
             if nextPrefix != nil && nextPrefix != "/" {
-                //done error
+                done!()
                 return
             }
             
@@ -259,7 +257,8 @@ public class _Router: _Middleware{
                 removed = layerPath
                 req.baseUrl = parantUrl
                 let removedPathLen = removed.length()
-                req.url = path.substring(removedPathLen-1, length: path.length() - removedPathLen)
+                
+                req.url = path.substring(removedPathLen, length: path.length() - removedPathLen)
                 
                 if req.url.substring(0, length: 1) != "/" {
                     req.url = ("/"+req.url)
@@ -309,9 +308,7 @@ public class _Router: _Middleware{
             }
             
             if match == nil || match == false {
-//                 return done()
-                print("done")
-                
+                 return done!()
             }
             
             if route != nil {
@@ -326,7 +323,7 @@ public class _Router: _Middleware{
                 }
                 
                 if route != nil {
-                     layer.handleRequest(req, res: res, next: nextHandle)
+                    return layer.handleRequest(req, res: res, next: nextHandle)
                 }
                 
                 trimPrefix(layer, layerPath: layerPath, path: path)
@@ -351,7 +348,7 @@ public class _Router: _Middleware{
     
     private func getPathname(req: IncomingMessage)-> String{
         //should parsing req.url
-        return req.path
+        return req.url
     }
     
     func use(path: String? = "/",  md: _Middleware){
@@ -452,12 +449,28 @@ public class Lime : _Routable{
         lazyRouter()
         _router.use(md: middleware)
     }
+    
+    public func handle(req: IncomingMessage,res: ServerResponse,next: NextCallback?){
+        
+        var done: NextCallback? = next
+        
+        if next == nil{
+            func finalHandler() {
+                res.statusCode = 404
+                let msg = "Not Found 404"
+                res.write(msg)
+                res.end()
+            }
+            done = finalHandler
+        }
 
+        return self._router.handle(req,res: res,next: done!)
+    }
 }
 
 extension Lime: ApplicationProtocol{
     public func createApplication() -> Any {
-        return self._router.handle
+        return self.handle
     }
 }
 
@@ -474,14 +487,13 @@ public class Root{
         router = lime.router
         
         router.get("/index") { ( req , res , next) -> Void in
-            print("root get")
-            next!()
-            
+            res.write("index get")
+            res.end()
         }
         
         router.get("/lime") { ( req , res , next) -> Void in
-            print("lime get")
-            next!()
+            res.write("lime get")
+            res.end()
         }
         
         router.get("/trevi/:param1") { ( req , res , next) -> Void in
@@ -490,6 +502,7 @@ public class Root{
         
         router.get("/trevi/:param1/:param2/end") { ( req , res , next) -> Void in
             print("[GET] /trevi/:praram1/:param2/end")
+            next!()
         }
     }
 }
@@ -503,14 +516,7 @@ extension Root: _Require{
 
 //extention incomingMessage for lime 
 extension IncomingMessage {
-    public var route: Route {
-        get {
-            return (self._route  as? Route)!
-        }
-        set{
-            self._route = newValue
-        }
-    }
+
 }
 
 

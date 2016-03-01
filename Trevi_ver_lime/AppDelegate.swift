@@ -24,7 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use("/root", Root())
   
         lime.use { (req, res, next) in
-            print("function")
+            print("err")
         }
         
 

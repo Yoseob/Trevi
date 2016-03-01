@@ -206,7 +206,6 @@ public class IncomingMessage: StreamReadable{
     
     // for lime (not fixed)
     public var baseUrl: String! = ""
-    public var _route: AnyObject!
     public var route: AnyObject!
     public var originUrl: String! = ""
     public var params: [String: AnyObject]!
@@ -279,7 +278,6 @@ public class TreviServer: Net{
         switch requestListener {
         case let ra as ApplicationProtocol:
             let eventName = "request"
-            
             self.removeEvent(eventName)
             self.on(eventName, ra.createApplication())
             break
@@ -290,7 +288,7 @@ public class TreviServer: Net{
     
     
     func connectionListener(sock: AnyObject){
-    
+        print("sock : \(sock)")
         let socket = sock as! Socket
         
         func parserSetup(){
@@ -300,6 +298,9 @@ public class TreviServer: Net{
             }
             
             parser.onHeaderComplete = { info in
+                
+                print(info.url)
+                
                 let incoming = IncomingMessage(socket: self.parser.socket)
         
                 incoming.header = info.header
@@ -348,7 +349,6 @@ public class TreviServer: Net{
             _parser!.onHeaderComplete = nil
             _parser = nil
             self.parsers.removeValueForKey(socket.handle)
-            self.parser = nil
         }
         
         parser.onIncoming = { req in
@@ -367,7 +367,8 @@ public class TreviServer: Net{
             }
             
             self.emit("request", req ,res)
-
+            
+            return false
         }
     }
 }
