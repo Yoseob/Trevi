@@ -38,22 +38,15 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         
         Stream.doWrite(uv_buf_const_ptr(buffer), handle: handle)
         
-//        self.setTimeout(100){ [unowned self]
-//            _ in
-//            self.close()
-//        }
+        Socket.onTimeout(100){ [unowned self]
+            _ in
+            self.close()
+        }
     }
     
     public func close() {
     
         Handle.close(uv_handle_ptr(handle))
-    }
-    
-    public func setTimeout( msecs : UInt64, callback : ((uv_timer_ptr)->()) ) {
-        
-        let timer : Timer = Timer()
-        timer.event.onTimeout = callback
-        Timer.start(timer.timerhandle, timeout: msecs, count: 0)
     }
     
     public func setKeepAlive(msecs: UInt32) {
@@ -96,6 +89,13 @@ extension Socket {
             Socket.dictionary.removeValueForKey(uv_stream_ptr(handle))
         }
     }
+    
+    public static func onTimeout( msecs : UInt64, callback : ((uv_timer_ptr)->()) ) {
+        
+        let timer : Timer = Timer()
+        timer.event.onTimeout = callback
+        Timer.start(timer.timerhandle, timeout: msecs, count: 0)
+    }
         
 }
 
@@ -133,11 +133,9 @@ public class Net: EventEmitter {
         }
         
         Tcp.bind(self.server.tcpHandle, address : self.ip, port: self.port)
-        
         Tcp.listen(self.server.tcpHandle)
     
-        uv_run(uv_default_loop(), UV_RUN_DEFAULT)
-        
+        Loop.run(mode: UV_RUN_DEFAULT)
     }
     
 }
