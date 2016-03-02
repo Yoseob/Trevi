@@ -37,7 +37,7 @@ extension Loop {
         Handle.close(uv_handle_ptr(handle))
     }
     
-    public static func run(handle : uv_loop_ptr, mode : uv_run_mode) {
+    public static func run(handle : uv_loop_ptr = uv_default_loop(), mode : uv_run_mode) {
         
         let error = uv_run(handle, mode)
         

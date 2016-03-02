@@ -7,6 +7,7 @@
 //
 
 import Libuv
+import Foundation
 
 
 public class Socket: EventEmitter { // should be inherited stream, eventEmitter
@@ -14,7 +15,7 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
     public static var dictionary = [uv_stream_ptr : Socket]()
     
     public var handle: uv_stream_ptr!
-    public var ondata: (( uv_buf_const_ptr, Int )->Void)?
+    public var ondata: (( NSData, Int )->Void)?
     public var onend: ((Void)->(Void))?
     
     public init(handle: uv_stream_ptr) {
@@ -38,7 +39,7 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         
         Stream.doWrite(uv_buf_const_ptr(buffer), handle: handle)
         
-//        self.setTimeout(100){ [unowned self]
+//        Socket.onTimeout(100){ [unowned self]
 //            _ in
 //            self.close()
 //        }
@@ -47,13 +48,6 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
     public func close() {
     
         Handle.close(uv_handle_ptr(handle))
-    }
-    
-    public func setTimeout( msecs : UInt64, callback : ((uv_timer_ptr)->()) ) {
-        
-        let timer : Timer = Timer()
-        timer.event.onTimeout = callback
-        Timer.start(timer.timerhandle, timeout: msecs, count: 0)
     }
     
     public func setKeepAlive(msecs: UInt32) {
@@ -75,13 +69,14 @@ extension Socket {
         
         let socket = Socket(handle: handle)
         EE.emit("connection", socket)
-        
     }
 
-    public static func onRead(handle : uv_stream_ptr, nread: Int, bufs: uv_buf_const_ptr) -> Void {
+    public static func onRead(handle : uv_stream_ptr, nread: Int, buffer: uv_buf_const_ptr) -> Void {
+        
+        let data = NSData(bytesNoCopy : buffer.memory.base, length : nread)
         
         if let wrap = Socket.dictionary[handle] {
-            wrap.ondata!(bufs,nread)
+            wrap.ondata!(data, nread)
         }
     }
 
@@ -95,6 +90,13 @@ extension Socket {
             wrap.onend = nil
             Socket.dictionary.removeValueForKey(uv_stream_ptr(handle))
         }
+    }
+    
+    public static func onTimeout( msecs : UInt64, callback : ((uv_timer_ptr)->()) ) {
+        
+        let timer : Timer = Timer()
+        timer.event.onTimeout = callback
+        Timer.start(timer.timerhandle, timeout: msecs, count: 0)
     }
         
 }
@@ -133,11 +135,9 @@ public class Net: EventEmitter {
         }
         
         Tcp.bind(self.server.tcpHandle, address : self.ip, port: self.port)
-        
         Tcp.listen(self.server.tcpHandle)
     
-        uv_run(uv_default_loop(), UV_RUN_DEFAULT)
-        
+        Loop.run(mode: UV_RUN_DEFAULT)
     }
     
 }

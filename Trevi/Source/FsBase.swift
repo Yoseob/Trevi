@@ -33,6 +33,7 @@ public class FsBase {
     
     deinit {
         self.fsRequest.dealloc(1)
+        self.events.removeAll()
         
         print("FS deinit")
     }
@@ -44,13 +45,13 @@ public class FsBase {
 }
 
 
-// Filesystem static functions
+// FsBase static functions
 
 extension FsBase {
     
-    public static func open(request : uv_fs_ptr, path : String) {
+    public static func open(request : uv_fs_ptr, path : String, flags : Int32) -> Int32 {
         
-        uv_fs_open(uv_default_loop(), request, path, O_RDONLY, 0, onOpen)
+       return uv_fs_open(uv_default_loop(), request, path, flags, 0644, onOpen)
     }
     
     public static func close(request : uv_fs_ptr) {
@@ -67,19 +68,16 @@ extension FsBase {
         uv_fs_read(uv_default_loop(), request, uv_file(request.memory.result), buffer, 1, -1, onRead)
     }
     
-    public static func write(request : uv_fs_ptr, path : String) {
+    public static func write(buffer: uv_buf_const_ptr, fd : uv_file) {
         
-        //        uv_fs_write(uv_default_loop(), request, request.memory.result, 0, onWrite)
+        let request : uv_fs_ptr = uv_fs_ptr.alloc(1)
+        
+        request.memory.data = void_ptr(buffer)
+        
+        uv_fs_write(uv_default_loop(), request, fd, buffer, 1, -1, afterWrite)
     }
     
     public static func cleanup(request : uv_fs_ptr) {
-        
-        let buffer =  uv_buf_ptr(request.memory.data)
-        
-        if buffer.memory.len > 0 {
-            buffer.memory.base.dealloc(buffer.memory.len)
-        }
-        buffer.dealloc(1)
         
         FsBase.dictionary[request] = nil
         uv_fs_req_cleanup(request)
@@ -88,7 +86,57 @@ extension FsBase {
 }
 
 
-// Filesystem static callbacks
+// FsBase static internal module.
+
+extension FsBase {
+    
+    public struct Info {
+        let request : uv_fs_ptr
+        let size : UInt64
+        var nread : Int
+    }
+    
+    public static func streamReadFile(handle : uv_pipe_ptr, path : String) {
+        
+        let request = uv_fs_ptr.alloc(1)
+        let fd = uv_fs_open(uv_default_loop(), request, path, O_RDONLY, 0, nil)
+        
+        Pipe.open(handle, fd: fd)
+        uv_fs_stat(uv_default_loop(), request, path, nil)
+        
+        let stat = request.memory.statbuf
+        var info = Info(request: request, size: stat.st_size, nread: 0)
+        
+        handle.memory.data = withUnsafeMutablePointer(&info){ void_ptr($0) }
+        
+        Stream.readStart(uv_stream_ptr(handle))
+        
+        Loop.run(mode: UV_RUN_ONCE)
+    }
+    
+    
+    // Should add close callback after write in Stream module.
+    
+    public static func streamOpenFile(handle : uv_pipe_ptr, path : String) {
+        
+        let request = uv_fs_ptr.alloc(1)
+        let fd = uv_fs_open(uv_default_loop(), request, path, O_CREAT | O_RDWR, 6644, nil)
+        
+        Pipe.open(handle, fd: fd)
+    }
+    
+    
+    // Should add close callback after write in Stream module.
+    
+    public static func streamWriteFile(handle : uv_pipe_ptr, buffer: uv_buf_const_ptr) {
+        
+        Stream.doWrite(buffer, handle: uv_stream_ptr(handle))
+        Loop.run(mode: UV_RUN_ONCE)
+    }
+    
+}
+
+// FsBase static callbacks
 
 extension FsBase {
     
@@ -116,9 +164,11 @@ extension FsBase {
     public static var onClose : uv_fs_cb  = { request in
         
         after(request, UV_FS_CLOSE)
+        
+        FsBase.cleanup(request)
+        uv_cancel(uv_req_ptr(request))
         request.dealloc(1)
     }
-    
     
     public static var onRead : uv_fs_cb  = { request in
         
@@ -127,21 +177,27 @@ extension FsBase {
             print("Filesystem read error : \(uv_strerror(Int32(request.memory.result)))")
         }
         else if request.memory.result == 0 {
-            
-            print("close called")
+
             FsBase.close(request)
         }
         else {
             
             after(request, UV_FS_READ)
         }
-        
     }
     
-    
-    public static var onWrite : uv_fs_cb  = { request in
-        
+    public static var afterWrite : uv_fs_cb  = { request in
         
         after(request, UV_FS_WRITE)
+        
+        let buffer : uv_buf_const_ptr = uv_buf_const_ptr(request.memory.data)
+        
+        if buffer.memory.len > 0 {
+            buffer.memory.base.dealloc(buffer.memory.len)
+        }
+        
+        uv_cancel(uv_req_ptr(request))
+        request.memory.data.dealloc(1)
+        request.dealloc(1)
     }
 }

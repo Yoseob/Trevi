@@ -27,10 +27,16 @@ public typealias uv_timer_ptr = UnsafeMutablePointer<uv_timer_t>
 public typealias uv_async_ptr = UnsafeMutablePointer<uv_async_t>
 
 
+public struct write_req_t {
+    let req : uv_write_t
+    var buf : uv_buf_t
+}
+
 public typealias uv_req_ptr = UnsafeMutablePointer<uv_req_t>
 public typealias uv_write_ptr = UnsafeMutablePointer<uv_write_t>
 public typealias uv_work_ptr = UnsafeMutablePointer<uv_work_t>
 public typealias uv_fs_ptr = UnsafeMutablePointer<uv_fs_t>
+public typealias write_req_ptr = UnsafeMutablePointer<write_req_t>
 
 
 public typealias uv_buf_ptr = UnsafeMutablePointer<uv_buf_t>
@@ -77,8 +83,8 @@ func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> (host: 
     }
 }
 
-public func uvErrorName() -> String {
-    return blockToUTF8String(uv_strerror(UV_EAGAIN.rawValue))
+public func uvErrorName(type : uv_errno_t) -> String {
+    return blockToUTF8String(uv_strerror(type.rawValue))
 }
 
 // Get String from the pointer

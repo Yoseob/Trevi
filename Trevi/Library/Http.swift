@@ -5,7 +5,9 @@
 //  Created by LeeYoseob on 2015. 11. 20..
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
+
 import Libuv
+import Foundation
 
 
 public typealias HttpCallback = ( ( IncomingMessage, ServerResponse, NextCallback?) -> Void )
@@ -44,6 +46,10 @@ public class OutgoingMessage: httpStream{
 
 
 public class ServerResponse: OutgoingMessage{
+    
+    //for Lime 
+    public var req: IncomingMessage!
+    
     
     public var httpVersion: String = ""
     public var url: String!
@@ -101,9 +107,7 @@ public class ServerResponse: OutgoingMessage{
         super.init(socket: socket)
         self._body = ""
     }
-    deinit{
-        
-    }
+    
     public func end(){
         let hData: NSData = self.prepareHeader()
         let result: NSMutableData = NSMutableData(data: hData)
@@ -184,6 +188,7 @@ public class ServerResponse: OutgoingMessage{
 public class IncomingMessage: StreamReadable{
     
     public var socket: Socket!
+    
     public var connection: Socket!
     
     // HTTP header
@@ -208,6 +213,13 @@ public class IncomingMessage: StreamReadable{
     
     public var path = ""
     
+    // for lime (not fixed)
+    public var baseUrl: String! = ""
+    public var route: AnyObject!
+    public var originUrl: String! = ""
+    public var params: [String: AnyObject]!
+    
+    
     //server only
     public var url: String!{
         didSet{
@@ -215,16 +227,7 @@ public class IncomingMessage: StreamReadable{
             if self.path.characters.last != "/" {
                 self.path += "/"
             }
-            // Parsing url query by using regular expression.
-            if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)", options: [ .CaseInsensitive ] ) {
-                for match in regex.matchesInString ( url, options: [], range: NSMakeRange( 0, url.length() ) ) {
-                    let keyRange   = match.rangeAtIndex( 1 )
-                    let valueRange = match.rangeAtIndex( 2 )
-                    let key   = url.substring ( keyRange.location, length: keyRange.length )
-                    let value = url.substring ( valueRange.location, length: valueRange.length )
-                    self.query.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
-                }
-            }
+               originUrl = url
         }
     }
     
@@ -254,10 +257,7 @@ public class IncomingMessage: StreamReadable{
 
 
 
-
 public class TreviServer: Net{
-    
-//    private var parser: HttpParser!
     
     private var parsers = [uv_stream_ptr:HttpParser!]()
     
@@ -273,11 +273,11 @@ public class TreviServer: Net{
         
         self.on("connection", connectionListener) // when Client Socket accepted
     }
+    
     deinit{
-//        parser.socket = nil
         parsers.removeAll()
-//        parser = nil
     }
+    
     func onlistening(){
         print("Http Server starts ip : \(ip), port : \(port).")
         
@@ -298,9 +298,9 @@ public class TreviServer: Net{
     }
     
     func connectionListener(sock: AnyObject){
-    
+        
         let socket = sock as! Socket
-
+        
         func parserSetup(){
             
             parser(socket).onHeader = {
@@ -330,24 +330,23 @@ public class TreviServer: Net{
                 
             }
         }
-
+        
         parsers[socket.handle] = HttpParser()
         let _parser = parser(socket)
         _parser.socket = socket
         parserSetup()
 
-        socket.ondata = { buf, nread in
+        socket.ondata = { data, nread in
             
             if let _parser = self.parsers[socket.handle] {
-                _parser.execute(buf,length: nread)
+                _parser.execute(data,length: nread)
             }else{
                 print("no parser")
             }
         }
         
         socket.onend = {
-            
-//            self.parser = nil
+        
             var _parser = self.parsers[socket.handle]
             _parser!.onBody = nil
             _parser!.onBodyComplete = nil
@@ -375,9 +374,10 @@ public class TreviServer: Net{
                 res.header[Connection] = "close"
                 res.shouldKeepAlive = false
             }
-            
+            res.req = req
             self.emit("request", req ,res)
-
+            
+            return false
         }
         
     }
@@ -416,19 +416,13 @@ public class Http {
         let server = TreviServer(requestListener: requestListener)
         return server
     }
+    
     public func createServer( requestListener: Any) -> Net{
         let server = TreviServer(requestListener: requestListener)
         return server
     }
     
-    
-   //    public func createServer ( requireModule: RoutAble... ) -> Http {
-//        for rm in requireModule {
-//            rm.makeChildsRoute(rm.superPath!, module:requireModule)
-//            mwManager.enabledMiddlwareList += rm.middlewareList;
-//        }
-//        return self
-//    }
+
     
     
 }

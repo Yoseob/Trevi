@@ -48,6 +48,7 @@ public enum HTTPMethodType: String {
     case HEAD      = "HEAD"
     case DELETE    = "DELETE"
     case UNDEFINED = "UNDEFINED"
+    case OPTIONS   = "OPTIONS"
 }
 
 

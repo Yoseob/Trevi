@@ -1,43 +1,50 @@
-////
-////  Lime.swift
-////  Trevi
-////
-////  Created by LeeYoseob on 2015. 12. 1..
-////  Copyright © 2015년 LeeYoseob. All rights reserved.
-////
 //
-//import Foundation
-//import Trevi
+//  Lime.swift
+//  Trevi
 //
-//public class Root: RoutAble {
+//  Created by LeeYoseob on 2015. 12. 1..
+//  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
-//    override init () {
-//        super.init ()
-//    }
-//
-//    public override func prepare() {
-//        let root = self
-//
-//        root.use ("/", Index ())
-//        
-//        root.get ( "/trevi" ) { req, res in
-//            let msg = "Hello Trevi!"
-//            return res.send ( msg )
-//        }
-//        
-//        root.get( "/param/:arg", { req, res in
-//            var msg = "Request path : \(req.path)<br>"
-//            msg += "Found parameter : <br>\(req.params)"
-//            return res.send ( msg )
-//
-//        })
-//        
-//        root.get("/redir"){ req , res in
-//            return res.redirect(url: "http://127.0.0.1:8080/trevi")
-//        }
-//        
-//        root.post("/post") { (req, res) -> Bool in
-//            return res.send("post data")
-//        }
-//    }
-//}
+
+import Foundation
+import Trevi
+import Lime
+
+public class Root{
+    
+    private let lime = Lime()
+    private var router: Router!
+    public init(){
+        router = lime.router
+        
+        router.get("/") { ( req , res , next) -> Void in
+            res.write("root get")
+            res.end()
+        }
+        router.get("/index") { ( req , res , next) -> Void in
+            res.write("index get")
+            res.end()
+        }
+        
+        router.post("/index") { ( req , res , next) -> Void in
+            res.write("index post")
+            res.end()
+        }
+        
+        router.get("/lime") { ( req , res , next) -> Void in
+            res.write("lime get")
+            res.end()
+        }
+        
+        router.get("/trevi/:param1") { ( req , res , next) -> Void in
+            print("[GET] /trevi/:praram")
+        }
+    }
+}
+
+extension Root: Require{
+    public func export() -> Router {
+        return self.router
+    }
+}
+
