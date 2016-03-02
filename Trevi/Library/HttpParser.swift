@@ -30,7 +30,7 @@ public class HttpParser{
     public var onHeaderComplete: ((HeaderInfo) -> Void)?
     public var onBody: ((String) -> Void)?
     public var onBodyComplete: ((Void) -> Void)?
-    public var onIncoming: ((IncomingMessage) -> Void)?
+    public var onIncoming: ((IncomingMessage) -> Bool)?
     
     
     public var date: NSDate = NSDate()

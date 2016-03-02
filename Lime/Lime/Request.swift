@@ -128,10 +128,3 @@ public class Request {
 }
 
 
-extension Request{
-    public func parseParam ( route: Route ) {
-        for params in route.paramsPos {
-            self.params.updateValue( pathComponent[ params.1 ], forKey: params.0 )
-        }
-    }
-}

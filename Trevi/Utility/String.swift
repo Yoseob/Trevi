@@ -36,6 +36,7 @@ public extension String {
     }
 
     func substring ( start: Int, length: Int ) -> String {
+
         return self[self.startIndex.advancedBy ( start ) ..< self.startIndex.advancedBy ( start + length )]
     }
 
@@ -74,7 +75,7 @@ public extension String {
  
  - Returns: An array of tuples that include NSRange and String which are searched with regular expression.
  */
-func searchWithRegularExpression ( string: String, pattern: String, options: NSRegularExpressionOptions = [] ) -> [[String : (range: NSRange, text: String)]] {
+public func searchWithRegularExpression ( string: String, pattern: String, options: NSRegularExpressionOptions = [] ) -> [[String : (range: NSRange, text: String)]] {
     var searched = [[String : (range: NSRange, text: String)]]()
     
     if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: pattern, options: options ) {

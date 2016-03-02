@@ -45,6 +45,10 @@ public class OutgoingMessage: httpStream{
 
 public class ServerResponse: OutgoingMessage{
     
+    //for Lime 
+    public var req: IncomingMessage!
+    
+    
     public var httpVersion: String = ""
     public var url: String!
     public var method: String!
@@ -208,6 +212,13 @@ public class IncomingMessage: StreamReadable{
     
     public var path = ""
     
+    // for lime (not fixed)
+    public var baseUrl: String! = ""
+    public var route: AnyObject!
+    public var originUrl: String! = ""
+    public var params: [String: AnyObject]!
+    
+    
     //server only
     public var url: String!{
         didSet{
@@ -215,16 +226,7 @@ public class IncomingMessage: StreamReadable{
             if self.path.characters.last != "/" {
                 self.path += "/"
             }
-            // Parsing url query by using regular expression.
-            if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)", options: [ .CaseInsensitive ] ) {
-                for match in regex.matchesInString ( url, options: [], range: NSMakeRange( 0, url.length() ) ) {
-                    let keyRange   = match.rangeAtIndex( 1 )
-                    let valueRange = match.rangeAtIndex( 2 )
-                    let key   = url.substring ( keyRange.location, length: keyRange.length )
-                    let value = url.substring ( valueRange.location, length: valueRange.length )
-                    self.query.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
-                }
-            }
+               originUrl = url
         }
     }
     
@@ -251,7 +253,6 @@ public class IncomingMessage: StreamReadable{
         
     }
 }
-
 
 
 
@@ -298,7 +299,7 @@ public class TreviServer: Net{
     }
     
     func connectionListener(sock: AnyObject){
-    
+        
         let socket = sock as! Socket
 
         func parserSetup(){
@@ -375,7 +376,7 @@ public class TreviServer: Net{
                 res.header[Connection] = "close"
                 res.shouldKeepAlive = false
             }
-            
+            res.req = req
             self.emit("request", req ,res)
 
         }
@@ -416,19 +417,13 @@ public class Http {
         let server = TreviServer(requestListener: requestListener)
         return server
     }
+    
     public func createServer( requestListener: Any) -> Net{
         let server = TreviServer(requestListener: requestListener)
         return server
     }
     
-    
-   //    public func createServer ( requireModule: RoutAble... ) -> Http {
-//        for rm in requireModule {
-//            rm.makeChildsRoute(rm.superPath!, module:requireModule)
-//            mwManager.enabledMiddlwareList += rm.middlewareList;
-//        }
-//        return self
-//    }
+
     
     
 }

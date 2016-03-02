@@ -7,10 +7,11 @@
 //
 
 import Foundation
-
+import Trevi
 /**
  A Middleware for serving static files in server like .css, .js, .html, etc.
  */
+
 public class ServeStatic: Middleware {
     
     public var name: MiddlewareName
@@ -26,23 +27,22 @@ public class ServeStatic: Middleware {
         }
     }
     
-    public func operateCommand (params: MiddlewareParams) -> Bool {
-        let req: Request  = params.req
-        let res: Response = params.res
-        
-//        let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
-//        if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
-//            var buffer = [UInt8](count: 8, repeatedValue: 0)
-//            let data = NSMutableData()
-//            
-//            file.open()
-//            while file.status == .Open {
-//                let result: Int = file.read(&buffer, maxLength: buffer.count)
-//                data.appendBytes(buffer, length: result)
-//            }
-//            return res.send(data)
-//        }
-        
-        return false
+    
+    public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+        let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
+        if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
+            var buffer = [UInt8](count: 8, repeatedValue: 0)
+            let data = NSMutableData()
+            
+            file.open()
+            while file.status == .Open {
+                let result: Int = file.read(&buffer, maxLength: buffer.count)
+                data.appendBytes(buffer, length: result)
+            }
+            return res.send(data)
+        }
+        next!()
     }
+    
+
 }

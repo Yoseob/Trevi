@@ -8,16 +8,17 @@
 
 import Foundation
 import Trevi
-public class Favicon: _Middleware {
 
-    public var name: _MiddlewareName = .Favicon;
+public class Favicon: Middleware {
+
+    public var name: MiddlewareName = .Favicon;
 
     public init () {
 
     }
 
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
-        print(name)
+
         next!()
     }
 }

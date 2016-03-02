@@ -7,11 +7,10 @@
 //
 
 import Foundation
-
-// if need handle request, response, route
-public typealias MiddlewareParams = ( req:Request, res:Response, route:Route )
+import Trevi
 
 public enum MiddlewareName: String {
+    case Query           = "query"
     case Err             = "error"
     case Undefined       = "undefined"
     case Favicon         = "favicon"
@@ -27,19 +26,7 @@ public enum MiddlewareName: String {
     // else...
 }
 
-    /**
-    * if you want to make middleware, use this protocol
-    *
-    * Examples:
-    *
-    *        public func operateCommand ( params: MiddlewareParams ) -> Bool {
-    *           return false
-    *        }
-    *
-    * @public
-    */
-public protocol Middleware {
+public protocol Middleware{
     var name: MiddlewareName { get set }
-    func operateCommand ( params: MiddlewareParams ) -> Bool
-    
+    func handle(req: IncomingMessage,res: ServerResponse,next: NextCallback?) -> ()
 }

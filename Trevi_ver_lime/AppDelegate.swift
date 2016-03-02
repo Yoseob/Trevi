@@ -24,15 +24,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use("/root", Root())
   
         lime.use { (req, res, next) in
-            print("function")
-        }
-  
-//        server.createServer(lime).listen(8080)
-
-        server.createServer({ (req, res, next) in
-            res.write("hello Trevi")
+            res.statusCode = 200
+            res.write("404 error")
             res.end()
-        }).listen(8080)
+        }
+        
+
+        
+        server.createServer(lime).listen(8080)
+
+//        server.createServer({ (req, res, next) in
+//            res.write("hello Trevi")
+//            res.end()
+//        }).listen(8080)
 
 
     }
@@ -41,4 +45,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
 }
+
 

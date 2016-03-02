@@ -8,7 +8,6 @@
 
 import Foundation
 
-
-public protocol Require {
-    func prepare ()
+public protocol Require{
+    func export() -> Router
 }
