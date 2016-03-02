@@ -36,6 +36,7 @@ public extension String {
     }
 
     func substring ( start: Int, length: Int ) -> String {
+
         return self[self.startIndex.advancedBy ( start ) ..< self.startIndex.advancedBy ( start + length )]
     }
 

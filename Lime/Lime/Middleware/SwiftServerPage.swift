@@ -18,19 +18,15 @@ public protocol Renderer {
 /**
  A Middleware for compiling a specific SSP(Swift Server Page) file and send the data to client.
  */
-public class SwiftServerPage: Middleware, Renderer {
 
-    public var name: MiddlewareName;
+
+public class SwiftServerPage: Renderer {
 
     public init () {
-        name = .SwiftServerPage
+    
     }
 
-    public func operateCommand ( params: MiddlewareParams ) -> Bool {
 
-
-        return false
-    }
     
     /**
      Get a compiled result of a SSP(Swift Server Page) file from the specific path.

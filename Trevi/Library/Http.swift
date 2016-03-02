@@ -42,6 +42,10 @@ public class OutgoingMessage: httpStream{
 
 public class ServerResponse: OutgoingMessage{
     
+    //for Lime 
+    public var req: IncomingMessage!
+    
+    
     public var httpVersion: String = ""
     public var url: String!
     public var method: String!
@@ -218,17 +222,7 @@ public class IncomingMessage: StreamReadable{
             if self.path.characters.last != "/" {
                 self.path += "/"
             }
-            // Parsing url query by using regular expression.
-            if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)", options: [ .CaseInsensitive ] ) {
-                for match in regex.matchesInString ( url, options: [], range: NSMakeRange( 0, url.length() ) ) {
-                    let keyRange   = match.rangeAtIndex( 1 )
-                    let valueRange = match.rangeAtIndex( 2 )
-                    let key   = url.substring ( keyRange.location, length: keyRange.length )
-                    let value = url.substring ( valueRange.location, length: valueRange.length )
-                    self.query.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
-                }
-            }
-            originUrl = url
+               originUrl = url
         }
     }
     
@@ -251,17 +245,13 @@ public class IncomingMessage: StreamReadable{
 
 
 
-
 public class TreviServer: Net{
-    
-    private var parser: HttpParser!
     
     private var parsers = [uv_stream_ptr:HttpParser!]()
     
     private var requestListener: Any!
     
     init(requestListener: Any!){
-        
         super.init()
         self.requestListener = requestListener
         
@@ -272,12 +262,17 @@ public class TreviServer: Net{
         self.on("connection", connectionListener) // when Client Socket accepted
     }
     
+    deinit{
+        parsers.removeAll()
+    }
+    
     func onlistening(){
         print("Http Server starts ip : \(ip), port : \(port).")
         
         switch requestListener {
         case let ra as ApplicationProtocol:
             let eventName = "request"
+            
             self.removeEvent(eventName)
             self.on(eventName, ra.createApplication())
             break
@@ -286,47 +281,47 @@ public class TreviServer: Net{
         }
     }
     
+    private func parser(socket: Socket) -> HttpParser{
+        return parsers[socket.handle]!
+    }
     
     func connectionListener(sock: AnyObject){
-        print("sock : \(sock)")
+        
         let socket = sock as! Socket
         
         func parserSetup(){
             
-            parser.onHeader = {
+            parser(socket).onHeader = {
                 
             }
             
-            parser.onHeaderComplete = { info in
+            parser(socket).onHeaderComplete = { info in
+                let incoming = IncomingMessage(socket: self.parser(socket).socket)
                 
-                print(info.url)
-                
-                let incoming = IncomingMessage(socket: self.parser.socket)
-        
                 incoming.header = info.header
                 incoming.httpVersionMajor = info.versionMajor
                 incoming.httpVersionMinor = info.versionMinor
                 incoming.url = info.url
                 incoming.method = info.method
                 
-                self.parser.incoming = incoming
-                self.parser.onIncoming!(incoming)
+                self.parser(socket).incoming = incoming
+                self.parser(socket).onIncoming!(incoming)
             }
             
-            parser.onBody = { body in
-                let incoming = self.parser.incoming
+            parser(socket).onBody = { body in
+                let incoming = self.parser(socket).incoming
                 incoming.push(body)
                 
             }
             
-            parser.onBodyComplete = {
+            parser(socket).onBodyComplete = {
                 
             }
         }
-
+        
         parsers[socket.handle] = HttpParser()
-        parser = parsers[socket.handle]
-        parser.socket = socket
+        let _parser = parser(socket)
+        _parser.socket = socket
         parserSetup()
         
         socket.ondata = { buf, nread in
@@ -339,19 +334,21 @@ public class TreviServer: Net{
         }
         
         socket.onend = {
-            print("onend")
-            
+        
             var _parser = self.parsers[socket.handle]
             _parser!.onBody = nil
             _parser!.onBodyComplete = nil
             _parser!.onHeader = nil
             _parser!.onIncoming = nil
             _parser!.onHeaderComplete = nil
+            _parser!.socket = nil
+            _parser!.incoming = nil
             _parser = nil
             self.parsers.removeValueForKey(socket.handle)
+            
         }
         
-        parser.onIncoming = { req in
+        parser(socket).onIncoming = { req in
             
             let res = ServerResponse(socket: req.socket)
             res.socket = req.socket
@@ -365,11 +362,12 @@ public class TreviServer: Net{
                 res.header[Connection] = "close"
                 res.shouldKeepAlive = false
             }
-            
+            res.req = req
             self.emit("request", req ,res)
             
             return false
         }
+        
     }
 }
 
@@ -406,19 +404,13 @@ public class Http {
         let server = TreviServer(requestListener: requestListener)
         return server
     }
+    
     public func createServer( requestListener: Any) -> Net{
         let server = TreviServer(requestListener: requestListener)
         return server
     }
     
-    
-   //    public func createServer ( requireModule: RoutAble... ) -> Http {
-//        for rm in requireModule {
-//            rm.makeChildsRoute(rm.superPath!, module:requireModule)
-//            mwManager.enabledMiddlwareList += rm.middlewareList;
-//        }
-//        return self
-//    }
+
     
     
 }

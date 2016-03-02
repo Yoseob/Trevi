@@ -10,53 +10,77 @@ import Foundation
 import Trevi
 
 
-public class Route {
-
-    public var path: String!
-    public var regex: String!
-    var method: HTTPMethodType!
-    var callbacks = [ HttpCallback ]!()
-    var params    = [ String : String ]()
-    var paramsPos = [ String : Int ]()
-
-    init () {
-        self.method = .UNDEFINED
+public class Route{
+    private var stack = [Layer!]()
+    public var path: String?
+    public var methods = [HTTPMethodType]()
+    public var method: HTTPMethodType!
+    public var dispatch: HttpCallback? {
+        didSet{
+            let layer = Layer(path: "", name: "anonymous", options: Option(end: true), fn: self.dispatch!)
+            if method != nil{
+                layer.method = method
+                method = nil
+            }else{
+                layer.method = .UNDEFINED
+            }
+            
+            self.stack.append(layer)
+        }
     }
     
-    init ( method: HTTPMethodType, _ path: String, _ callback: [HttpCallback] ) {
-        self.method = method
+    public init(method: HTTPMethodType, _ path: String){
         self.path = path
-        self.callbacks = callback
-
-        parsePath()
+        self.methods.append(method)
     }
     
-    init ( method: HTTPMethodType, path: String, routeAble: RoutAble... ) {
-        self.method = method
-        self.path = path
-//        self.callback.append(callback);
+    public func dispatchs(req: IncomingMessage,res: ServerResponse,next: NextCallback?){
         
-        parsePath()
-    }
-    
-    private final func parsePath() {
-        regex = "^\(path)(/|$)"
+        var idx = 0
+        let stack = self.stack
         
-        if path.length() < 2 {
-            return
+        guard stack.count > 0 else {
+            return next!()
         }
         
-        let pathComponent = path.componentsSeparatedByString("/")
+        req.route = self
+        let method = HTTPMethodType(rawValue: req.method)
         
-//        for param in searchWithRegularExpression(path, pattern: ":([\(unreserved)\(gen_delims)\(sub_delims)]*?)(/|$)") {
-//            // get regular expression for routing
-//            regex = regex.stringByReplacingOccurrencesOfString ( ":\(param["$1"]!.text)", withString: "([\(unreserved)\\:\\?\\#\\[\\]\\@\(sub_delims);]*)" )
-//            
-//            // get path parameter
-//            params.updateValue( "", forKey: param["$1"]!.text )
-//            for idx in 0 ..< pathComponent.count where idx != 0 && pathComponent[idx] == ":\(param["$1"]!.text)" {
-//                paramsPos.updateValue(idx - 1, forKey: param["$1"]!.text)
-//            }
-//        }
+        func nextHandle(){
+            guard stack.count > idx else {
+                return next!()
+            }
+            
+            let layer: Layer! = stack[idx++]
+            
+            guard layer != nil  else{
+                return next!()
+            }
+            
+            if (layer.method != nil) && (layer.method != method){
+                return nextHandle()
+            }
+            
+            layer.handleRequest(req, res: res, next: next!)
+        }
+        
+        nextHandle()
+        
+        
     }
+    
+    public func handlesMethod(method: HTTPMethodType) -> Bool{
+        for _mathod in methods {
+            if method == _mathod {
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    public func options() -> [HTTPMethodType] {
+        return self.methods
+    }
+    
 }
