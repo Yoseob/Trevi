@@ -117,15 +117,20 @@ extension FsBase {
     
     // Should add close callback after write in Stream module.
     
-    public static func streamWriteFile(handle : uv_pipe_ptr, buffer: uv_buf_const_ptr, path : String) {
+    public static func streamOpenFile(handle : uv_pipe_ptr, path : String) {
         
         let request = uv_fs_ptr.alloc(1)
-        let fd = uv_fs_open(uv_default_loop(), request, path, O_CREAT | O_WRONLY, 0, nil)
+        let fd = uv_fs_open(uv_default_loop(), request, path, O_CREAT | O_RDWR, 6644, nil)
         
         Pipe.open(handle, fd: fd)
+    }
+    
+    
+    // Should add close callback after write in Stream module.
+    
+    public static func streamWriteFile(handle : uv_pipe_ptr, buffer: uv_buf_const_ptr) {
         
         Stream.doWrite(buffer, handle: uv_stream_ptr(handle))
-        
         Loop.run(mode: UV_RUN_ONCE)
     }
     
@@ -172,8 +177,7 @@ extension FsBase {
             print("Filesystem read error : \(uv_strerror(Int32(request.memory.result)))")
         }
         else if request.memory.result == 0 {
-            
-            print("close called")
+
             FsBase.close(request)
         }
         else {
