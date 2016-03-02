@@ -5,7 +5,9 @@
 //  Created by LeeYoseob on 2015. 11. 20..
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
+
 import Libuv
+import Foundation
 
 
 public typealias HttpCallback = ( ( IncomingMessage, ServerResponse, NextCallback?) -> Void )

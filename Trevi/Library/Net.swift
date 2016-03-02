@@ -7,6 +7,7 @@
 //
 
 import Libuv
+import Foundation
 
 
 public class Socket: EventEmitter { // should be inherited stream, eventEmitter
