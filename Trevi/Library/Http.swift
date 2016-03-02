@@ -5,7 +5,9 @@
 //  Created by LeeYoseob on 2015. 11. 20..
 //  Copyright © 2015년 LeeYoseob. All rights reserved.
 //
+
 import Libuv
+import Foundation
 
 
 public typealias HttpCallback = ( ( IncomingMessage, ServerResponse, NextCallback?) -> Void )
@@ -333,11 +335,11 @@ public class TreviServer: Net{
         let _parser = parser(socket)
         _parser.socket = socket
         parserSetup()
-        
-        socket.ondata = { buf, nread in
+
+        socket.ondata = { data, nread in
             
             if let _parser = self.parsers[socket.handle] {
-                _parser.execute(buf,length: nread)
+                _parser.execute(data,length: nread)
             }else{
                 print("no parser")
             }
