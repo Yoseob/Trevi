@@ -105,9 +105,7 @@ public class ServerResponse: OutgoingMessage{
         super.init(socket: socket)
         self._body = ""
     }
-    deinit{
-        
-    }
+    
     public func end(){
         let hData: NSData = self.prepareHeader()
         let result: NSMutableData = NSMutableData(data: hData)
@@ -188,6 +186,7 @@ public class ServerResponse: OutgoingMessage{
 public class IncomingMessage: StreamReadable{
     
     public var socket: Socket!
+    
     public var connection: Socket!
     
     // HTTP header
@@ -258,8 +257,6 @@ public class IncomingMessage: StreamReadable{
 
 public class TreviServer: Net{
     
-//    private var parser: HttpParser!
-    
     private var parsers = [uv_stream_ptr:HttpParser!]()
     
     private var requestListener: Any!
@@ -274,11 +271,11 @@ public class TreviServer: Net{
         
         self.on("connection", connectionListener) // when Client Socket accepted
     }
+    
     deinit{
-//        parser.socket = nil
         parsers.removeAll()
-//        parser = nil
     }
+    
     func onlistening(){
         print("Http Server starts ip : \(ip), port : \(port).")
         
@@ -301,7 +298,7 @@ public class TreviServer: Net{
     func connectionListener(sock: AnyObject){
         
         let socket = sock as! Socket
-
+        
         func parserSetup(){
             
             parser(socket).onHeader = {
@@ -331,12 +328,12 @@ public class TreviServer: Net{
                 
             }
         }
-
+        
         parsers[socket.handle] = HttpParser()
         let _parser = parser(socket)
         _parser.socket = socket
         parserSetup()
-
+        
         socket.ondata = { buf, nread in
             
             if let _parser = self.parsers[socket.handle] {
@@ -347,8 +344,7 @@ public class TreviServer: Net{
         }
         
         socket.onend = {
-            
-//            self.parser = nil
+        
             var _parser = self.parsers[socket.handle]
             _parser!.onBody = nil
             _parser!.onBodyComplete = nil
@@ -378,7 +374,8 @@ public class TreviServer: Net{
             }
             res.req = req
             self.emit("request", req ,res)
-
+            
+            return false
         }
         
     }
