@@ -8,6 +8,8 @@
 
 
 import Libuv
+import Foundation
+
 
 public class Echo : Net {
     
@@ -22,7 +24,7 @@ public class Echo : Net {
 //        fileStreamTest("/Users/Ingyure/Documents/fstest.txt")
         
         print("Echo Server starts ip : \(ip), port : \(port).")
-        print("Main thread : \(getThreadID())")
+//        print("Main thread : \(getThreadID())")
         super.listen(port)
         
     }
@@ -32,23 +34,19 @@ public class Echo : Net {
         
         let socket = sock as! Socket
         
-        print("Connect thread : \(getThreadID())")
+//        print("Connect thread : \(getThreadID())")
         
-        socket.ondata = { buf, nread in
+        socket.ondata = { data, nread in
             
-            print("Read thread : \(getThreadID())")
-            print(nread)
-            
-            let data = NSData(bytesNoCopy: buf.memory.base, length: nread)
-            
-            print(blockToString(buf.memory.base, length : nread-2))
+//            print("Read thread : \(getThreadID())")
+            print("Read length: \(nread)")
+//            print(blockToString(data.bytes, length : nread-2))
             
             socket.write(data, handle: socket.handle)
-            
         }
         
         socket.onend = {
-            print("Close thread : \(getThreadID())")
+//            print("Close thread : \(getThreadID())")
         }
     }
     
@@ -58,11 +56,13 @@ public class Echo : Net {
 
 func fileStreamTest(path : String){
     
-    let filePipe = Pipe()
+    let readPipe = Pipe()
+    let writePipe = Pipe()
+    FsBase.streamOpenFile(writePipe.pipeHandle, path: "/Users/Ingyure/Documents/fswritetest.txt")
     
-    filePipe.event.onRead = { (handle, nread, buffer) in
+    readPipe.event.onRead = { (handle, nread, buffer) in
         
-        print(nread)
+        print("Read : \(nread)")
         
         let infoPtr = UnsafeMutablePointer<FsBase.Info>(handle.memory.data)
         
@@ -76,21 +76,21 @@ func fileStreamTest(path : String){
         
         if buffer.memory.len > 0 {
             
-            //            let writeHandle = Pipe()
-            //            FsBase.streamWriteFile(writeHandle.pipeHandle, buffer: buffer, path: "/Users/Ingyure/Documents/fswritetest.txt")
-            print(blockToString(buffer.memory.base, length: nread))
+            FsBase.streamWriteFile(writePipe.pipeHandle, buffer: buffer)
             
-            buffer.memory.base.dealloc(buffer.memory.len)
+//            print(blockToString(buffer.memory.base, length: nread))
+//            
+//            buffer.memory.base.dealloc(buffer.memory.len)
         }
         
     }
     
-    filePipe.event.onClose = { (handle) in
+    readPipe.event.onClose = { (handle) in
         print("File pipe cloesing")
         
     }
     
-    FsBase.streamReadFile(filePipe.pipeHandle, path: path)
+    FsBase.streamReadFile(readPipe.pipeHandle, path: path)
     
 }
 

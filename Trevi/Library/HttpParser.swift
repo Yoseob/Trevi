@@ -59,21 +59,21 @@ public class HttpParser{
     deinit{
     }
     
-    public func execute(buf: uv_buf_const_ptr = nil, length: Int){
-        let readData = blockToUTF8String(buf.memory.base)
-        
-        if self.headerString == nil{
-            self.headerInfo = HeaderInfo()
-            self.headerString = readData
-            self.onHeader!()
-        }else{
-            totalLength += length
-            
-            
-            if(totalLength >= contentLength){
-                onBodyComplete!()
-            }
-        }
+    public func execute(data: NSData! = nil, length: Int){
+//        let readData = blockToUTF8String(buf.memory.base)
+//        
+//        if self.headerString == nil{
+//            self.headerInfo = HeaderInfo()
+//            self.headerString = readData
+//            self.onHeader!()
+//        }else{
+//            totalLength += length
+//            
+//            
+//            if(totalLength >= contentLength){
+//                onBodyComplete!()
+//            }
+//        }
     }
     
     private final func headerParserBegin () {

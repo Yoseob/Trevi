@@ -338,10 +338,10 @@ public class TreviServer: Net{
         _parser.socket = socket
         parserSetup()
 
-        socket.ondata = { buf, nread in
+        socket.ondata = { data, nread in
             
             if let _parser = self.parsers[socket.handle] {
-                _parser.execute(buf,length: nread)
+                _parser.execute(data,length: nread)
             }else{
                 print("no parser")
             }
