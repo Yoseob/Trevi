@@ -29,7 +29,7 @@ public typealias uv_async_ptr = UnsafeMutablePointer<uv_async_t>
 
 public struct write_req_t {
     let req : uv_write_t
-    var buf : uv_buf_t
+    var buf : uv_buf_ptr
 }
 
 public typealias uv_req_ptr = UnsafeMutablePointer<uv_req_t>
@@ -57,7 +57,10 @@ extension uv_fs_type : Hashable {
 
 // Reference form
 // https://developer.apple.com/library/ios/samplecode/SimpleTunnel/Listings/tunnel_server_UDPServerConnection_swift.html
-
+//   * Example
+//    let addressInfo = Tcp.getPeerName(uv_tcp_ptr(handle))
+//    let (ip, port) = getEndpointFromSocketAddress(addressInfo)!
+//    print("New client!  ip : \(ip), port : \(port).")
 func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> (host: String, port: Int)? {
     let socketAddress = UnsafePointer<sockaddr>(socketAddressPointer).memory
     
