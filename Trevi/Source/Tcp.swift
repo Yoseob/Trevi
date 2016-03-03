@@ -69,8 +69,9 @@ extension Tcp {
     public static func listen(handle : uv_tcp_ptr, backlog : Int32 = 50) {
         
 //        Should add if state to set using work or not
-//        let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
-        let error = uv_listen(uv_stream_ptr(handle), backlog, Work.onConnection)
+//        let error = uv_listen(uv_stream_ptr(handle), backlog, Work.onConnection)
+        
+        let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
         
         if error != 0 {
             // Should handle error
