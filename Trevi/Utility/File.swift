@@ -43,8 +43,7 @@ public enum FileStatus : UInt {
  - Returns: The full pathname for the resource file.
  */
 public func getResourcePath(path: String) -> String {
-    let comp = path.componentsSeparatedByString( "/" )
-    if let rsrcPath = NSBundle.mainBundle().pathForResource(comp.last!, ofType: nil) {
+    if let rsrcPath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: path).lastPathComponent!, ofType: nil) {
         return rsrcPath
     }
     return path
@@ -240,7 +239,7 @@ public class ReadableFile: File {
 
 public class WritableFile: File {
     
-    override init(fileAtPath path: String, option: Int32 = O_WRONLY) {
+    public override init(fileAtPath path: String, option: Int32 = O_WRONLY) {
         super.init(fileAtPath: path, option: option|O_WRONLY&(~(O_RDONLY|O_RDWR)))
     }
     

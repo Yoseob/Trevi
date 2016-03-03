@@ -63,9 +63,9 @@ public class HttpParser{
         let readData = String(data: data, encoding:NSUTF8StringEncoding)
         
         if self.headerString == nil{
+            self.onHeader!()
             self.headerInfo = HeaderInfo()
             self.headerString = readData
-            self.onHeader!()
         }else{
             totalLength += length
             

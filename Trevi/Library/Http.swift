@@ -65,11 +65,11 @@ public class ServerResponse: OutgoingMessage{
     private var _body: String?{
         didSet {
             self._hasbody = true
-            header[Content_Type] = "text/plain;charset=utf-8"
+            header[Content_Type] = "text/html;charset=utf-8"
         }
     }
     
-    private var _bodyData: NSData! {
+    private var _bodyData: NSData? {
         didSet{
             self._hasbody = true
             header[Content_Type] = ""
@@ -127,7 +127,7 @@ public class ServerResponse: OutgoingMessage{
         case let str as String :
             self._body = str
         case let dt as NSData:
-            self._bodyData! = dt
+            self._bodyData = dt
             if let t = type{
                 header[Content_Type] = t
             }
@@ -218,6 +218,7 @@ public class IncomingMessage: StreamReadable{
     public var route: AnyObject!
     public var originUrl: String! = ""
     public var params: [String: AnyObject]!
+    public var app: AnyObject!
     
     
     //server only

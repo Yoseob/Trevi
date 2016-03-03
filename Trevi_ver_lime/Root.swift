@@ -39,6 +39,10 @@ public class Root{
         router.get("/trevi/:param1") { ( req , res , next) -> Void in
             print("[GET] /trevi/:praram")
         }
+        
+        router.get("/ssp") { (req, res, next) -> Void in
+            res.render("index.ssp", args: ["title":"Trevi"])
+        }
     }
 }
 
