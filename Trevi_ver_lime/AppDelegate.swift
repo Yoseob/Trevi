@@ -14,20 +14,12 @@ import Lime
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching ( aNotification: NSNotification ) {
-        
+              
         let server = Http ()
 
         let lime = Lime()
         
-        #if os(Linux)
-        lime.set("views", val: "\(__dirname)/views");
-        #endif
-        
-        lime.set("view engine", val: SwiftServerPage())
-        
-        lime.use(Favicon())
-        
-        lime.use(ServeStatic(path: "\(__dirname)/public"))
+        lime.use(Favicon());
         
         lime.use(BodyParser())
         

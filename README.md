@@ -5,27 +5,7 @@ Fast, light web application server framwork for Swift. Trevi uses an event-drive
 Trevi refers to node.js core modules and makes Trevi core modules similary to support node.js features. Trevi also hopes that node.js developers easily use and develop Trevi. <br><br>
 Lime is improved web framework for Trevi, and Lime refers to express. (Lime does not support many core modules in express yet.)
 
-
-## Build Instructions
-
-### OS X (recommended)
-For Debug builds (recommended) run:
-```
-$ make all
-```
-
-For Release builds run:
-```
-$ make all COMPILE_MODE=Release
-```
-
-### Ubuntu
-Trevi is not working on ubuntu yet, but it can be build soon.
-
-### Running tests
-For testing Trevi, use Xcode and build the project
-
-
+ 
 ## Examples
 ```swift
 import Trevi

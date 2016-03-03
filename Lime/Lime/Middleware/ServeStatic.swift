@@ -29,17 +29,9 @@ public class ServeStatic: Middleware {
     
     
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+       
         
-        var entirePath = req.path
-        #if os(Linux)
-            entirePath += "\(basePath)/\(req.path)"
-        #else
-            if let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: req.path).lastPathComponent!, ofType: nil) {
-                entirePath = bundlePath
-            }
-        #endif
-        
-        let file = ReadableFile(fileAtPath: entirePath)
+        let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
         if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
             var buffer = [UInt8](count: 8, repeatedValue: 0)
             let data = NSMutableData()

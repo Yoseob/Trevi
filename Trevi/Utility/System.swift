@@ -8,13 +8,13 @@
 
 import Foundation
 
-public class System {
+class System {
 
-    public static func executeCmd ( command: String ) -> String {
+    static func executeCmd ( command: String ) -> String {
         return executeCmd ( command, args: [] )
     }
 
-    public static func executeCmd ( command: String, args: [String] ) -> String {
+    static func executeCmd ( command: String, args: [String] ) -> String {
         let task = NSTask ()
         let pipe = NSPipe ()
 
