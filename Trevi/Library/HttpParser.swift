@@ -28,7 +28,7 @@ public class HttpParser{
     
     public var onHeader: ((Void) -> (Void))?
     public var onHeaderComplete: ((HeaderInfo) -> Void)?
-    public var onBody: ((String) -> Void)?
+    public var onBody: ((AnyObject) -> Void)?
     public var onBodyComplete: ((Void) -> Void)?
     public var onIncoming: ((IncomingMessage) -> Bool)?
     
@@ -59,19 +59,20 @@ public class HttpParser{
     deinit{
     }
     
-    public func execute(data: NSData! = nil, length: Int){
-        let readData = String(data: data, encoding:NSUTF8StringEncoding)
-        
+    public func execute(data: UnsafeMutablePointer<CChar>! = nil, length: Int){
+
+        let readData: String! = blockToString(data, length: length)
         if self.headerString == nil{
+            self.onHeader!()
             self.headerInfo = HeaderInfo()
             self.headerString = readData
-            self.onHeader!()
         }else{
-            totalLength += length
-            
-            
-            if(totalLength >= contentLength){
-                onBodyComplete!()
+            if contentLength > 0 {
+                totalLength += length
+                onBody!(readData)
+                if totalLength >= contentLength{
+                    onBodyComplete!()
+                }
             }
         }
     }
@@ -92,11 +93,16 @@ public class HttpParser{
             self.headerInfo.versionMinor = version.last!
             parseHeader( requestHeader )
             
+            
             if trace.length() > 1 {
-
                 onBody!(trace)
                 trace = ""
             }
+            
+            if trace.length() == 0 && contentLength == 0 {
+                self.onBodyComplete!()
+            }
+            
         }
     }
     
@@ -108,12 +114,12 @@ public class HttpParser{
             }
 
             if fields[_idx].length() == 0 && endOfheader == false{
-                self.onHeaderComplete!(self.headerInfo)
                 if let contentLength = self.headerInfo.header[Content_Length]{
                     self.contentLength = Int(contentLength)!
                     hasbody = true
                 }
                 endOfheader = true
+                self.onHeaderComplete!(self.headerInfo)
             }
             
             if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {

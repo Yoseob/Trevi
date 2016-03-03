@@ -304,12 +304,12 @@ public class TreviServer: Net{
         func parserSetup(){
             
             parser(socket).onHeader = {
-                
+                print("onHeader")
             }
             
             parser(socket).onHeaderComplete = { info in
                 let incoming = IncomingMessage(socket: self.parser(socket).socket)
-                
+                print("onHeaderComplete")
                 incoming.header = info.header
                 incoming.httpVersionMajor = info.versionMajor
                 incoming.httpVersionMinor = info.versionMinor
@@ -322,12 +322,13 @@ public class TreviServer: Net{
             
             parser(socket).onBody = { body in
                 let incoming = self.parser(socket).incoming
-                incoming.push(body)
-                
+                incoming.push(body as? String)
             }
             
             parser(socket).onBodyComplete = {
-                
+                let incoming = self.parser(socket).incoming
+                incoming.emit("end")
+
             }
         }
         
@@ -339,10 +340,27 @@ public class TreviServer: Net{
         socket.ondata = { data, nread in
             
             if let _parser = self.parsers[socket.handle] {
-                _parser.execute(data,length: nread)
+                let readLen = nread
+                var bufSize = 4096
+                var offset = 0
+                let readBuf = UnsafeMutablePointer<CChar>.alloc(bufSize)
+                
+                while offset < readLen {
+                    
+                    if readLen < (offset + bufSize){
+                        bufSize = readLen - offset
+                    }
+        
+                    data.getBytes(readBuf, range: NSMakeRange(offset, bufSize))
+                    _parser.execute(readBuf,length: bufSize)
+                    
+                    offset += bufSize
+                }
+                readBuf.dealloc(bufSize)
             }else{
                 print("no parser")
             }
+            
         }
         
         socket.onend = {
@@ -375,6 +393,7 @@ public class TreviServer: Net{
                 res.shouldKeepAlive = false
             }
             res.req = req
+            
             self.emit("request", req ,res)
             
             return false

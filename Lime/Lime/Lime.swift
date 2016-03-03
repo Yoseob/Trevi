@@ -72,17 +72,16 @@ extension Lime: ApplicationProtocol{
 
 public class LimeInit{
 
+
+    
 }
+
+
 public extension ServerResponse{
     public func send(data: AnyObject?, encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
         end()
     }
-    
-    public func render(){
-        
-    }
-
 }
 //extention incomingMessage for lime
 extension IncomingMessage {

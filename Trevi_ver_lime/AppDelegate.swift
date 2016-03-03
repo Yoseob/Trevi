@@ -31,12 +31,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
 
         
-        server.createServer(lime).listen(8080)
+//        server.createServer(lime).listen(8080)
 
-//        server.createServer({ (req, res, next) in
-//            res.write("hello Trevi")
-//            res.end()
-//        }).listen(8080)
+        server.createServer({ (req, res, next) in
+            
+            func ondata(c: String){
+                print(c)
+            }
+            func onend(){
+                print("end")
+                res.write("hello Trevi")
+                res.end()
+
+            }
+            req.on("data", ondata)
+            req.on("end", onend)
+            
+        }).listen(8080)
 
 
     }
