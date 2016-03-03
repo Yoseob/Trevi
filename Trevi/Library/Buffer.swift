@@ -25,6 +25,9 @@ public class Buffer {
     init(data: [Int8]) {
         self.data = data
     }
+    init(data: String) {
+        self.data = Array(UnsafeBufferPointer(start: data, count: data.characters.count))
+    }
     
     init(data: UnsafePointer<Int8>, length: Int) {
         self.data = Array(UnsafeBufferPointer(start: data, count: length))
