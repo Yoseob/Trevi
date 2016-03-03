@@ -28,6 +28,7 @@ For testing Trevi, use Xcode and build the project
 
 ## Examples
 ```swift
+let server = Http ()
 
 server.createServer({ (req, res, next) in
 
