@@ -39,7 +39,7 @@ public class Lime : Routable {
         _router.use(md: middleware)
     }
     
-    public func set(name: String, val: AnyObject){
+    public func set(name: String, _ val: AnyObject){
         if setting == nil {
             setting = [String: AnyObject]()
         }

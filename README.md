@@ -28,81 +28,100 @@ For testing Trevi, use Xcode and build the project
 
 ## Examples
 ```swift
-import Trevi
-let server = Http ()
-do {
-    try server.createServer( { req , res in
-        return res.send("hello trevi!")
-    }).listen(8080)
-} catch {
-    //error
-}
+
+server.createServer({ (req, res, next) in
+
+    var chuck = ""
+    func ondata(c: String){
+        chuck += c
+    }
+
+    func onend(){
+        res.write(chuck)
+        res.end()
+
+    }
+
+    req.on("data", ondata)
+    req.on("end", onend)
+
+}).listen(8080)
+
 ```
 
 OR
 
 ```swift
 
-import Trevi
-
 let server = Http ()
-let trevi = Trevi.sharedInstance ()
-let lime   = Lime ()
+
+let lime = Lime()
+
+
+lime.set("views", "\(__dirname)/views");
+
+lime.set("view engine", SwiftServerPage())
+
+lime.use(Favicon())
+
+lime.use(ServeStatic(path: "\(__dirname)/public"))
 
 lime.use(BodyParser())
-lime.use(Favicon())
-lime.use(SwiftServerPage())
-lime.use(trevi) // it is important to routing
-lime.use(){ req, res in
-    res.status = 404
-    return res.send ("404 Pages Not Found")
+
+lime.use("/", Root())
+
+lime.use { (req, res, next) in
+    res.statusCode = 404
+    res.send("404 error")
 }
 
-do {
-    try server.createServer ( lime ).listen ( 8080 )
-} catch {
-    //error
-}
+server.createServer(lime).listen(8080)
+
 ```
 
 lime class 
 ```swift
 
-import Trevi
+import Foundation
+import Lime
 
-public class Lime: RouteAble {
+public class Root{
 
-    override init () {
-        super.init ()
+    private let lime = Lime()
+    private var router: Router!
+
+    public init(){
+
+        router = lime.router
+
+        router.get("/") { req , res , next in
+            res.render("index.ssp", args: ["title":"Trevi"])
+        }
+
+        router.get("/index") { req , res , next in
+            res.write("index get")
+            res.end()
+        }
+
+        router.post("/index") { req , res , next in
+            print("\(req.json["name"])")
+            res.send("index post")
+        }
+
+        router.get("/lime") { req , res , next in
+            res.write("lime get")
+            res.end()
+        }
+
+        router.get("/trevi/:param1") { req , res , next in
+            print("[GET] /trevi/:praram")
+        }
     }
+}
 
-    public override func prepare() {
-
-        let lime = trevi.store(self)
-    
-        lime.get ( "/trevi" ) { req, res in
-            let msg = "Hello Trevi!"
-            return res.send ( msg )
-        }
-
-        lime.get ( "/", { req, res in
-            // Do any..
-            return false
-        }, { req, res in
-            return res.render("trevi.ssp", args: [ "title" : "Trevi" ])
-        })
-
-        lime.use ( "/yoseob", Index () )
-
-        lime.get( "/param/:arg", { req, res in
-            var msg = "Request path : \(req.path)<br>"
-            msg += "Found parameter : <br>\(req.params)"
-            return res.send ( msg )
-        })
-
-        lime.get("/redir"){ req , res in
-            return res.redirect(url: "http://127.0.0.1:8080/trevi")
-        }
+extension Root: Require{
+    public func export() -> Router {
+        return self.router
     }
 }
 

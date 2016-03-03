@@ -19,11 +19,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let lime = Lime()
         
-        #if os(Linux)
-        lime.set("views", val: "\(__dirname)/views");
-        #endif
-        
-        lime.set("view engine", val: SwiftServerPage())
+
+        lime.set("views", "\(__dirname)/views");
+
+        lime.set("view engine", SwiftServerPage())
         
         lime.use(Favicon())
         
@@ -34,30 +33,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lime.use("/", Root())
   
         lime.use { (req, res, next) in
-            res.statusCode = 200
-            res.write("404 error")
-            res.end()
+            res.statusCode = 404
+            res.send("404 error")
         }
         
         server.createServer(lime).listen(8080)
+        /*
+        server.createServer({ (req, res, next) in
+            
+            var chuck = ""
+            func ondata(c: String){
+                chuck += c
+            }
+            func onend(){
+                print("end")
+                res.write(chuck)
+                res.end()
 
-//        server.createServer({ (req, res, next) in
-//            
-//            var chuck = ""
-//            func ondata(c: String){
-//                chuck += c
-//            }
-//            func onend(){
-//                print("end")
-//                res.write(chuck)
-//                res.end()
-//
-//            }
-//            req.on("data", ondata)
-//            req.on("end", onend)
-//            
-//        }).listen(8080)
-
+            }
+            req.on("data", ondata)
+            req.on("end", onend)
+            
+        }).listen(8080)
+        */
 
     }
 

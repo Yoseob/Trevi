@@ -28,7 +28,11 @@ public class ServerResponse: OutgoingMessage{
     private var _body: String?{
         didSet {
             self._hasbody = true
-            header[Content_Type] = "text/plain;charset=utf-8"
+            var type = "text/plain;charset=utf-8"
+            if ((_body?.containsString("!DOCTYPE")) != nil){
+                type = "text/html;charset=utf-8"
+            }
+            header[Content_Type] = type
         }
     }
     
