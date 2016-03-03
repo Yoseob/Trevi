@@ -23,26 +23,19 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         super.init()
         Socket.dictionary[handle] = self
         
-//        print("socket init")
-    }
-    deinit {
-        
-//        print("socket deinit")
     }
     
     
     func write(data: NSData, handle : uv_stream_ptr) {
  
         // Should add buffer module.
-        let buffer = uv_buf_ptr.alloc(1)
-        buffer.memory = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), UInt32(data.length))
         
-        Stream.doWrite(uv_buf_const_ptr(buffer), handle: handle)
+        Stream.doWrite(data, handle: handle)
         
-//        Socket.onTimeout(100){ [unowned self]
-//            _ in
-//            self.close()
-//        }
+        Socket.onTimeout(100){ [unowned self]
+            _ in
+            self.close()
+        }
     }
     
     public func close() {
@@ -63,25 +56,19 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
 extension Socket {
 
     public static func onConnection(handle : uv_stream_ptr , _ EE: EventEmitter) {
-    //    let addressInfo = Tcp.getPeerName(uv_tcp_ptr(handle))
-    //    let (ip, port) = getEndpointFromSocketAddress(addressInfo)!
-    //    print("New client!  ip : \(ip), port : \(port).")
         
         let socket = Socket(handle: handle)
         EE.emit("connection", socket)
     }
 
-    public static func onRead(handle : uv_stream_ptr, nread: Int, buffer: uv_buf_const_ptr) -> Void {
-        
-        let data = NSData(bytesNoCopy : buffer.memory.base, length : nread)
+    public static func onRead(handle : uv_stream_ptr, data: NSData) -> Void {
         
         if let wrap = Socket.dictionary[handle] {
-            wrap.ondata!(data, nread)
+            wrap.ondata!(data, data.length)
         }
     }
 
     public static func onClose(handle : uv_handle_ptr) {
-//        print("onClose called")
         
         if let wrap = Socket.dictionary[uv_stream_ptr(handle)] {
             wrap.onend!()

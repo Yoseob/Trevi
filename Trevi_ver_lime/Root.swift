@@ -26,9 +26,9 @@ public class Root{
             res.end()
         }
         
-        router.post("/index") { ( req , res , next) -> Void in
-            res.write("index post")
-            res.end()
+        router.post("/index") { ( req , res , next)  in
+            print("\(req.json["name"])")
+            res.send("index post")
         }
         
         router.get("/lime") { ( req , res , next) -> Void in

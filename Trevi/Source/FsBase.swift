@@ -128,9 +128,9 @@ extension FsBase {
     
     // Should add close callback after write in Stream module.
     
-    public static func streamWriteFile(handle : uv_pipe_ptr, buffer: uv_buf_const_ptr) {
+    public static func streamWriteFile(handle : uv_pipe_ptr, data : NSData) {
         
-        Stream.doWrite(buffer, handle: uv_stream_ptr(handle))
+        Stream.doWrite(data, handle: uv_stream_ptr(handle))
         Loop.run(mode: UV_RUN_ONCE)
     }
     

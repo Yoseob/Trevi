@@ -88,7 +88,7 @@ public class Router: Middleware{
                     continue
                 }
                 
-                let method = HTTPMethodType(rawValue: req.method)!
+                let method = req.method
                 let hasMethod = route.handlesMethod(method)
                 
                 if hasMethod && method == .OPTIONS {
@@ -147,7 +147,7 @@ public class Router: Middleware{
         return layer.match(path)
     }
     
-    private func getPathname(req: IncomingMessage)-> String{
+    private func getPathname(req: IncomingMessage) -> String{
         //should parsing req.url
         return req.url
     }

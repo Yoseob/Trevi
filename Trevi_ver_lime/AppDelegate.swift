@@ -29,7 +29,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(ServeStatic(path: "\(__dirname)/public"))
         
-        lime.use("/root", Root())
+        lime.use(BodyParser())
+        
+        lime.use("/", Root())
   
         lime.use { (req, res, next) in
             res.statusCode = 200
@@ -40,8 +42,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         server.createServer(lime).listen(8080)
 
 //        server.createServer({ (req, res, next) in
-//            res.write("hello Trevi")
-//            res.end()
+//            
+//            var chuck = ""
+//            func ondata(c: String){
+//                chuck += c
+//            }
+//            func onend(){
+//                print("end")
+//                res.write(chuck)
+//                res.end()
+//
+//            }
+//            req.on("data", ondata)
+//            req.on("end", onend)
+//            
 //        }).listen(8080)
 
 

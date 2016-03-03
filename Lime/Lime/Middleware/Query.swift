@@ -17,7 +17,7 @@ class Query: Middleware {
     
     func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
         // Parsing url query by using regular expression.
-        let url = req.url
+        let url = req.url!
         
         if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)", options: [ .CaseInsensitive ] ) {
             for match in regex.matchesInString ( url, options: [], range: NSMakeRange( 0, url.length() ) ) {
