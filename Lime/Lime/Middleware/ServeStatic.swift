@@ -29,6 +29,8 @@ public class ServeStatic: Middleware {
     
     
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
+       
+        
         let file = ReadableFile(fileAtPath: "\(basePath)\(req.path)")
         if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
             var buffer = [UInt8](count: 8, repeatedValue: 0)
