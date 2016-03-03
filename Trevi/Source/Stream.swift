@@ -30,10 +30,11 @@ public class Stream : Handle {
     
     public func readStart() -> Int32 {
         
-        //        Should add if state to set using work or not
-        //        return uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
         
-        return uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
+//        Should add if state to set using work or not
+//        return uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
+        
+        return uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
     }
     
     public func doTryWrite(buffer: UnsafeMutablePointer<uv_buf_ptr>, count : UnsafeMutablePointer<UInt32>) -> Int32 {
