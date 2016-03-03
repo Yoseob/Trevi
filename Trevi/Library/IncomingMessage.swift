@@ -43,6 +43,7 @@ public class IncomingMessage: StreamReadable{
     public var originUrl: String! = ""
     public var params: [String: AnyObject]!
     public var json: [String: AnyObject]!
+    public var app: AnyObject!
     
     
     //server only
