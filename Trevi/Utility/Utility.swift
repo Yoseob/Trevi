@@ -29,12 +29,27 @@ extension NSDate {
     }
 }
 
-func bridge<T : AnyObject>(obj : T) -> UnsafePointer<Void> {
+public func executeShellCommand(command: String, args: [String]? = nil) -> String {
+    let task = NSTask ()
+    let pipe = NSPipe ()
+    
+    task.launchPath = command
+    task.standardOutput = pipe
+    if args != nil {
+        task.arguments = args
+    }
+    
+    task.launch()
+    
+    return (NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding) as! String)
+}
+
+public func bridge<T : AnyObject>(obj : T) -> UnsafePointer<Void> {
     return UnsafePointer(Unmanaged.passUnretained(obj).toOpaque())
     // return unsafeAddressOf(obj) // ***
 }
 
-func bridge<T : AnyObject>(ptr : UnsafePointer<Void>) -> T {
+public func bridge<T : AnyObject>(ptr : UnsafePointer<Void>) -> T {
     return Unmanaged<T>.fromOpaque(COpaquePointer(ptr)).takeUnretainedValue()
     // return unsafeBitCast(ptr, T.self) // ***
 }

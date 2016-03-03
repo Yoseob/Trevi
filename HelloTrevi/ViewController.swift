@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Trevi_ver_lime
+//  HelloTrevi
 //
 //  Created by LeeYoseob on 2015. 11. 30..
 //  Copyright © 2015년 LeeYoseob. All rights reserved.

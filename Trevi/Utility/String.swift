@@ -11,24 +11,16 @@ import Foundation
 public let CRLF = "\r\n"
 public let SP = " "
 public let HT = "\t"
-
-//public enum UrlRegex: String {
-//    case unreserved = "\\w\\-\\.\\_\\~"
-//    case gen_delims = "\\:\\/\\?\\#\\[\\]\\@"
-//    case sub_delims = "\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\="
-//}
 public let unreserved = "\\w\\-\\.\\_\\~"
 public let gen_delims = "\\:\\/\\?\\#\\[\\]\\@"
 public let sub_delims = "\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\="
 public let __dirname = NSFileManager.defaultManager().currentDirectoryPath
-
 
 public enum StringError: ErrorType {
     case UnsupportedEncodingError
 }
 
 public extension String {
-    
     func length () -> Int {
         return self.characters.count
     }

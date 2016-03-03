@@ -3,7 +3,7 @@ PROJECT_NAME = HelloTrevi
 COMPILE_MODE = Debug
 PLATFORM     = $(shell uname -s)
 ARCH         = $(shell uname -m)
-SOURCE_DIR   = Trevi_ver_lime
+SOURCE_DIR   = HelloTrevi
 
 ## LOCATIONS ##
 ROOT_DIR            = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
