@@ -44,7 +44,7 @@ public class Route{
         }
         
         req.route = self
-        let method = HTTPMethodType(rawValue: req.method)
+        let method = req.method
         
         func nextHandle(){
             guard stack.count > idx else {

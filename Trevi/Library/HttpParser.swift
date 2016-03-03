@@ -32,7 +32,6 @@ public class HttpParser{
     public var onBodyComplete: ((Void) -> Void)?
     public var onIncoming: ((IncomingMessage) -> Bool)?
     
-    
     public var date: NSDate = NSDate()
     
     //only header
@@ -45,11 +44,11 @@ public class HttpParser{
     private var endOfheader = false
     private var trace = ""
     
-    private var headerString: String!{
-        didSet{
-            headerParserBegin()
-        }
-    }
+    
+    private var firstRequestSize = 0
+    
+    private var headerString: String!
+    
     private var bodyString: String!{
         didSet{
         }
@@ -58,27 +57,53 @@ public class HttpParser{
     }
     deinit{
     }
-    
-    public func execute(data: UnsafeMutablePointer<CChar>! = nil, length: Int){
 
-        let readData: String! = blockToString(data, length: length)
+    private func parse(data: NSData , nread: Int, cb: ((dt: UnsafeMutablePointer<CChar> , len: Int)->())){
+        let readLen = nread
+        var bufSize = 4096*4
+        var offset = 0
+        let readBuf = UnsafeMutablePointer<CChar>.alloc(bufSize)
+        
+        while offset < readLen {
+            
+            if readLen < (offset + bufSize){
+                bufSize = readLen - offset
+            }
+            data.getBytes(readBuf, range: NSMakeRange(offset, bufSize))
+            cb(dt: readBuf, len: bufSize)
+            offset += bufSize
+        }
+        readBuf.dealloc(bufSize)
+    }
+    
+    
+    public func execute(data: NSData, length: Int){
+        self.firstRequestSize = length
+    
         if self.headerString == nil{
+            let readData = NSString(data : data, encoding : NSASCIIStringEncoding)
             self.onHeader!()
             self.headerInfo = HeaderInfo()
-            self.headerString = readData
+            self.headerString = readData as! String
+            self.headerParserBegin((readData?.componentsSeparatedByString(CRLF))!)
         }else{
-            if contentLength > 0 {
-                totalLength += length
-                onBody!(readData)
-                if totalLength >= contentLength{
-                    onBodyComplete!()
+            if self.contentLength > 0 {
+                self.totalLength += length
+                let readData = String(data : data, encoding : NSASCIIStringEncoding)
+                self.onBody!(readData!)
+                if self.totalLength >= self.contentLength{
+                    self.onBodyComplete!()
+                    self.headerString = nil
+                    self.totalLength = 0
                 }
             }
         }
     }
     
-    private final func headerParserBegin () {
-        let requestHeader: [String] = headerString.componentsSeparatedByString ( CRLF )
+    private final func headerParserBegin (requestHeader: [String]) {
+        guard headerString != nil else{
+            return
+        }
         let requestLineElements: [String] = requestHeader.first!.componentsSeparatedByString ( SP )
         
         // This is only for HTTP/1.x
@@ -92,14 +117,13 @@ public class HttpParser{
             self.headerInfo.versionMajor = version.first!
             self.headerInfo.versionMinor = version.last!
             parseHeader( requestHeader )
-            
-            
-            if trace.length() > 1 {
+
+            if  totalLength > 1 {
                 onBody!(trace)
                 trace = ""
             }
             
-            if trace.length() == 0 && contentLength == 0 {
+            if (contentLength == 0) || (self.totalLength == contentLength) {
                 self.onBodyComplete!()
             }
             
@@ -111,6 +135,7 @@ public class HttpParser{
 
             if endOfheader && fields[_idx].length() > 0 && hasbody{
                 self.trace += fields[_idx]
+                self.trace += CRLF
             }
 
             if fields[_idx].length() == 0 && endOfheader == false{
@@ -126,6 +151,11 @@ public class HttpParser{
                 self.headerInfo.header[fieldSet[0].trim()] = fieldSet[1].trim();
             }
         }
+        
+        if hasbody{
+            let doubleSplite: [String] = headerString.componentsSeparatedByString ( CRLF+CRLF )
+            let haederLength = (doubleSplite.first! as NSString).length + 4
+            self.totalLength += firstRequestSize - haederLength
+        }
     }
-    
 }

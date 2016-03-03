@@ -21,7 +21,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(Favicon());
         
-        lime.use("/root", Root())
+        lime.use(BodyParser())
+        
+        lime.use("/", Root())
   
         lime.use { (req, res, next) in
             res.statusCode = 200
@@ -29,25 +31,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             res.end()
         }
         
+        server.createServer(lime).listen(8080)
 
-        
-//        server.createServer(lime).listen(8080)
-
-        server.createServer({ (req, res, next) in
-            
-            func ondata(c: String){
-                print(c)
-            }
-            func onend(){
-                print("end")
-                res.write("hello Trevi")
-                res.end()
-
-            }
-            req.on("data", ondata)
-            req.on("end", onend)
-            
-        }).listen(8080)
+//        server.createServer({ (req, res, next) in
+//            
+//            var chuck = ""
+//            func ondata(c: String){
+//                chuck += c
+//            }
+//            func onend(){
+//                print("end")
+//                res.write(chuck)
+//                res.end()
+//
+//            }
+//            req.on("data", ondata)
+//            req.on("end", onend)
+//            
+//        }).listen(8080)
 
 
     }

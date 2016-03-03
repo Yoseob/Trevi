@@ -175,7 +175,7 @@ extension Stream {
     public static var onAlloc : uv_alloc_cb = { (_, suggestedSize, buffer) in
         
 //        buffer.initialize(uv_buf_init(UnsafeMutablePointer<Int8>.alloc(size), UInt32(size))
-        buffer.initialize(uv_buf_init(UnsafeMutablePointer.alloc(streamBufferSize), UInt32(streamBufferSize)))
+        buffer.initialize(uv_buf_init(UnsafeMutablePointer.alloc(suggestedSize), UInt32(suggestedSize)))
     }
     
     public typealias uv_read_com_cb = @convention(c) (uv_stream_ptr, Int, uv_buf_const_ptr, uv_handle_type) -> ()
@@ -196,7 +196,7 @@ extension Stream {
 //        var type : uv_handle_type = Stream.getHandleType(handle)
 //        Stream.onReadCommon(handle, nread, buf, type)
         
-        if nread < 0 {
+        if nread <= 0 {
             if Int32(nread) == UV_EOF.rawValue {
                 Handle.close(uv_handle_ptr(handle))
             }

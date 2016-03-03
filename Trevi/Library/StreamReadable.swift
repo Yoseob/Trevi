@@ -239,7 +239,7 @@ private func addChunk(stream: StreamReadable, chunk: String?, addToFront: Bool) 
         state.flowing = true
         if (state.flowing && state.length == 0 && !state.sync) {
             
-            stream.emit("data", String.fromCString(chunkBuf.data)!)
+            stream.emit("data", chunk!)
             stream.read(0)
         } else {
             state.length += chunkBuf.length
