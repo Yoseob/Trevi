@@ -22,9 +22,36 @@
 		2354417B1C7CCCE600E90A97 /* RoutAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441761C7CCCE600E90A97 /* RoutAble.swift */; };
 		2354417C1C7CCCE600E90A97 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441771C7CCCE600E90A97 /* Route.swift */; };
 		239411D71C0C2DA3001B9B07 /* Trevi.h in Headers */ = {isa = PBXBuildFile; fileRef = 239411D61C0C2DA3001B9B07 /* Trevi.h */; settings = {ATTRIBUTES = (Public, ); }; };
+<<<<<<< HEAD
+		2394120B1C0C46EF001B9B07 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
+		2394120D1C0C4A5C001B9B07 /* RouteAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120C1C0C4A5C001B9B07 /* RouteAble.swift */; };
+		239412101C0C4FEB001B9B07 /* Middleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120F1C0C4FEB001B9B07 /* Middleware.swift */; };
+		239412121C0C513C001B9B07 /* BodyParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412111C0C513C001B9B07 /* BodyParser.swift */; };
+		906E50B11C11DB9A005937A8 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
+		906E50B51C121202005937A8 /* System.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B41C121202005937A8 /* System.swift */; };
+		906E50B71C121225005937A8 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
+		906E50B91C1212CC005937A8 /* SwiftServerPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B81C1212CC005937A8 /* SwiftServerPage.swift */; };
+		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		90BEEE621C2F142B009A8DA8 /* ServeStatic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */; };
+		DF3B81931C1E086400974327 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81901C1E086400974327 /* Http.swift */; };
+		DF3B81951C1E086400974327 /* PreparedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81921C1E086400974327 /* PreparedData.swift */; };
+		DF3B819C1C1E08C500974327 /* ConnectedSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81961C1E08C500974327 /* ConnectedSocket.swift */; };
+		DF3B819D1C1E08C500974327 /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81971C1E08C500974327 /* EventHandler.swift */; };
+		DF3B819E1C1E08C500974327 /* ListenSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81981C1E08C500974327 /* ListenSocket.swift */; };
+		DF3B819F1C1E08C500974327 /* LogFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81991C1E08C500974327 /* LogFactory.swift */; };
+		DF3B81A01C1E08C500974327 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B819A1C1E08C500974327 /* Socket.swift */; };
+		DF3B81A11C1E08C500974327 /* SocketUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B819B1C1E08C500974327 /* SocketUtility.swift */; };
+		DF3B81A31C1E092400974327 /* InetAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A21C1E092400974327 /* InetAddress.swift */; };
+		DF3B81A51C1E098400974327 /* UnixBridge.c in Sources */ = {isa = PBXBuildFile; fileRef = DF3B81A41C1E098400974327 /* UnixBridge.c */; };
+		DF76B5281C30176F005E5391 /* HttpSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF76B5271C30176F005E5391 /* HttpSocket.swift */; };
+		DFDFC9F01C2F582A00862331 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFDFC9EF1C2F582A00862331 /* Timer.swift */; };
+=======
 		239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E41C0C2E19001B9B07 /* AppDelegate.swift */; };
 		239411E71C0C2E19001B9B07 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E61C0C2E19001B9B07 /* ViewController.swift */; };
+		239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 239411E81C0C2E19001B9B07 /* Assets.xcassets */; };
+		239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239411EA1C0C2E19001B9B07 /* Main.storyboard */; };
 		239412141C0DECC2001B9B07 /* Root.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412131C0DECC2001B9B07 /* Root.swift */; };
+		23973D611C25AB3B00FBB8E7 /* sky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 23973D601C25AB3B00FBB8E7 /* sky.jpeg */; };
 		23A5FAAB1C86CDAD00F68B78 /* Require.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAAA1C86CDAD00F68B78 /* Require.swift */; };
 		23A5FAAD1C86CDFC00F68B78 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAAC1C86CDFC00F68B78 /* Query.swift */; };
 		23A5FAAF1C86CE4F00F68B78 /* Layer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAAE1C86CE4F00F68B78 /* Layer.swift */; };
@@ -33,13 +60,10 @@
 		23A5FAB51C8888B100F68B78 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB41C8888B100F68B78 /* ServerResponse.swift */; };
 		23A5FAB71C8888D600F68B78 /* IncomingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */; };
 		23A5FAB91C88891400F68B78 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB81C88891400F68B78 /* HttpServer.swift */; };
+		23D2F3A01C1DA4A000F0C784 /* helloworld.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		ACD8697D1C88DAE100260C87 /* sky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 23973D601C25AB3B00FBB8E7 /* sky.jpeg */; };
-		ACD8697E1C88DAE100260C87 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
-		ACD8697F1C88DAE100260C87 /* helloworld.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */; };
-		ACD869801C88DAE100260C87 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
-		ACD869811C88DAEA00260C87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 239411E81C0C2E19001B9B07 /* Assets.xcassets */; };
-		ACD869821C88DAEA00260C87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD8697A1C88D6DB00260C87 /* Main.storyboard */; };
+		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
+		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
@@ -65,6 +89,7 @@
 		DFD970C21C8739A700E39995 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441501C79800300E90A97 /* Async.swift */; };
 		DFD970C31C8739A700E39995 /* Timer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF732EF01C799E65000B12E8 /* Timer.swift */; };
 		DFD970C41C8739A700E39995 /* LibuvUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235441541C79800300E90A97 /* LibuvUtility.swift */; };
+>>>>>>> unstable
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,10 +153,18 @@
 		239411D31C0C2DA3001B9B07 /* Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		239411D61C0C2DA3001B9B07 /* Trevi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Trevi.h; sourceTree = "<group>"; };
 		239411D81C0C2DA3001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+<<<<<<< HEAD
+		239411E21C0C2E19001B9B07 /* Trevi_ver_lime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Trevi_ver_lime.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		2394120C1C0C4A5C001B9B07 /* RouteAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteAble.swift; sourceTree = "<group>"; };
+		2394120F1C0C4FEB001B9B07 /* Middleware.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Middleware.swift; sourceTree = "<group>"; };
+		239412111C0C513C001B9B07 /* BodyParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BodyParser.swift; sourceTree = "<group>"; };
+=======
 		239411E21C0C2E19001B9B07 /* HelloTrevi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloTrevi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		239411E41C0C2E19001B9B07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		239411E61C0C2E19001B9B07 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		239411E81C0C2E19001B9B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		239411EB1C0C2E19001B9B07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		239411ED1C0C2E19001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		239412131C0DECC2001B9B07 /* Root.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Root.swift; sourceTree = "<group>"; };
@@ -145,14 +178,30 @@
 		23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomingMessage.swift; sourceTree = "<group>"; };
 		23A5FAB81C88891400F68B78 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
 		23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = helloworld.ssp; sourceTree = "<group>"; };
+>>>>>>> unstable
 		906E50B01C11DB9A005937A8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		906E50B61C121225005937A8 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+<<<<<<< HEAD
+		906E50B81C1212CC005937A8 /* SwiftServerPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftServerPage.swift; sourceTree = "<group>"; };
+		90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServeStatic.swift; sourceTree = "<group>"; };
+		DF3B81901C1E086400974327 /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
+		DF3B81921C1E086400974327 /* PreparedData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreparedData.swift; sourceTree = "<group>"; };
+		DF3B81961C1E08C500974327 /* ConnectedSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectedSocket.swift; sourceTree = "<group>"; };
+		DF3B81971C1E08C500974327 /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
+		DF3B81981C1E08C500974327 /* ListenSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenSocket.swift; sourceTree = "<group>"; };
+		DF3B81991C1E08C500974327 /* LogFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogFactory.swift; sourceTree = "<group>"; };
+		DF3B819A1C1E08C500974327 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
+		DF3B819B1C1E08C500974327 /* SocketUtility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketUtility.swift; sourceTree = "<group>"; };
+		DF3B81A21C1E092400974327 /* InetAddress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InetAddress.swift; sourceTree = "<group>"; };
+		DF3B81A41C1E098400974327 /* UnixBridge.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = UnixBridge.c; sourceTree = "<group>"; };
+		DF76B5271C30176F005E5391 /* HttpSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpSocket.swift; sourceTree = "<group>"; };
+		DFDFC9EF1C2F582A00862331 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
+=======
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamReadable.swift; sourceTree = "<group>"; };
 		ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
 		ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamWritable.swift; sourceTree = "<group>"; };
-		ACD8697B1C88D6DB00260C87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DF3D4EE01C85F77D00DF2DE1 /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
 		DF4BE52B1C7F073800908A3D /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = "<group>"; };
 		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
@@ -162,6 +211,7 @@
 		DF826E181C8814BF0032F31C /* NetEchoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetEchoServer.swift; path = Test/NetEchoServer.swift; sourceTree = "<group>"; };
 		DF826E1C1C881A900032F31C /* FileServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileServer.swift; path = Test/FileServer.swift; sourceTree = "<group>"; };
 		DF843F111C80CAEF0078D69C /* FsBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FsBase.swift; sourceTree = "<group>"; };
+>>>>>>> unstable
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,8 +322,11 @@
 			isa = PBXGroup;
 			children = (
 				239411D51C0C2DA3001B9B07 /* Trevi */,
+<<<<<<< HEAD
+=======
 				239411E31C0C2E19001B9B07 /* HelloTrevi */,
 				232299921C61E00D003E44AB /* Lime */,
+>>>>>>> unstable
 				239411D41C0C2DA3001B9B07 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -301,6 +354,33 @@
 			path = Trevi;
 			sourceTree = "<group>";
 		};
+<<<<<<< HEAD
+		239411F81C0C2E81001B9B07 /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				DF3B819A1C1E08C500974327 /* Socket.swift */,
+				DF3B81A21C1E092400974327 /* InetAddress.swift */,
+				DF3B81981C1E08C500974327 /* ListenSocket.swift */,
+				DF3B81961C1E08C500974327 /* ConnectedSocket.swift */,
+				DF76B5271C30176F005E5391 /* HttpSocket.swift */,
+				DF3B81971C1E08C500974327 /* EventHandler.swift */,
+				DFDFC9EF1C2F582A00862331 /* Timer.swift */,
+				DF3B819B1C1E08C500974327 /* SocketUtility.swift */,
+				DF3B81991C1E08C500974327 /* LogFactory.swift */,
+				DF3B81A41C1E098400974327 /* UnixBridge.c */,
+			);
+			path = Socket;
+			sourceTree = "<group>";
+		};
+		239412031C0C45CA001B9B07 /* Route */ = {
+			isa = PBXGroup;
+			children = (
+				2368EAC91C1C9060007DB033 /* Route.swift */,
+				2394120C1C0C4A5C001B9B07 /* RouteAble.swift */,
+			);
+			name = Route;
+			path = Router;
+=======
 		239411E31C0C2E19001B9B07 /* HelloTrevi */ = {
 			isa = PBXGroup;
 			children = (
@@ -311,10 +391,12 @@
 				239411E61C0C2E19001B9B07 /* ViewController.swift */,
 				239412131C0DECC2001B9B07 /* Root.swift */,
 				239411E81C0C2E19001B9B07 /* Assets.xcassets */,
-				ACD8697A1C88D6DB00260C87 /* Main.storyboard */,
+				239411EA1C0C2E19001B9B07 /* Main.storyboard */,
 				239411ED1C0C2E19001B9B07 /* Info.plist */,
 			);
+			name = HelloTrevi;
 			path = HelloTrevi;
+>>>>>>> unstable
 			sourceTree = "<group>";
 		};
 		239412091C0C46CE001B9B07 /* Utility */ = {
@@ -328,6 +410,21 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
+<<<<<<< HEAD
+		2394120E1C0C4FDA001B9B07 /* Middleware */ = {
+			isa = PBXGroup;
+			children = (
+				236E53E11C1726450076ED36 /* Router.swift */,
+				236E53DF1C1726370076ED36 /* Trevi.swift */,
+				2394120F1C0C4FEB001B9B07 /* Middleware.swift */,
+				239412111C0C513C001B9B07 /* BodyParser.swift */,
+				906E50B81C1212CC005937A8 /* SwiftServerPage.swift */,
+				236E53D61C12198D0076ED36 /* MiddlewareManager.swift */,
+				236E53D81C1235130076ED36 /* Favicon.swift */,
+				90BEEE611C2F142B009A8DA8 /* ServeStatic.swift */,
+			);
+			path = Middleware;
+=======
 		23D2F3941C1DA4A000F0C784 /* public */ = {
 			isa = PBXGroup;
 			children = (
@@ -369,6 +466,7 @@
 				DF826E1C1C881A900032F31C /* FileServer.swift */,
 			);
 			name = Test;
+>>>>>>> unstable
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -509,12 +607,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ACD869811C88DAEA00260C87 /* Assets.xcassets in Resources */,
-				ACD869821C88DAEA00260C87 /* Main.storyboard in Resources */,
-				ACD8697D1C88DAE100260C87 /* sky.jpeg in Resources */,
-				ACD8697E1C88DAE100260C87 /* style.css in Resources */,
-				ACD8697F1C88DAE100260C87 /* helloworld.ssp in Resources */,
-				ACD869801C88DAE100260C87 /* index.ssp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -582,9 +674,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+<<<<<<< HEAD
+=======
 				239412141C0DECC2001B9B07 /* Root.swift in Sources */,
 				239411E71C0C2E19001B9B07 /* ViewController.swift in Sources */,
 				239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */,
+>>>>>>> unstable
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,17 +698,6 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		ACD8697A1C88D6DB00260C87 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				ACD8697B1C88D6DB00260C87 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		2322999B1C61E00D003E44AB /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -627,7 +711,7 @@
 				INFOPLIST_FILE = Lime/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Lime";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -645,7 +729,7 @@
 				INFOPLIST_FILE = Lime/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Lime";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -793,7 +877,7 @@
 				INFOPLIST_FILE = HelloTrevi/Info.plist;
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi-ver-lime";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -808,7 +892,7 @@
 				INFOPLIST_FILE = HelloTrevi/Info.plist;
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi-ver-lime";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "Trevi"
-  s.version      = "0.1.0"
+  s.version      = "v0.1.0"
   s.summary      = "A powerful Swift Web Application Server Framework Project"
 
   #Trevi is a minimal and flexible Swift web application server that provides Swift 
@@ -76,7 +76,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/Yoseob/Trevi.git", :tag => "0.1.0" }
+  s.source       = { :git => "https://github.com/Yoseob/Trevi.git", :tag => "v0.1.0" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #

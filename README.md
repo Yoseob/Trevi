@@ -1,4 +1,8 @@
 
+![Trevi?] (./index.png)
+
+[![Swift 2.2](https://img.shields.io/badge/Swift-2.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Platforms OS X ](https://img.shields.io/badge/Platforms-OS%20X-lightgray.svg?style=flat)](https://developer.apple.com/swift/)
 
 ## Trevi
 Fast, light web application server framwork for Swift. Trevi uses an event-driven, non-blocking I/O model based on libuv (https://github.com/libuv/libuv).<br>
@@ -131,5 +135,7 @@ extension Root: Require{
 ### CocoaPods 
 ### Carthage
 ### Youtube
+[![Youtube](./screenshot.png)](https://www.youtube.com/watch?v=v7O5dq4_s2Q)
+
 https://youtu.be/W6hPkevipX4
 
