@@ -20,6 +20,8 @@ public let HT = "\t"
 public let unreserved = "\\w\\-\\.\\_\\~"
 public let gen_delims = "\\:\\/\\?\\#\\[\\]\\@"
 public let sub_delims = "\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\="
+public let __dirname = NSFileManager.defaultManager().currentDirectoryPath
+
 
 public enum StringError: ErrorType {
     case UnsupportedEncodingError

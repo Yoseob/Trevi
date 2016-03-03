@@ -11,8 +11,8 @@ import Trevi
 
 
 public protocol Renderer {
-    func render ( filename: String ) -> String
-    func render ( filename: String, args: [String:String] ) -> String
+    func render(filename: String) -> String
+    func render(filename: String, args: [String:String]) -> String
 }
 
 /**
@@ -22,11 +22,8 @@ public protocol Renderer {
 
 public class SwiftServerPage: Renderer {
 
-    public init () {
-    
+    public init() {
     }
-
-
     
     /**
      Get a compiled result of a SSP(Swift Server Page) file from the specific path.
@@ -35,7 +32,7 @@ public class SwiftServerPage: Renderer {
      
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
-    public func render ( path: String ) -> String {
+    public func render(path: String) -> String {
         return render(path, args: [:])
     }
     
@@ -47,15 +44,14 @@ public class SwiftServerPage: Renderer {
      
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
-    public func render ( path: String, args: [String:String] ) -> String {
-//        guard let data = load (path) else {
-//            return ""
-//        }
-//        guard let compiled = compile (path, code: convertToSwift(from: data, with: args)) else {
-//            return ""
-//        }
-//        return compiled
-        return ""
+    public func render(path: String, args: [String:String]) -> String {
+        guard let data = load(path) else {
+            return ""
+        }
+        guard let compiled = compile(path, code: convertToSwift(from: data, with: args)) else {
+            return ""
+        }
+        return compiled
     }
     
     /**
@@ -65,7 +61,7 @@ public class SwiftServerPage: Renderer {
      
      - Returns: A string initialized by data from the file specified by path.
      */
-    private final func load ( path: String ) -> String? {
+    private final func load(path: String) -> String? {
         let file = ReadableFile(fileAtPath: path).open()
         var buffer = [UInt8](count: 8, repeatedValue: 0)
         let data = NSMutableData()
@@ -89,8 +85,6 @@ public class SwiftServerPage: Renderer {
      
      - Returns: The swift source codes which are converted from SSP file with arguments.
      */
-    
-    /*
     private final func convertToSwift ( from ssp: String, with args: [String:String] ) -> String {
         var swiftCode: String = ""
         for key in args.keys {
@@ -126,8 +120,6 @@ public class SwiftServerPage: Renderer {
 
         return (swiftCode + "print(\"\(htmlTag)\")\n")
     }
-
-    */
     
     /**
      Get a compiled result of a swift codes.
@@ -138,13 +130,12 @@ public class SwiftServerPage: Renderer {
      - Returns: Compiled data from the swift codes
      */
     
-    /*
-    private final func compile ( path: String, code: String ) -> String? {
-        let file = WritableFile(fileAtPath: "\(path).swift", option: O_CREAT|O_TRUNC).open()
+    private final func compile(path: String, code: String) -> String? {
+        let compileFile = "/tmp/\(NSURL(fileURLWithPath: path).lastPathComponent!).swift"
+        let file = WritableFile(fileAtPath: compileFile, option: O_CREAT|O_TRUNC).open()
         file.write(UnsafePointer<UInt8>(code.dataUsingEncoding(NSUTF8StringEncoding)!.bytes), maxLength: code.characters.count)
-        return System.executeCmd ( "/usr/bin/swift", args: [ "\(path).swift" ] )
+        return System.executeCmd("/usr/bin/swift", args: [ compileFile ])
             .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
             .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
     }
-    */
 }
