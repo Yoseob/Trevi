@@ -44,6 +44,12 @@ public func executeShellCommand(command: String, args: [String]? = nil) -> Strin
     return (NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding) as! String)
 }
 
+public func getCurrentDatetime(format: String = "yyyy/MM/dd hh:mm:ss a z") -> String {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = format
+    return formatter.stringFromDate(NSDate())
+}
+
 public func bridge<T : AnyObject>(obj : T) -> UnsafePointer<Void> {
     return UnsafePointer(Unmanaged.passUnretained(obj).toOpaque())
     // return unsafeAddressOf(obj) // ***

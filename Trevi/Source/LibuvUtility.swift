@@ -61,7 +61,7 @@ extension uv_fs_type : Hashable {
 //    let addressInfo = Tcp.getPeerName(uv_tcp_ptr(handle))
 //    let (ip, port) = getEndpointFromSocketAddress(addressInfo)!
 //    print("New client!  ip : \(ip), port : \(port).")
-func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> (host: String, port: Int)? {
+public func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> (host: String, port: Int)? {
     let socketAddress = UnsafePointer<sockaddr>(socketAddressPointer).memory
     
     switch Int32(socketAddress.sa_family) {

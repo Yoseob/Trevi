@@ -37,9 +37,61 @@ public var Transfer_Encoding           = "Transfer-Encoding"
 public var Upgrade                     = "Upgrade"
 public var Server                      = "Server"
 
-
-
-
+public enum HttpHeaderType: String {
+    case Access_Control_Allow_Origin = "Access-Control-Allow-Origin"
+    case Accept_Patch                = "Accept-Patch"
+    case Accept_Ranges               = "Accept-Ranges"
+    case Age                         = "Age"
+    case Allow                       = "Allow"
+    case Cache_Control               = "Cache-Control"
+    case Connection                  = "Connection"
+    case Content_Disposition         = "Content-Disposition"
+    case Content_Encoding            = "Content-Encoding"
+    case Content_Length              = "Content-Length"
+    case Content_Language            = "Content-Language"
+    case Content_Location            = "Content-Location"
+    case Content_MD5                 = "Content-MD5"
+    case Content_Range               = "Content-Range"
+    case Content_Type                = "Content-Type"
+    case Date                        = "Date"
+    case Expires                     = "Expires"
+    case Last_Modified               = "Last-Modified"
+    case Link                        = "Link"
+    case Location                    = "Location"
+    case ETag                        = "ETag"
+    case Refresh                     = "Refresh"
+    case Strict_Transport_Security   = "Strict-Transport-Security"
+    case Transfer_Encoding           = "Transfer-Encoding"
+    case Upgrade                     = "Upgrade"
+    case Server                      = "Server"
+    
+    public static let allValues = [ Access_Control_Allow_Origin,
+                            Accept_Patch,
+                            Accept_Ranges,
+                            Age,
+                            Allow,
+                            Cache_Control,
+                            Connection,
+                            Content_Disposition,
+                            Content_Encoding,
+                            Content_Length,
+                            Content_Language,
+                            Content_Location,
+                            Content_MD5,
+                            Content_Range,
+                            Content_Type,
+                            Date,
+                            Expires,
+                            Last_Modified,
+                            Link,
+                            Location,
+                            ETag,
+                            Refresh, 
+                            Strict_Transport_Security, 
+                            Transfer_Encoding, 
+                            Upgrade, 
+                            Server ]
+}
 
 public enum HTTPMethodType: String {
     case GET       = "GET"

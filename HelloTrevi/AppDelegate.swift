@@ -19,9 +19,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let lime = Lime()
         
-        lime.set("views", "\(__dirname)/views");
-
+        lime.set("views", "\(__dirname)/views")
+        
         lime.set("view engine", SwiftServerPage())
+        
+        lime.use(Logger(format: "default"))
         
         lime.use(Favicon())
         
