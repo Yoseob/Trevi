@@ -24,10 +24,7 @@
 		239411D71C0C2DA3001B9B07 /* Trevi.h in Headers */ = {isa = PBXBuildFile; fileRef = 239411D61C0C2DA3001B9B07 /* Trevi.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		239411E51C0C2E19001B9B07 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E41C0C2E19001B9B07 /* AppDelegate.swift */; };
 		239411E71C0C2E19001B9B07 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239411E61C0C2E19001B9B07 /* ViewController.swift */; };
-		239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 239411E81C0C2E19001B9B07 /* Assets.xcassets */; };
-		239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 239411EA1C0C2E19001B9B07 /* Main.storyboard */; };
 		239412141C0DECC2001B9B07 /* Root.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239412131C0DECC2001B9B07 /* Root.swift */; };
-		23973D611C25AB3B00FBB8E7 /* sky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 23973D601C25AB3B00FBB8E7 /* sky.jpeg */; };
 		23A5FAAB1C86CDAD00F68B78 /* Require.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAAA1C86CDAD00F68B78 /* Require.swift */; };
 		23A5FAAD1C86CDFC00F68B78 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAAC1C86CDFC00F68B78 /* Query.swift */; };
 		23A5FAAF1C86CE4F00F68B78 /* Layer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAAE1C86CE4F00F68B78 /* Layer.swift */; };
@@ -36,11 +33,14 @@
 		23A5FAB51C8888B100F68B78 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB41C8888B100F68B78 /* ServerResponse.swift */; };
 		23A5FAB71C8888D600F68B78 /* IncomingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */; };
 		23A5FAB91C88891400F68B78 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB81C88891400F68B78 /* HttpServer.swift */; };
-		23D2F3A01C1DA4A000F0C784 /* helloworld.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
-		90BEEE661C2F5155009A8DA8 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
-		ACD869841C8AFEC200260C87 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD869831C8AFEC200260C87 /* Logger.swift */; };
+		ACD8697D1C88DAE100260C87 /* sky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 23973D601C25AB3B00FBB8E7 /* sky.jpeg */; };
+		ACD8697E1C88DAE100260C87 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
+		ACD8697F1C88DAE100260C87 /* helloworld.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */; };
+		ACD869801C88DAE100260C87 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
+		ACD869811C88DAEA00260C87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 239411E81C0C2E19001B9B07 /* Assets.xcassets */; };
+		ACD869821C88DAEA00260C87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD8697A1C88D6DB00260C87 /* Main.storyboard */; };
+		ACD869861C8B45FE00260C87 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD869851C8B45FE00260C87 /* Logger.swift */; };
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
@@ -133,7 +133,6 @@
 		239411E41C0C2E19001B9B07 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		239411E61C0C2E19001B9B07 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		239411E81C0C2E19001B9B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		239411EB1C0C2E19001B9B07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		239411ED1C0C2E19001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
 		239412131C0DECC2001B9B07 /* Root.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Root.swift; sourceTree = "<group>"; };
@@ -154,7 +153,8 @@
 		ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamReadable.swift; sourceTree = "<group>"; };
 		ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
 		ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamWritable.swift; sourceTree = "<group>"; };
-		ACD869831C8AFEC200260C87 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		ACD8697B1C88D6DB00260C87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		ACD869851C8B45FE00260C87 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		DF3D4EE01C85F77D00DF2DE1 /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
 		DF4BE52B1C7F073800908A3D /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = "<group>"; };
 		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
@@ -266,7 +266,7 @@
 				2354416A1C7CCCC600E90A97 /* ServeStatic.swift */,
 				2354416B1C7CCCC600E90A97 /* SwiftServerPage.swift */,
 				23A5FAAC1C86CDFC00F68B78 /* Query.swift */,
-				ACD869831C8AFEC200260C87 /* Logger.swift */,
+				ACD869851C8B45FE00260C87 /* Logger.swift */,
 			);
 			path = Middleware;
 			sourceTree = "<group>";
@@ -314,7 +314,7 @@
 				239411E61C0C2E19001B9B07 /* ViewController.swift */,
 				239412131C0DECC2001B9B07 /* Root.swift */,
 				239411E81C0C2E19001B9B07 /* Assets.xcassets */,
-				239411EA1C0C2E19001B9B07 /* Main.storyboard */,
+				ACD8697A1C88D6DB00260C87 /* Main.storyboard */,
 				239411ED1C0C2E19001B9B07 /* Info.plist */,
 			);
 			path = HelloTrevi;
@@ -512,12 +512,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23D2F3A01C1DA4A000F0C784 /* helloworld.ssp in Resources */,
-				239411E91C0C2E19001B9B07 /* Assets.xcassets in Resources */,
-				239411EC1C0C2E19001B9B07 /* Main.storyboard in Resources */,
-				23973D611C25AB3B00FBB8E7 /* sky.jpeg in Resources */,
-				90BEEE601C259FD7009A8DA8 /* index.ssp in Resources */,
-				90BEEE661C2F5155009A8DA8 /* style.css in Resources */,
+				ACD869811C88DAEA00260C87 /* Assets.xcassets in Resources */,
+				ACD869821C88DAEA00260C87 /* Main.storyboard in Resources */,
+				ACD8697D1C88DAE100260C87 /* sky.jpeg in Resources */,
+				ACD8697E1C88DAE100260C87 /* style.css in Resources */,
+				ACD8697F1C88DAE100260C87 /* helloworld.ssp in Resources */,
+				ACD869801C88DAE100260C87 /* index.ssp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,7 +535,7 @@
 				2354416E1C7CCCC600E90A97 /* Middleware.swift in Sources */,
 				23A5FAB11C86CE8600F68B78 /* Regexp.swift in Sources */,
 				2354417A1C7CCCE600E90A97 /* Response.swift in Sources */,
-				ACD869841C8AFEC200260C87 /* Logger.swift in Sources */,
+				ACD869861C8B45FE00260C87 /* Logger.swift in Sources */,
 				235441701C7CCCC600E90A97 /* Router.swift in Sources */,
 				2354417B1C7CCCE600E90A97 /* RoutAble.swift in Sources */,
 				23A5FAAD1C86CDFC00F68B78 /* Query.swift in Sources */,
@@ -608,10 +608,10 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		239411EA1C0C2E19001B9B07 /* Main.storyboard */ = {
+		ACD8697A1C88D6DB00260C87 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				239411EB1C0C2E19001B9B07 /* Base */,
+				ACD8697B1C88D6DB00260C87 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -631,7 +631,7 @@
 				INFOPLIST_FILE = Lime/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Lime";
+				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -649,7 +649,7 @@
 				INFOPLIST_FILE = Lime/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Lime";
+				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -797,7 +797,7 @@
 				INFOPLIST_FILE = HelloTrevi/Info.plist;
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi-ver-lime";
+				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -812,7 +812,7 @@
 				INFOPLIST_FILE = HelloTrevi/Info.plist;
 				LD_DYLIB_INSTALL_NAME = "$(DYLIB_INSTALL_NAME_BASE:standardizepath)/$(EXECUTABLE_PATH)";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.Trevi-project-team.Trevi-ver-lime";
+				PRODUCT_BUNDLE_IDENTIFIER = io.trevi.Trevi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
