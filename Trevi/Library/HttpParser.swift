@@ -15,7 +15,7 @@ public struct HeaderInfo{
     public var versionMinor: String!
     public var url: String!
     public var method: String!
-    
+    public var hasbody: Bool!
     public init(){
     }
 
@@ -93,8 +93,7 @@ public class HttpParser{
                 self.onBody!(readData!)
                 if self.totalLength >= self.contentLength{
                     self.onBodyComplete!()
-                    self.headerString = nil
-                    self.totalLength = 0
+                    reset()
                 }
             }
         }
@@ -125,9 +124,15 @@ public class HttpParser{
             
             if (contentLength == 0) || (self.totalLength == contentLength) {
                 self.onBodyComplete!()
+                reset()
             }
-            
         }
+    }
+    
+    private func reset(){
+        self.headerString = nil
+        self.totalLength = 0
+        self.headerInfo = nil
     }
     
     private final func parseHeader ( fields: [String] ) {
@@ -142,6 +147,7 @@ public class HttpParser{
                 if let contentLength = self.headerInfo.header[Content_Length]{
                     self.contentLength = Int(contentLength)!
                     hasbody = true
+                    self.headerInfo.hasbody = hasbody
                 }
                 endOfheader = true
                 self.onHeaderComplete!(self.headerInfo)

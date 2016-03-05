@@ -44,7 +44,7 @@ public class ServerResponse: OutgoingMessage{
     }
     
     //for dictionary
-    private var bodys: [ String: AnyObject ]?{
+    private var bodys: [ String: String ]?{
         didSet{
             self._hasbody = true
             header[Content_Type] = "application/json"
@@ -97,7 +97,7 @@ public class ServerResponse: OutgoingMessage{
             if let t = type{
                 header[Content_Type] = t
             }
-        case let dic as [String:AnyObject]:
+        case let dic as [String:String]:
             self.bodys = dic
         default:
             break

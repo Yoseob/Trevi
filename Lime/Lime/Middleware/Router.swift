@@ -149,7 +149,7 @@ public class Router: Middleware{
     
     private func getPathname(req: IncomingMessage) -> String{
         //should parsing req.url
-        return req.url
+        return req.url!
     }
     
     func use(path: String? = "/",  md: Middleware){

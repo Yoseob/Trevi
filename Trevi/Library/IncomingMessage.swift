@@ -37,22 +37,25 @@ public class IncomingMessage: StreamReadable{
     
     public var path = ""
     
+    public var hasBody: Bool!
+    
     // for lime (not fixed)
     public var baseUrl: String! = ""
     public var route: AnyObject!
     public var originUrl: String! = ""
     public var params: [String: AnyObject]!
     public var json: [String: AnyObject]!
+    public var body: [String: AnyObject]!
+    public var bodyText: String!
+    
+    public var files: [String: AnyObject]!
+    
     public var app: AnyObject!
     
     
     //server only
     public var url: String!{
-        didSet{
-            self.path = (url.componentsSeparatedByString( "?" ) as [String])[0]
-            if self.path.characters.last != "/" {
-                self.path += "/"
-            }
+        didSet{            
             originUrl = url
         }
     }

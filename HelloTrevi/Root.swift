@@ -28,7 +28,7 @@ public class Root{
         }
         
         router.post("/index") { req , res , next in
-            print("\(req.json["name"])")
+            print("\(req.body["name"])")
             res.send("index post")
         }
         

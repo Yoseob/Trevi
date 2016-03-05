@@ -30,11 +30,11 @@ public class ServeStatic: Middleware {
     
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
         
-        var entirePath = req.path
+        var entirePath = req.url
         #if os(Linux)
-            entirePath += "\(basePath)/\(req.path)"
+            entirePath += "\(basePath)/\(req.url)"
         #else
-            if let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: req.path).lastPathComponent!, ofType: nil) {
+            if let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: req.url).lastPathComponent!, ofType: nil) {
                 entirePath = bundlePath
             }
         #endif

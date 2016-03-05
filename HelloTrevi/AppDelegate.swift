@@ -27,7 +27,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(ServeStatic(path: "\(__dirname)/public"))
         
-        lime.use(BodyParser())
+        lime.use(BodyParser.json())
+        lime.use(BodyParser.urlencoded())
         
         lime.use("/", Root())
   

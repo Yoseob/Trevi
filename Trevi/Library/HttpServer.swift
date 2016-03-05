@@ -67,6 +67,7 @@ public class HttpServer: Net{
                 incoming.httpVersionMinor = info.versionMinor
                 incoming.url = info.url
                 incoming.method = HTTPMethodType(rawValue: info.method)
+                incoming.hasBody = info.hasbody
                 
                 self.parser(socket).incoming = incoming
                 self.parser(socket).onIncoming!(incoming)

@@ -17,18 +17,31 @@ class Query: Middleware {
     
     func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
         // Parsing url query by using regular expression.
-        let url = req.url!
-        
-        if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)", options: [ .CaseInsensitive ] ) {
-            for match in regex.matchesInString ( url, options: [], range: NSMakeRange( 0, url.length() ) ) {
-                let keyRange   = match.rangeAtIndex( 1 )
-                let valueRange = match.rangeAtIndex( 2 )
-                let key   = url.substring ( keyRange.location, length: keyRange.length )
-                let value = url.substring ( valueRange.location, length: valueRange.length )
-                req.query.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
-            }
+        let url = req.url
+        queryParse(url) { query in
+            req.query = query
+
+            req.url = (url.componentsSeparatedByString( "?" ) as [String])[0]
+            
+            
+            next!()
         }
-        
-        next!()
     }
+}
+public func queryParse(src: String , cb: ([ String: String ])->()) {
+    
+    var result = [String: String]()
+    if let regex: NSRegularExpression = try? NSRegularExpression ( pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)", options: [ .CaseInsensitive ] ) {
+        
+        for match in regex.matchesInString ( src, options: [], range: NSMakeRange( 0, src.length() ) ) {
+            let keyRange   = match.rangeAtIndex( 1 )
+            let valueRange = match.rangeAtIndex( 2 )
+            let key   = src.substring ( keyRange.location, length: keyRange.length )
+            let value = src.substring ( valueRange.location, length: valueRange.length )
+            result.updateValue ( value.stringByRemovingPercentEncoding!, forKey: key.stringByRemovingPercentEncoding! )
+        }
+    }
+    
+    return cb(result)
+    
 }
