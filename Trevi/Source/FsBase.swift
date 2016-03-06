@@ -49,9 +49,15 @@ public class FsBase {
 
 extension FsBase {
     
-    public static func open(request : uv_fs_ptr, path : String, flags : Int32) -> Int32 {
+    public static func open(handle : uv_pipe_ptr! = nil, path : String, flags : Int32, mode : Int32) -> Int32 {
         
-       return uv_fs_open(uv_default_loop(), request, path, flags, 0644, onOpen)
+        let request = uv_fs_ptr.alloc(1)
+        
+        if let handle = handle {
+            handle.memory.data = void_ptr(request)
+        }
+        
+        return uv_fs_open(uv_default_loop(), request, path, flags, 0o666, nil)
     }
     
     public static func close(request : uv_fs_ptr) {
@@ -81,57 +87,6 @@ extension FsBase {
         
         FsBase.dictionary[request] = nil
         uv_fs_req_cleanup(request)
-    }
-    
-}
-
-
-// FsBase static internal module.
-
-extension FsBase {
-    
-    public struct Info {
-        let request : uv_fs_ptr
-        let size : UInt64
-        var nread : Int
-    }
-    
-    public static func streamReadFile(handle : uv_pipe_ptr, path : String) {
-        
-        let request = uv_fs_ptr.alloc(1)
-        let fd = uv_fs_open(uv_default_loop(), request, path, O_RDONLY, 0, nil)
-        
-        Pipe.open(handle, fd: fd)
-        uv_fs_stat(uv_default_loop(), request, path, nil)
-        
-        let stat = request.memory.statbuf
-        var info = Info(request: request, size: stat.st_size, nread: 0)
-        
-        handle.memory.data = withUnsafeMutablePointer(&info){ void_ptr($0) }
-        
-        Stream.readStart(uv_stream_ptr(handle))
-        
-        Loop.run(mode: UV_RUN_ONCE)
-    }
-    
-    
-    // Should add close callback after write in Stream module.
-    
-    public static func streamOpenFile(handle : uv_pipe_ptr, path : String) {
-        
-        let request = uv_fs_ptr.alloc(1)
-        let fd = uv_fs_open(uv_default_loop(), request, path, O_CREAT | O_RDWR, 6644, nil)
-        
-        Pipe.open(handle, fd: fd)
-    }
-    
-    
-    // Should add close callback after write in Stream module.
-    
-    public static func streamWriteFile(handle : uv_pipe_ptr, data : NSData) {
-        
-        Stream.doWrite(data, handle: uv_stream_ptr(handle))
-        Loop.run(mode: UV_RUN_ONCE)
     }
     
 }
