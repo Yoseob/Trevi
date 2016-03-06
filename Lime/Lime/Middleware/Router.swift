@@ -106,7 +106,11 @@ public class Router: Middleware{
             }
             
             if layer.params != nil{
-                req.params = parantParams != nil ? mergeParams(layer.params, src: parantParams) : layer.params
+                var params = layer.params
+                if parantParams != nil {
+                    params = mergeParams(layer.params, src: parantParams)
+                }
+                req.params = params
             }
             
             let layerPath = layer.path
@@ -126,7 +130,7 @@ public class Router: Middleware{
         nextHandle()
     }
     
-    private func mergeParams(var dest: [String: AnyObject]? , src: [String: AnyObject]?) -> [String: AnyObject]?{
+    private func mergeParams(var dest: [String: String]? , src: [String: String]?) -> [String: String]?{
         for (k,v) in src! {
             dest![k] = v
         }
@@ -175,8 +179,9 @@ public class Router: Middleware{
     /**
      * Support http ver 1.1/1.0
      */
-    public func post ( path: String, _ callback: HttpCallback ) {
-        boundDispatch(path, callback , .POST)
+
+    public func post ( path: String, _ middleWare: Middleware? = nil, _ callback: HttpCallback ) {
+        boundDispatch(path, callback, .POST, middleWare)
     }
     /**
      * Support http ver 1.1/1.0
@@ -197,9 +202,17 @@ public class Router: Middleware{
         
     }
     
-    private func boundDispatch(path: String, _ callback: HttpCallback, _ method: HTTPMethodType){
-        methods.append(method)
+    
+    private func boundDispatch(path: String, _ callback: HttpCallback, _ method: HTTPMethodType , _ md: Middleware? = nil ){
         let route = Route(method: method, path)
+        if let middleware = md {
+            
+            let newMiddleWare = Layer(path: "/", options: Option(end: false), module: middleware)
+            newMiddleWare.method = method 
+            route.stack.append(newMiddleWare)
+        }
+        
+        methods.append(method)
         route.method = method
         route.dispatch = callback
         let layer = Layer(path: path, name: "bound dispatch", options: Option(end: true), fn: route.dispatchs)

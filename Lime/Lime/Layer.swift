@@ -18,7 +18,7 @@ public class Layer {
     public var method: HTTPMethodType! = .UNDEFINED
     
     public var keys: [String]? // params key ex path/:name , name is key
-    public var params: [String: AnyObject]?
+    public var params: [String: String]?
     
     public init(path: String ,name: String? = "function", options: Option? = nil, fn: HttpCallback){
         setupAfterInit(path, opt: options, name: name, fn: fn)
@@ -68,7 +68,7 @@ public class Layer {
         
         guard (self.regexp.fastSlash) == false else {
             self.path = ""
-            self.params = [String: AnyObject]()
+            self.params = [String: String]()
             return true
         }
         
@@ -81,7 +81,7 @@ public class Layer {
         }
         
         self.path = ret[0]
-        self.params = [String: AnyObject]()
+        self.params = [String: String]()
         ret.removeFirst()
         
         var idx = 0

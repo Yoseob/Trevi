@@ -11,7 +11,7 @@ import Trevi
 
 
 public class Route{
-    private var stack = [Layer!]()
+    public var stack = [Layer!]()
     public var path: String?
     public var methods = [HTTPMethodType]()
     public var method: HTTPMethodType!
@@ -61,12 +61,9 @@ public class Route{
                 return nextHandle()
             }
             
-            layer.handleRequest(req, res: res, next: next!)
+            layer.handleRequest(req, res: res, next: nextHandle)
         }
-        
         nextHandle()
-        
-        
     }
     
     public func handlesMethod(method: HTTPMethodType) -> Bool{

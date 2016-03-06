@@ -106,7 +106,7 @@ public class BodyParser: Middleware{
             do {
                 
                 let data = (body as NSString).dataUsingEncoding(NSUTF8StringEncoding)
-                let result = try NSJSONSerialization.JSONObjectWithData (data! , options: .AllowFragments ) as? [String:AnyObject]
+                let result = try NSJSONSerialization.JSONObjectWithData (data! , options: .AllowFragments ) as? [String:String]
                 if let ret = result {
                     req.json = ret
                     return next!()

@@ -17,13 +17,9 @@ class Query: Middleware {
     
     func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
         // Parsing url query by using regular expression.
-        let url = req.url
-        queryParse(url) { query in
+        queryParse(req.url) { query in
             req.query = query
-
-            req.url = (url.componentsSeparatedByString( "?" ) as [String])[0]
-            
-            
+            req.url = (req.url.componentsSeparatedByString( "?" ) as [String])[0]
             next!()
         }
     }
