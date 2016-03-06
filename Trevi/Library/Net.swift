@@ -25,17 +25,11 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         
     }
     
-    
     func write(data: NSData, handle : uv_stream_ptr) {
  
         // Should add buffer module.
         
         Stream.doWrite(data, handle: handle)
-        
-        Socket.onTimeout(100){ [unowned self]
-            _ in
-            self.close()
-        }
     }
     
     public func close() {
@@ -66,6 +60,14 @@ extension Socket {
         if let wrap = Socket.dictionary[handle] {
             wrap.ondata!(data, data.length)
         }
+    }
+    
+    public static func onAfterWrite(handle: uv_stream_ptr) -> Void {
+      
+//        Socket.onTimeout(100){
+//            _ in
+//            Handle.close(uv_handle_ptr(handle))
+//        }
     }
 
     public static func onClose(handle : uv_handle_ptr) {
@@ -117,6 +119,7 @@ public class Net: EventEmitter {
             if let wrap = Handle.dictionary[uv_handle_ptr(client)] {
                 
                 wrap.event.onRead = Socket.onRead
+                wrap.event.onAfterWrite = Socket.onAfterWrite
                 wrap.event.onClose = Socket.onClose
             }
         }
@@ -124,7 +127,6 @@ public class Net: EventEmitter {
         Tcp.bind(self.server.tcpHandle, address : self.ip, port: self.port)
         Tcp.listen(self.server.tcpHandle)
     
-        Loop.run(mode: UV_RUN_DEFAULT)
     }
     
 }

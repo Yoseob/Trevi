@@ -43,7 +43,7 @@ extension Handle {
         var onAlloc : Any!
         var onRead : ((uv_stream_ptr, NSData)->())!
         var afterShutdown : Any!
-        var afterWrite : ((uv_req_ptr)->())!
+        var onAfterWrite : ((uv_stream_ptr)->())!
         var onConnection : (uv_stream_ptr -> ())!
         var afterConnect : Any!
         var onTimeout : ((uv_timer_ptr)->())!
