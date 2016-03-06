@@ -32,7 +32,7 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         
         Stream.doWrite(data, handle: handle)
         
-        Socket.onTimeout(100){ [unowned self]
+        Socket.onTimeout(200){ [unowned self]
             _ in
             self.close()
         }

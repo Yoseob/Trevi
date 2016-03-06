@@ -62,8 +62,7 @@ public class Root{
         }
         
         router.post("double", MultiParty()) { (req, res, next) -> Void in
-            print("\(req.body["name"])")
-            res.send("123123123123")
+            res.send("multipart parser middleware")
         }
         
         router.post("/index") { req , res , next in
@@ -71,9 +70,8 @@ public class Root{
             res.send("index post")
         }
         
-        router.get("/lime") { req , res , next in
-            res.write("lime get")
-            res.end()
+        router.get("/redir") { req , res , next in
+            res.redirect("http://127.0.0.1:8080/")
         }
         
         router.get("/trevi/:param1") { req , res , next in

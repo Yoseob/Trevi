@@ -48,6 +48,8 @@ public class Lime : Routable {
     
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?){
         
+        print("handle")
+        
         var done: NextCallback? = next
         
         if next == nil{
@@ -102,7 +104,15 @@ public extension ServerResponse {
         }
         end()
     }
+    
+    public func redirect(url: String){
+        self.writeHead(302, headers: [Location:url])
+        self.end()
+    }
 }
+
+import Trevi
+
 
 //extention incomingMessage for lime
 extension IncomingMessage {

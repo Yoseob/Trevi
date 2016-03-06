@@ -77,12 +77,16 @@ public class ServerResponse: OutgoingMessage{
     public func end(){
         let hData: NSData = self.prepareHeader()
         let result: NSMutableData = NSMutableData(data: hData)
-        result.appendData(self.bodyData!)
+        if self._hasbody {
+            result.appendData(self.bodyData!)    
+        }
+        
         self._end(result)
     }
     
     public func writeHead(statusCode: Int, headers: [String:String]! = nil){
         self.statusCode = statusCode
+        mergeHeader(headers)
         firstLine = "\(httpVersion) \(statusCode) \(status)" + CRLF
     }
     
@@ -108,6 +112,7 @@ public class ServerResponse: OutgoingMessage{
         }
         
     }
+
     
     /**
      * Factory method fill header data
@@ -131,6 +136,12 @@ public class ServerResponse: OutgoingMessage{
         var headerString = firstLine
         headerString! += dictionaryToString ( header )
         return headerString!.dataUsingEncoding ( NSUTF8StringEncoding )!
+    }
+    
+    private func mergeHeader(headers: [String:String]){
+        for (k,v) in headers {
+            self.header[k] = v
+        }
     }
     
     private func dictionaryToString ( dic: NSDictionary ) -> String! {
