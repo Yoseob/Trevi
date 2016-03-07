@@ -59,7 +59,6 @@ public class ServerResponse: OutgoingMessage{
         }else if (bodys != nil)  {
             let jsonData = try? NSJSONSerialization.dataWithJSONObject(bodys!, options:NSJSONWritingOptions(rawValue:0))
             // if need jsonString, use it
-            // let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
             return jsonData
         }
         return nil

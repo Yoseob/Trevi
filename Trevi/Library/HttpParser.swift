@@ -81,10 +81,10 @@ public class HttpParser{
         self.firstRequestSize = length
     
         if self.headerString == nil{
-            let readData = NSString(data : data, encoding : NSASCIIStringEncoding)
+            let readData = String(data : data, encoding : NSASCIIStringEncoding)
             self.onHeader!()
             self.headerInfo = HeaderInfo()
-            self.headerString = readData as! String
+            self.headerString = readData 
             self.headerParserBegin((readData?.componentsSeparatedByString(CRLF))!)
         }else{
             if self.contentLength > 0 {
@@ -160,7 +160,7 @@ public class HttpParser{
         
         if hasbody{
             let doubleSplite: [String] = headerString.componentsSeparatedByString ( CRLF+CRLF )
-            let haederLength = (doubleSplite.first! as NSString).length + 4
+            let haederLength = doubleSplite.first!.length() + 4
             self.totalLength += firstRequestSize - haederLength
         }
     }

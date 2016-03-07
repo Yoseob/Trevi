@@ -108,7 +108,7 @@ public class Router: Middleware{
             if layer.params != nil{
                 var params = layer.params
                 if parantParams != nil {
-                    params = mergeParams(layer.params, src: parantParams)
+                    params = mergeParams(&layer.params, src: parantParams)
                 }
                 req.params = params
             }
@@ -130,7 +130,7 @@ public class Router: Middleware{
         nextHandle()
     }
     
-    private func mergeParams(var dest: [String: String]? , src: [String: String]?) -> [String: String]?{
+    private func mergeParams(inout dest: [String: String]? , src: [String: String]?) -> [String: String]?{
         for (k,v) in src! {
             dest![k] = v
         }

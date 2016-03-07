@@ -47,9 +47,7 @@ public class Lime : Routable {
     }
     
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?){
-        
-        print("handle")
-        
+
         var done: NextCallback? = next
         
         if next == nil{

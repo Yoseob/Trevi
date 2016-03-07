@@ -51,13 +51,14 @@ public func getResourcePath(path: String) -> String {
 
 public class File {
     public let path: String
+    public var name: String!
     public let type: FileType
     public var status: FileStatus!
     
     private var option: Int32
     private var fd: Int32
     
-    init (fileAtPath: String, option: Int32 = O_RDWR) {
+    public init (fileAtPath: String, option: Int32 = O_RDWR) {
         self.path = fileAtPath
         self.option = option
         self.fd = -1

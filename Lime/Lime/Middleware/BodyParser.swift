@@ -61,7 +61,8 @@ public class BodyParser: Middleware{
     }
     
     public static func urlencoded() -> HttpCallback{
-        func parse(req: IncomingMessage, _ next: NextCallback? , var _ body: String!){
+        func parse(req: IncomingMessage, _ next: NextCallback? , _ bodyData: String!){
+            var body = bodyData
             if body != nil {
                 
                 if body.containsString(CRLF){
@@ -105,7 +106,7 @@ public class BodyParser: Middleware{
         func parse(req: IncomingMessage, _ next: NextCallback? , _ body: String!){
             do {
                 
-                let data = (body as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+                let data = body.dataUsingEncoding(NSUTF8StringEncoding)
                 let result = try NSJSONSerialization.JSONObjectWithData (data! , options: .AllowFragments ) as? [String:String]
                 if let ret = result {
                     req.json = ret

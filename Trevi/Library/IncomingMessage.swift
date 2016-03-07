@@ -48,7 +48,7 @@ public class IncomingMessage: StreamReadable{
     public var body: [String: String]!
     public var bodyText: String!
     
-    public var files: [String: AnyObject]!
+    public var files: [String: File]!
     
     public var app: AnyObject!
     
