@@ -10,7 +10,7 @@ import Libuv
 
 public class Work {
 
-    let workRequest : uv_work_ptr
+    public let workRequest : uv_work_ptr
     
     init(){
         self.workRequest = uv_work_ptr.alloc(1)
@@ -80,7 +80,7 @@ extension Work {
     }
     
     public static var afterWork : uv_after_work_cb = { (handle, status) in
-        uv_cancel(uv_req_ptr(handle))
+        
         handle.dealloc(1)
     }
 }

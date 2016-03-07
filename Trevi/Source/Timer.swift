@@ -18,9 +18,11 @@ public class Timer : Handle {
         uv_timer_init(uv_default_loop(), self.timerhandle)
         
         super.init(handle: uv_handle_ptr(self.timerhandle))
-    }
-    deinit {
         
+    }
+    
+    public func close() {
+        Handle.close(self.handle)
     }
     
 }

@@ -11,7 +11,7 @@ import Libuv
 
 public class Pipe : Stream {
     
-    let pipeHandle : uv_pipe_ptr
+    public let pipeHandle : uv_pipe_ptr
     
     public init(ipc : Int32 = 0){
         self.pipeHandle = uv_pipe_ptr.alloc(1)
@@ -20,12 +20,6 @@ public class Pipe : Stream {
         
         super.init(streamHandle: uv_stream_ptr(self.pipeHandle))
         
-        print("Pipe init")
-    }
-    
-    deinit{
-        
-        print("Pipe deinit")
     }
 
 }
@@ -77,7 +71,6 @@ extension Pipe {
     
     public static var afterConnect : uv_connect_cb = { (request, status) in
         
-        uv_cancel(uv_req_ptr(request))
         request.dealloc(1)
     }
     

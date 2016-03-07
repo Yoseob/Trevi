@@ -14,29 +14,38 @@ import Lime
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching ( aNotification: NSNotification ) {
-        
-        let server = Http ()
 
-        let lime = Lime()
-        
-        lime.set("views", "\(__dirname)/views");
+        let fileserver = FileServer()
+        fileserver.fileTestStart()
 
-        lime.set("view engine", SwiftServerPage())
+        let echoserver = NetEchoServer()
+        echoserver.listen(1337)
+
         
-        lime.use(Favicon())
+//        let server = Http ()
+//
+//        let lime = Lime()
+//        
+//        lime.set("views", "\(__dirname)/views");
+//
+//        lime.set("view engine", SwiftServerPage())
+//        
+//        lime.use(Favicon())
+//        
+//        lime.use(ServeStatic(path: "\(__dirname)/public"))
+//        
+//        lime.use(BodyParser())
+//        
+//        lime.use("/", Root())
+//  
+//        lime.use { (req, res, next) in
+//            res.statusCode = 404
+//            res.send("404 error")
+//        }
+//        
+//        server.createServer(lime).listen(8080)
         
-        lime.use(ServeStatic(path: "\(__dirname)/public"))
         
-        lime.use(BodyParser())
-        
-        lime.use("/", Root())
-  
-        lime.use { (req, res, next) in
-            res.statusCode = 404
-            res.send("404 error")
-        }
-        
-        server.createServer(lime).listen(8080)
         /*
         server.createServer({ (req, res, next) in
             

@@ -17,19 +17,14 @@ public class Stream : Handle {
     
     public let streamHandle : uv_stream_ptr
     
-    var readCallback : ((Int, uv_buf_const_ptr, uv_handle_type)->())! = nil
     
     public init (streamHandle : uv_stream_ptr){
         self.streamHandle = streamHandle
         super.init(handle: uv_handle_ptr(streamHandle))
     }
     
-    deinit {
-        
-    }
     
     public func readStart() {
-        
         
 //      Should add if state to set using work or not
 //      uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
@@ -37,6 +32,7 @@ public class Stream : Handle {
         uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
         Loop.run(mode: UV_RUN_ONCE)
     }
+    
     
     public func doTryWrite(buffer: UnsafeMutablePointer<uv_buf_ptr>, count : UnsafeMutablePointer<UInt32>) -> Int32 {
         var error : Int32
@@ -84,9 +80,9 @@ extension Stream {
     public static func readStart(handle : uv_stream_ptr) {
         
 //        Should add if state to set using work or not
-        uv_read_start(handle, Stream.onAlloc, Work.onRead)
+//        uv_read_start(handle, Stream.onAlloc, Work.onRead)
         
-//        uv_read_start(handle, Stream.onAlloc, Stream.onRead)
+        uv_read_start(handle, Stream.onAlloc, Stream.onRead)
         
         Loop.run(mode: UV_RUN_ONCE)
     }
@@ -105,19 +101,18 @@ extension Stream {
         return error
     }
     
-    // Should be modified.
+    
     public static func doWrite(data : NSData, handle : uv_stream_ptr,
         count : UInt32 = 1, sendHandle : uv_stream_ptr! = nil) -> Int {
             
-        let request : write_req_ptr = write_req_ptr.alloc(1)
         let error : Int32
-        
-//        request.memory.data = void_ptr(buffer)
-            
         let buffer = uv_buf_ptr.alloc(1)
-        buffer.memory = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), UInt32(data.length))
+        let request : write_req_ptr = write_req_ptr.alloc(1)
+            
         request.memory.handle = handle
         request.memory.buffer = buffer
+            
+        buffer.memory = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), UInt32(data.length))
             
         if sendHandle != nil {
             error = uv_write2(uv_write_ptr(request), handle, buffer, count, sendHandle, Stream.afterWrite)
@@ -179,8 +174,9 @@ extension Stream {
 extension Stream {
     
     public static var onAlloc : uv_alloc_cb = { (_, suggestedSize, buffer) in
-        
         buffer.initialize(uv_buf_init(UnsafeMutablePointer.alloc(suggestedSize), UInt32(suggestedSize)))
+        
+//        print("alloc buffer : \(buffer.memory)")
     }
     
     public static var onRead : uv_read_cb = { (handle, nread, buffer) in
@@ -208,7 +204,6 @@ extension Stream {
     public static var afterShutdown : uv_shutdown_cb = { (request, status) in
         // State after shutdown callback
         
-        
         request.dealloc(1)
     }
     
@@ -219,20 +214,21 @@ extension Stream {
         let writeRequest = write_req_ptr(request)
         let handle = writeRequest.memory.handle
         let buffer  = writeRequest.memory.buffer
-        
+
         if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {
             if let callback =  wrap.event.onAfterWrite {
                 callback(handle)
             }
         }
         
+//        print("after buffer : \(buffer.memory)")
         if buffer.memory.len > 0 {
             buffer.memory.base.dealloc(buffer.memory.len)
         }
         buffer.dealloc(1)
         
         uv_cancel(uv_req_ptr(request))
-        request.dealloc(1)
+        writeRequest.dealloc(1)
     }
     
 }

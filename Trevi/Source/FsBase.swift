@@ -27,15 +27,11 @@ public class FsBase {
         self.setWorkData(void_ptr(buffer))
         
         FsBase.dictionary[self.fsRequest] = self
-        
-        print("FS init")
     }
     
     deinit {
         self.fsRequest.dealloc(1)
         self.events.removeAll()
-        
-        print("FS deinit")
     }
     
     public func setWorkData(dataPtr : void_ptr) {

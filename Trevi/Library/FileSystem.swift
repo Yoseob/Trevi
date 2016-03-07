@@ -13,9 +13,9 @@ import Foundation
 public class FileSystem {
 
 public struct Options {
-    var fd : Int32! = nil
-    var flags : Int32! = nil
-    var mode : Int32! = nil
+    public var fd : Int32! = nil
+    public var flags : Int32! = nil
+    public var mode : Int32! = nil
 }
     
     
@@ -23,8 +23,8 @@ public struct Options {
 
 public class ReadStream {
     
-    let pipe : Pipe = Pipe()
-    var options : Options = Options()
+    public let pipe : Pipe = Pipe()
+    public var options : Options = Options()
     
     public init(path : String, options : Options? = nil) {
         
@@ -59,12 +59,14 @@ public class ReadStream {
     public func setCloseCallback(callback : ((handle : uv_handle_ptr)->Void)) {
         
         self.pipe.event.onClose = { (handle) in
-            print("File pipe cloesing")
+           
+//            print("File pipe cloesing")
             
             callback(handle: handle)
             
             let request = uv_fs_ptr(handle.memory.data)
             FsBase.close(request)
+            request.dealloc(1)
         }
         
     }
@@ -73,8 +75,6 @@ public class ReadStream {
     public func readStart(callback : ((error : Int32, data : NSData)->Void)) {
         
         self.pipe.event.onRead = { (handle, data) in
-            
-            print("Read : \(data.length)")
             
             callback(error : 0, data : data)
         }
@@ -89,8 +89,8 @@ public class ReadStream {
     
 public class WriteStream {
     
-    let pipe : Pipe = Pipe()
-    var options : Options = Options()
+    public let pipe : Pipe = Pipe()
+    public var options : Options = Options()
     
     public init(path : String, options : Options? = nil) {
         
@@ -125,6 +125,7 @@ public class WriteStream {
         let request = uv_fs_ptr(self.pipe.pipeHandle.memory.data)
         FsBase.close(request)
         Handle.close(self.pipe.handle)
+        request.dealloc(1)
     }
     
     

@@ -33,14 +33,13 @@ public class NetEchoServer : Net {
         
         let socket = sock as! Socket
         
-        //        print("Connect thread : \(getThreadID())")
+//        print("Connect thread : \(getThreadID())")
         
         socket.ondata = { data, nread in
             
-            //            print("Read thread : \(getThreadID())")
-            print("Read length: \(nread)")
-            //            print(blockToString(data.bytes, length : nread-2))
-            //            socket.write(data, handle: socket.handle)
+//            print("Read thread : \(getThreadID())")
+//            print("Read length: \(nread)")
+            socket.write(data, handle: socket.handle)
         }
         
         socket.onend = {
