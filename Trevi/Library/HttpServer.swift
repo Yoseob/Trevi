@@ -74,13 +74,12 @@ public class HttpServer: Net{
             
             parser(socket).onBody = { body in
                 let incoming = self.parser(socket).incoming
-                incoming.push(body as? String)
+                incoming.push(body)
             }
             
             parser(socket).onBodyComplete = {
                 let incoming = self.parser(socket).incoming
-                incoming.emit("end")
-                
+                incoming.emit("end")                
             }
         }
         
@@ -90,15 +89,11 @@ public class HttpServer: Net{
         parserSetup()
         
         socket.ondata = { data, nread in
-            
-            
             if let _parser = self.parsers[socket.handle] {
                 _parser.execute(data,length: nread)
             }else{
                 print("no parser")
             }
-            
-            
         }
         
         socket.onend = {

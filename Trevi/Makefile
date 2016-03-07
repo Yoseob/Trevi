@@ -4,12 +4,10 @@ COMPILE_MODE = Debug
 PLATFORM     = $(shell uname -s)
 ARCH         = $(shell uname -m)
 SOURCE_DIR   = HelloTrevi
+MACH_O_TYPE  = mh_dylib
 
 ## LOCATIONS ##
 ROOT_DIR            = $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-TREVI_DIR           = $(ROOT_DIR)/Trevi
-LIME_DIR            = $(ROOT_DIR)/Lime
-SRC_DIR             = $(ROOT_DIR)/$(SOURCE_DIR)
 BUILD_DIR           = $(ROOT_DIR)/build
 PLATFORM_DIR        = $(BUILD_DIR)/$(PROJECT_NAME)/$(COMPILE_MODE)/$(PLATFORM)/$(ARCH)
 PLATFORM_BUILD_DIR  = $(PLATFORM_DIR)/bin
@@ -37,19 +35,18 @@ ifeq ($(COMPILE_MODE), Debug)
 else
    CFLAGS    = -O3
 endif
-
 ## LINKER SETTINGS ##
-LD = $(shell xcrun -f ld)
+LD = ld
 OBJ_EXT =
 OBJ_PRE =
+
 ifeq (mh_dylib, $(MACH_O_TYPE))
 	OBJ_EXT = .dylib
 	OBJ_PRE = lib
 	LDFLAGS += -dylib
 endif
 
-TARGET        = Trevi Lime
-SOURCE_FILES  = $(shell find $(SRC_DIR) \( -name "*.swift" ! -name "AppDelegate.swift" ! -name "ViewController.swift" \))
+SOURCE_FILES  = $(shell find $(ROOT_DIR) \( -name "*.swift" ! -name "file.swift" \))
 
 ## BUILD TARGETS ##
 all: clean setup $(TARGET) build
@@ -63,6 +60,7 @@ setup:
 
 $(UV_LIB):
 	@echo "\n\033[1;33m>>> Download Libuv & Make\033[0m"
+	$(shell mkdir -p $(PLATFORM_LIB_DIR))
 	git clone "https://github.com/libuv/libuv.git" $(UV_PATH) && \
 		test -d $(UV_PATH)/build/gyp || \
 			(mkdir -p ./build && git clone https://chromium.googlesource.com/external/gyp.git $(UV_PATH)/build/gyp) && \
@@ -74,23 +72,42 @@ $(UV_LIB):
 		echo "$$UV_MMAP_STR" > $(PLATFORM_LIB_DIR)/module.modulemap
 	@echo "\n\033[1;33m<<<\033[0m\n"
 
-$(TARGET): .PHONY $(UV_LIB)
-	@echo "\n\033[1;33m>>> Framework : $@ \033[0m"
-	$(SWIFTC) $(CFLAGS) \
-		-emit-library \
-		-o $(PLATFORM_LIB_DIR)/lib$@.dylib \
-		-emit-module \
-		-emit-module-path $(PLATFORM_LIB_DIR)/$@.swiftmodule \
-		-module-name $@ \
-		-module-link-name $@ \
-		-I$(PLATFORM_LIB_DIR) \
-		-L$(PLATFORM_LIB_DIR) \
-		-v \
-		$(shell find '$(ROOT_DIR)/$@' \( -name "*.swift" ! -name "file.swift" \) )
-	@echo "\n\033[1;33m<<<\033[0m\n"
+# $(TARGET): .PHONY $(UV_LIB)
+# 	@echo "\n\033[1;33m>>> Framework : $@ \033[0m"
+# 	$(SWIFTC) $(CFLAGS) \
+# 		-emit-library \
+# 		-o $(PLATFORM_LIB_DIR)/lib$@.dylib \
+# 		-Xlinker -install_name -Xlinker @rpath/../lib/lib$@.dylib \
+# 		-emit-module \
+# 		-emit-module-path $(PLATFORM_LIB_DIR)/$@.swiftmodule \
+# 		-module-name $@ \
+# 		-module-link-name $@ \
+# 		-I$(PLATFORM_LIB_DIR) \
+# 		-L$(PLATFORM_LIB_DIR) \
+# 		-v \
+# 		$(shell find '$(ROOT_DIR)/$@' -name '*.swift')
+# 	@echo "\n\033[1;33m<<<\033[0m\n"
+
+%.swift: .PHONY $(UV_LIB)
+	@echo "\n\033[1;33m>>> $(notdir $@)\033[0m"
+	$(SWIFT) $(CFLAGS) -primary-file $@ \
+	$(filter-out $@,$(SOURCE_FILES)) \
+	-module-name Trevi \
+	-o $(PLATFORM_OBJ_DIR)/$(notdir $*).o \
+	-emit-module \
+	-emit-module-path $(PLATFORM_OBJ_DIR)/$(notdir $*)~partial.swiftmodule \
+	-I$(PLATFORM_LIB_DIR) \
+	-L$(PLATFORM_LIB_DIR)
+
+files:
+	@echo $(SOURCE_FILES)
+
+test: $(SOURCE_FILES)
 
 link:
 	$(LD) $(LDFLAGS) $(wildcard $(PLATFORM_OBJ_DIR)/*.o) \
+	-I$(PLATFORM_LIB_DIR) \
+	-L$(PLATFORM_LIB_DIR) \
 	-o $(PLATFORM_BUILD_DIR)/$(OBJ_PRE)$(MODULE_NAME)$(OBJ_EXT)
 
 build: .PHONY

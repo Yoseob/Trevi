@@ -7,7 +7,7 @@
 //
 
 import Libuv
-
+import Foundation
 
 public class FsBase {
     

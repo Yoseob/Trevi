@@ -20,21 +20,31 @@ public enum StringError: ErrorType {
     case UnsupportedEncodingError
 }
 
-public extension String {
-    func length () -> Int {
+#if os(Linux)
+// Wrapper for casting between AnyObject and String
+public class StringWrapper {
+    public var string: String
+
+    public init(string: String) {
+        self.string = string
+    }
+}
+#endif
+
+extension String {
+    func length() -> Int {
         return self.characters.count
     }
     
-    func trim () -> String {
+    func trim() -> String {
         return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
 
-    func substring ( start: Int, length: Int ) -> String {
-
-        return self[self.startIndex.advancedBy ( start ) ..< self.startIndex.advancedBy ( start + length )]
+    func substring(start: Int, length: Int) -> String {
+        return self[self.startIndex.advancedBy(start) ..< self.startIndex.advancedBy(start + length)]
     }
 
-    func getIndex ( location: Int, encoding: UInt = NSUnicodeStringEncoding ) throws -> String.Index {
+    func getIndex(location: Int, encoding: UInt = NSUnicodeStringEncoding) throws -> String.Index {
         switch (encoding) {
         case NSUTF8StringEncoding:
             return String.Index ( utf8.startIndex.advancedBy ( location, limit: utf8.endIndex ), within: self )!
@@ -48,7 +58,7 @@ public extension String {
     }
     
     // TODO : Which one better? it needs testing..
-    func isMatch( regex: String ) -> Bool {
+    func isMatch(regex: String) -> Bool {
         if let _ = self.rangeOfString( regex, options: .RegularExpressionSearch) {
             return true
         } else {

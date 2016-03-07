@@ -59,7 +59,11 @@ public class ServerResponse: OutgoingMessage{
         }else if let bodyString = _body {
             return bodyString.dataUsingEncoding(NSUTF8StringEncoding)!
         }else if (bodys != nil)  {
+            #if os(Linux)
+            let jsonData = try? NSJSONSerialization.dataWithJSONObject(bodys as! AnyObject, options:NSJSONWritingOptions(rawValue:0))
+            #else
             let jsonData = try? NSJSONSerialization.dataWithJSONObject(bodys!, options:NSJSONWritingOptions(rawValue:0))
+            #endif
             // if need jsonString, use it
             // let jsonString = NSString(data: jsonData!, encoding: NSUTF8StringEncoding)! as String
             return jsonData
@@ -92,26 +96,24 @@ public class ServerResponse: OutgoingMessage{
     }
     
     //will move outgoingMessage
-    public func write(data: AnyObject?, encoding: String! = nil, type: String! = ""){
-        
-        switch data {
-        case let str as String :
-            self._body = str
-        case let dt as NSData:
-            self._bodyData! = dt
-            if let t = type{
-                header[Content_Type] = t
-            }
-        case let dic as [String:AnyObject]:
-            self.bodys = dic
-        default:
-            break
+    public func write(data: String, encoding: String! = nil, type: String! = ""){
+        _body = data
+        _hasbody = true
+    }
+    
+    //will move outgoingMessage
+    public func write(data: NSData, encoding: String! = nil, type: String! = ""){
+        _bodyData = data
+        if let t = type{
+            header[Content_Type] = t
         }
-        if let _ = data{
-            self._hasbody = true
-            statusCode = 200
-        }
-        
+        _hasbody = true
+    }
+
+    //will move outgoingMessage
+    public func write(data: [String : AnyObject], encoding: String! = nil, type: String! = ""){
+        bodys = data
+        _hasbody = true
     }
     
     /**
@@ -122,7 +124,7 @@ public class ServerResponse: OutgoingMessage{
      */
     private func prepareHeader () -> NSData {
         
-        header[Date] = NSDate.GtmString()
+        header[Date] = getCurrentDatetime("E,dd LLL yyyy HH:mm:ss 'GMT'")
         header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
         
@@ -138,7 +140,7 @@ public class ServerResponse: OutgoingMessage{
         return headerString!.dataUsingEncoding ( NSUTF8StringEncoding )!
     }
     
-    private func dictionaryToString ( dic: NSDictionary ) -> String! {
+    private func dictionaryToString ( dic: [String : String] ) -> String! {
         var resultString = ""
         for (key, value) in dic {
             if value.lengthOfBytesUsingEncoding ( NSUTF8StringEncoding ) == 0 {

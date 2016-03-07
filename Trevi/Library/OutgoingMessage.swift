@@ -12,7 +12,7 @@ import Foundation
 //temp class
 
 
-public class OutgoingMessage: StreamWritable{
+public class OutgoingMessage {
     
     var socket: Socket!
     public var connection: Socket!

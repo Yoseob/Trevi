@@ -102,7 +102,7 @@ public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
             let c = String(format: "%c", idx.memory)
             value += c
 //        }
-        idx++
+        idx = idx.successor()
     }
     return value
 }
@@ -113,9 +113,11 @@ public func blockToUTF8String(block: UnsafePointer<CChar>) -> String {
     return value
 }
 
+#if os(OSX)
 public func getThreadID() -> mach_port_t {
     return pthread_mach_thread_np(pthread_self())
     
 }
+#endif
 
 
