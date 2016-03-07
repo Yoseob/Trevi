@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "239411E11C0C2E19001B9B07"
-               BuildableName = "Trevi_ver_lime.app"
-               BlueprintName = "Trevi_ver_lime"
+               BuildableName = "HelloTrevi.app"
+               BlueprintName = "HelloTrevi"
                ReferencedContainer = "container:Trevi.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "239411E11C0C2E19001B9B07"
-            BuildableName = "Trevi_ver_lime.app"
-            BlueprintName = "Trevi_ver_lime"
+            BuildableName = "HelloTrevi.app"
+            BlueprintName = "HelloTrevi"
             ReferencedContainer = "container:Trevi.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -56,8 +56,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "239411E11C0C2E19001B9B07"
-            BuildableName = "Trevi_ver_lime.app"
-            BlueprintName = "Trevi_ver_lime"
+            BuildableName = "HelloTrevi.app"
+            BlueprintName = "HelloTrevi"
             ReferencedContainer = "container:Trevi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -75,8 +75,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "239411E11C0C2E19001B9B07"
-            BuildableName = "Trevi_ver_lime.app"
-            BlueprintName = "Trevi_ver_lime"
+            BuildableName = "HelloTrevi.app"
+            BlueprintName = "HelloTrevi"
             ReferencedContainer = "container:Trevi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -87,8 +87,9 @@ public class ServerResponse: OutgoingMessage{
         if self._hasbody {
             result.appendData(self.bodyData!)    
         }
-        
+    
         self._end(result)
+        onFinished?(self)
     }
     
     public func writeHead(statusCode: Int, headers: [String:String]! = nil){
@@ -98,34 +99,25 @@ public class ServerResponse: OutgoingMessage{
     }
     
     //will move outgoingMessage
-    public func write(data: AnyObject?, encoding: String! = nil, type: String! = ""){
-        
-        switch data {
-        case let str as String :
-            self._body = str
-        case let dt as NSData:
-            self._bodyData! = dt
-            if let t = type{
-                header[Content_Type] = t
-            }
-        case let dic as [String:String]:
-            self.bodys = dic
-        default:
-            break
-        }
-        if let _ = data{
-            self._hasbody = true
-            statusCode = 200
+    public func write(data: String, encoding: String! = nil, type: String! = ""){
+        _body = data
+        _hasbody = true
+    }
+    
+    //will move outgoingMessage
+    public func write(data: NSData, encoding: String! = nil, type: String! = ""){
+        _bodyData = data
+        if let t = type{
+            header[Content_Type] = t
         }
         _hasbody = true
     }
 
     //will move outgoingMessage
-    public func write(data: [String : AnyObject], encoding: String! = nil, type: String! = ""){
+    public func write(data: [String : String], encoding: String! = nil, type: String! = ""){
         bodys = data
         _hasbody = true
     }
-
     
     /**
      * Factory method fill header data
@@ -144,6 +136,7 @@ public class ServerResponse: OutgoingMessage{
         }
         
         if firstLine == nil{
+            statusCode = 200
             firstLine = "\(httpVersion) \(statusCode) \(status)" + CRLF
         }
         var headerString = firstLine

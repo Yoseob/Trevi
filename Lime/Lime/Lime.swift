@@ -86,7 +86,7 @@ extension ServerResponse {
         end()
     }
     
-    public func send(data: [String : AnyObject], encoding: String! = nil, type: String! = ""){
+    public func send(data: [String : String], encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
         end()
     }
