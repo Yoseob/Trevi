@@ -24,13 +24,13 @@ public class FileServer {
         let readableStream = FileSystem.ReadStream(path: "/Users/Ingyure/Documents/testImage1.jpg")
         let writableStream = FileSystem.WriteStream(path: "/Users/Ingyure/Documents/testImage2.jpg")
         
-        readableStream.setCloseCallback() { [unowned writableStream]
+        readableStream.setCloseCallback() {
             handle in
             
             writableStream.close()
         }
         
-        readableStream.readStart() { [unowned writableStream]
+        readableStream.readStart() {
             (error, data) in
             
             writableStream.writeData(data)

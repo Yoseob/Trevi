@@ -46,12 +46,12 @@ public class ReadStream {
         else{
             Pipe.open(self.pipe.pipeHandle, fd: self.options.fd)
         }
-        
 //        print("read init")
     }
     
     deinit{
 //        print("read deinit")
+        Handle.close(self.pipe.handle)
     }
     
     func setOptions(options : Options) {
@@ -63,8 +63,6 @@ public class ReadStream {
     public func setCloseCallback(callback : ((handle : uv_handle_ptr)->Void)) {
         
         self.pipe.event.onClose = { (handle) in
-           
-            print("File pipe cloesing")
             
             callback(handle: handle)
             

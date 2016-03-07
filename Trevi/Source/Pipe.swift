@@ -22,7 +22,6 @@ public class Pipe : Stream {
         
 //        print("pipe init")
     }
-    
     deinit{
 //        print("pipe deinit")
     }
