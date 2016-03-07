@@ -13,6 +13,8 @@ import Foundation
 public class ServerResponse: OutgoingMessage{
     //for Lime
     public var req: IncomingMessage!
+    public let startTime: NSDate
+    public var onFinished : ((ServerResponse) -> Void)?
     
     public var httpVersion: String = ""
     public var url: String!
@@ -57,7 +59,11 @@ public class ServerResponse: OutgoingMessage{
         }else if let bodyString = _body {
             return bodyString.dataUsingEncoding(NSUTF8StringEncoding)!
         }else if (bodys != nil)  {
+            #if os(Linux)
+            let jsonData = try? NSJSONSerialization.dataWithJSONObject(bodys as! AnyObject, options:NSJSONWritingOptions(rawValue:0))
+            #else
             let jsonData = try? NSJSONSerialization.dataWithJSONObject(bodys!, options:NSJSONWritingOptions(rawValue:0))
+            #endif
             // if need jsonString, use it
             return jsonData
         }
@@ -69,6 +75,8 @@ public class ServerResponse: OutgoingMessage{
     private var firstLine: String!
     
     public init(socket: Socket) {
+        startTime = NSDate ()
+        onFinished = nil
         super.init(socket: socket)
         self._body = ""
     }
@@ -109,7 +117,13 @@ public class ServerResponse: OutgoingMessage{
             self._hasbody = true
             statusCode = 200
         }
-        
+        _hasbody = true
+    }
+
+    //will move outgoingMessage
+    public func write(data: [String : AnyObject], encoding: String! = nil, type: String! = ""){
+        bodys = data
+        _hasbody = true
     }
 
     
@@ -121,7 +135,7 @@ public class ServerResponse: OutgoingMessage{
      */
     private func prepareHeader () -> NSData {
         
-        header[Date] = NSDate.GtmString()
+        header[Date] = getCurrentDatetime("E,dd LLL yyyy HH:mm:ss 'GMT'")
         header[Server] = "Trevi-lime"
         header[Accept_Ranges] = "bytes"
         

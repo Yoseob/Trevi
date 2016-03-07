@@ -18,7 +18,7 @@ public class Request {
     
     public var httpVersionMinor : String? = "1"
     
-    public var version : String{
+    public var version : String {
         return "\(httpVersionMajor).\(httpVersionMinor)"
     }
     
@@ -61,15 +61,19 @@ public class Request {
         }
     }
     
+    public let startTime: NSDate
+    
     // A variable to contain something needs by user.
     public var attribute = [ String : String ] ()
-
+    
     public init () {
-        self.path = String ()
+        self.path      = String ()
+        self.startTime = NSDate ()
     }
     
     public init ( _ headerStr: String ) {
-        self.path = String ()
+        self.path      = String ()
+        self.startTime = NSDate ()
         self.headerString = headerStr
         parse()
     }
@@ -96,32 +100,15 @@ public class Request {
             httpVersionMajor = version.first!
             httpVersionMinor = version.last!
             
-//            parseUrl( requestLineElements[1] )
             parseHeader( requestHeader )
         }
     }
     
-//    private final func parseUrl ( url: String ) {
-//        var urlComp = url.componentsSeparatedByString("?")
-//        
-//        // Parsing request path
-//        for searched in searchWithRegularExpression(urlComp[0], pattern: "(/\\.+/|/*)") {
-//            urlComp[0] = urlComp[0].stringByReplacingOccurrencesOfString(searched["$1"]!.text, withString: "/")
-//        }
-//        path = urlComp[0].stringByReplacingOccurrencesOfString("/*", withString: "/")
-//        
-//        // Parsing url query by using regular expression.
-//        if urlComp.count > 1 {
-//            for searched in searchWithRegularExpression(urlComp[1], pattern: "[&\\?](.+?)=([\(unreserved)\(gen_delims)\\!\\$\\'\\(\\)\\*\\+\\,\\;]*)") {
-//                query.updateValue ( searched["$2"]!.text.stringByRemovingPercentEncoding!, forKey: searched["$1"]!.text.stringByRemovingPercentEncoding! )
-//            }
-//        }
-//    }
-    
     private final func parseHeader ( fields: [String] ) {
         for _idx in 1 ..< fields.count {
             if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
-                header[fieldSet[0].trim()] = fieldSet[1].trim();
+                self.header[fieldSet[0].trim()] = fieldSet[1].trim();
+                self.header[fieldSet[0].trim().lowercaseString] = fieldSet[1].trim();
             }
         }
     }

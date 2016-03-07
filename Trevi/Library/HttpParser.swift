@@ -28,7 +28,7 @@ public class HttpParser{
     
     public var onHeader: ((Void) -> (Void))?
     public var onHeaderComplete: ((HeaderInfo) -> Void)?
-    public var onBody: ((AnyObject) -> Void)?
+    public var onBody: ((String) -> Void)?
     public var onBodyComplete: ((Void) -> Void)?
     public var onIncoming: ((IncomingMessage) -> Bool)?
     
@@ -90,7 +90,7 @@ public class HttpParser{
             if self.contentLength > 0 {
                 self.totalLength += length
                 let readData = String(data : data, encoding : NSASCIIStringEncoding)
-                self.onBody!(readData!)
+                onBody!(readData!)
                 if self.totalLength >= self.contentLength{
                     self.onBodyComplete!()
                     reset()
@@ -121,8 +121,8 @@ public class HttpParser{
                 onBody!(trace)
                 trace = ""
             }
-            
-            if (contentLength == 0) || (self.totalLength == contentLength) {
+                        
+            if totalLength != 0 && ((contentLength != 0) || (self.totalLength == contentLength)) {
                 self.onBodyComplete!()
                 reset()
             }

@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 public typealias emitable = (AnyObject) -> Void
 
 public typealias noParamsEvent = (Void) -> Void
@@ -51,12 +50,21 @@ public class EventEmitter{
             if arg.count == 1 {
                 cb(arg.first!)
             }else {
-                cb(arg)
+                #if os(Linux)
+                    cb(arg as! AnyObject)
+                #else
+                    cb(arg)
+                #endif
             }
             break
         case let cb as oneStringeEvent:
             if arg.count == 1 {
-                cb(arg.first as! String)
+                #if os(Linux)
+                    let str = arg.first as! StringWrapper
+                    cb(str.string)
+                #else
+                    cb(arg.first as! String)
+                #endif
             }
             break
         case let cb as noParamsEvent:

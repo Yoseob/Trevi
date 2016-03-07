@@ -53,8 +53,7 @@ public class Stream : Handle {
         }
         
         written = error
-        for ; vcount > 0 ; vbuffer++, vcount-- {
-            
+        while vcount > 0 {
             if vbuffer[0].len > Int(written) {
                 vbuffer[0].base.initialize(vbuffer[0].base[Int(written)])
                 vbuffer[0].len -= Int(written)
@@ -64,6 +63,9 @@ public class Stream : Handle {
             else {
                 written -= vbuffer[0].len;
             }
+            
+            vbuffer = vbuffer.successor()
+            vcount = vcount.predecessor()
         }
         
         buffer.memory = vbuffer;

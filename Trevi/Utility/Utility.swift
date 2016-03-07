@@ -8,28 +8,7 @@
 
 import Foundation
 
-extension NSDate {
-    struct Date {
-        static let formatter = NSDateFormatter()
-    }
-    var formatted: String {
-        Date.formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSX"
-        Date.formatter.timeZone = NSTimeZone(forSecondsFromGMT: 0)
-        Date.formatter.calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierISO8601)!
-        Date.formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
-        return Date.formatter.stringFromDate(self)
-    }
-    
-    static func GtmString() -> String{
-        let date = NSDate();
-        let formatter = NSDateFormatter();
-        formatter.dateFormat = " E,dd LLL yyyy HH:mm:ss 'GMT'";
-        formatter.timeZone =   NSTimeZone(abbreviation: "GMT");
-        return  formatter.stringFromDate(date);
-    }
-}
-
-public func executeShellCommand(command: String, args: [String]? = nil) -> String {
+public func executeShellCommand(command: String, args: [String]? = nil) -> String? {
     let task = NSTask ()
     let pipe = NSPipe ()
     
@@ -41,7 +20,13 @@ public func executeShellCommand(command: String, args: [String]? = nil) -> Strin
     
     task.launch()
     
-    return (NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding) as! String)
+    return String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)
+}
+
+public func getCurrentDatetime(format: String = "yyyy/MM/dd hh:mm:ss a z") -> String {
+    let formatter = NSDateFormatter()
+    formatter.dateFormat = format
+    return formatter.stringFromDate(NSDate())
 }
 
 public func bridge<T : AnyObject>(obj : T) -> UnsafePointer<Void> {

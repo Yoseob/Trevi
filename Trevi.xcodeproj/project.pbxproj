@@ -40,6 +40,7 @@
 		ACD869801C88DAE100260C87 /* index.ssp in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE5F1C259FD7009A8DA8 /* index.ssp */; };
 		ACD869811C88DAEA00260C87 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 239411E81C0C2E19001B9B07 /* Assets.xcassets */; };
 		ACD869821C88DAEA00260C87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD8697A1C88D6DB00260C87 /* Main.storyboard */; };
+		ACD869861C8B45FE00260C87 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD869851C8B45FE00260C87 /* Logger.swift */; };
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
@@ -153,6 +154,7 @@
 		ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
 		ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamWritable.swift; sourceTree = "<group>"; };
 		ACD8697B1C88D6DB00260C87 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		ACD869851C8B45FE00260C87 /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		DF3D4EE01C85F77D00DF2DE1 /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
 		DF4BE52B1C7F073800908A3D /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = "<group>"; };
 		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 				2354416A1C7CCCC600E90A97 /* ServeStatic.swift */,
 				2354416B1C7CCCC600E90A97 /* SwiftServerPage.swift */,
 				23A5FAAC1C86CDFC00F68B78 /* Query.swift */,
+				ACD869851C8B45FE00260C87 /* Logger.swift */,
 			);
 			path = Middleware;
 			sourceTree = "<group>";
@@ -532,6 +535,7 @@
 				2354416E1C7CCCC600E90A97 /* Middleware.swift in Sources */,
 				23A5FAB11C86CE8600F68B78 /* Regexp.swift in Sources */,
 				2354417A1C7CCCE600E90A97 /* Response.swift in Sources */,
+				ACD869861C8B45FE00260C87 /* Logger.swift in Sources */,
 				235441701C7CCCC600E90A97 /* Router.swift in Sources */,
 				2354417B1C7CCCE600E90A97 /* RoutAble.swift in Sources */,
 				23A5FAAD1C86CDFC00F68B78 /* Query.swift in Sources */,

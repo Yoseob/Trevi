@@ -52,6 +52,7 @@ public class IncomingMessage: StreamReadable{
     
     public var app: AnyObject!
     
+    public let startTime: NSDate
     
     //server only
     public var url: String!{
@@ -66,11 +67,11 @@ public class IncomingMessage: StreamReadable{
     public var client: AnyObject!
     
     init(socket: Socket){
+        startTime = NSDate ()
         super.init()
         self.socket = socket
         self.connection = socket
         self.client = socket
-        
     }
     
     deinit{
