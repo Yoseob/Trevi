@@ -30,7 +30,6 @@ public class Stream : Handle {
 //      uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
         
         uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
-        Loop.run(mode: UV_RUN_ONCE)
     }
     
     
@@ -83,8 +82,6 @@ extension Stream {
 //        uv_read_start(handle, Stream.onAlloc, Work.onRead)
         
         uv_read_start(handle, Stream.onAlloc, Stream.onRead)
-        
-        Loop.run(mode: UV_RUN_ONCE)
     }
     
     public func readStop(handle : uv_stream_ptr) -> Int32 {
@@ -121,7 +118,6 @@ extension Stream {
             error = uv_write(uv_write_ptr(request), handle, buffer, count, Stream.afterWrite)
         }
             
-        Loop.run(mode: UV_RUN_ONCE)
             
         if error == 0 {
             // Should add count module

@@ -20,6 +20,11 @@ public class Pipe : Stream {
         
         super.init(streamHandle: uv_stream_ptr(self.pipeHandle))
         
+//        print("pipe init")
+    }
+    
+    deinit{
+//        print("pipe deinit")
     }
 
 }

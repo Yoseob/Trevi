@@ -47,8 +47,12 @@ public class ReadStream {
             Pipe.open(self.pipe.pipeHandle, fd: self.options.fd)
         }
         
+//        print("read init")
     }
     
+    deinit{
+//        print("read deinit")
+    }
     
     func setOptions(options : Options) {
         self.options.fd = options.fd
@@ -60,7 +64,7 @@ public class ReadStream {
         
         self.pipe.event.onClose = { (handle) in
            
-//            print("File pipe cloesing")
+            print("File pipe cloesing")
             
             callback(handle: handle)
             
@@ -80,6 +84,7 @@ public class ReadStream {
         }
         
         Stream.readStart(self.pipe.streamHandle)
+        Loop.run(mode: UV_RUN_ONCE)
     }
     
 }
@@ -112,6 +117,11 @@ public class WriteStream {
             Pipe.open(self.pipe.pipeHandle, fd: self.options.fd)
         }
         
+//        print("write init")
+    }
+    
+    deinit{
+//        print("write deinit")
     }
     
     
