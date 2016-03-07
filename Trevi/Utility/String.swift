@@ -32,19 +32,19 @@ public class StringWrapper {
 #endif
 
 extension String {
-    func length() -> Int {
+    public func length() -> Int {
         return self.characters.count
     }
     
-    func trim() -> String {
+    public func trim() -> String {
         return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
     }
 
-    func substring(start: Int, length: Int) -> String {
+    public func substring(start: Int, length: Int) -> String {
         return self[self.startIndex.advancedBy(start) ..< self.startIndex.advancedBy(start + length)]
     }
 
-    func getIndex(location: Int, encoding: UInt = NSUnicodeStringEncoding) throws -> String.Index {
+    public func getIndex(location: Int, encoding: UInt = NSUnicodeStringEncoding) throws -> String.Index {
         switch (encoding) {
         case NSUTF8StringEncoding:
             return String.Index ( utf8.startIndex.advancedBy ( location, limit: utf8.endIndex ), within: self )!
@@ -58,7 +58,7 @@ extension String {
     }
     
     // TODO : Which one better? it needs testing..
-    func isMatch(regex: String) -> Bool {
+    public func isMatch(regex: String) -> Bool {
         if let _ = self.rangeOfString( regex, options: .RegularExpressionSearch) {
             return true
         } else {

@@ -75,8 +75,18 @@ extension Lime: ApplicationProtocol {
 public class LimeInit {
 }
 
-public extension ServerResponse {
-    public func send(data: AnyObject?, encoding: String! = nil, type: String! = ""){
+extension ServerResponse {
+    public func send(data: String, encoding: String! = nil, type: String! = ""){
+        write(data, encoding: encoding, type: type)
+        end()
+    }
+    
+    public func send(data: NSData, encoding: String! = nil, type: String! = ""){
+        write(data, encoding: encoding, type: type)
+        end()
+    }
+    
+    public func send(data: [String : AnyObject], encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
         end()
     }

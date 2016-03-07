@@ -134,8 +134,13 @@ public class SwiftServerPage: Renderer {
         let compileFile = "/tmp/\(NSURL(fileURLWithPath: path).lastPathComponent!).swift"
         let file = WritableFile(fileAtPath: compileFile, option: O_CREAT|O_TRUNC).open()
         file.write(UnsafePointer<UInt8>(code.dataUsingEncoding(NSUTF8StringEncoding)!.bytes), maxLength: code.characters.count)
-        return executeShellCommand("/usr/bin/swift", args: [ compileFile ])
-            .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+        
+        guard let result = executeShellCommand("/usr/bin/swift", args: [ compileFile ]) else {
+            return nil
+        }
+        
+        return result.stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
             .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
+        
     }
 }
