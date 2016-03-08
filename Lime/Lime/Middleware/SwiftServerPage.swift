@@ -9,17 +9,10 @@
 import Foundation
 import Trevi
 
-public protocol Renderer {
-    func render(filename: String) -> String
-    func render(filename: String, args: [String:String]) -> String
-}
-
 /**
  A Middleware for compiling a specific SSP(Swift Server Page) file and send the data to client.
  */
-
-
-public class SwiftServerPage: Renderer {
+public class SwiftServerPage: Render {
 
     public init() {
     }
