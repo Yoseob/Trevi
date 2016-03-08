@@ -188,8 +188,14 @@ public class Root{
         */
         
         router.post("/index") { req , res , next in
-            print("\(req.body["name"])")
-            res.send("index post")
+            func ondata(data: String) {
+                print(data)
+            }
+            func onend() {
+                res.send("index post")
+            }
+            req.on("data", ondata)
+            req.on("end", onend)
         }
         
         router.get("/redir") { req , res , next in
