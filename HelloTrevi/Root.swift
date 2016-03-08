@@ -21,13 +21,38 @@ import Lime
 */
 
 import Trevi
-/*
+
+//dev module 
+
+public class DevFile {
+    
+    //public
+    public var name: String!
+    public var type: String = "text"
+    
+    //file
+    public var fileName: String! = nil
+    public var path: String! = nil
+    
+    //body
+    public var value: String! = nil
+    
+    public var isFinished: Bool = false
+    
+    public init(){}
+}
+
+//
+
 class MultiParty: Middleware {
     
     var name: MiddlewareName = .Undefined
     var fileDestName: String = __dirname
     var limits: String!
+    
+    
     //options has limits, dest, filter
+    
     var options: [String:String!]!
 
     init(options : [String:String!]! = nil){
@@ -56,6 +81,7 @@ class MultiParty: Middleware {
         
         var chuck = ""
         var boundry: String! = nil
+        var processingFileName: String!
         
         func ondata(data: String){
             
@@ -68,13 +94,34 @@ class MultiParty: Middleware {
             var bodyInfo = data.componentsSeparatedByString(CRLF)
             
             let firstBodyInfo = bodyInfo.first!
-            if boundry == firstBodyInfo {
-                chuck += firstBodyInfo
+            if boundry != firstBodyInfo {
+                
+                if let processingFileName = processingFileName{
+                    let lastFile: DevFile = req.files[processingFileName] as! DevFile
+                    writefile(firstBodyInfo, path: lastFile.path)
+                }
+
+                bodyInfo.removeFirst()
+            }else{
+                if processingFileName != nil {
+                    if let processingFileName = processingFileName{
+                        let lastFile: DevFile = req.files[processingFileName] as! DevFile
+                        lastFile.isFinished = true
+                    }
+
+                    processingFileName = nil
+                }
             }
             
-            bodyInfo.removeFirst()
-            var cursor = 1
             
+            
+            //remove first boundry
+            if bodyInfo.count > 1 {
+                bodyInfo.removeFirst()
+            }
+            var cursor = 1
+ 
+
             //remove empty charecter ("")
             for index in 1 ..< bodyInfo.count{
 
@@ -94,6 +141,9 @@ class MultiParty: Middleware {
             
             parseMultipart(bodyInfo, boundry: boundry, onFile: { file in
                 req.files[file.name] = file
+                if file.isFinished == false{
+                    processingFileName = file.name
+                }
             }, onBody: { name, value in
                 req.body[name] = value
             })
@@ -111,39 +161,95 @@ class MultiParty: Middleware {
 
     }
     
-    private func parseMultipart(bodyInfo: [String] ,boundry: String, onFile: (File)->(), onBody: (String,String)->()){
-        //test val
-        var infoCount = 0
-        //parsing
-        var type: String
-        var disposition: String
-        var data: String
-        
-        for index in 1 ..< bodyInfo.count{
-            if bodyInfo[index] == boundry || bodyInfo[index] == (boundry+"--"){
-                type = "text"
-                infoCount += 1
-                disposition = bodyInfo[index-2]
-                if disposition.containsString("Content-Disposition") == false {
-                    type = disposition
-                    disposition = bodyInfo[index-3]
-                }
-                data = bodyInfo[index-1]
-                 print("info :  \(type)\n , \(disposition)\n , \(data)\n")
-                
+    private func parseMultipart(bodyInfo: [String] ,boundry: String, onFile: (DevFile)->(), onBody: (String,String)->()){
 
-                //parsing content disposition
-                if disposition.containsString("filename") == true {
-                    //make file
-                    
-                }else{
-                    //make body
-                }
+        var testArr = [DevFile]()
+        func onCompliteParse(file: DevFile){
+            testArr.append(file)
+            if let _ = file.path {
+                onFile(file)
+            }else{
+                onBody(file.name,file.value)
+            }
+        }
+    
+        //parsing
+        var disposition: String
+        var file: DevFile!
+        
+        var readLine = ""
+        for index in 0 ..< bodyInfo.count{
+            
+            readLine = bodyInfo[index]
+            if readLine == boundry{
+                file.isFinished = true
+                onCompliteParse(file)
+                file = nil
                 
+            }else if readLine == (boundry+"--"){
+                file.isFinished = true
+                onCompliteParse(file)
+                file = nil
+                break
+            }else if readLine == "" {
+                file.isFinished = false
+                onCompliteParse(file)
+                break
+            }else{
+                if readLine.containsString("Content-Disposition:") == true {
+                    disposition = readLine
+                    
+                    getComponent(disposition, result: { name, filename in
+                        file = DevFile()
+                        file.name = name
+                        
+                        if let filename = filename{
+                            file.fileName = filename
+                            file.path = "\(self.fileDestName)/\(name)/\(filename)"
+                        }
+                    })
+                    continue
+                    
+                }else if readLine.containsString("Content-Type:") == true {
+                    if let file = file {
+                        file.type = readLine.componentsSeparatedByString(": ").last!
+                    }
+                    continue
+                }else {
+                    if let file = file, let filename = file.fileName {
+                        writefile(readLine, path: filename)
+                    }else{
+                        file.value = readLine
+                    }
+                    continue
+                }
             }
         }
     }
 
+    
+    private func getComponent(data: String , result: (String,String!)->()){
+        let dispositionComponents = data.componentsSeparatedByString("; ")
+
+        var resultList = [String]()
+        
+        for index in 1 ..< dispositionComponents.count{
+            let str = dispositionComponents[index]
+            resultList.append(str.componentsSeparatedByString("=").last!)
+        }
+        
+
+        if resultList.count > 1 {
+            return result(resultList[0],resultList[1])
+        }
+        
+        result(resultList[0],nil)
+
+    }
+    
+    private func writefile(data: String, path: String){
+        print("path : \(path) , data : \(data)")
+    }
     
     private func readBoundry(data: String) -> String{
         
@@ -163,7 +269,7 @@ class MultiParty: Middleware {
         return data.substring(0, length: index)
     }
 }
-*/
+
 public class Root{
     
     private let lime = Lime()
@@ -181,11 +287,11 @@ public class Root{
             res.write("index get")
             res.end()
         }
-        /*
+
         router.post("double", MultiParty()) { (req, res, next) -> Void in
             res.send("multipart parser middleware")
         }
-        */
+
         
         router.post("/index") { req , res , next in
             print("\(req.body["name"])")
