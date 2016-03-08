@@ -1,5 +1,5 @@
 //
-//  FsBase.swift
+//  FSBase.swift
 //  Trevi
 //
 //  Created by JangTaehwan on 2016. 2. 27..
@@ -9,10 +9,10 @@
 import Libuv
 
 
-public class FsBase {
+public class FSBase {
     
     public static let BUF_SIZE = 1024
-    public static var dictionary = [uv_fs_ptr : FsBase]()
+    public static var dictionary = [uv_fs_ptr : FSBase]()
     
     public typealias fsCallback = (uv_fs_ptr)->Void
     public var events = [uv_fs_type : fsCallback]()
@@ -26,7 +26,7 @@ public class FsBase {
         let buffer = uv_buf_ptr.alloc(1)
         self.setWorkData(void_ptr(buffer))
         
-        FsBase.dictionary[self.fsRequest] = self
+        FSBase.dictionary[self.fsRequest] = self
     }
     
     deinit {
@@ -49,7 +49,7 @@ public struct FSInfo {
 
 // FsBase static functions
 
-extension FsBase {
+extension FSBase {
 
     
     public static func open(loop : uv_loop_ptr, handle : uv_pipe_ptr! = nil, path : String, flags : Int32, mode : Int32) -> Int32 {
@@ -96,7 +96,7 @@ extension FsBase {
     
     public static func cleanup(request : uv_fs_ptr) {
         
-        FsBase.dictionary[request] = nil
+        FSBase.dictionary[request] = nil
         uv_fs_req_cleanup(request)
     }
     
@@ -104,11 +104,11 @@ extension FsBase {
 
 // FsBase static callbacks
 
-extension FsBase {
+extension FSBase {
     
     public static var after : ((uv_fs_ptr, uv_fs_type)->()) = { (request, type) in
         
-        if let wrap = FsBase.dictionary[request]{
+        if let wrap = FSBase.dictionary[request]{
             if let callback = wrap.events[type] {
                 callback(request)
             }
@@ -131,7 +131,7 @@ extension FsBase {
         
         after(request, UV_FS_CLOSE)
         
-        FsBase.cleanup(request)
+        FSBase.cleanup(request)
         uv_cancel(uv_req_ptr(request))
         request.dealloc(1)
     }
@@ -144,7 +144,7 @@ extension FsBase {
         }
         else if request.memory.result == 0 {
 
-            FsBase.close(uv_default_loop(), request: request)
+            FSBase.close(uv_default_loop(), request: request)
         }
         else {
             

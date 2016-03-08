@@ -26,7 +26,7 @@ public static func close(handle : uv_handle_ptr) {
     let loop = info.memory.loop
     
     Handle.close(handle)
-    FsBase.close(loop, request: request)
+    FSBase.close(loop, request: request)
     Loop.close(loop)
     request.dealloc(1)
     info.dealloc(1)
@@ -52,7 +52,7 @@ public class ReadStream {
         
         
         if self.options.fd == nil {
-            self.options.fd = FsBase.open(self.loop.loopHandle, handle: self.pipe.pipeHandle, path : path,
+            self.options.fd = FSBase.open(self.loop.loopHandle, handle: self.pipe.pipeHandle, path : path,
                 flags: self.options.flags, mode: self.options.mode)
         }
         
@@ -145,7 +145,7 @@ public class WriteStream {
         if let options = options { self.setOptions(options) }
         
         if self.options.fd == nil {
-            self.options.fd = FsBase.open(self.loop.loopHandle, handle: self.pipe.pipeHandle, path : path,
+            self.options.fd = FSBase.open(self.loop.loopHandle, handle: self.pipe.pipeHandle, path : path,
                 flags: self.options.flags, mode: self.options.mode)
         }
         
