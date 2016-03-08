@@ -20,12 +20,10 @@ public class NetEchoServer : Net {
     
     public override func listen(port: Int32) {
         
-        //        fileStreamTest("/Users/Ingyure/Documents/fstest.txt")
-        
         print("Echo Server starts ip : \(ip), port : \(port).")
-        //        print("Main thread : \(getThreadID())")
         super.listen(port)
         
+//        print("Main thread : \(getThreadID())")
     }
     
     
@@ -33,18 +31,17 @@ public class NetEchoServer : Net {
         
         let socket = sock as! Socket
         
-        //        print("Connect thread : \(getThreadID())")
+//        print("Connect thread : \(getThreadID())")
         
         socket.ondata = { data, nread in
             
-            //            print("Read thread : \(getThreadID())")
-            print("Read length: \(nread)")
-            //            print(blockToString(data.bytes, length : nread-2))
-            //            socket.write(data, handle: socket.handle)
+//            print("Read thread : \(getThreadID())")
+//            print("Read length: \(nread)")
+            socket.write(data, handle: socket.handle)
         }
         
         socket.onend = {
-            //            print("Close thread : \(getThreadID())")
+//            print("Close thread : \(getThreadID())")
         }
     }
     

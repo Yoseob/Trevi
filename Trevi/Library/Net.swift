@@ -12,6 +12,8 @@ import Foundation
 
 public class Socket: EventEmitter { // should be inherited stream, eventEmitter
     
+    public let timer : Timer = Timer()
+    
     public static var dictionary = [uv_stream_ptr : Socket]()
     
     public var handle: uv_stream_ptr!
@@ -22,11 +24,10 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         self.handle = handle
         super.init()
         Socket.dictionary[handle] = self
-        
     }
     
     
-    func write(data: NSData, handle : uv_stream_ptr) {
+    public func write(data: NSData, handle : uv_stream_ptr) {
  
         // Should add buffer module.
         
@@ -67,6 +68,16 @@ extension Socket {
             wrap.ondata!(data, data.length)
         }
     }
+    
+    public static func onAfterWrite(handle: uv_stream_ptr) -> Void {
+        
+        if let wrap = Socket.dictionary[uv_stream_ptr(handle)] {
+            Socket.onTimeout(wrap.timer.timerhandle, msecs: 200) {
+                _ in
+                Handle.close(uv_handle_ptr(handle))
+            }
+        }
+    }
 
     public static func onClose(handle : uv_handle_ptr) {
         
@@ -75,15 +86,18 @@ extension Socket {
             wrap.events.removeAll()
             wrap.ondata = nil
             wrap.onend = nil
+            wrap.timer.close()
             Socket.dictionary.removeValueForKey(uv_stream_ptr(handle))
         }
     }
     
-    public static func onTimeout( msecs : UInt64, callback : ((uv_timer_ptr)->()) ) {
+    public static func onTimeout( handle : uv_timer_ptr, msecs : UInt64, callback : ((uv_timer_ptr)->()) ) {
         
-        let timer : Timer = Timer()
-        timer.event.onTimeout = callback
-        Timer.start(timer.timerhandle, timeout: msecs, count: 0)
+        if let wrap = Handle.dictionary[uv_handle_ptr(handle)]{
+            wrap.event.onTimeout = callback
+            Timer.stop(handle)
+            Timer.start(handle, timeout: msecs, count: 0)
+        }
     }
         
 }
@@ -91,10 +105,10 @@ extension Socket {
 
 public class Net: EventEmitter {
     
-    let ip : String
-    var port : Int32
+    public let ip : String
+    public var port : Int32
     
-    let server : Tcp
+    public let server : Tcp
     
     public init(ip : String = "0.0.0.0") {
         self.ip = ip
@@ -117,13 +131,14 @@ public class Net: EventEmitter {
             if let wrap = Handle.dictionary[uv_handle_ptr(client)] {
                 
                 wrap.event.onRead = Socket.onRead
+                wrap.event.onAfterWrite = Socket.onAfterWrite
                 wrap.event.onClose = Socket.onClose
             }
         }
         
         Tcp.bind(self.server.tcpHandle, address : self.ip, port: self.port)
         Tcp.listen(self.server.tcpHandle)
-    
+        
         Loop.run(mode: UV_RUN_DEFAULT)
     }
     

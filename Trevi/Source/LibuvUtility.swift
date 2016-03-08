@@ -28,8 +28,9 @@ public typealias uv_async_ptr = UnsafeMutablePointer<uv_async_t>
 
 
 public struct write_req_t {
-    let req : uv_write_t
-    var buf : uv_buf_ptr
+    let request : uv_write_t
+    var handle: uv_stream_ptr
+    var buffer : uv_buf_ptr
 }
 
 public typealias uv_req_ptr = UnsafeMutablePointer<uv_req_t>

@@ -12,12 +12,13 @@ import Foundation
 
 public class Handle {
     
-    static var dictionary = [uv_handle_ptr : Handle]()
+    public static var dictionary = [uv_handle_ptr : Handle]()
     
-    public let event : Event
+    public var event : Event
     public let handle : uv_handle_ptr
     
     public init (handle : uv_handle_ptr) {
+        
         self.handle = handle
         self.event = Event()
         Handle.dictionary[self.handle] = self
@@ -39,14 +40,14 @@ extension Handle {
         
         // Should be modified to standard type
         
-        var onClose : ((uv_handle_ptr)->())!
-        var onAlloc : Any!
-        var onRead : ((uv_stream_ptr, NSData)->())!
-        var afterShutdown : Any!
-        var afterWrite : ((uv_req_ptr)->())!
-        var onConnection : (uv_stream_ptr -> ())!
-        var afterConnect : Any!
-        var onTimeout : ((uv_timer_ptr)->())!
+        public var onClose : ((uv_handle_ptr)->())!
+        public var onAlloc : Any!
+        public var onRead : ((uv_stream_ptr, NSData)->())!
+        public var afterShutdown : Any!
+        public var onAfterWrite : ((uv_stream_ptr)->())!
+        public  var onConnection : (uv_stream_ptr -> ())!
+        public var afterConnect : Any!
+        public var onTimeout : ((uv_timer_ptr)->())!
         
     }
 }

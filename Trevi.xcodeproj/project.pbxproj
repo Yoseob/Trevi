@@ -44,6 +44,7 @@
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
+		DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9233E81C8C50B000D87A29 /* FileSystem.swift */; };
 		DFD970A61C87399D00E39995 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
 		DFD970A71C87399D00E39995 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
 		DFD970A91C87399D00E39995 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
@@ -164,6 +165,7 @@
 		DF826E181C8814BF0032F31C /* NetEchoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetEchoServer.swift; path = Test/NetEchoServer.swift; sourceTree = "<group>"; };
 		DF826E1C1C881A900032F31C /* FileServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileServer.swift; path = Test/FileServer.swift; sourceTree = "<group>"; };
 		DF843F111C80CAEF0078D69C /* FsBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FsBase.swift; sourceTree = "<group>"; };
+		DF9233E81C8C50B000D87A29 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,14 +228,15 @@
 				2354413C1C797FFA00E90A97 /* Http.swift */,
 				2354413D1C797FFA00E90A97 /* HttpParser.swift */,
 				2354413E1C797FFA00E90A97 /* HttpProtocol.swift */,
+				23A5FAB81C88891400F68B78 /* HttpServer.swift */,
 				2354413F1C797FFA00E90A97 /* Net.swift */,
 				ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */,
 				ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */,
 				ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */,
+				23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */,
 				23A5FAB21C8887D000F68B78 /* OutgoingMessage.swift */,
 				23A5FAB41C8888B100F68B78 /* ServerResponse.swift */,
-				23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */,
-				23A5FAB81C88891400F68B78 /* HttpServer.swift */,
+				DF9233E81C8C50B000D87A29 /* FileSystem.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -558,6 +561,7 @@
 				DFD970A91C87399D00E39995 /* String.swift in Sources */,
 				DFD970BB1C8739A700E39995 /* Handle.swift in Sources */,
 				DFD970AA1C87399D00E39995 /* Json.swift in Sources */,
+				DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */,
 				23A5FAB91C88891400F68B78 /* HttpServer.swift in Sources */,
 				DFD970B91C8739A300E39995 /* StreamWritable.swift in Sources */,
 				DFD970BF1C8739A700E39995 /* Stream.swift in Sources */,

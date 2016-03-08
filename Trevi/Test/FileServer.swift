@@ -12,54 +12,19 @@ import Foundation
 
 public class FileServer {
     
-    let readPipe = Pipe()
-    let writePipe = Pipe()
-    
-    
-    public func readStart(path : String) {
-        
-        FileServer.setFileStreamEvents(self.readPipe, self.writePipe)
-        FsBase.streamReadFile(self.readPipe.pipeHandle, path: path)
+    public init(){
+        print("init")
+    }
+    deinit{
+        print("deinit")
     }
     
-}
-
-
-// FileServer static functions
-
-extension FileServer {
-    
-    
-    // Temporary function for testing FsBase module. 
-    // Should be modified.
-    public static func setFileStreamEvents(readPipe : Pipe, _ writePipe : Pipe){
+    public func fileTestStart() {
         
-        FsBase.streamOpenFile(writePipe.pipeHandle, path: "/Users/Ingyure/Documents/fswritetest.txt")
+        let readableStream = FileSystem.ReadStream(path: "/Users/Ingyure/Documents/testImage1.jpg")
+        let writableStream = FileSystem.WriteStream(path: "/Users/Ingyure/Documents/testImage2.jpg")
         
-        readPipe.event.onRead = { (handle, data) in
-            
-            print("Read : \(data.length)")
-            
-            let infoPtr = UnsafeMutablePointer<FsBase.Info>(handle.memory.data)
-            
-            infoPtr.memory.nread += data.length
-            
-            if infoPtr.memory.nread == Int(infoPtr.memory.size) {
-                
-                FsBase.close(infoPtr.memory.request)
-                Handle.close(uv_handle_ptr(handle))
-            }
-            
-            if data.length > 0 {
-                
-                FsBase.streamWriteFile(writePipe.pipeHandle, data: data)
-            }
-            
-        }
-        
-        readPipe.event.onClose = { (handle) in
-            print("File pipe cloesing")
-            
-        }
+        readableStream.pipeStream(writableStream)
     }
+    
 }
