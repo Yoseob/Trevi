@@ -20,12 +20,10 @@ public class NetEchoServer : Net {
     
     public override func listen(port: Int32) {
         
-        //        fileStreamTest("/Users/Ingyure/Documents/fstest.txt")
-        
         print("Echo Server starts ip : \(ip), port : \(port).")
-        //        print("Main thread : \(getThreadID())")
         super.listen(port)
         
+//        print("Main thread : \(getThreadID())")
     }
     
     
@@ -43,7 +41,7 @@ public class NetEchoServer : Net {
         }
         
         socket.onend = {
-            //            print("Close thread : \(getThreadID())")
+//            print("Close thread : \(getThreadID())")
         }
     }
     

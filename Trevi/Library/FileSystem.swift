@@ -19,15 +19,32 @@ public struct Options {
 }
     
     
+public static func close(handle : uv_handle_ptr) {
+    
+    let info = UnsafeMutablePointer<FSInfo>(handle.memory.data)
+    let request = info.memory.request
+    let loop = info.memory.loop
+    
+    Handle.close(handle)
+    FsBase.close(loop, request: request)
+    Loop.close(loop)
+    request.dealloc(1)
+    info.dealloc(1)
+}
+    
+    
 // Should be inherited from StreamReadable
 
 public class ReadStream {
     
-    public let pipe : Pipe = Pipe()
+    public let loop : Loop
+    public let pipe : Pipe
     public var options : Options = Options()
     
     public init(path : String, options : Options? = nil) {
         
+        self.loop = Loop()
+        self.pipe = Pipe(loop: loop.loopHandle)
         self.options.flags = O_RDONLY
         self.options.mode = 0o666
         
@@ -35,22 +52,25 @@ public class ReadStream {
         
         
         if self.options.fd == nil {
-            self.options.fd = FsBase.open(self.pipe.pipeHandle, path : path,
+            self.options.fd = FsBase.open(self.loop.loopHandle, handle: self.pipe.pipeHandle, path : path,
                 flags: self.options.flags, mode: self.options.mode)
         }
         
         if self.options.fd <= 0 {
             // Should handle error
             
+            print("Read Stream file open error \(self.options.fd)")
         }
         else{
             Pipe.open(self.pipe.pipeHandle, fd: self.options.fd)
+            
+            self.pipe.event.onClose = { (handle) in
+                
+                FileSystem.close(handle)
+            }
         }
-//        print("read init")
     }
-    
     deinit{
-//        print("read deinit")
         Handle.close(self.pipe.handle)
     }
     
@@ -60,17 +80,13 @@ public class ReadStream {
         self.options.mode = options.mode == nil ?  0o666 : options.mode
     }
     
-    public func setCloseCallback(callback : ((handle : uv_handle_ptr)->Void)) {
+    public func onClose(callback : ((handle : uv_handle_ptr)->Void)) {
         
         self.pipe.event.onClose = { (handle) in
-            
-            callback(handle: handle)
-            
-            let request = uv_fs_ptr(handle.memory.data)
-            FsBase.close(request)
-            request.dealloc(1)
-        }
         
+            callback(handle: handle)
+            FileSystem.close(handle)
+        }
     }
     
     
@@ -78,11 +94,34 @@ public class ReadStream {
         
         self.pipe.event.onRead = { (handle, data) in
             
+            let info = UnsafeMutablePointer<FSInfo>(handle.memory.data)
+            info.memory.toRead = info.memory.toRead - UInt64(data.length)
+            
             callback(error : 0, data : data)
+            
+            if info.memory.toRead <= 0 {
+                Handle.close(uv_handle_ptr(handle))
+            }
         }
         
         Stream.readStart(self.pipe.streamHandle)
-        Loop.run(mode: UV_RUN_ONCE)
+    }
+    
+    
+    public func pipeStream(writeStream : WriteStream) {
+        
+        self.onClose() {
+            handle in
+            Handle.close(writeStream.pipe.handle)
+        }
+        
+        self.readStart() {
+            (error, data) in
+            writeStream.writeData(data)
+        }
+        
+        Loop.run(self.loop.loopHandle, mode: UV_RUN_ONCE)
+        Loop.run(writeStream.loop.loopHandle, mode: UV_RUN_ONCE)
     }
     
 }
@@ -92,34 +131,41 @@ public class ReadStream {
     
 public class WriteStream {
     
-    public let pipe : Pipe = Pipe()
+    public let loop : Loop
+    public let pipe : Pipe 
     public var options : Options = Options()
     
     public init(path : String, options : Options? = nil) {
         
+        self.loop = Loop()
+        self.pipe = Pipe(loop: loop.loopHandle)
         self.options.flags = O_CREAT | O_WRONLY
         self.options.mode = 0o666
         
         if let options = options { self.setOptions(options) }
         
         if self.options.fd == nil {
-            self.options.fd = FsBase.open(self.pipe.pipeHandle, path : path,
+            self.options.fd = FsBase.open(self.loop.loopHandle, handle: self.pipe.pipeHandle, path : path,
                 flags: self.options.flags, mode: self.options.mode)
         }
         
         if self.options.fd <= 0 {
             // Should handle error
-            print(self.options.fd)
+            
+            print("Write Stream file open error \(self.options.fd)")
         }
         else{
+            
             Pipe.open(self.pipe.pipeHandle, fd: self.options.fd)
+            
+            self.pipe.event.onClose = { (handle) in
+                
+                FileSystem.close(handle)
+            }
         }
-        
-//        print("write init")
     }
-    
-    deinit{
-//        print("write deinit")
+    deinit {
+        Handle.close(self.pipe.handle)
     }
     
     
@@ -129,11 +175,9 @@ public class WriteStream {
         self.options.mode = options.mode == nil ?  0o666 : options.mode
     }
     
+    
     public func close() {
-        let request = uv_fs_ptr(self.pipe.pipeHandle.memory.data)
-        FsBase.close(request)
         Handle.close(self.pipe.handle)
-        request.dealloc(1)
     }
     
     

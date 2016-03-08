@@ -56,8 +56,6 @@ extension Timer {
     
     public static var onTimeout : uv_timer_cb = { (handle) in
         
-//        print("ontimeout")
-        
         if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {
             if let callback =  wrap.event.onTimeout {
                 callback(handle)

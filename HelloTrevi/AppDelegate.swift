@@ -14,13 +14,12 @@ import Lime
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching ( aNotification: NSNotification ) {
-
+        
         let fileserver = FileServer()
         fileserver.fileTestStart()
-
+        
         let echoserver = NetEchoServer()
         echoserver.listen(1337)
-
         
 //        let server = Http ()
 //

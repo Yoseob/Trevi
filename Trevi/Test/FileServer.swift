@@ -13,10 +13,10 @@ import Foundation
 public class FileServer {
     
     public init(){
-//        print("init")
+        print("init")
     }
     deinit{
-//        print("deinit")
+        print("deinit")
     }
     
     public func fileTestStart() {
@@ -24,18 +24,7 @@ public class FileServer {
         let readableStream = FileSystem.ReadStream(path: "/Users/Ingyure/Documents/testImage1.jpg")
         let writableStream = FileSystem.WriteStream(path: "/Users/Ingyure/Documents/testImage2.jpg")
         
-        readableStream.setCloseCallback() {
-            handle in
-            
-            writableStream.close()
-        }
-        
-        readableStream.readStart() {
-            (error, data) in
-            
-            writableStream.writeData(data)
-        }
-        
+        readableStream.pipeStream(writableStream)
     }
     
 }

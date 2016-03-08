@@ -8,7 +8,7 @@
 
 import Libuv
 
-public class Loop : Handle {
+public class Loop {
     
     public let loopHandle : uv_loop_ptr
     
@@ -16,12 +16,10 @@ public class Loop : Handle {
         
         self.loopHandle = uv_loop_ptr.alloc(1)
         uv_loop_init(self.loopHandle)
-        
-        super.init(handle: uv_handle_ptr(self.loopHandle))
     }
     
     deinit {
-        
+        self.loopHandle.dealloc(1)
     }
     
 }
@@ -34,7 +32,6 @@ extension Loop {
     public static func close(handle : uv_loop_ptr) {
         
         uv_loop_close(handle)
-        Handle.close(uv_handle_ptr(handle))
     }
     
     public static func run(handle : uv_loop_ptr = uv_default_loop(), mode : uv_run_mode) {

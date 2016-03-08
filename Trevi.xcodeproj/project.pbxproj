@@ -226,14 +226,14 @@
 				2354413C1C797FFA00E90A97 /* Http.swift */,
 				2354413D1C797FFA00E90A97 /* HttpParser.swift */,
 				2354413E1C797FFA00E90A97 /* HttpProtocol.swift */,
+				23A5FAB81C88891400F68B78 /* HttpServer.swift */,
 				2354413F1C797FFA00E90A97 /* Net.swift */,
 				ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */,
 				ACBB9EA21C7A1D7D00E58E31 /* StreamWritable.swift */,
 				ACBB9EA01C7A1D7D00E58E31 /* Buffer.swift */,
+				23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */,
 				23A5FAB21C8887D000F68B78 /* OutgoingMessage.swift */,
 				23A5FAB41C8888B100F68B78 /* ServerResponse.swift */,
-				23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */,
-				23A5FAB81C88891400F68B78 /* HttpServer.swift */,
 				DF9233E81C8C50B000D87A29 /* FileSystem.swift */,
 			);
 			path = Library;

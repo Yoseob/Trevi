@@ -18,10 +18,10 @@ public class Handle {
     public let handle : uv_handle_ptr
     
     public init (handle : uv_handle_ptr) {
+        
         self.handle = handle
         self.event = Event()
         Handle.dictionary[self.handle] = self
-        
     }
     
     deinit {

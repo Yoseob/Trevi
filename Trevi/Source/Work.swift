@@ -17,7 +17,7 @@ public class Work {
     }
     
     deinit{
-        
+        self.workRequest.dealloc(1)
     }
     
     public func setWorkData(dataPtr : void_ptr) {

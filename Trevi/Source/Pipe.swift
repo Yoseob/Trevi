@@ -13,17 +13,15 @@ public class Pipe : Stream {
     
     public let pipeHandle : uv_pipe_ptr
     
-    public init(ipc : Int32 = 0){
+    public init(loop : uv_loop_ptr = uv_default_loop(), ipc : Int32 = 0){
         self.pipeHandle = uv_pipe_ptr.alloc(1)
         
-       uv_pipe_init(uv_default_loop(), self.pipeHandle, ipc)
+       uv_pipe_init(loop, self.pipeHandle, ipc)
         
         super.init(streamHandle: uv_stream_ptr(self.pipeHandle))
         
-//        print("pipe init")
     }
     deinit{
-//        print("pipe deinit")
     }
 
 }

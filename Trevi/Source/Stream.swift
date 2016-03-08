@@ -26,8 +26,8 @@ public class Stream : Handle {
     
     public func readStart() {
         
-//      Should add if state to set using work or not
-//      uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
+//        Should add if state to set using work or not
+//        uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
         
         uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
     }
@@ -172,14 +172,13 @@ extension Stream {
     public static var onAlloc : uv_alloc_cb = { (_, suggestedSize, buffer) in
         buffer.initialize(uv_buf_init(UnsafeMutablePointer.alloc(suggestedSize), UInt32(suggestedSize)))
         
-//        print("alloc buffer : \(buffer.memory)")
     }
     
     public static var onRead : uv_read_cb = { (handle, nread, buffer) in
         
         if nread <= 0 {
             if Int32(nread) == UV_EOF.rawValue {
-                
+                print("eof")
                 Handle.close(uv_handle_ptr(handle))
             }
             else {
@@ -217,7 +216,6 @@ extension Stream {
             }
         }
         
-//        print("after buffer : \(buffer.memory)")
         if buffer.memory.len > 0 {
             buffer.memory.base.dealloc(buffer.memory.len)
         }

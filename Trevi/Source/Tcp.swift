@@ -73,8 +73,6 @@ extension Tcp {
         
         let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
         
-        Loop.run(mode: UV_RUN_DEFAULT)
-        
         if error != 0 {
             // Should handle error
         }

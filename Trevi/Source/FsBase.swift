@@ -40,26 +40,41 @@ public class FsBase {
     
 }
 
+public struct FSInfo {
+    public var request : uv_fs_ptr
+    public var loop : uv_loop_ptr
+    public var toRead : UInt64
+}
+
 
 // FsBase static functions
 
 extension FsBase {
+
     
-    public static func open(handle : uv_pipe_ptr! = nil, path : String, flags : Int32, mode : Int32) -> Int32 {
+    public static func open(loop : uv_loop_ptr, handle : uv_pipe_ptr! = nil, path : String, flags : Int32, mode : Int32) -> Int32 {
         
         let request = uv_fs_ptr.alloc(1)
         
+        let fd = uv_fs_open(loop, request, path, flags, mode, nil)
+        uv_fs_stat(loop, request, path, nil)
+        
+        let info =  UnsafeMutablePointer<FSInfo>.alloc(1)
+        info.memory.request = request
+        info.memory.loop = loop
+        info.memory.toRead = request.memory.statbuf.st_size
+        
         if let handle = handle {
-            handle.memory.data = void_ptr(request)
+            handle.memory.data = void_ptr(info)
         }
         
-        return uv_fs_open(uv_default_loop(), request, path, flags, 0o666, nil)
+        return fd
     }
     
-    public static func close(request : uv_fs_ptr) {
+    public static func close(loop : uv_loop_ptr, request : uv_fs_ptr) {
         
         let closeRequest = uv_fs_ptr.alloc(1)
-        uv_fs_close(uv_default_loop(), closeRequest, uv_file(request.memory.result), onClose)
+        uv_fs_close(loop, closeRequest, uv_file(request.memory.result), onClose)
     }
     
     public static func read(request : uv_fs_ptr) {
@@ -129,7 +144,7 @@ extension FsBase {
         }
         else if request.memory.result == 0 {
 
-            FsBase.close(request)
+            FsBase.close(uv_default_loop(), request: request)
         }
         else {
             
