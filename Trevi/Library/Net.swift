@@ -32,11 +32,6 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
         // Should add buffer module.
         
         Stream.doWrite(data, handle: handle)
-        
-        Socket.onTimeout(200){ [unowned self]
-            _ in
-            self.close()
-        }
     }
     
     public func close() {

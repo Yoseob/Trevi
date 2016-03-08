@@ -27,12 +27,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         lime.use(Favicon())
         
-        lime.use(ServeStatic(path: "\(__dirname)/public"))
         
         lime.use(BodyParser.json())
         
         lime.use(BodyParser.urlencoded())
         
+        lime.use("/", Root())
+  
+        lime.use { (req, res, next) in
+            res.statusCode = 404
+            res.send("404 error")
+        }
         
         server.createServer(lime).listen(8080)
         
