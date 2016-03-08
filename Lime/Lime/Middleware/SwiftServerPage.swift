@@ -9,7 +9,6 @@
 import Foundation
 import Trevi
 
-
 public protocol Renderer {
     func render(filename: String) -> String
     func render(filename: String, args: [String:String]) -> String
@@ -131,16 +130,31 @@ public class SwiftServerPage: Renderer {
      */
     
     private final func compile(path: String, code: String) -> String? {
-        let compileFile = "/tmp/\(NSURL(fileURLWithPath: path).lastPathComponent!).swift"
+        let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
+        let compileFile = "/tmp/\(NSURL(fileURLWithPath: path).lastPathComponent!)\(timestamp).swift"
+
         let file = WritableFile(fileAtPath: compileFile, option: O_CREAT|O_TRUNC).open()
-        file.write(UnsafePointer<UInt8>(code.dataUsingEncoding(NSUTF8StringEncoding)!.bytes), maxLength: code.characters.count)
-        
-        guard let result = executeShellCommand("/usr/bin/swift", args: [ compileFile ]) else {
-            return nil
+        file.write(code.dataUsingEncoding(NSUTF8StringEncoding)!, maxLength: code.characters.count)
+
+        #if os(Linux)
+        if Glibc.system("/home/zero2hex/Develop/tools/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-ubuntu15.10/usr/bin/swiftc \(compileFile) -o /tmp/ssp\(timestamp)") == 0 {
+            if Glibc.system("/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print") == 0 {
+                if let result = load("/tmp/ssp\(timestamp)_print") {
+                    return result.stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+                        .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
+                }
+            }
         }
-        
-        return result.stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
-            .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
-        
+        #else        
+        if Darwin.system("/usr/bin/swiftc \(compileFile) -o /tmp/ssp\(timestamp)") == 0 {
+            if Darwin.system("/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print") == 0 {
+                if let result = load("/tmp/ssp\(timestamp)_print") {
+                    return result.stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+                        .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
+                }
+            }
+        }
+        #endif
+        return nil
     }
 }

@@ -87,7 +87,8 @@ public class Layer {
         var idx = 0
         var key: String! = ""
         for value in ret {
-            key = keys![idx++]
+            key = keys![idx]
+            idx += 1
             if key == nil {
                 break
             }

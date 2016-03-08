@@ -265,7 +265,7 @@ public class WritableFile: File {
         return self
     }
     
-    public func write(buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
+    public func write(buffer: NSData, maxLength len: Int) -> Int {
         if isClosed() {
             print("ERROR: Not opened")
             return 0
@@ -277,9 +277,9 @@ public class WritableFile: File {
         
         status = .Writing
         #if os(Linux)
-            let written = Glibc.write(fd, buffer, len)
+            let written = Glibc.write(fd, buffer.bytes, len)
         #else
-            let written = Darwin.write(fd, buffer, len)
+            let written = Darwin.write(fd, buffer.bytes, len)
         #endif
         if written > -1 {
             status = .Open

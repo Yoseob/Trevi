@@ -51,7 +51,8 @@ public class Route{
                 return next!()
             }
             
-            let layer: Layer! = stack[idx++]
+            let layer: Layer! = stack[idx]
+            idx += 1
             
             guard layer != nil  else{
                 return next!()

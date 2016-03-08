@@ -24,6 +24,7 @@ public class Lime : Routable {
     
     public override init () {
         super.init()
+        lazyRouter()
     }
     
     private func lazyRouter(){
@@ -35,9 +36,17 @@ public class Lime : Routable {
     }
     
     public func use(middleware: Middleware) {
-        lazyRouter()
         _router.use(md: middleware)
     }
+    
+    #if os(Linux)
+    public func set(name: String, _ val: String){
+        if setting == nil {
+            setting = [String: AnyObject]()
+        }
+        setting[name] = StringWrapper(string: val)
+    }
+    #endif
     
     public func set(name: String, _ val: AnyObject){
         if setting == nil {
@@ -95,8 +104,8 @@ extension ServerResponse {
         if let app = req.app as? Lime, let render = app.setting["view engine"] as? Renderer {
             var entirePath = path
             #if os(Linux)
-            if let abpath = app.setting["views"] as? String {
-                entirePath = "\(abpath)/\(entirePath)"
+            if let abpath = app.setting["views"] as? StringWrapper {
+                entirePath = "\(abpath.string)/\(entirePath)"
             }
             #else
             if let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: path).lastPathComponent!, ofType: nil) {

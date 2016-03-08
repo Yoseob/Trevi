@@ -24,7 +24,6 @@ public class Router: Middleware{
     public init(){}
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback? ) {
         
-        
         var idx = 0
         var options = [HTTPMethodType:Int]()
         var removed = ""
@@ -80,7 +79,8 @@ public class Router: Middleware{
             var route: Route!
             
             while match != true && idx < stack.count{
-                layer = stack[idx++]
+                layer = stack[idx]
+                idx += 1
                 match = matchLayer(layer, path: path)
                 route = layer.route
                 
@@ -92,7 +92,9 @@ public class Router: Middleware{
                 let hasMethod = route.handlesMethod(method)
                 
                 if hasMethod && method == .OPTIONS {
-                    appendMethods(&options, src: route.options())
+                    for method in route.options() {
+                        options[method] = 1
+                    }
                 }
                 
             }
@@ -108,39 +110,48 @@ public class Router: Middleware{
             if layer.params != nil{
                 var params = layer.params
                 if parantParams != nil {
-                    params = mergeParams(&layer.params, src: parantParams)
+                    params = mergeParams(layer.params, src: parantParams)
                 }
                 req.params = params
             }
             
             let layerPath = layer.path
             
-            self.poccessParams(layer, paramsCalled: "", req: req, res: res) {  err in
-                if err != nil {
-                    return nextHandle()
+            #if os(Linux)
+                poccessParams(layer, paramsCalled: StringWrapper(string: ""), req: req, res: res) {  err in
+                    if err != nil {
+                        return nextHandle()
+                    }
+                    
+                    if route != nil {
+                        return layer.handleRequest(req, res: res, next: nextHandle)
+                    }
+                    
+                    trimPrefix(layer, layerPath: layerPath, path: path)
                 }
-                
-                if route != nil {
-                    return layer.handleRequest(req, res: res, next: nextHandle)
+            #else
+                poccessParams(layer, paramsCalled: "", req: req, res: res) {  err in
+                    if err != nil {
+                        return nextHandle()
+                    }
+                    
+                    if route != nil {
+                        return layer.handleRequest(req, res: res, next: nextHandle)
+                    }
+                    
+                    trimPrefix(layer, layerPath: layerPath, path: path)
                 }
-                
-                trimPrefix(layer, layerPath: layerPath, path: path)
-            }
+            #endif
         }
         nextHandle()
     }
     
-    private func mergeParams(inout dest: [String: String]? , src: [String: String]?) -> [String: String]?{
+    private func mergeParams(dest: [String: String]? , src: [String: String]?) -> [String: String]?{
+        var _dest = dest
         for (k,v) in src! {
-            dest![k] = v
+            _dest![k] = v
         }
-        return dest
-    }
-    
-    private func appendMethods(inout dest: [HTTPMethodType:Int], src: [HTTPMethodType]){
-        for method in src {
-            dest[method] = 1
-        }
+        return _dest
     }
     
     private func poccessParams(layer: Layer, paramsCalled: AnyObject, req: IncomingMessage, res: ServerResponse, cb:((String?)->())){

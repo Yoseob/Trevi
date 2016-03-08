@@ -32,7 +32,7 @@ public class ServeStatic: Middleware {
         
         var entirePath = req.url
         #if os(Linux)
-            entirePath += "\(basePath)/\(req.url)"
+            entirePath = "\(basePath)/\(req.url)"
         #else
             if let bundlePath = NSBundle.mainBundle().pathForResource(NSURL(fileURLWithPath: req.url).lastPathComponent!, ofType: nil) {
                 entirePath = bundlePath

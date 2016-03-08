@@ -144,13 +144,13 @@ public class ServerResponse: OutgoingMessage{
         return headerString!.dataUsingEncoding ( NSUTF8StringEncoding )!
     }
     
-    private func mergeHeader(headers: [String:String]){
+    private func mergeHeader(headers: [String : String]){
         for (k,v) in headers {
             self.header[k] = v
         }
     }
     
-    private func dictionaryToString ( dic: NSDictionary ) -> String! {
+    private func dictionaryToString ( dic: [String : String] ) -> String! {
         var resultString = ""
         for (key, value) in dic {
             if value.lengthOfBytesUsingEncoding ( NSUTF8StringEncoding ) == 0 {

@@ -198,6 +198,7 @@ public class Root{
         
         router.get("/trevi/:param1") { req , res , next in
             print("[GET] /trevi/:praram")
+            res.send(req.params["param1"]!)
         }
     }
 }
