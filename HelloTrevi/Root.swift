@@ -89,54 +89,52 @@ class MultiParty: Middleware {
                 boundry = readBoundry(data)
             }
             
-            let finishBoundry = boundry+"--"
-            
             var bodyInfo = data.componentsSeparatedByString(CRLF)
             
             let firstBodyInfo = bodyInfo.first!
             if boundry != firstBodyInfo {
-                
-                if let processingFileName = processingFileName{
-                    let lastFile: DevFile = req.files[processingFileName] as! DevFile
-                    writefile(firstBodyInfo, path: lastFile.path)
-                }
 
-                bodyInfo.removeFirst()
+                var fillterFlag = false
+                bodyInfo = bodyInfo.filter({ body in
+                    if body == boundry {
+                        fillterFlag = true
+                    }
+                    if fillterFlag == true && body == "" {
+                        return false
+                    }
+                    if fillterFlag == false {
+                        if let processingFileName = processingFileName{
+                            let lastFile: DevFile = req.files[processingFileName] as! DevFile
+                            writefile(body, path: lastFile.path)
+                        }
+                    }
+
+                    return  fillterFlag
+                 })
+                
+                guard bodyInfo.count > 0 else {
+                    return
+                }
             }else{
                 if processingFileName != nil {
                     if let processingFileName = processingFileName{
                         let lastFile: DevFile = req.files[processingFileName] as! DevFile
                         lastFile.isFinished = true
                     }
-
                     processingFileName = nil
                 }
             }
             
-            
-            
-            //remove first boundry
-            if bodyInfo.count > 1 {
-                bodyInfo.removeFirst()
-            }
-            var cursor = 1
- 
-
-            //remove empty charecter ("")
-            for index in 1 ..< bodyInfo.count{
-
-                if bodyInfo[index-1] == ""{
-                    if bodyInfo[index] == "" {
-                        continue
-                    }
-                    cursor += 1
-                    bodyInfo[cursor] = bodyInfo[index]
-                    bodyInfo[index] = ""
+            bodyInfo = bodyInfo.filter({ body in
+                if body == "" {
+                    return false
                 }
-                if bodyInfo[index] == finishBoundry {
-                    break
-                }
-            }
+                return true
+            })
+
+            //insert "" becouse finish noboundry data
+            bodyInfo.append("")
+            
             
             
             parseMultipart(bodyInfo, boundry: boundry, onFile: { file in
@@ -178,10 +176,11 @@ class MultiParty: Middleware {
         var file: DevFile!
         
         var readLine = ""
-        for index in 0 ..< bodyInfo.count{
+        for index in 1 ..< bodyInfo.count{
             
             readLine = bodyInfo[index]
             if readLine == boundry{
+
                 file.isFinished = true
                 onCompliteParse(file)
                 file = nil
@@ -240,15 +239,26 @@ class MultiParty: Middleware {
         
 
         if resultList.count > 1 {
-            return result(resultList[0],resultList[1])
+
+            return result(removePrefixFuxfix(resultList[0]),removePrefixFuxfix(resultList[1]))
         }
         
-        result(resultList[0],nil)
-
+        result(removePrefixFuxfix(resultList[0]),nil)
+    }
+    
+    private func removePrefixFuxfix(src: String) ->String{
+        var str = src
+        if str.hasPrefix("\"") {
+            str.removeAtIndex(str.startIndex)
+        }
+        if str.hasSuffix("\"") {
+            str.removeAtIndex(str.endIndex.predecessor())
+        }
+        return str
     }
     
     private func writefile(data: String, path: String){
-        print("path : \(path) , data : \(data)")
+        print("path : \(path) , data : \(data) -end!")
     }
     
     private func readBoundry(data: String) -> String{
