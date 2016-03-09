@@ -11,6 +11,8 @@ import Trevi
 //dev module
 
 public class DevFile {
+    //dev
+    var rs: FileSystem.WriteStream!
     
     //public
     public var name: String!
@@ -24,6 +26,9 @@ public class DevFile {
     public var value: String! = nil
     
     public var isFinished: Bool = false
+    
+    
+
     
     public init(){}
 }
@@ -82,6 +87,7 @@ public class MultiParty: Middleware {
                 
                 var fillterFlag = false
                 //filltering pre Request Data
+                
                 bodyInfo = bodyInfo.filter({ body in
                     if body == boundry {
                         fillterFlag = true
@@ -92,7 +98,7 @@ public class MultiParty: Middleware {
                     if fillterFlag == false {
                         if let processingFileName = processingFileName{
                             let lastFile: DevFile = req.files[processingFileName] as! DevFile
-                            writefile(body, path: lastFile.path)
+                            writefile(body, file: lastFile)
                         }
                     }
                     return  fillterFlag
@@ -106,6 +112,8 @@ public class MultiParty: Middleware {
                     if let processingFileName = processingFileName{
                         let lastFile: DevFile = req.files[processingFileName] as! DevFile
                         lastFile.isFinished = true
+                        lastFile.rs.close()
+                        lastFile.rs = nil
                     }
                     processingFileName = nil
                 }
@@ -121,8 +129,6 @@ public class MultiParty: Middleware {
             //insert "" becouse finish noboundry data
             bodyInfo.append("")
             
-            
-            
             parseMultipart(bodyInfo, boundry: boundry, onFile: { file in
                 req.files[file.name] = file
                 if file.isFinished == false{
@@ -131,8 +137,6 @@ public class MultiParty: Middleware {
                 }, onBody: { name, value in
                     req.body[name] = value
             })
-            
-            
         }
         
         func onend(){
@@ -147,10 +151,13 @@ public class MultiParty: Middleware {
     
     private func parseMultipart(bodyInfo: [String] ,boundry: String, onFile: (DevFile)->(), onBody: (String,String)->()){
         
-        var testArr = [DevFile]()
         func onCompliteParse(file: DevFile){
-            testArr.append(file)
+        
             if let _ = file.path {
+                if file.isFinished == true {
+                    file.rs.close()
+                    file.rs = nil
+                }
                 onFile(file)
             }else{
                 onBody(file.name,file.value)
@@ -190,7 +197,8 @@ public class MultiParty: Middleware {
                         
                         if let filename = filename{
                             file.fileName = filename
-                            file.path = "\(self.fileDestName)/\(name)/\(filename)"
+                            file.path = "\(self.fileDestName)/\(filename)"
+                            file.rs = FileSystem.WriteStream(path: file.path)
                         }
                     })
                     continue
@@ -201,8 +209,8 @@ public class MultiParty: Middleware {
                     }
                     continue
                 }else {
-                    if let file = file, let filename = file.fileName {
-                        writefile(readLine, path: filename)
+                    if let file = file ,let _ = file.fileName {
+                        writefile(readLine, file: file)
                     }else{
                         file.value = readLine
                     }
@@ -243,8 +251,11 @@ public class MultiParty: Middleware {
         return str
     }
     
-    private func writefile(data: String, path: String){
-        print("path : \(path) , data : \(data) -end!")
+    private func writefile(data: String, file: DevFile){
+//        print(data)
+        let sendData = data.dataUsingEncoding(NSUTF8StringEncoding)!
+        
+        file.rs.writeData(sendData)
     }
     
     private func readBoundry(data: String) -> String{

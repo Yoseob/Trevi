@@ -77,21 +77,122 @@ public class HttpParser{
     }
     
     
-    public func execute(data: NSData, length: Int){
-        self.firstRequestSize = length
+
     
-        if self.headerString == nil{
-            let readData = String(data : data, encoding : NSASCIIStringEncoding)
-            self.onHeader!()
+    //test
+    func headerParser(p:UnsafePointer<Int8> , length: Int ,onHeaderInfo: (String,Bool)->() , onBodyData: (NSData)->()) {
+    
+        var itr = p
+        
+        var startByte = itr
+        
+        let CR: Int8 = 13
+        let LF: Int8 = 10
+        
+        var pre: Int8 = 0
+        var crt: Int8 = 0
+        var index = 0
+        
+        var readLength = 0
+        for _ in 0..<length {
+            
+            crt = itr.memory
+            itr = itr.successor()
+            index += 1
+            readLength += 1
+            if pre == CR && crt == LF {
+                
+
+                let data = NSData(bytes: startByte, length: index-2)
+                
+                
+                if index == 2 {
+                    onHeaderInfo(String(data: data, encoding: NSASCIIStringEncoding)! , true)
+                    self.totalLength = length - readLength
+                    
+                    if self.totalLength == 0 {
+                        return
+                    }else{
+                        let body = NSData(bytes: startByte, length: self.totalLength)
+                        
+                        return onBodyData(body)
+                    }
+                }
+                
+                onHeaderInfo(String(data: data, encoding: NSASCIIStringEncoding)! , false)
+                
+                index = 0
+                startByte = itr
+    
+            }
+            pre = crt
+
+            
+        
+            
+        }
+        
+
+        
+        
+    }
+    
+    public func execute(data: NSData, length: Int){
+        
+        if self.headerInfo == nil{
+            
+            var headerCount = 0
             self.headerInfo = HeaderInfo()
-            self.headerString = readData 
-            self.headerParserBegin((readData?.componentsSeparatedByString(CRLF))!)
+            onHeader!()
+            headerParser(UnsafePointer<Int8>(data.bytes), length: length, onHeaderInfo: { headerLine , isFinish in
+                
+                if isFinish == true {
+                    self.onHeaderComplete!(self.headerInfo)
+                }
+                
+                if headerCount == 0 {
+                    let requestLineElements: [String] = headerLine.componentsSeparatedByString ( SP )
+                    
+                    // This is only for HTTP/1.x
+                    if requestLineElements.count == 3 {
+                        self.headerInfo.method = requestLineElements[0]
+                        self.headerInfo.url = requestLineElements[1]
+                        let httpProtocolString = requestLineElements.last!
+                        let versionComponents: [String] = httpProtocolString.componentsSeparatedByString( "/" )
+                        let version: [String] = versionComponents.last!.componentsSeparatedByString( "." )
+                        self.headerInfo.versionMajor = version.first!
+                        self.headerInfo.versionMinor = version.last!
+                    }
+                }else{
+                    if let fieldSet: [String] = headerLine.componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
+                        self.headerInfo.header[fieldSet[0].trim()] = fieldSet[1].trim();
+                    }
+                }
+                
+                headerCount += 1
+                
+            } , onBodyData: { body in
+                
+                let testString = String(data: body, encoding: NSASCIIStringEncoding)!
+                self.onBody!(testString)
+                
+                self.headerInfo.hasbody = true
+                if let contentLength = self.headerInfo.header[Content_Length]{
+                    self.contentLength = Int(contentLength)!
+                    if self.contentLength == body.length {
+                        self.onBodyComplete!()
+                        self.reset()
+                    }
+                }
+            })
+            
         }else{
             if self.contentLength > 0 {
                 self.totalLength += length
                 let readData = String(data : data, encoding : NSASCIIStringEncoding)
                 onBody!(readData!)
                 if self.totalLength >= self.contentLength{
+                    print("last total length : \(self.totalLength) , \(self.contentLength)")
                     self.onBodyComplete!()
                     reset()
                 }
@@ -103,46 +204,59 @@ public class HttpParser{
         guard headerString != nil else{
             return
         }
+        
         let requestLineElements: [String] = requestHeader.first!.componentsSeparatedByString ( SP )
         
         // This is only for HTTP/1.x
         if requestLineElements.count == 3 {
             self.headerInfo.method = requestLineElements[0]
             self.headerInfo.url = requestLineElements[1]
-            
             let httpProtocolString = requestLineElements.last!
             let versionComponents: [String] = httpProtocolString.componentsSeparatedByString( "/" )
             let version: [String] = versionComponents.last!.componentsSeparatedByString( "." )
             self.headerInfo.versionMajor = version.first!
             self.headerInfo.versionMinor = version.last!
-            parseHeader( requestHeader )
-
-            if  totalLength > 1 {
-                onBody!(trace)
-                trace = ""
-            }
-                        
-            if totalLength != 0 && ((contentLength != 0) || (self.totalLength == contentLength)) {
-                self.onBodyComplete!()
-                reset()
-            }
+            
+            parserHeaderWithComplete(requestHeader, onbody: { body , isFinish in
+                if let body = body {
+                    self.onBody!(body)
+                }
+                if isFinish {
+                    self.onBodyComplete!()
+                    self.reset()
+                }
+            })
         }
     }
-    
-    private func reset(){
-        self.headerString = nil
-        self.totalLength = 0
-        self.headerInfo = nil
-    }
-    
-    private final func parseHeader ( fields: [String] ) {
+
+    private func parserHeaderWithComplete(headers: [String], onbody: (String! , Bool)->()){
+        var fields = headers
+        totalLength = 0
         for _idx in 1 ..< fields.count {
-
+            
             if endOfheader && fields[_idx].length() > 0 && hasbody{
-                self.trace += fields[_idx]
-                self.trace += CRLF
-            }
+                
+                
+                if hasbody{
+                    let doubleSplite: [String] = headerString.componentsSeparatedByString ( CRLF+CRLF )
+                    let haederLength = doubleSplite.first!.length() + 4
+                    self.totalLength += (firstRequestSize - haederLength)
+                    firstRequestSize = 0
+                }
 
+                let range = Range(start: 0, end: _idx)
+                fields.removeRange(range)
+                
+                let body = fields.joinWithSeparator(CRLF)
+                
+                var isFinish = false
+                if totalLength >= contentLength{
+                    isFinish = true
+                }
+                
+                return onbody(body,isFinish)
+            }
+            
             if fields[_idx].length() == 0 && endOfheader == false{
                 if let contentLength = self.headerInfo.header[Content_Length]{
                     self.contentLength = Int(contentLength)!
@@ -151,17 +265,19 @@ public class HttpParser{
                 }
                 endOfheader = true
                 self.onHeaderComplete!(self.headerInfo)
+                self.headerInfo = nil
             }
-            
-            if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
-                self.headerInfo.header[fieldSet[0].trim()] = fieldSet[1].trim();
+            if self.headerInfo != nil {
+                if let fieldSet: [String] = fields[_idx].componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
+                    self.headerInfo.header[fieldSet[0].trim()] = fieldSet[1].trim();
+                }
             }
         }
-        
-        if hasbody{
-            let doubleSplite: [String] = headerString.componentsSeparatedByString ( CRLF+CRLF )
-            let haederLength = doubleSplite.first!.length() + 4
-            self.totalLength += firstRequestSize - haederLength
-        }
+    }
+    
+    private func reset(){
+        self.headerString = nil
+        self.totalLength = 0
+        self.headerInfo = nil
     }
 }
