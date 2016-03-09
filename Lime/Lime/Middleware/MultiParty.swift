@@ -130,6 +130,7 @@ public class MultiParty: Middleware {
             bodyInfo.append("")
             
             parseMultipart(bodyInfo, boundry: boundry, onFile: { file in
+                
                 req.files[file.name] = file
                 if file.isFinished == false{
                     processingFileName = file.name
