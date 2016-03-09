@@ -50,7 +50,6 @@
 		DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9233E81C8C50B000D87A29 /* FileSystem.swift */; };
 		DFD970A61C87399D00E39995 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
 		DFD970A71C87399D00E39995 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
-		DFD970A91C87399D00E39995 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B61C121225005937A8 /* String.swift */; };
 		DFD970AA1C87399D00E39995 /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E61C1835570076ED36 /* Json.swift */; };
 		DFD970B31C8739A300E39995 /* EventEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413B1C797FFA00E90A97 /* EventEmitter.swift */; };
 		DFD970B41C8739A300E39995 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2354413C1C797FFA00E90A97 /* Http.swift */; };
@@ -128,7 +127,7 @@
 		235441751C7CCCE600E90A97 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		235441761C7CCCE600E90A97 /* RoutAble.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutAble.swift; sourceTree = "<group>"; };
 		235441771C7CCCE600E90A97 /* Route.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
-		236E53E61C1835570076ED36 /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
+		236E53E61C1835570076ED36 /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Json.swift; path = ../Utility/Json.swift; sourceTree = "<group>"; };
 		239411D31C0C2DA3001B9B07 /* Trevi.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Trevi.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		239411D61C0C2DA3001B9B07 /* Trevi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Trevi.h; sourceTree = "<group>"; };
 		239411D81C0C2DA3001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -137,7 +136,7 @@
 		239411E61C0C2E19001B9B07 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		239411E81C0C2E19001B9B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		239411ED1C0C2E19001B9B07 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		2394120A1C0C46EF001B9B07 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utility.swift; path = ../Utility/Utility.swift; sourceTree = "<group>"; };
 		239412131C0DECC2001B9B07 /* Root.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Root.swift; sourceTree = "<group>"; };
 		23973D601C25AB3B00FBB8E7 /* sky.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sky.jpeg; sourceTree = "<group>"; };
 		2399DFDD1C8F57C2004816CF /* MultiParty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiParty.swift; sourceTree = "<group>"; };
@@ -150,8 +149,7 @@
 		23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomingMessage.swift; sourceTree = "<group>"; };
 		23A5FAB81C88891400F68B78 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
 		23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = helloworld.ssp; sourceTree = "<group>"; };
-		906E50B01C11DB9A005937A8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		906E50B61C121225005937A8 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
+		906E50B01C11DB9A005937A8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = ../Utility/File.swift; sourceTree = "<group>"; };
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		ACBB9E9E1C7A1D7D00E58E31 /* StreamReadable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamReadable.swift; sourceTree = "<group>"; };
@@ -242,6 +240,9 @@
 				23A5FAB21C8887D000F68B78 /* OutgoingMessage.swift */,
 				23A5FAB41C8888B100F68B78 /* ServerResponse.swift */,
 				DF9233E81C8C50B000D87A29 /* FileSystem.swift */,
+				906E50B01C11DB9A005937A8 /* File.swift */,
+				2394120A1C0C46EF001B9B07 /* Utility.swift */,
+				236E53E61C1835570076ED36 /* Json.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -306,7 +307,6 @@
 				2354414F1C79800300E90A97 /* Source */,
 				2354413A1C797FFA00E90A97 /* Library */,
 				DF826E131C88135F0032F31C /* Test */,
-				239412091C0C46CE001B9B07 /* Utility */,
 				239411D61C0C2DA3001B9B07 /* Trevi.h */,
 				239411D81C0C2DA3001B9B07 /* Info.plist */,
 			);
@@ -327,17 +327,6 @@
 				239411ED1C0C2E19001B9B07 /* Info.plist */,
 			);
 			path = HelloTrevi;
-			sourceTree = "<group>";
-		};
-		239412091C0C46CE001B9B07 /* Utility */ = {
-			isa = PBXGroup;
-			children = (
-				2394120A1C0C46EF001B9B07 /* Utility.swift */,
-				906E50B01C11DB9A005937A8 /* File.swift */,
-				906E50B61C121225005937A8 /* String.swift */,
-				236E53E61C1835570076ED36 /* Json.swift */,
-			);
-			path = Utility;
 			sourceTree = "<group>";
 		};
 		23D2F3941C1DA4A000F0C784 /* public */ = {
@@ -566,7 +555,6 @@
 				DFD970A71C87399D00E39995 /* File.swift in Sources */,
 				DFD970C11C8739A700E39995 /* Pipe.swift in Sources */,
 				23A5FAB51C8888B100F68B78 /* ServerResponse.swift in Sources */,
-				DFD970A91C87399D00E39995 /* String.swift in Sources */,
 				DFD970BB1C8739A700E39995 /* Handle.swift in Sources */,
 				DFD970AA1C87399D00E39995 /* Json.swift in Sources */,
 				DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */,
