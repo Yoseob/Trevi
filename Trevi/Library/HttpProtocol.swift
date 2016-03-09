@@ -8,6 +8,13 @@
 
 import Foundation
 
+public let CRLF = "\r\n"
+public let SP = " "
+public let HT = "\t"
+public let unreserved = "\\w\\-\\.\\_\\~"
+public let gen_delims = "\\:\\/\\?\\#\\[\\]\\@"
+public let sub_delims = "\\!\\$\\&\\'\\(\\)\\*\\+\\,\\;\\="
+
 public var NewLine                     = "\r\n"
 public let HttpProtocol                = "HTTP/1.1"
 public var Access_Control_Allow_Origin = "Access-Control-Allow-Origin"

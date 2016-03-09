@@ -7,9 +7,11 @@
 //
 
 import Libuv
+import Foundation
+
 
 public class Work {
-
+    
     public let workRequest : uv_work_ptr
     
     init(){
@@ -31,32 +33,37 @@ public class Work {
 extension Work {
     
     struct connectionInfo {
-        let handle : uv_stream_ptr
-        let status : Int32
+        var handle : uv_stream_ptr
+        var status : Int32
     }
     
     public static var onConnection : uv_connection_cb = { (handle, status) in
         
         let work : Work = Work()
-        var info : connectionInfo = connectionInfo(handle: handle, status: status)
+        let info = UnsafeMutablePointer<connectionInfo>.alloc(1)
         
-        work.setWorkData( withUnsafeMutablePointer(&info){ void_ptr($0) } )
+        info.memory.handle = handle
+        info.memory.status = status
+        
+        work.workRequest.memory.data = void_ptr(info)
         
         uv_queue_work( uv_default_loop(), work.workRequest, workConnection, afterWork )
     }
     
     struct readInfo {
-        let handle : uv_stream_ptr
-        let nread : Int
-        let buffer : uv_buf_const_ptr
+        var handle : uv_stream_ptr
+        var nread : Int
+        var buffer : uv_buf_const_ptr
     }
     
     public static var onRead : uv_read_cb = { (handle, nread, buffer) in
         
         let work : Work = Work()
-        var info : readInfo = readInfo(handle: handle, nread : nread, buffer : buffer)
+        let info = UnsafeMutablePointer<readInfo>.alloc(1)
         
-        work.setWorkData( withUnsafeMutablePointer(&info){ void_ptr($0) } )
+        info.memory.handle = handle
+        info.memory.nread = nread
+        info.memory.buffer = buffer
         
         uv_queue_work( uv_default_loop(), work.workRequest, workRead, afterWork )
     }
@@ -68,15 +75,17 @@ extension Work {
 extension Work {
     
     public static var workConnection : uv_work_cb = { (handle) in
-        let info : connectionInfo = UnsafeMutablePointer<connectionInfo>(handle.memory.data).memory
+        let info = UnsafeMutablePointer<connectionInfo>(handle.memory.data)
         
-        Tcp.onConnection(info.handle, info.status)
+        Tcp.onConnection(info.memory.handle, info.memory.status)
+        info.dealloc(1)
     }
     
     public static var workRead : uv_work_cb = { (handle) in
-        let info : readInfo = UnsafeMutablePointer<readInfo>(handle.memory.data).memory
-
-        Tcp.onRead(info.handle, info.nread, info.buffer)
+        let info  = UnsafeMutablePointer<readInfo>(handle.memory.data)
+        
+        Tcp.onRead(info.memory.handle, info.memory.nread, info.memory.buffer)
+        info.dealloc(1)
     }
     
     public static var afterWork : uv_after_work_cb = { (handle, status) in

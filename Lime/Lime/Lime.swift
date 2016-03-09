@@ -101,7 +101,7 @@ extension ServerResponse {
     }
     
     public func render(path: String, args: [String:String]? = nil) {
-        if let app = req.app as? Lime, let render = app.setting["view engine"] as? Renderer {
+        if let app = req.app as? Lime, let render = app.setting["view engine"] as? Render {
             var entirePath = path
             #if os(Linux)
             if let abpath = app.setting["views"] as? StringWrapper {
