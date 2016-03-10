@@ -48,6 +48,7 @@
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
 		DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9233E81C8C50B000D87A29 /* FileSystem.swift */; };
+		DFBDF7DB1C91B0470043F36D /* LibuvError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBDF7DA1C91B0470043F36D /* LibuvError.swift */; };
 		DFD970A61C87399D00E39995 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
 		DFD970A71C87399D00E39995 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
 		DFD970AA1C87399D00E39995 /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 236E53E61C1835570076ED36 /* Json.swift */; };
@@ -168,6 +169,7 @@
 		DF826E181C8814BF0032F31C /* NetEchoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetEchoServer.swift; path = Test/NetEchoServer.swift; sourceTree = "<group>"; };
 		DF826E1C1C881A900032F31C /* FileServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileServer.swift; path = Test/FileServer.swift; sourceTree = "<group>"; };
 		DF9233E81C8C50B000D87A29 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		DFBDF7DA1C91B0470043F36D /* LibuvError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibuvError.swift; path = Trevi/Source/LibuvError.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -261,6 +263,7 @@
 				235441501C79800300E90A97 /* Async.swift */,
 				DF732EF01C799E65000B12E8 /* Timer.swift */,
 				235441541C79800300E90A97 /* LibuvUtility.swift */,
+				DFBDF7DA1C91B0470043F36D /* LibuvError.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -572,6 +575,7 @@
 				DF826E1D1C881A900032F31C /* FileServer.swift in Sources */,
 				DFD970B31C8739A300E39995 /* EventEmitter.swift in Sources */,
 				DFD970B71C8739A300E39995 /* Net.swift in Sources */,
+				DFBDF7DB1C91B0470043F36D /* LibuvError.swift in Sources */,
 				23A5FAB71C8888D600F68B78 /* IncomingMessage.swift in Sources */,
 				DFD970B51C8739A300E39995 /* HttpParser.swift in Sources */,
 				23A5FAB31C8887D000F68B78 /* OutgoingMessage.swift in Sources */,

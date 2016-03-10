@@ -18,12 +18,16 @@ public class NetEchoServer : Net {
         self.on("connection", connectionListener)
     }
     
-    public override func listen(port: Int32) {
-        
-        print("Echo Server starts ip : \(ip), port : \(port).")
-        super.listen(port)
+    public override func listen(port: Int32) -> Int32? {
         
 //        print("Main thread : \(getThreadID())")
+        print("Echo Server starts ip : \(ip), port : \(port).")
+        
+        guard let _ = super.listen(port) else {
+            return nil
+        }
+        
+        return 0
     }
     
     
@@ -31,6 +35,10 @@ public class NetEchoServer : Net {
         
         let socket = sock as! Socket
         
+        
+//        let addressInfo = Tcp.getPeerName(uv_tcp_ptr(socket.handle))
+//        let (ip, port) = getEndpointFromSocketAddress(addressInfo)!
+//        print("New client!  ip : \(ip), port : \(port).")
 //        print("Connect thread : \(getThreadID())")
         
         socket.ondata = { data, nread in
@@ -43,6 +51,9 @@ public class NetEchoServer : Net {
         socket.onend = {
 //            print("Close thread : \(getThreadID())")
         }
+        
+//        let fileserver = FileServer()
+//        fileserver.fileTestStart()
     }
     
 }

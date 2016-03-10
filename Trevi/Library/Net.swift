@@ -67,7 +67,7 @@ extension Socket {
     public static func onAfterWrite(handle: uv_stream_ptr) -> Void {
         
         if let wrap = Socket.dictionary[uv_stream_ptr(handle)] {
-            Socket.onTimeout(wrap.timer.timerhandle, msecs: 50) {
+            Socket.onTimeout(wrap.timer.timerhandle, msecs: 40) {
                 _ in
                 
                 Stream.doShutDown(handle)
@@ -113,7 +113,7 @@ public class Net: EventEmitter {
     }
     
    
-    public func listen(port: Int32) {
+    public func listen(port: Int32) -> Int32? {
         self.port = port
         
         self.emit("listening")
@@ -132,10 +132,17 @@ public class Net: EventEmitter {
             }
         }
         
-        Tcp.bind(self.server.tcpHandle, address : self.ip, port: self.port)
-        Tcp.listen(self.server.tcpHandle)
+        guard let _ = Tcp.bind(self.server.tcpHandle, address : self.ip, port: self.port) else {
+            return nil
+        }
+        guard let _ = Tcp.listen(self.server.tcpHandle) else {
+            return nil
+        }
+        
         
         Loop.run(mode: UV_RUN_DEFAULT)
+        
+        return 0
     }
     
 }

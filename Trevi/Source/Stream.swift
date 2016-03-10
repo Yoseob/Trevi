@@ -187,8 +187,8 @@ extension Stream {
                 Handle.close(uv_handle_ptr(handle))
             }
             else {
-                // Should handle error in here
                 
+                LibuvError.printState("Stream.onRead", error : Int32(nread))
             }
         }
         else if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {
@@ -206,7 +206,8 @@ extension Stream {
         let handle = request.memory.handle
         
         if status < 0 {
-            print("Error : afterShutdown error : \(uvErrorName(status))")
+            
+            LibuvError.printState("Stream.afterShutdown", error : status)
         }
         
         Handle.close(uv_handle_ptr(handle))

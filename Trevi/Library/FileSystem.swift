@@ -39,7 +39,7 @@ public class FileSystem {
         public let pipe : Pipe
         public var options : Options = Options()
         
-        public init(path : String, options : Options? = nil) {
+        public init?(path : String, options : Options? = nil) {
             
             self.loop = Loop()
             self.pipe = Pipe(loop: loop.loopHandle)
@@ -55,9 +55,8 @@ public class FileSystem {
             }
             
             if self.options.fd <= 0 {
-                // Should handle error
-                
-                print("Read Stream file open error \(self.options.fd)")
+                LibuvError.printState("FileSystem.ReadStream init", error : self.options.fd)
+                return nil
             }
             else{
                 Pipe.open(self.pipe.pipeHandle, fd: self.options.fd)
@@ -137,7 +136,7 @@ public class FileSystem {
         public let pipe : Pipe
         public var options : Options = Options()
         
-        public init(path : String, options : Options? = nil) {
+        public init?(path : String, options : Options? = nil) {
             
             self.loop = Loop()
             self.pipe = Pipe(loop: loop.loopHandle)
@@ -152,9 +151,8 @@ public class FileSystem {
             }
             
             if self.options.fd <= 0 {
-                // Should handle error
-                
-                print("Write Stream file open error \(self.options.fd)")
+                LibuvError.printState("FileSystem.WriteStream init", error : self.options.fd)
+                return nil
             }
             else{
                 

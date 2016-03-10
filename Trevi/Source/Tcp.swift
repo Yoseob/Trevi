@@ -44,33 +44,50 @@ extension Tcp {
         uv_tcp_open(handle, fd)
     }
     
-    public static func bind(handle : uv_tcp_ptr, address: String, port: Int32) {
+    public static func bind(handle : uv_tcp_ptr, address: String, port: Int32) -> Int32? {
         var sockaddr = sockaddr_in()
         
-        let error = withUnsafeMutablePointer(&sockaddr) { (ptr) -> Int32 in
-            uv_ip4_addr(address, port, ptr)
-            return uv_tcp_bind(handle , UnsafePointer(ptr), 0)
+        let status = withUnsafeMutablePointer(&sockaddr) { (ptr) -> Int32 in
+            
+            var error = uv_ip4_addr(address, port, ptr)
+            
+            if error == 0 {
+                error = uv_tcp_bind(handle , UnsafePointer(ptr), 0)
+            }
+            
+            return error
         }
         
-        if error != 0 {
-            // Should handle error
+        if status != 0 {
+            LibuvError.printState("Tcp.bind", error : status)
+            return nil
         }
+        
+        return status
     }
     
-    public static func bind6(handle : uv_tcp_ptr, address: String, port: Int32) {
+    public static func bind6(handle : uv_tcp_ptr, address: String, port: Int32) -> Int32? {
         var sockaddr = sockaddr_in6()
         
-        let error = withUnsafeMutablePointer(&sockaddr) { (ptr) -> Int32 in
-            uv_ip6_addr(address, port, ptr)
-            return uv_tcp_bind(handle , UnsafePointer(ptr), 0)
+        let status = withUnsafeMutablePointer(&sockaddr) { (ptr) -> Int32 in
+            var error = uv_ip6_addr(address, port, ptr)
+            
+            if error == 0{
+                error = uv_tcp_bind(handle , UnsafePointer(ptr), 0)
+            }
+            
+            return error
         }
         
-        if error != 0 {
-            // Should handle error
+        if status != 0 {
+            LibuvError.printState("Tcp.bind6", error : status)
+            return nil
         }
+        
+        return status
     }
     
-    public static func listen(handle : uv_tcp_ptr, backlog : Int32 = 50) {
+    public static func listen(handle : uv_tcp_ptr, backlog : Int32 = 50) -> Int32? {
         
 //        Should add if state to set using work or not
 //        let error = uv_listen(uv_stream_ptr(handle), backlog, Work.onConnection)
@@ -78,18 +95,24 @@ extension Tcp {
         let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
         
         if error != 0 {
-            // Should handle error
+            LibuvError.printState("Tcp.listen", error : error)
+            return nil
         }
+        
+        return error
     }
     
-    public static func connect(handle : uv_tcp_ptr) {
+    public static func connect(handle : uv_tcp_ptr) -> Int32? {
         let request = uv_connect_ptr.alloc(1)
         let address = Tcp.getSocketName(handle)
         let error = uv_tcp_connect(request, handle, address, Tcp.afterConnect)
         
         if error != 0 {
-            // Should handle error
+            LibuvError.printState("Tcp.connect", error : error)
+            return nil
         }
+        
+        return error
     }
     
     //  Enable / disable Nagle’s algorithm.
@@ -107,6 +130,9 @@ extension Tcp {
         
         uv_tcp_simultaneous_accepts(handle, enable)
     }
+    
+    
+    // Should add dealloc module
     
     public static func getSocketName(handle : uv_tcp_ptr) -> sockaddr_ptr {
         

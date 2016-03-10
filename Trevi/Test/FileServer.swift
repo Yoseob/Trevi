@@ -24,7 +24,7 @@ public class FileServer {
         let readableStream = FileSystem.ReadStream(path: "/Users/Ingyure/Documents/testImage1.jpg")
         let writableStream = FileSystem.WriteStream(path: "/Users/Ingyure/Documents/testImage2.jpg")
         
-        readableStream.pipeStream(writableStream)
+        readableStream!.pipeStream(writableStream!)
     }
     
 }
