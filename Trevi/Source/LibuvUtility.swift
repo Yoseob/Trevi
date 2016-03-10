@@ -87,8 +87,9 @@ public func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> 
     }
 }
 
-public func uvErrorName(type : uv_errno_t) -> String {
-    return blockToUTF8String(uv_strerror(type.rawValue))
+public func uvErrorName(type : Int32) -> String {
+    
+    return NSString(UTF8String: uv_strerror(type))! as String
 }
 
 // Get String from the pointer

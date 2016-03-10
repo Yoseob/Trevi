@@ -36,7 +36,7 @@ public class Socket: EventEmitter { // should be inherited stream, eventEmitter
     
     public func close() {
     
-        Handle.close(uv_handle_ptr(handle))
+        Stream.doShutDown(handle)
     }
     
     public func setKeepAlive(msecs: UInt32) {
@@ -67,9 +67,10 @@ extension Socket {
     public static func onAfterWrite(handle: uv_stream_ptr) -> Void {
         
         if let wrap = Socket.dictionary[uv_stream_ptr(handle)] {
-            Socket.onTimeout(wrap.timer.timerhandle, msecs: 200) {
+            Socket.onTimeout(wrap.timer.timerhandle, msecs: 50) {
                 _ in
-                Handle.close(uv_handle_ptr(handle))
+                
+                Stream.doShutDown(handle)
             }
         }
     }

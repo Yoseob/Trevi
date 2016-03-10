@@ -94,7 +94,7 @@ extension Stream {
         
         let request = uv_shutdown_ptr.alloc(1)
         var error : Int32
-        
+                
         error = uv_shutdown(request, handle, Stream.afterShutdown)
         
         return error
@@ -180,7 +180,6 @@ extension Stream {
         
         if nread <= 0 {
             if Int32(nread) == UV_EOF.rawValue {
-                print("eof")
                 Handle.close(uv_handle_ptr(handle))
             }
             else {
@@ -199,8 +198,14 @@ extension Stream {
     }
     
     public static var afterShutdown : uv_shutdown_cb = { (request, status) in
-        // State after shutdown callback
         
+        let handle = request.memory.handle
+        
+        if status < 0 {
+            print("Error : afterShutdown error : \(uvErrorName(status))")
+        }
+        
+        Handle.close(uv_handle_ptr(handle))
         request.dealloc(1)
     }
     
