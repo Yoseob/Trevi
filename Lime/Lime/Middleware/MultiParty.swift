@@ -74,70 +74,74 @@ public class MultiParty: Middleware {
         var boundry: String! = nil
         var processingFileName: String!
         
-        func ondata(data: String){
+        func ondata(data: NSData){
             
-            if boundry == nil {
-                boundry = readBoundry(data)
-            }
             
-            var bodyInfo = data.componentsSeparatedByString(CRLF)
+            print(data)
             
-            let firstBodyInfo = bodyInfo.first!
-            if boundry != firstBodyInfo {
-                
-                var fillterFlag = false
-                //filltering pre Request Data
-                
-                bodyInfo = bodyInfo.filter({ body in
-                    if body == boundry {
-                        fillterFlag = true
-                    }
-                    if fillterFlag == true && body == "" {
-                        return false
-                    }
-                    if fillterFlag == false {
-                        if let processingFileName = processingFileName{
-                            let lastFile: DevFile = req.files[processingFileName] as! DevFile
-                            writefile(body, file: lastFile)
-                        }
-                    }
-                    return  fillterFlag
-                })
-                
-                guard bodyInfo.count > 0 else {
-                    return
-                }
-            }else{
-                if processingFileName != nil {
-                    if let processingFileName = processingFileName{
-                        let lastFile: DevFile = req.files[processingFileName] as! DevFile
-                        lastFile.isFinished = true
-                        lastFile.rs.close()
-                        lastFile.rs = nil
-                    }
-                    processingFileName = nil
-                }
-            }
             
-            bodyInfo = bodyInfo.filter({ body in
-                if body == "" {
-                    return false
-                }
-                return true
-            })
-            
-            //insert "" becouse finish noboundry data
-            bodyInfo.append("")
-            
-            parseMultipart(bodyInfo, boundry: boundry, onFile: { file in
-                
-                req.files[file.name] = file
-                if file.isFinished == false{
-                    processingFileName = file.name
-                }
-                }, onBody: { name, value in
-                    req.body[name] = value
-            })
+//            if boundry == nil {
+//                boundry = readBoundry(data)
+//            }
+//            
+//            var bodyInfo = data.componentsSeparatedByString(CRLF)
+//            
+//            let firstBodyInfo = bodyInfo.first!
+//            if boundry != firstBodyInfo {
+//                
+//                var fillterFlag = false
+//                //filltering pre Request Data
+//                
+//                bodyInfo = bodyInfo.filter({ body in
+//                    if body == boundry {
+//                        fillterFlag = true
+//                    }
+//                    if fillterFlag == true && body == "" {
+//                        return false
+//                    }
+//                    if fillterFlag == false {
+//                        if let processingFileName = processingFileName{
+//                            let lastFile: DevFile = req.files[processingFileName] as! DevFile
+//                            writefile(body, file: lastFile)
+//                        }
+//                    }
+//                    return  fillterFlag
+//                })
+//                
+//                guard bodyInfo.count > 0 else {
+//                    return
+//                }
+//            }else{
+//                if processingFileName != nil {
+//                    if let processingFileName = processingFileName{
+//                        let lastFile: DevFile = req.files[processingFileName] as! DevFile
+//                        lastFile.isFinished = true
+//                        lastFile.rs.close()
+//                        lastFile.rs = nil
+//                    }
+//                    processingFileName = nil
+//                }
+//            }
+//            
+//            bodyInfo = bodyInfo.filter({ body in
+//                if body == "" {
+//                    return false
+//                }
+//                return true
+//            })
+//            
+//            //insert "" becouse finish noboundry data
+//            bodyInfo.append("")
+//            
+//            parseMultipart(bodyInfo, boundry: boundry, onFile: { file in
+//                
+//                req.files[file.name] = file
+//                if file.isFinished == false{
+//                    processingFileName = file.name
+//                }
+//                }, onBody: { name, value in
+//                    req.body[name] = value
+//            })
         }
         
         func onend(){
