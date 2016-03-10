@@ -23,7 +23,11 @@ public class Tcp : Stream {
     }
     
     deinit {
-        
+        if isAlive {
+            Handle.close(self.handle)
+            self.tcpHandle.dealloc(1)
+            isAlive = false
+        }
     }
     
 }

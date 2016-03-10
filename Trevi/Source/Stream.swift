@@ -13,14 +13,19 @@ import Foundation
 
 public class Stream : Handle {
     
-    public static var streamBufferSize : Int = 4096
-    
     public let streamHandle : uv_stream_ptr
-    
     
     public init (streamHandle : uv_stream_ptr){
         self.streamHandle = streamHandle
         super.init(handle: uv_handle_ptr(streamHandle))
+    }
+    
+    deinit{
+        if isAlive {
+            Handle.close(self.handle)
+            self.streamHandle.dealloc(1)
+            isAlive = false
+        }
     }
     
     
@@ -108,7 +113,6 @@ extension Stream {
         let buffer = uv_buf_ptr.alloc(1)
         let request : write_req_ptr = write_req_ptr.alloc(1)
             
-        request.memory.handle = handle
         request.memory.buffer = buffer
             
         buffer.memory = uv_buf_init(UnsafeMutablePointer<Int8>(data.bytes), UInt32(data.length))
@@ -214,7 +218,7 @@ extension Stream {
     public static var afterWrite : uv_write_cb = { (request, status) in
  
         let writeRequest = write_req_ptr(request)
-        let handle = writeRequest.memory.handle
+        let handle = writeRequest.memory.request.handle
         let buffer  = writeRequest.memory.buffer
 
         if let wrap = Handle.dictionary[uv_handle_ptr(handle)] {

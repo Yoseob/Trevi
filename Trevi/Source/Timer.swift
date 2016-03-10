@@ -21,7 +21,17 @@ public class Timer : Handle {
         
     }
     
+    deinit {
+        if isAlive {
+            Handle.close(self.handle)
+            self.timerhandle.dealloc(1)
+            isAlive = false
+        }
+    }
+    
+    
     public func close() {
+        
         Handle.close(self.handle)
     }
     

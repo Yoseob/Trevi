@@ -21,7 +21,11 @@ public class Async : Handle {
     }
     
     deinit {
-        
+        if isAlive {
+            Handle.close(self.handle)
+            self.asyncHandle.dealloc(1)
+            isAlive = false
+        }
     }
     
 }

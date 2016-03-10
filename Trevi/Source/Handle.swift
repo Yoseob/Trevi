@@ -17,6 +17,8 @@ public class Handle {
     public var event : Event
     public let handle : uv_handle_ptr
     
+    public var isAlive : Bool = true
+    
     public init (handle : uv_handle_ptr) {
         
         self.handle = handle
@@ -25,8 +27,12 @@ public class Handle {
     }
     
     deinit {
-        Handle.close(self.handle)
-        self.handle.dealloc(1)
+        if isAlive {
+            print("handle deinit")
+            Handle.close(self.handle)
+            self.handle.dealloc(1)
+            isAlive = false
+        }
     }
     
 }

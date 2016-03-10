@@ -19,9 +19,14 @@ public class Pipe : Stream {
        uv_pipe_init(loop, self.pipeHandle, ipc)
         
         super.init(streamHandle: uv_stream_ptr(self.pipeHandle))
-        
     }
+    
     deinit{
+        if isAlive {
+            Handle.close(self.handle)
+            self.pipeHandle.dealloc(1)
+            isAlive = false
+        }
     }
 
 }
