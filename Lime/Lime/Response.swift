@@ -128,10 +128,10 @@ public class Response :Sender{
      */
     public func render ( filename: String, args: AnyObject? ) -> Bool {
         
-        var _args = [ String : String ]()
-        if args != nil {
-            _args = args as! [String:String]
-        }
+//        var _args = [ String : String ]()
+//        if args != nil {
+//            _args = args as! [String:String]
+//        }
         
         
         
@@ -161,8 +161,8 @@ public class Response :Sender{
      * return {Bool} isSend
      */
     public func end () ->Bool{
-        let headerData       = prepareHeader ()
-        let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
+//        let headerData       = prepareHeader ()
+//        let sendData: NSData = makeResponse ( headerData, body: self.bodyData )
         return true
     }
 
