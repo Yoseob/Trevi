@@ -49,6 +49,7 @@
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
 		DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9233E81C8C50B000D87A29 /* FileSystem.swift */; };
+		DF92C97E1C946D61007E693E /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92C97D1C946D61007E693E /* Poll.swift */; };
 		DFBDF7DB1C91B0470043F36D /* LibuvError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBDF7DA1C91B0470043F36D /* LibuvError.swift */; };
 		DFD970A61C87399D00E39995 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
 		DFD970A71C87399D00E39995 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
@@ -171,6 +172,7 @@
 		DF826E181C8814BF0032F31C /* NetEchoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetEchoServer.swift; path = Test/NetEchoServer.swift; sourceTree = "<group>"; };
 		DF826E1C1C881A900032F31C /* FileServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileServer.swift; path = Test/FileServer.swift; sourceTree = "<group>"; };
 		DF9233E81C8C50B000D87A29 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		DF92C97D1C946D61007E693E /* Poll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		DFBDF7DA1C91B0470043F36D /* LibuvError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibuvError.swift; path = Trevi/Source/LibuvError.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -257,6 +259,7 @@
 				DF732EDE1C799737000B12E8 /* Libuv */,
 				235441521C79800300E90A97 /* Handle.swift */,
 				DF732EF21C79B4DD000B12E8 /* Loop.swift */,
+				DF92C97D1C946D61007E693E /* Poll.swift */,
 				DF4BE52B1C7F073800908A3D /* Work.swift */,
 				DF61AFC21C8F4BBB00CB7218 /* FSBase.swift */,
 				235441561C79800300E90A97 /* Stream.swift */,
@@ -568,6 +571,7 @@
 				23A5FAB91C88891400F68B78 /* HttpServer.swift in Sources */,
 				DFD970B91C8739A300E39995 /* StreamWritable.swift in Sources */,
 				DFD970BF1C8739A700E39995 /* Stream.swift in Sources */,
+				DF92C97E1C946D61007E693E /* Poll.swift in Sources */,
 				DFD970C31C8739A700E39995 /* Timer.swift in Sources */,
 				DFD970B61C8739A300E39995 /* HttpProtocol.swift in Sources */,
 				DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */,

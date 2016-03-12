@@ -71,6 +71,7 @@ public func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> 
         var buffer = [CChar](count: length, repeatedValue: 0)
         let hostCString = inet_ntop(AF_INET, &socketAddressInet.sin_addr, &buffer, socklen_t(length))
         let port = Int(UInt16(socketAddressInet.sin_port).byteSwapped)
+        socketAddressPointer.dealloc(1)
         return (String.fromCString(hostCString)!, port)
         
     case AF_INET6:
@@ -79,6 +80,7 @@ public func getEndpointFromSocketAddress(socketAddressPointer: sockaddr_ptr) -> 
         var buffer = [CChar](count: length, repeatedValue: 0)
         let hostCString = inet_ntop(AF_INET6, &socketAddressInet6.sin6_addr, &buffer, socklen_t(length))
         let port = Int(UInt16(socketAddressInet6.sin6_port).byteSwapped)
+        socketAddressPointer.dealloc(1)
         return (String.fromCString(hostCString)!, port)
         
     default:
@@ -94,29 +96,6 @@ public func uvErrorName(type : Int32) -> String {
 public func uvErrorMessage(type : Int32) -> String {
     
     return NSString(UTF8String: uv_strerror(type))! as String
-}
-
-// Get String from the pointer
-public func blockToString(block: UnsafePointer<CChar>, length: Int) -> String {
-    var idx = block
-    var value = "" as String
-    
-    if length <= 0 { return ""}
-    
-    for _ in 0...length {
-//        if idx.memory > 31{
-            let c = String(format: "%c", idx.memory)
-            value += c
-//        }
-        idx = idx.successor()
-    }
-    return value
-}
-
-public func blockToUTF8String(block: UnsafePointer<CChar>) -> String {
-    let (k,_) = String.fromCStringRepairingIllFormedUTF8(block)
-    let value = k! as String
-    return value
 }
 
 #if os(OSX)

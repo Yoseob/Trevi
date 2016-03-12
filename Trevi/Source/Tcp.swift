@@ -9,6 +9,9 @@
 import Libuv
 
 
+/**
+ Libuv Tcp bindings and allow the user to use a closure on event.
+ */
 public class Tcp : Stream {
     
     public let tcpHandle : uv_tcp_ptr
@@ -38,11 +41,13 @@ public class Tcp : Stream {
 
 extension Tcp {
     
+    
     public static func open (handle : uv_tcp_ptr, fd : uv_os_fd_t) {
         
-        // It sets fd to non-block.
+        // Sets socket fd to non-block.
         uv_tcp_open(handle, fd)
     }
+    
     
     public static func bind(handle : uv_tcp_ptr, address: String, port: Int32) -> Int32? {
         var sockaddr = sockaddr_in()
@@ -66,6 +71,7 @@ extension Tcp {
         return status
     }
     
+    
     public static func bind6(handle : uv_tcp_ptr, address: String, port: Int32) -> Int32? {
         var sockaddr = sockaddr_in6()
         
@@ -87,9 +93,10 @@ extension Tcp {
         return status
     }
     
+    
     public static func listen(handle : uv_tcp_ptr, backlog : Int32 = 50) -> Int32? {
         
-//        Should add if state to set using work or not
+//        Set onConnection event from other thread in thread pool. Not stable yet.
 //        let error = uv_listen(uv_stream_ptr(handle), backlog, Work.onConnection)
         
         let error = uv_listen(uv_stream_ptr(handle), backlog, Tcp.onConnection)
@@ -99,8 +106,11 @@ extension Tcp {
             return nil
         }
         
+        Loop.run(mode: UV_RUN_DEFAULT)
+        
         return error
     }
+    
     
     public static func connect(handle : uv_tcp_ptr) -> Int32? {
         let request = uv_connect_ptr.alloc(1)
@@ -115,16 +125,19 @@ extension Tcp {
         return error
     }
     
+    
     //  Enable / disable Nagle’s algorithm.
     public static func setNoDelay (handle : uv_tcp_ptr, enable : Int32) {
         
         uv_tcp_nodelay(handle, enable)
     }
     
+    
     public static func setKeepAlive (handle : uv_tcp_ptr, enable : Int32, delay : UInt32) {
         
         uv_tcp_keepalive(handle, enable, delay)
     }
+    
     
     public static func setSimultaneousAccepts (handle : uv_tcp_ptr, enable : Int32) {
         
@@ -132,7 +145,8 @@ extension Tcp {
     }
     
     
-    // Should add dealloc module
+    // Should add dealloc module on return value sockaddr_ptr.
+    // Temporary it is dealloced 
     
     public static func getSocketName(handle : uv_tcp_ptr) -> sockaddr_ptr {
         
