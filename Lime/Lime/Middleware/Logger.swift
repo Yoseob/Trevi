@@ -25,7 +25,7 @@ public class Logger: Middleware {
         
         switch (format) {
         case "default":
-            _format = ":remote-addr - - [ :date ] \":Method :url HTTP/:http-version\" :status :res[content-length] \":referrer\" \":user-agent\""
+            _format = ":remote-addr - - [ :date ] \":method :url HTTP/:http-version\" :status :res[content-length] \":referrer\" \":user-agent\""
             
         case "short":
             _format = ":remote-addr - :method :url HTTP/:http-version :status :res[content-length] - :response-time ms"
@@ -113,7 +113,7 @@ public class Logger: Middleware {
     }
     
     private func url ( req: IncomingMessage, res: ServerResponse ) -> String {
-        return req.path
+        return req.url
     }
     
     private func referrer ( req: IncomingMessage, res: ServerResponse ) -> String {
