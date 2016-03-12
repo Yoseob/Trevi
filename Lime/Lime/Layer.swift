@@ -8,6 +8,11 @@
 
 import Foundation
 import Trevi
+
+/*
+    Reuse for becoming more useful results Middleware and all the routes that object is wrapped with this class.
+
+*/
 public class Layer {
     
     private var handle: HttpCallback?
@@ -28,10 +33,12 @@ public class Layer {
         setupAfterInit(path, opt: options, name: module.name.rawValue, fn: module.handle)
         
     }
+    
     private func setupAfterInit(p: String, opt: Option? = nil, name: String?, fn: HttpCallback){
         self.handle = fn
         self.path = p
         self.name = name
+        
         //create regexp
         regexp = self.pathRegexp(path, option: opt)
         
@@ -53,11 +60,13 @@ public class Layer {
         return RegExp(path: path)
     }
     
+    //handle mathed route module
     public func handleRequest(req: IncomingMessage , res: ServerResponse, next: NextCallback){
         let function = self.handle
         function!(req,res,next)
     }
     
+    //Request url meching.
     public func match(path: String?) -> Bool{
         
         guard path != nil else {

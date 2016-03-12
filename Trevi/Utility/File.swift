@@ -7,8 +7,19 @@
 //
 
 import Foundation
-#if os(Linux)
-    import Glibc
-#else
-    import Darwin
-#endif
+
+
+/*
+    This Protocol use File Type Class Of Super
+    When need path, name, value, type of File object, impliment this Protocol
+    Now It use file descripter Multipart/form-data 
+*/
+
+public protocol File{
+    
+    var name: String! {get set}
+    var value: String! {get set}
+    
+    var type: String! {get set}
+    var path: String! {get set}
+}

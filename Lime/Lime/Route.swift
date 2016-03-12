@@ -9,6 +9,7 @@
 import Foundation
 import Trevi
 
+// Terminating the callback functions with a module used in order to find you.
 
 public class Route{
     public var stack = [Layer!]()
@@ -16,6 +17,7 @@ public class Route{
     public var methods = [HTTPMethodType]()
     public var method: HTTPMethodType!
     public var dispatch: HttpCallback? {
+        
         didSet{
             let layer = Layer(path: "", name: "anonymous", options: Option(end: true), fn: self.dispatch!)
             if method != nil{
@@ -34,6 +36,7 @@ public class Route{
         self.methods.append(method)
     }
     
+    //To connect and use the ihamsu with a layer.
     public func dispatchs(req: IncomingMessage,res: ServerResponse,next: NextCallback?){
         
         var idx = 0

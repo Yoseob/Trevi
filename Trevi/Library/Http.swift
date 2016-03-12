@@ -16,6 +16,12 @@ public typealias NextCallback = ()->()
 
 public typealias ReceivedParams = (buffer: UnsafeMutablePointer<CChar>, length: Int)
 
+
+/*
+    This protocol is to other external module on the server should be implemented.
+    Currently, the Trevi is it used to be implemented this.
+
+*/
 public protocol ApplicationProtocol {
     func createApplication() -> Any
 }
@@ -40,11 +46,13 @@ public class Http {
      * @public
      */
 
+    //Only one function of registration is available.
     public func createServer( requestListener: ( IncomingMessage, ServerResponse, NextCallback? )->()) -> Net{
         let server = HttpServer(requestListener: requestListener)
         return server
     }
     
+    //Can be saved using external module.
     public func createServer( requestListener: Any) -> Net{
         let server = HttpServer(requestListener: requestListener)
         return server

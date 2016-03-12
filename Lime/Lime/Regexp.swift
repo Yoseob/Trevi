@@ -9,6 +9,8 @@
 import Foundation
 import Trevi
 
+// Through a layer of regular expression in order to match.
+
 public class RegExp {
     public var fastSlash: Bool!     // middleware only true
     public var source: String!      // Regular expression for path

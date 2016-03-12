@@ -7,10 +7,35 @@
 //
 
 import Foundation
-import Trevi 
-//dev module
+import Trevi
 
-public class DevFile {
+
+/*
+    It is signification current parsing state
+    Carry on with the parsing with each state.
+*/
+
+
+public enum ReadState: Int{
+    case CreateBoundary = 1
+    case DispositionValid
+    case CreateObject
+    case DispositionName
+    case DispositionFilename
+    case ContentType
+    case ReadFile
+    case ReadValue
+    case CheckBoundary
+    case Terminate
+}
+
+
+/*
+    This Class need to parse Multipart/form-data
+    It store file path, name, etc.
+*/
+
+public class MultiFile: File {
     //dev
     var writeStream: FileSystem.WriteStream!
     
@@ -30,9 +55,6 @@ public class DevFile {
     public var value: String! = nil
     public var valueBuffer = [Int8]()
     
-    public var isFinished: Bool = false
-    
-    
     public func prepare(){
         
         self.name = removePrefixFuxfix(String(data: NSData(bytes: UnsafePointer<Void>(self.nameBuffer), length: self.nameBuffer.count), encoding: NSUTF8StringEncoding)!)
@@ -49,27 +71,16 @@ public class DevFile {
         }
         return path
     }
-    
-    
-    public init(){}
-}
 
-public enum ReadState: Int{
-    case CreateBoundary = 1
-    case DispositionValid
-    case CreateObject
-    case DispositionName
-    case DispositionFilename
-    case ContentType
-    case ReadFile
-    case ReadValue
-    case CheckBoundary
-    case Terminate
+    public init(){
+    }
 }
 
 
-
-//
+/*
+    This Class Real-time parse Multipart/form-data 
+    This is reading and parsing by changing the state.
+*/
 
 public class MultiParty: Middleware {
     
@@ -94,12 +105,10 @@ public class MultiParty: Middleware {
     
     var state: ReadState = .CreateBoundary
     
-    private var file: DevFile!
+    private var file: MultiFile!
     
     private var contentLength = 0
     private var totalReadLength = 0
-    
-    
     
     
     let dispotion = "Content-Disposition: form-data"
@@ -144,6 +153,8 @@ public class MultiParty: Middleware {
 
         
     }
+    
+    // Should be implemented in order to use as middleware.
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
         
         var contentType = req.header[Content_Type]
@@ -157,7 +168,7 @@ public class MultiParty: Middleware {
             req.body = [String:String]()
         }
         if req.files == nil {
-            req.files = [String:AnyObject]()
+            req.files = [String:File]()
         }
 
         if let contentLength = req.header[Content_Length]{
@@ -165,15 +176,15 @@ public class MultiParty: Middleware {
         }
         
         
+        
+        // Data comes in, will be called
+        //Data is that reading the parsing.
+        
         func ondata(data: NSData){
-            
-            
-            
             self.totalReadLength += data.length
 
             var fileSize = 0
 
-            
             var itr = UnsafePointer<Int8>(data.bytes)
             
             for dataIndex in 0..<data.length {
@@ -211,7 +222,7 @@ public class MultiParty: Middleware {
                     if current != space {
                         print("Invalid CreateObject")
                     }
-                    self.file = DevFile()
+                    self.file = MultiFile()
                     state = .DispositionName
                     break
                 case .DispositionName:
@@ -271,10 +282,15 @@ public class MultiParty: Middleware {
                     }else{
                         if cursor != 0 {
                             fileSize += cursor
+                            if fileBufferBeginIndex == -1 {
+                                fileSize = 0
+                                writefile(NSData(bytes: boundary, length: cursor), file: file)
+                            }
                             cursor = 0
                         }
                         if fileBufferBeginIndex == -1 {
                             fileBufferBeginIndex = dataIndex
+
                         }
                         fileSize += 1
                     }
@@ -283,7 +299,7 @@ public class MultiParty: Middleware {
                             fileSize -= 2
                             state = .CheckBoundary
                         }
-                    
+                        
                         writefile(data.subdataWithRange(NSRange(location: fileBufferBeginIndex, length: fileSize)), file: file)
                         cursor = 0
                         fileSize = 0
@@ -369,6 +385,9 @@ public class MultiParty: Middleware {
             }
         }
         
+        
+        
+        // End of Body Data
         func onend(){
             self.totalReadLength = 0
             self.contentLength = 0
@@ -379,8 +398,6 @@ public class MultiParty: Middleware {
             self.hyphenCount = 0
             self.crlfCount = 0
             self.state = .CreateBoundary
-            
-            
             next!()
         }
         
@@ -391,7 +408,7 @@ public class MultiParty: Middleware {
     }
     
     
-    private func writefile(data: NSData, file: DevFile){
+    private func writefile(data: NSData, file: MultiFile){
 
         file.writeStream.writeData(data)
     }
@@ -401,8 +418,7 @@ public class MultiParty: Middleware {
         guard data.length() > 0 else{
             return ""
         }
-        
-        
+    
         var index = 0
         for utfString in data.utf8 {
             if utfString == 13 {
@@ -415,6 +431,7 @@ public class MultiParty: Middleware {
     }
 }
 
+//helper to paring data 
 public func getComponent(data: String , result: (String)->()){
     let dispositionComponents = data.componentsSeparatedByString("=")
         
