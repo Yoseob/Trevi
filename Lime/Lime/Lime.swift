@@ -108,8 +108,10 @@ extension ServerResponse {
     
     private func endReuqstAndClean(){
         end()
-        for file in self.req.files.values{
-            FSBase.unlink(path: file.path)
+        if req.files != nil {
+            for file in self.req.files.values{
+                FSBase.unlink(path: file.path)
+            }
         }
     }
     
