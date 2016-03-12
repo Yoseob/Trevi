@@ -8,6 +8,10 @@
 
 import Foundation
 
+
+/*
+    User-defined certainly should be implemented in order to use a router.
+*/
 public protocol Require{
     func export() -> Router
 }

@@ -9,6 +9,8 @@
 import Foundation
 import Trevi
 
+
+// Currently, you don't use this class, but will use the next.
 public class Request {
     
     // HTTP method like GET, POST.

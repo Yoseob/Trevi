@@ -26,7 +26,14 @@ public enum MiddlewareName: String {
     // else...
 }
 
+
+
+/*
+
+    Middleware is an easy and fast to using the server can offer the many functions.
+    Should be implemented handle in order to use as middleware.
+*/
 public protocol Middleware{
     var name: MiddlewareName { get set }
-    func handle(req: IncomingMessage,res: ServerResponse,next: NextCallback?) -> ()
+    func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) -> ()
 }

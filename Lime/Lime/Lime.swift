@@ -9,6 +9,10 @@
 import Foundation
 import Trevi
 
+/*
+
+    This custom modules, routing and each of the middleware to allow the absence of a working class.
+*/
 
 public class Lime : Routable {
     
@@ -132,7 +136,7 @@ extension ServerResponse {
     }
 }
 
-import Trevi
+
 
 
 //extention incomingMessage for lime
