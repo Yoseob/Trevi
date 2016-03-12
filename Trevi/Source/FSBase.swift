@@ -9,6 +9,10 @@
 import Libuv
 import Foundation
 
+/**
+ Libuv Filesystem bindings and events module, but considering better way.
+ So, hope to use FileSystem on Trevi temporary.
+ */
 public class FSBase {
     
     public static let BUF_SIZE = 1024
@@ -103,6 +107,26 @@ extension FSBase {
         uv_fs_write(uv_default_loop(), request, fd, buffer, 1, -1, afterWrite)
     }
     
+    public static func unlink(loop : uv_loop_ptr = uv_default_loop(), path : String) {
+        let request = uv_fs_ptr.alloc(1)
+        let error = uv_fs_unlink(loop, request, path, FSBase.afterUnlink)
+        
+        if error == 0 {
+            // Should handle error
+            
+        }
+    }
+    
+    public static func makeDirectory(loop : uv_loop_ptr = uv_default_loop(), path : String, mode : Int32 = 0o666) {
+        let request = uv_fs_ptr.alloc(1)
+        let error = uv_fs_mkdir(loop, request, path, mode, FSBase.afterMakeDirectory)
+        
+        if error == 0 {
+            // Should handle error
+            
+        }
+    }
+    
     public static func cleanup(request : uv_fs_ptr) {
         
         //        FSBase.dictionary[request] = nil
@@ -139,7 +163,7 @@ extension FSBase {
     
     public static var onClose : uv_fs_cb  = { request in
         
-        //        after(request, UV_FS_CLOSE)
+//        after(request, UV_FS_CLOSE)
         
         FSBase.cleanup(request)
     }
@@ -172,6 +196,14 @@ extension FSBase {
         
         uv_cancel(uv_req_ptr(request))
         request.memory.data.dealloc(1)
+        request.dealloc(1)
+    }
+    
+    public static var afterUnlink : uv_fs_cb = { request in
+        request.dealloc(1)
+    }
+    
+    public static var afterMakeDirectory : uv_fs_cb = { request in
         request.dealloc(1)
     }
 }

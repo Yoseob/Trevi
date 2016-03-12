@@ -8,6 +8,10 @@
 
 import Libuv
 
+
+/**
+ Libuv timer bindings and allow the user to use a closure on event.
+ */
 public class Timer : Handle {
     
     public let timerhandle : uv_timer_ptr

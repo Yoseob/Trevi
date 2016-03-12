@@ -8,6 +8,10 @@
 
 import Libuv
 
+
+/**
+ Libuv Async bindings.
+ */
 public class Async : Handle {
     
     public let asyncHandle : uv_async_ptr
@@ -27,7 +31,6 @@ public class Async : Handle {
             isAlive = false
         }
     }
-    
 }
 
 

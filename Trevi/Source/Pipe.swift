@@ -9,6 +9,9 @@
 import Libuv
 
 
+/**
+ Provides interactive actions with file descriptors and Stream modules.
+ */
 public class Pipe : Stream {
     
     public let pipeHandle : uv_pipe_ptr

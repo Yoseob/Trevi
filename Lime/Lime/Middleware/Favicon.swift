@@ -9,6 +9,7 @@
 import Foundation
 import Trevi
 
+// use for favicon.io
 public class Favicon: Middleware {
 
     public var name: MiddlewareName = .Favicon;

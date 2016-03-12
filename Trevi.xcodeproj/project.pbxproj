@@ -35,6 +35,7 @@
 		23A5FAB71C8888D600F68B78 /* IncomingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */; };
 		23A5FAB91C88891400F68B78 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB81C88891400F68B78 /* HttpServer.swift */; };
 		23CFA0C61C93AB99003DDB6B /* favicon.ico in Resources */ = {isa = PBXBuildFile; fileRef = 23CFA0C51C93AB99003DDB6B /* favicon.ico */; };
+		23D5AB491C94B67300481AEC /* FSBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D5AB481C94B67300481AEC /* FSBase.swift */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ACD8697D1C88DAE100260C87 /* sky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 23973D601C25AB3B00FBB8E7 /* sky.jpeg */; };
 		ACD8697E1C88DAE100260C87 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
@@ -44,11 +45,11 @@
 		ACD869821C88DAEA00260C87 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ACD8697A1C88D6DB00260C87 /* Main.storyboard */; };
 		ACD869861C8B45FE00260C87 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD869851C8B45FE00260C87 /* Logger.swift */; };
 		ACD869881C8F874400260C87 /* Render.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACD869871C8F874400260C87 /* Render.swift */; };
-		DF61AFC31C8F4BBB00CB7218 /* FSBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF61AFC21C8F4BBB00CB7218 /* FSBase.swift */; };
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
 		DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9233E81C8C50B000D87A29 /* FileSystem.swift */; };
+		DF92C97E1C946D61007E693E /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92C97D1C946D61007E693E /* Poll.swift */; };
 		DFBDF7DB1C91B0470043F36D /* LibuvError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBDF7DA1C91B0470043F36D /* LibuvError.swift */; };
 		DFD970A61C87399D00E39995 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2394120A1C0C46EF001B9B07 /* Utility.swift */; };
 		DFD970A71C87399D00E39995 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906E50B01C11DB9A005937A8 /* File.swift */; };
@@ -152,6 +153,7 @@
 		23A5FAB81C88891400F68B78 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
 		23CFA0C51C93AB99003DDB6B /* favicon.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = favicon.ico; sourceTree = "<group>"; };
 		23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = helloworld.ssp; sourceTree = "<group>"; };
+		23D5AB481C94B67300481AEC /* FSBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FSBase.swift; sourceTree = "<group>"; };
 		906E50B01C11DB9A005937A8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = ../Utility/File.swift; sourceTree = "<group>"; };
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
 		90BEEE651C2F5155009A8DA8 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
@@ -163,7 +165,6 @@
 		ACD869871C8F874400260C87 /* Render.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Render.swift; sourceTree = "<group>"; };
 		DF3D4EE01C85F77D00DF2DE1 /* Pipe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pipe.swift; sourceTree = "<group>"; };
 		DF4BE52B1C7F073800908A3D /* Work.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Work.swift; sourceTree = "<group>"; };
-		DF61AFC21C8F4BBB00CB7218 /* FSBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FSBase.swift; sourceTree = "<group>"; };
 		DF732EDF1C799737000B12E8 /* libuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libuv.a; sourceTree = "<group>"; };
 		DF732EE01C799737000B12E8 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		DF732EF01C799E65000B12E8 /* Timer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timer.swift; sourceTree = "<group>"; };
@@ -171,6 +172,7 @@
 		DF826E181C8814BF0032F31C /* NetEchoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetEchoServer.swift; path = Test/NetEchoServer.swift; sourceTree = "<group>"; };
 		DF826E1C1C881A900032F31C /* FileServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileServer.swift; path = Test/FileServer.swift; sourceTree = "<group>"; };
 		DF9233E81C8C50B000D87A29 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		DF92C97D1C946D61007E693E /* Poll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		DFBDF7DA1C91B0470043F36D /* LibuvError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibuvError.swift; path = Trevi/Source/LibuvError.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -214,13 +216,13 @@
 		2322999D1C61E048003E44AB /* Lime */ = {
 			isa = PBXGroup;
 			children = (
+				2322999E1C61E048003E44AB /* Lime.swift */,
 				235441641C7CCCC600E90A97 /* Middleware */,
 				235441731C7CCCE600E90A97 /* Request.swift */,
 				235441761C7CCCE600E90A97 /* RoutAble.swift */,
 				23A5FAAA1C86CDAD00F68B78 /* Require.swift */,
 				235441751C7CCCE600E90A97 /* Response.swift */,
 				235441771C7CCCE600E90A97 /* Route.swift */,
-				2322999E1C61E048003E44AB /* Lime.swift */,
 				23A5FAAE1C86CE4F00F68B78 /* Layer.swift */,
 				23A5FAB01C86CE8600F68B78 /* Regexp.swift */,
 				ACD869871C8F874400260C87 /* Render.swift */,
@@ -257,9 +259,10 @@
 				DF732EDE1C799737000B12E8 /* Libuv */,
 				235441521C79800300E90A97 /* Handle.swift */,
 				DF732EF21C79B4DD000B12E8 /* Loop.swift */,
+				DF92C97D1C946D61007E693E /* Poll.swift */,
 				DF4BE52B1C7F073800908A3D /* Work.swift */,
-				DF61AFC21C8F4BBB00CB7218 /* FSBase.swift */,
 				235441561C79800300E90A97 /* Stream.swift */,
+				23D5AB481C94B67300481AEC /* FSBase.swift */,
 				235441571C79800300E90A97 /* Tcp.swift */,
 				DF3D4EE01C85F77D00DF2DE1 /* Pipe.swift */,
 				235441501C79800300E90A97 /* Async.swift */,
@@ -568,6 +571,8 @@
 				23A5FAB91C88891400F68B78 /* HttpServer.swift in Sources */,
 				DFD970B91C8739A300E39995 /* StreamWritable.swift in Sources */,
 				DFD970BF1C8739A700E39995 /* Stream.swift in Sources */,
+				DF92C97E1C946D61007E693E /* Poll.swift in Sources */,
+				23D5AB491C94B67300481AEC /* FSBase.swift in Sources */,
 				DFD970C31C8739A700E39995 /* Timer.swift in Sources */,
 				DFD970B61C8739A300E39995 /* HttpProtocol.swift in Sources */,
 				DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */,
@@ -575,7 +580,6 @@
 				DFD970BD1C8739A700E39995 /* Work.swift in Sources */,
 				DFD970A61C87399D00E39995 /* Utility.swift in Sources */,
 				DFD970C01C8739A700E39995 /* Tcp.swift in Sources */,
-				DF61AFC31C8F4BBB00CB7218 /* FSBase.swift in Sources */,
 				DF826E1D1C881A900032F31C /* FileServer.swift in Sources */,
 				DFD970B31C8739A300E39995 /* EventEmitter.swift in Sources */,
 				DFD970B71C8739A300E39995 /* Net.swift in Sources */,

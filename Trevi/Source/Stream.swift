@@ -11,6 +11,10 @@ import Libuv
 import Foundation
 
 
+/**
+ Libuv stream bindings and allow the user to use a closure on event.
+ Also, provides improved data read, write stream modules.
+ */
 public class Stream : Handle {
     
     public let streamHandle : uv_stream_ptr
@@ -31,7 +35,7 @@ public class Stream : Handle {
     
     public func readStart() {
         
-//        Should add if state to set using work or not
+//        Set onRead event from other thread in thread pool. Not stable yet.
 //        uv_read_start(self.streamHandle, Stream.onAlloc, Work.onRead)
         
         uv_read_start(self.streamHandle, Stream.onAlloc, Stream.onRead)
@@ -85,7 +89,7 @@ extension Stream {
     
     public static func readStart(handle : uv_stream_ptr) {
         
-//        Should add if state to set using work or not
+//        Set onRead event from other thread in thread pool. Not stable yet.
 //        uv_read_start(handle, Stream.onAlloc, Work.onRead)
         
         uv_read_start(handle, Stream.onAlloc, Stream.onRead)
@@ -176,9 +180,10 @@ extension Stream {
 extension Stream {
     
     public static var onAlloc : uv_alloc_cb = { (_, suggestedSize, buffer) in
-        buffer.initialize(uv_buf_init(UnsafeMutablePointer.alloc(suggestedSize), UInt32(suggestedSize)))
         
+        buffer.initialize(uv_buf_init(UnsafeMutablePointer.alloc(suggestedSize), UInt32(suggestedSize)))
     }
+    
     
     public static var onRead : uv_read_cb = { (handle, nread, buffer) in
         
@@ -198,8 +203,8 @@ extension Stream {
                 callback(handle, data)
             }
         }
-        
     }
+    
     
     public static var afterShutdown : uv_shutdown_cb = { (request, status) in
         
@@ -215,7 +220,6 @@ extension Stream {
     }
     
     
-    // Should modify for file stream.
     public static var afterWrite : uv_write_cb = { (request, status) in
  
         let writeRequest = write_req_ptr(request)

@@ -42,15 +42,15 @@ public class Root{
 
         router.post("double", MultiParty()) { (req, res, next) -> Void in
  
-            for (k,v) in req.files {
-                let file = v as! DevFile
-                print("\(k) , \(file.path)")
+            for file in req.files.values {
+
+                print("\(file.name) , \(file.path)")
             }
 
-            
             for (k,v) in req.body {
                 print("\(k) , \(v)")
             }
+            
             res.send("multipart parser middleware")
         }
 
@@ -77,6 +77,7 @@ public class Root{
     }
 }
 
+// To leave implementation order to use a module in lime to use.
 extension Root: Require{
     public func export() -> Router {
         return self.router

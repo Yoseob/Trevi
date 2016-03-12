@@ -14,6 +14,9 @@
 import Foundation
 import Trevi
 
+// External module's top class that has a router with class. like lime.
+// I commend it to the router using inheritance.
+
 public class Routable{
     internal var _router: Router!
     

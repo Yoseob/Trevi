@@ -9,7 +9,7 @@
 import Foundation
 import Trevi
 
-//defualt middleware
+// defualt middleware, parse Query 
 class Query: Middleware {
     var  name: MiddlewareName = .Query
     init(){
