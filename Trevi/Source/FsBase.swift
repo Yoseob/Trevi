@@ -107,7 +107,8 @@ extension FSBase {
         uv_fs_write(uv_default_loop(), request, fd, buffer, 1, -1, afterWrite)
     }
     
-    public static func unlink(loop : uv_loop_ptr = uv_default_loop(), request : uv_fs_ptr, path : String) {
+    public static func unlink(loop : uv_loop_ptr = uv_default_loop(), path : String) {
+        let request = uv_fs_ptr.alloc(1)
         let error = uv_fs_unlink(loop, request, path, FSBase.afterUnlink)
         
         if error == 0 {
@@ -116,7 +117,8 @@ extension FSBase {
         }
     }
     
-    public static func makeDirectory(loop : uv_loop_ptr = uv_default_loop(), request : uv_fs_ptr, path : String, mode : Int32 = 0o666) {
+    public static func makeDirectory(loop : uv_loop_ptr = uv_default_loop(), path : String, mode : Int32 = 0o666) {
+        let request = uv_fs_ptr.alloc(1)
         let error = uv_fs_mkdir(loop, request, path, mode, FSBase.afterMakeDirectory)
         
         if error == 0 {
@@ -198,10 +200,10 @@ extension FSBase {
     }
     
     public static var afterUnlink : uv_fs_cb = { request in
-        
+        request.dealloc(1)
     }
     
     public static var afterMakeDirectory : uv_fs_cb = { request in
-        
+        request.dealloc(1)
     }
 }
