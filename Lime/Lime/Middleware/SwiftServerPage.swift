@@ -10,7 +10,10 @@ import Foundation
 import Trevi
 
 /**
- A Middleware for compiling a specific SSP(Swift Server Page) file and send the data to client.
+ *
+ * A Middleware to compile a specific SSP(Swift Server Page) file and send the
+ * data to client.
+ *
  */
 public class SwiftServerPage: Render {
 
@@ -18,23 +21,32 @@ public class SwiftServerPage: Render {
     }
     
     /**
-     Get a compiled result of a SSP(Swift Server Page) file from the specific path.
-     
-     - Parameter path: The name of the file or path of the file from which to read data.
-     
-     - Returns: A string initialized by compiled swift server page data from the file specified by path.
+     *
+     * Get a compiled result of a SSP(Swift Server Page) file from the specific
+     * path with the argument.
+     *
+     * - Parameter path: A path where file that is read is located
+     *
+     * - Returns: A string initialized by compiled swift server page data from
+     * the file specified by path.
+     *
      */
     public func render(path: String, writer: ((String) -> Void)) {
         return render(path, args: [:], writer: writer)
     }
     
     /**
-     Get a compiled result of a SSP(Swift Server Page) file from the specific path with input arguments.
-     
-     - Parameter path: The name of the file or path of the file from which to read data.
-     - Parameter args: The arguments which will be using for compiling SSP file.
-     
-     - Returns: A string initialized by compiled swift server page data from the file specified by path.
+     *
+     * Get a compiled result of a SSP(Swift Server Page) file from the specific
+     * path with the argument.
+     *
+     * - Parameter path: A path where file that is read is located
+     * - Parameter args: Arguments that will be using to compile SSP file.
+     * - Parameter writer: Callback to send data to user.
+     *
+     * - Returns: A string initialized by compiled swift server page data from
+     * the file specified by path.
+     *
      */
     public func render(path: String, args: [String:String], writer: ((String) -> Void)) {
         let file = FileSystem.ReadStream(path: path)
@@ -52,13 +64,19 @@ public class SwiftServerPage: Render {
 }
 
 /**
- Get the swift source codes from the specific SSP(Swift Server Page) file. In this process, the SSP codes is divided into HTML codes and swift codes.
- After that, the HTML codes is wrapped by `print` function. An wrapped HTML codes are combined with swift code again.
- 
- - Parameter ssp: The original data of SSP file which will be converted to a swift source code file.
- - Parameter args: The list of arguments which is used at compiling.
- 
- - Returns: The swift source codes which are converted from SSP file with arguments.
+ *
+ * Get the Swift source codes from the specific SSP(Swift Server Page) file.
+ * In this process, the SSP codes is divided into HTML codes and Swift codes.
+ * After that, the HTML codes is wrapped by `print` function. An wrapped HTML
+ * codes are combined with Swift code again.
+ *
+ * - Parameter ssp: The original data of SSP file which will be converted to a
+ * Swift source code file.
+ * - Parameter args: The list of arguments which is used at compiling.
+ *
+ * - Returns: The Swift source codes which are converted from SSP file with
+ * arguments.
+ *
  */
 private func convertToSwift(from ssp: String, with args: [String:String]) -> String {
     var swiftCode: String = ""
@@ -97,14 +115,15 @@ private func convertToSwift(from ssp: String, with args: [String:String]) -> Str
 }
 
 /**
- Get a compiled result of a swift codes.
- 
- - Parameter path: The path where compiled swift codes will be locate.
- - Parameter code: Source codes which will be compiled.
- 
- - Returns: Compiled data from the swift codes
+ *
+ * Run a callback as an argument to the results of compiling input code.
+ *
+ * - Parameter path: The path where compiled Swift codes will be located.
+ * - Parameter code: Source codes which will be compiled.
+ * - Parameter callback: Callback to send data to user.
+ *
  */
-private func compileSwift(path: String, code: String, callback: ((String) -> Void)) -> String? {
+private func compileSwift(path: String, code: String, callback: ((String) -> Void)) {
     let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
     let compileFile = "/tmp/\(NSURL(fileURLWithPath: path).lastPathComponent!)\(timestamp).swift"
     
@@ -113,8 +132,8 @@ private func compileSwift(path: String, code: String, callback: ((String) -> Voi
     file?.close()
     
     #if os(Linux)
-        if Glibc.system("/home/zero2hex/Develop/tools/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-ubuntu15.10/usr/bin/swiftc \(compileFile) -o /tmp/ssp\(timestamp)") == 0 {
-            if Glibc.system("/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print") == 0 {
+        if Glibc.system("bash -c \"source ~/.profile && swiftc \(compileFile) -o /tmp/ssp\(timestamp) && chmod +x /tmp/ssp\(timestamp)\"") == 0 {
+            if Glibc.system("bash -c \"/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print\"") == 0 {
                 let file = FileSystem.ReadStream(path: "/tmp/ssp\(timestamp)_print")
                 let buf = NSMutableData()
                 
@@ -133,8 +152,8 @@ private func compileSwift(path: String, code: String, callback: ((String) -> Voi
             }
         }
     #else
-        if Darwin.system("/usr/bin/swiftc \(compileFile) -o /tmp/ssp\(timestamp)") == 0 {
-            if Darwin.system("/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print") == 0 {
+        if Darwin.system("swiftc \(compileFile) -o /tmp/ssp\(timestamp)") == 0 {
+            if Darwin.system("bash -c \"/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print\"") == 0 {
                 let file = FileSystem.ReadStream(path: "/tmp/ssp\(timestamp)_print")
                 let buf = NSMutableData()
                 
@@ -153,5 +172,4 @@ private func compileSwift(path: String, code: String, callback: ((String) -> Voi
             }
         }
     #endif
-    return nil
 }
