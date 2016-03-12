@@ -8,10 +8,10 @@
 
 import Foundation
 import Trevi
+
 /**
  A Middleware for serving static files in server like .css, .js, .html, etc.
  */
-
 public class ServeStatic: Middleware {
     
     public var name: MiddlewareName
@@ -27,9 +27,7 @@ public class ServeStatic: Middleware {
         }
     }
     
-    
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
-        
         var entirePath = req.url
         #if os(Linux)
             entirePath = "\(basePath)/\(req.url)"
@@ -39,20 +37,16 @@ public class ServeStatic: Middleware {
             }
         #endif
         
-        let file = ReadableFile(fileAtPath: entirePath)
-        if file.isExist() && (file.type == FileType.Regular || file.type == FileType.SymbolicLink) {
-            var buffer = [UInt8](count: 8, repeatedValue: 0)
-            let data = NSMutableData()
-            
-            file.open()
-            while file.status == .Open {
-                let result: Int = file.read(&buffer, maxLength: buffer.count)
-                data.appendBytes(buffer, length: result)
-            }
-            return res.send(data)
+        let file = FileSystem.ReadStream(path: entirePath)
+        let buf = NSMutableData()
+        
+        file?.onClose() { handle in
+            return res.send(buf)
+        }
+        
+        file?.readStart() { error, data in
+            buf.appendData(data)
         }
         next!()
     }
-    
-
 }

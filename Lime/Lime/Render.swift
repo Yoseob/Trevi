@@ -9,6 +9,6 @@
 import Foundation
 
 public protocol Render {
-    func render(filename: String) -> String
-    func render(filename: String, args: [String:String]) -> String
+    func render(path: String, writer: ((String) -> Void))
+    func render(path: String, args: [String:String], writer: ((String) -> Void))
 }

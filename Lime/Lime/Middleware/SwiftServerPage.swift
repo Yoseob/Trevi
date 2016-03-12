@@ -24,8 +24,8 @@ public class SwiftServerPage: Render {
      
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
-    public func render(path: String) -> String {
-        return render(path, args: [:])
+    public func render(path: String, writer: ((String) -> Void)) {
+        return render(path, args: [:], writer: writer)
     }
     
     /**
@@ -36,118 +36,122 @@ public class SwiftServerPage: Render {
      
      - Returns: A string initialized by compiled swift server page data from the file specified by path.
      */
-    public func render(path: String, args: [String:String]) -> String {
-        guard let data = load(path) else {
-            return ""
-        }
-        guard let compiled = compile(path, code: convertToSwift(from: data, with: args)) else {
-            return ""
-        }
-        return compiled
-    }
-    
-    /**
-     Load the file from input path and convert to String type.
-     
-     - Parameter path: The name of the file or path of the file from which to read data.
-     
-     - Returns: A string initialized by data from the file specified by path.
-     */
-    private final func load(path: String) -> String? {
-        let file = ReadableFile(fileAtPath: path).open()
-        var buffer = [UInt8](count: 8, repeatedValue: 0)
-        let data = NSMutableData()
-        while file.status == .Open {
-            let result: Int = file.read(&buffer, maxLength: buffer.count)
-            data.appendBytes(buffer, length: result)
+    public func render(path: String, args: [String:String], writer: ((String) -> Void)) {
+        let file = FileSystem.ReadStream(path: path)
+        let buf = NSMutableData()
+        
+        file?.onClose() { handle in
+            let swiftCodes = convertToSwift(from: String(data: buf, encoding: NSUTF8StringEncoding)!, with: args)
+            compileSwift(path, code: swiftCodes, callback: writer)
         }
         
-        guard let str = String(data: data, encoding: NSUTF8StringEncoding) else {
-            return nil
+        file?.readStart() { error, data in
+            buf.appendData(data)
         }
-        return str
+    }
+}
+
+/**
+ Get the swift source codes from the specific SSP(Swift Server Page) file. In this process, the SSP codes is divided into HTML codes and swift codes.
+ After that, the HTML codes is wrapped by `print` function. An wrapped HTML codes are combined with swift code again.
+ 
+ - Parameter ssp: The original data of SSP file which will be converted to a swift source code file.
+ - Parameter args: The list of arguments which is used at compiling.
+ 
+ - Returns: The swift source codes which are converted from SSP file with arguments.
+ */
+private func convertToSwift(from ssp: String, with args: [String:String]) -> String {
+    var swiftCode: String = ""
+    for key in args.keys {
+        swiftCode += "var \(key) = \"\(args[key]!)\"\n"
     }
     
-    /**
-     Get the swift source codes from the specific SSP(Swift Server Page) file. In this process, the SSP codes is divided into HTML codes and swift codes.
-     After that, the HTML codes is wrapped by `print` function. An wrapped HTML codes are combined with swift code again.
-     
-     - Parameter ssp: The original data of SSP file which will be converted to a swift source code file.
-     - Parameter args: The list of arguments which is used at compiling.
-     
-     - Returns: The swift source codes which are converted from SSP file with arguments.
-     */
-    private final func convertToSwift ( from ssp: String, with args: [String:String] ) -> String {
-        var swiftCode: String = ""
-        for key in args.keys {
-            swiftCode += "var \(key) = \"\(args[key]!)\"\n"
-        }
-
-        var startIdx = ssp.startIndex
+    var startIdx = ssp.startIndex
+    
+    let searched = searchWithRegularExpression( ssp, pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [.CaseInsensitive] )
+    for dict in searched {
+        let swiftTag, htmlTag: String
         
-        let searched = searchWithRegularExpression( ssp, pattern: "(<%=?)[ \\t\\n]*([\\w\\W]+?)[ \\t\\n]*%>", options: [.CaseInsensitive] )
-        for dict in searched {
-            let swiftTag, htmlTag: String
-            
-            if dict["$1"]!.text == "<%=" {
-                swiftTag = "print(\(dict["$2"]!.text), terminator:\"\")"
-            } else {
-                swiftTag = dict["$2"]!.text
-            }
-            
-            htmlTag = ssp[startIdx ..< ssp.startIndex.advancedBy ( dict["$0"]!.range.location )]
-                .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
-                .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
-                .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
-            
-            swiftCode += "print(\"\(htmlTag)\", terminator:\"\")\n\(swiftTag)\n"
-            
-            startIdx = ssp.startIndex.advancedBy ( dict["$0"]!.range.location + dict["$0"]!.range.length )
+        if dict["$1"]!.text == "<%=" {
+            swiftTag = "print(\(dict["$2"]!.text), terminator:\"\")"
+        } else {
+            swiftTag = dict["$2"]!.text
         }
-
-        let htmlTag = ssp[startIdx ..< ssp.endIndex]
+        
+        htmlTag = ssp[startIdx ..< ssp.startIndex.advancedBy ( dict["$0"]!.range.location )]
             .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
             .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
             .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
-
-        return (swiftCode + "print(\"\(htmlTag)\")\n")
+        
+        swiftCode += "print(\"\(htmlTag)\", terminator:\"\")\n\(swiftTag)\n"
+        
+        startIdx = ssp.startIndex.advancedBy ( dict["$0"]!.range.location + dict["$0"]!.range.length )
     }
     
-    /**
-     Get a compiled result of a swift codes.
-     
-     - Parameter path: The path where compiled swift codes will be locate.
-     - Parameter code: Source codes which will be compiled.
-     
-     - Returns: Compiled data from the swift codes
-     */
+    let htmlTag = ssp[startIdx ..< ssp.endIndex]
+        .stringByReplacingOccurrencesOfString ( "\"", withString: "\\\"" )
+        .stringByReplacingOccurrencesOfString ( "\t", withString: "{@t}" )
+        .stringByReplacingOccurrencesOfString ( "\n", withString: "{@n}" )
     
-    private final func compile(path: String, code: String) -> String? {
-        let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
-        let compileFile = "/tmp/\(NSURL(fileURLWithPath: path).lastPathComponent!)\(timestamp).swift"
+    return (swiftCode + "print(\"\(htmlTag)\")\n")
+}
 
-        let file = WritableFile(fileAtPath: compileFile, option: O_CREAT|O_TRUNC).open()
-        file.write(code.dataUsingEncoding(NSUTF8StringEncoding)!, maxLength: code.characters.count)
-
-        #if os(Linux)
+/**
+ Get a compiled result of a swift codes.
+ 
+ - Parameter path: The path where compiled swift codes will be locate.
+ - Parameter code: Source codes which will be compiled.
+ 
+ - Returns: Compiled data from the swift codes
+ */
+private func compileSwift(path: String, code: String, callback: ((String) -> Void)) -> String? {
+    let timestamp = Int(NSDate().timeIntervalSince1970 * 1000)
+    let compileFile = "/tmp/\(NSURL(fileURLWithPath: path).lastPathComponent!)\(timestamp).swift"
+    
+    let file = FileSystem.WriteStream(path: compileFile)
+    file?.writeData(code.dataUsingEncoding(NSUTF8StringEncoding)!)
+    file?.close()
+    
+    #if os(Linux)
         if Glibc.system("/home/zero2hex/Develop/tools/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-ubuntu15.10/usr/bin/swiftc \(compileFile) -o /tmp/ssp\(timestamp)") == 0 {
             if Glibc.system("/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print") == 0 {
-                if let result = load("/tmp/ssp\(timestamp)_print") {
-                    return result.stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
-                        .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
+                let file = FileSystem.ReadStream(path: "/tmp/ssp\(timestamp)_print")
+                let buf = NSMutableData()
+                
+                file?.onClose() { handle in
+                    if let result = String(data: buf, encoding: NSUTF8StringEncoding)?
+                        .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+                        .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" ) {
+                            callback(result)
+                            Glibc.remove("/tmp/ssp\(timestamp)_print")
+                    }
+                }
+                
+                file?.readStart() { error, data in
+                    buf.appendData(data)
                 }
             }
         }
-        #else        
+    #else
         if Darwin.system("/usr/bin/swiftc \(compileFile) -o /tmp/ssp\(timestamp)") == 0 {
             if Darwin.system("/tmp/ssp\(timestamp) > /tmp/ssp\(timestamp)_print") == 0 {
-                if let result = load("/tmp/ssp\(timestamp)_print") {
-                    return result.stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
-                        .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" )
+                let file = FileSystem.ReadStream(path: "/tmp/ssp\(timestamp)_print")
+                let buf = NSMutableData()
+                
+                file?.onClose() { handle in
+                    if let result = String(data: buf, encoding: NSUTF8StringEncoding)?
+                        .stringByReplacingOccurrencesOfString ( "{@t}", withString: "\t" )
+                        .stringByReplacingOccurrencesOfString ( "{@n}", withString: "\n" ) {
+                            callback(result)
+                            Darwin.remove("/tmp/ssp\(timestamp)_print")
+                    }
+                }
+                
+                file?.readStart() { error, data in
+                    buf.appendData(data)
                 }
             }
         }
-        #endif
-        return nil
-    }
+    #endif
+    return nil
 }

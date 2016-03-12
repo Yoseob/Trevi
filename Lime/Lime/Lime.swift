@@ -114,9 +114,13 @@ extension ServerResponse {
             #endif
             
             if args != nil {
-                write(render.render(entirePath, args: args!))
+                render.render(entirePath, args: args!) { data in
+                    self.write(data)
+                }
             } else {
-                write(render.render(entirePath))
+                render.render(entirePath) { data in
+                    self.write(data)
+                }
             }
         }
         end()
