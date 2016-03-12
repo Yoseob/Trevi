@@ -12,36 +12,110 @@ import Trevi
 
 public class DevFile {
     //dev
-    var rs: FileSystem.WriteStream!
+    var writeStream: FileSystem.WriteStream!
     
     //public
     public var name: String!
-    public var type: String = "text"
+    public var nameBuffer  = [Int8]()
+    
+    public var type: String! = "str"
+    public var typeBuffer = [Int8]()
     
     //file
     public var fileName: String! = nil
+    public var fileNameBuffer = [Int8]()
     public var path: String! = nil
     
     //body
     public var value: String! = nil
+    public var valueBuffer = [Int8]()
     
     public var isFinished: Bool = false
     
     
+    public func prepare(){
+        
+        self.name = removePrefixFuxfix(String(data: NSData(bytes: UnsafePointer<Void>(self.nameBuffer), length: self.nameBuffer.count), encoding: NSUTF8StringEncoding)!)
+        self.type = String(data: NSData(bytes: UnsafePointer<Void>(self.typeBuffer), length: self.typeBuffer.count), encoding: NSUTF8StringEncoding)
+        self.value = String(data: NSData(bytes: UnsafePointer<Void>(self.valueBuffer), length: self.valueBuffer.count), encoding: NSUTF8StringEncoding)
 
+    }
+    
+    public func getPath(dirName: String) -> String{
+    
+        getComponent(String(data: NSData(bytes: UnsafePointer<Void>(self.fileNameBuffer), length: self.fileNameBuffer.count), encoding: NSUTF8StringEncoding)!) { name in
+            self.fileName = name
+            self.path = "\(dirName)/\(self.fileName)"
+        }
+        return path
+    }
+    
     
     public init(){}
 }
+
+public enum ReadState: Int{
+    case CreateBoundary = 1
+    case DispositionValid
+    case CreateObject
+    case DispositionName
+    case DispositionFilename
+    case ContentType
+    case ReadFile
+    case ReadValue
+    case CheckBoundary
+    case Terminate
+}
+
+
 
 //
 
 public class MultiParty: Middleware {
     
     public var name: MiddlewareName = .Undefined
-    var fileDestName: String = __dirname
-    var limits: String!
+    public var fileDestName: String = __dirname
+    private var limits: String!
     
     
+    private var crlfCount = 0
+    private var hyphenCount = 0
+    private var boundary = [Int8]()
+    private var cursor = 0
+    private var previos: Int8 = 0
+    private var current: Int8 = 0
+    private var fileBufferBeginIndex = -1
+    
+    let CR: Int8 = 13
+    let LF: Int8 = 10
+    let space: Int8 = 32
+    let semicolon: Int8 = 59
+    let hyphen: Int8 = 45
+    
+    var state: ReadState = .CreateBoundary
+    
+    private var file: DevFile!
+    
+    private var contentLength = 0
+    private var totalReadLength = 0
+    
+    
+    
+    
+    let dispotion = "Content-Disposition: form-data"
+    var dispositionList = [Int8]()
+    
+    let dispotionName = "name="
+    var dispositionNameList = [Int8]()
+    
+    
+    let dispotionFileName = " filename="
+    var dispositionFileNameList = [Int8]()
+    
+    let contentType = "Content-Type: "
+    var contentTypeList = [Int8]()
+    
+
     //options has limits, dest, filter
     
     var options: [String:String!]!
@@ -54,11 +128,26 @@ public class MultiParty: Middleware {
                 fileDestName = dest
             }
         }
+        for d in dispotion.utf8 {
+            dispositionList.append(Int8(d))
+        }
+        for d in dispotionName.utf8 {
+            dispositionNameList.append(Int8(d))
+        }
+        for d in dispotionFileName.utf8 {
+            dispositionFileNameList.append(Int8(d))
+        }
+        
+        for d in contentType.utf8 {
+            contentTypeList.append(Int8(d))
+        }
+
         
     }
     public func handle(req: IncomingMessage, res: ServerResponse, next: NextCallback?) {
         
         var contentType = req.header[Content_Type]
+        
         
         guard contentType?.containsString("multipart/form-data") == true else{
             return next!()
@@ -71,76 +160,227 @@ public class MultiParty: Middleware {
             req.files = [String:AnyObject]()
         }
 
-        var boundry: String! = nil
-        var processingFileName: String!
+        if let contentLength = req.header[Content_Length]{
+            self.contentLength = Int(contentLength)!
+        }
         
-        func ondata(data: String){
+        
+        func ondata(data: NSData){
             
-            if boundry == nil {
-                boundry = readBoundry(data)
-            }
             
-            var bodyInfo = data.componentsSeparatedByString(CRLF)
             
-            let firstBodyInfo = bodyInfo.first!
-            if boundry != firstBodyInfo {
+            self.totalReadLength += data.length
+
+            var fileSize = 0
+
+            
+            var itr = UnsafePointer<Int8>(data.bytes)
+            
+            for dataIndex in 0..<data.length {
                 
-                var fillterFlag = false
-                //filltering pre Request Data
+                current = itr.memory
+                itr = itr.successor()
                 
-                bodyInfo = bodyInfo.filter({ body in
-                    if body == boundry {
-                        fillterFlag = true
+                
+                switch state {
+                case .CreateBoundary:
+                    if previos == CR && current == LF {
+                        boundary.removeLast()
+                        state = .DispositionValid
+                    }else{
+                       boundary.append(current)
                     }
-                    if fillterFlag == true && body == "" {
-                        return false
+                    break
+                    
+                case .DispositionValid:
+                    
+                    if cursor == dispositionList.count{
+                        if current != semicolon {
+                            print("Invalid DispositionValid - semi")
+                        }
+                        state = .CreateObject
+                        cursor = 0
+                    }else if dispositionList[cursor] == current {
+                        cursor += 1
+                    }else{
+                        print("Invalid DispositionValid")
                     }
-                    if fillterFlag == false {
-                        if let processingFileName = processingFileName{
-                            let lastFile: DevFile = req.files[processingFileName] as! DevFile
-                            writefile(body, file: lastFile)
+                    
+                    break
+                case .CreateObject:
+                    if current != space {
+                        print("Invalid CreateObject")
+                    }
+                    self.file = DevFile()
+                    state = .DispositionName
+                    break
+                case .DispositionName:
+                
+                    if current == semicolon{
+                        cursor = 0
+                        state = .DispositionFilename
+                    } else if previos == CR && current == LF {
+                        cursor = 0
+                        file.nameBuffer.removeLast()
+                        state = .ReadValue
+                    }else if cursor == dispositionNameList.count {
+                        file.nameBuffer.append(current)
+                    }else if dispositionNameList[cursor] == current{
+                        cursor += 1
+                    }else{
+                        print("Invalid DispositionName")
+                    }
+                    break
+                case .DispositionFilename:
+                    
+                    if previos == CR && current == LF {
+                        cursor = 0
+                        file.fileNameBuffer.removeLast()
+                        state = .ContentType
+                    }else if cursor == dispositionNameList.count {
+                        file.fileNameBuffer.append(current)
+                    }else if dispositionFileNameList[cursor] == current{
+                        cursor += 1
+                    }else{
+                        
+                        print("Invalid DispositionFilename")
+                    }
+
+                    break
+                case .ContentType:
+                    
+                    
+                    if previos == CR && current == LF && crlfCount == 3 {
+                        cursor = 0
+                        file.writeStream = FileSystem.WriteStream(path: file.getPath(fileDestName))
+                        state = .ReadFile
+                    }else if current == CR || current == LF {
+                        crlfCount += 1
+                    }else if cursor == contentTypeList.count {
+                        file.typeBuffer.append(current)
+                    }else if contentTypeList[cursor] == current{
+                        cursor += 1
+                    }else{
+                        print("Invalid ContentType")
+                    }
+                    break
+                case .ReadFile:
+                    
+                    if boundary[cursor] == current{
+                        cursor += 1
+                    }else{
+                        if cursor != 0 {
+                            fileSize += cursor
+                            cursor = 0
+                        }
+                        if fileBufferBeginIndex == -1 {
+                            fileBufferBeginIndex = dataIndex
+                        }
+                        fileSize += 1
+                    }
+                    if cursor == boundary.count || data.length - 1 == dataIndex {
+                        if cursor == boundary.count{
+                            fileSize -= 2
+                            state = .CheckBoundary
+                        }
+                    
+                        writefile(data.subdataWithRange(NSRange(location: fileBufferBeginIndex, length: fileSize)), file: file)
+                        cursor = 0
+                        fileSize = 0
+                        crlfCount = 0
+                        fileBufferBeginIndex = -1
+                        
+                    }
+
+                    break
+                case .ReadValue:
+                    if crlfCount > 1{
+                        if boundary[cursor] == current{
+                            cursor += 1
+                            if cursor == boundary.count {
+                                cursor = 0
+                                crlfCount = 0
+                                state = .CheckBoundary
+                                file.valueBuffer.removeLast()
+                                file.valueBuffer.removeLast()
+                            }
+                        }else{
+                            if cursor != 0 {
+                                for index in 0..<cursor{
+                                    file.valueBuffer.append(boundary[index])
+                                }
+                                cursor = 0
+                            }
+                        
+                            file.valueBuffer.append(current)
+                        }
+                    }else{
+                        if current == CR || current == LF {
+                            crlfCount += 1
+                        }else{
+                             print("Invalid ReadValue")
                         }
                     }
-                    return  fillterFlag
-                })
-                
-                guard bodyInfo.count > 0 else {
-                    return
-                }
-            }else{
-                if processingFileName != nil {
-                    if let processingFileName = processingFileName{
-                        let lastFile: DevFile = req.files[processingFileName] as! DevFile
-                        lastFile.isFinished = true
-                        lastFile.rs.close()
-                        lastFile.rs = nil
+                    break
+                    
+                case .CheckBoundary:
+                    
+                    if hyphenCount > 0 || crlfCount > 0 {
+                        if hyphenCount * crlfCount > 0 {
+                            print("Invalid CheckBoundary")
+                        }
+                        if hyphenCount > 0 {
+                            state = .Terminate
+                            hyphenCount = 0
+                        }else if crlfCount > 0 {
+                            state = .DispositionValid
+                            crlfCount = 0
+                        }
+                        
+                        
+                        file.prepare()
+                        
+                        if file.writeStream != nil {
+                            file.writeStream.close()
+                            req.files[file.name] = file
+                        }
+                        
+                        if file.value != nil {
+                            req.body[file.name] = file.value
+
+                        }
+                        file = nil
+                        
+                        
+                    }else if current == CR || current == LF {
+                        crlfCount += 1
+                    }else if current == hyphen {
+                        hyphenCount += 1
+                    }else{
                     }
-                    processingFileName = nil
+
+                    break
+                    
+                case .Terminate:
+                    break
+
                 }
+                previos = current
             }
-            
-            bodyInfo = bodyInfo.filter({ body in
-                if body == "" {
-                    return false
-                }
-                return true
-            })
-            
-            //insert "" becouse finish noboundry data
-            bodyInfo.append("")
-            
-            parseMultipart(bodyInfo, boundry: boundry, onFile: { file in
-                
-                req.files[file.name] = file
-                if file.isFinished == false{
-                    processingFileName = file.name
-                }
-                }, onBody: { name, value in
-                    req.body[name] = value
-            })
         }
         
         func onend(){
+            self.totalReadLength = 0
+            self.contentLength = 0
+            self.cursor = 0
+            self.boundary.removeAll()
+            self.previos = 0
+            self.current = 0
+            self.hyphenCount = 0
+            self.crlfCount = 0
+            self.state = .CreateBoundary
+            
+            
             next!()
         }
         
@@ -150,113 +390,10 @@ public class MultiParty: Middleware {
         
     }
     
-    private func parseMultipart(bodyInfo: [String] ,boundry: String, onFile: (DevFile)->(), onBody: (String,String)->()){
-        
-        func onCompliteParse(file: DevFile){
-        
-            if let _ = file.path {
-                if file.isFinished == true {
-                    file.rs.close()
-                    file.rs = nil
-                }
-                onFile(file)
-            }else{
-                onBody(file.name,file.value)
-            }
-        }
-        
-        //parsing
-        var disposition: String
-        var file: DevFile!
-        
-        var readLine = ""
-        for index in 1 ..< bodyInfo.count{
-            
-            readLine = bodyInfo[index]
-            if readLine == boundry{
-                
-                file.isFinished = true
-                onCompliteParse(file)
-                file = nil
-                
-            }else if readLine == (boundry+"--"){
-                file.isFinished = true
-                onCompliteParse(file)
-                file = nil
-                break
-            }else if readLine == "" {
-                file.isFinished = false
-                onCompliteParse(file)
-                break
-            }else{
-                if readLine.containsString("Content-Disposition:") == true {
-                    disposition = readLine
-                    
-                    getComponent(disposition, result: { name, filename in
-                        file = DevFile()
-                        file.name = name
-                        
-                        if let filename = filename{
-                            file.fileName = filename
-                            file.path = "\(self.fileDestName)/\(filename)"
-                            file.rs = FileSystem.WriteStream(path: file.path)
-                        }
-                    })
-                    continue
-                    
-                }else if readLine.containsString("Content-Type:") == true {
-                    if let file = file {
-                        file.type = readLine.componentsSeparatedByString(": ").last!
-                    }
-                    continue
-                }else {
-                    if let file = file ,let _ = file.fileName {
-                        writefile(readLine, file: file)
-                    }else{
-                        file.value = readLine
-                    }
-                    continue
-                }
-            }
-        }
-    }
     
-    
-    private func getComponent(data: String , result: (String,String!)->()){
-        let dispositionComponents = data.componentsSeparatedByString("; ")
-        
-        var resultList = [String]()
-        
-        for index in 1 ..< dispositionComponents.count{
-            let str = dispositionComponents[index]
-            resultList.append(str.componentsSeparatedByString("=").last!)
-        }
-        
-        
-        if resultList.count > 1 {
-            
-            return result(removePrefixFuxfix(resultList[0]),removePrefixFuxfix(resultList[1]))
-        }
-        
-        result(removePrefixFuxfix(resultList[0]),nil)
-    }
-    
-    private func removePrefixFuxfix(src: String) ->String{
-        var str = src
-        if str.hasPrefix("\"") {
-            str.removeAtIndex(str.startIndex)
-        }
-        if str.hasSuffix("\"") {
-            str.removeAtIndex(str.endIndex.predecessor())
-        }
-        return str
-    }
-    
-    private func writefile(data: String, file: DevFile){
-//        print(data)
-        let sendData = data.dataUsingEncoding(NSUTF8StringEncoding)!
-        
-        file.rs.writeData(sendData)
+    private func writefile(data: NSData, file: DevFile){
+
+        file.writeStream.writeData(data)
     }
     
     private func readBoundry(data: String) -> String{
@@ -277,3 +414,22 @@ public class MultiParty: Middleware {
         return data.substring(0, length: index)
     }
 }
+
+public func getComponent(data: String , result: (String)->()){
+    let dispositionComponents = data.componentsSeparatedByString("=")
+        
+    result(removePrefixFuxfix(dispositionComponents[1]))
+
+}
+
+public func removePrefixFuxfix(src: String) ->String{
+    var str = src
+    if str.hasPrefix("\"") {
+        str.removeAtIndex(str.startIndex)
+    }
+    if str.hasSuffix("\"") {
+        str.removeAtIndex(str.endIndex.predecessor())
+    }
+    return str
+}
+

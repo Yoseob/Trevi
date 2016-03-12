@@ -75,7 +75,7 @@ public class HttpServer: Net{
             
             parser(socket).onBody = { body in
                 let incoming = self.parser(socket).incoming
-                if body.length() > 0 {
+                if body.length > 0 {
                     incoming.push(body)   
                 }
             }

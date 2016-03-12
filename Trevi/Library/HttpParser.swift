@@ -28,14 +28,14 @@ public class HttpParser{
     
     public var onHeader: ((Void) -> (Void))?
     public var onHeaderComplete: ((HeaderInfo) -> Void)?
-    public var onBody: ((String) -> Void)?
+    public var onBody: ((NSData) -> Void)?
     public var onBodyComplete: ((Void) -> Void)?
     public var onIncoming: ((IncomingMessage) -> Bool)?
     
     public var date: NSDate = NSDate()
     
     //only header
-    public var headerInfo: HeaderInfo!
+    public var headerInfo: HeaderInfo! = nil
     
     //only body
     private var contentLength: Int = 0
@@ -52,52 +52,27 @@ public class HttpParser{
     
     func headerParser(p:UnsafePointer<Int8> , length: Int ,onHeaderInfo: (String,Bool)->() , onBodyData: (NSData)->()) {
     
-        var itr = p
-        var startByte = itr
-        
-        let CR: Int8 = 13
-        let LF: Int8 = 10
-        
-        var pre: Int8 = 0
-        var crt: Int8 = 0
-        var index = 0
-        
-        var readLength = 0
-        for _ in 0..<length {
-            
-            crt = itr.memory
-            itr = itr.successor()
-            index += 1
-            readLength += 1
-            if pre == CR && crt == LF {
+        readLine(p, length: length) { (pointer, data, readTotalSize, readlineSize) -> (Bool) in
+
+            if data == "" {
+                onHeaderInfo(data , true)
+                self.totalLength = length - readTotalSize
                 
-                let data = NSData(bytes: startByte, length: index-2)
-                if index == 2 {
-                    onHeaderInfo(String(data: data, encoding: NSASCIIStringEncoding)! , true)
-                    self.totalLength = length - readLength
-                    
-                    if self.totalLength == 0 {
-                        return
-                    }else{
-                        let body = NSData(bytes: startByte+index, length: self.totalLength)
-                        return onBodyData(body)
-                    }
+                if self.totalLength != 0 {
+                    let body = NSData(bytes: pointer+2, length: self.totalLength)
+                    onBodyData(body)
                 }
-                
-                onHeaderInfo(String(data: data, encoding: NSASCIIStringEncoding)! , false)
-                
-                index = 0
-                startByte = itr
-    
+                return false
             }
-            pre = crt
+            
+            onHeaderInfo(data , false)
+            return true
         }
     }
     
     public func execute(data: NSData, length: Int){
-        
-        if self.headerInfo == nil{
-            
+
+        if self.headerInfo == nil{            
             var headerCount = 0
             self.headerInfo = HeaderInfo()
             onHeader!()
@@ -125,31 +100,30 @@ public class HttpParser{
                 }else{
                     if let fieldSet: [String] = headerLine.componentsSeparatedByString ( ":" ) where fieldSet.count > 1 {
                         self.headerInfo.header[fieldSet[0].trim()] = fieldSet[1].trim();
+                        if let contentLength = self.headerInfo.header[Content_Length]{
+                            self.contentLength = Int(contentLength)!
+                        }
                     }
                 }
                 
                 headerCount += 1
-                
             } , onBodyData: { body in
-                
-                let testString = String(data: body, encoding: NSASCIIStringEncoding)!
-                self.onBody!(testString)
+
+                self.onBody!(body)
                 
                 self.headerInfo.hasbody = true
-                if let contentLength = self.headerInfo.header[Content_Length]{
-                    self.contentLength = Int(contentLength)!
-                    if self.contentLength == body.length {
-                        self.onBodyComplete!()
-                        self.reset()
-                    }
+                if self.contentLength == body.length {
+                    self.onBodyComplete!()
+                    self.reset()
                 }
             })
             
         }else{
+
             if self.contentLength > 0 {
                 self.totalLength += length
-                let readData = String(data : data, encoding : NSASCIIStringEncoding)
-                onBody!(readData!)
+                onBody!(data)
+                
                 if self.totalLength >= self.contentLength{
                     self.onBodyComplete!()
                     reset()
@@ -160,6 +134,47 @@ public class HttpParser{
     
     private func reset(){
         self.totalLength = 0
+        self.contentLength = 0
         self.headerInfo = nil
+    }
+}
+
+
+public func readLine(p:UnsafePointer<Int8> , length: Int, line: (UnsafePointer<Int8>, String!, Int, Int)->(Bool)){
+    var itr = p
+    var startByte = itr
+    
+    let CR: Int8 = 13
+    let LF: Int8 = 10
+    
+    var pre: Int8 = 0
+    var crt: Int8 = 0
+    var index = 0
+    var lineStr: String! = nil
+    var readLength = 0
+    
+    var isContinue: Bool = false
+    
+    for _ in 0..<length {
+        
+        crt = itr.memory
+        itr = itr.successor()
+        index += 1
+        readLength += 1
+        if pre == CR && crt == LF {
+            
+            let data = NSData(bytes: startByte, length: index-2)
+            lineStr = String(data: data, encoding: NSASCIIStringEncoding)!
+            
+            isContinue = line(startByte, lineStr, readLength , index-2)
+            
+            if isContinue == false {
+                return
+            }
+            index = 0
+            startByte = itr
+            
+        }
+        pre = crt
     }
 }

@@ -14,6 +14,8 @@ public typealias noParamsEvent = (Void) -> Void
 
 public typealias oneStringeEvent = (String) -> Void
 
+public typealias oneDataEvent = (NSData) -> Void
+
 typealias EmiiterType = ((AnyObject) -> Void)?
 
 
@@ -67,6 +69,12 @@ public class EventEmitter{
                 #endif
             }
             break
+        case let cb as oneDataEvent:
+            if arg.count == 1 {
+                cb(arg.first as! NSData)
+            }
+            break
+
         case let cb as noParamsEvent:
             cb()
             break

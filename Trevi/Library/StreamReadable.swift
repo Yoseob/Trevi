@@ -52,7 +52,7 @@ public class StreamReadable: EventEmitter {
     //        return addChunk(self, chunk: chunk, addToFront: false)
     //    }
     
-    func push(chunk: String?, encoding: NSStringEncoding = 0) -> Bool {
+    func push(chunk: NSData?, encoding: NSStringEncoding = 0) -> Bool {
         return addChunk(self, chunk: chunk, addToFront: false)
     }
     
@@ -60,7 +60,7 @@ public class StreamReadable: EventEmitter {
     //        return addChunk(self, chunk: chunk, addToFront: true)
     //    }
     
-    func unshift(chunk: String?, encoding: NSStringEncoding = 0) -> Bool {
+    func unshift(chunk: NSData?, encoding: NSStringEncoding = 0) -> Bool {
         return addChunk(self, chunk: chunk, addToFront: true)
     }
     
@@ -224,14 +224,14 @@ func lengthToRead(n: Int = -1, state: StreamReadableState) -> Int {
     return n
 }
 
-private func addChunk(stream: StreamReadable, chunk: String?, addToFront: Bool) -> Bool {
+private func addChunk(stream: StreamReadable, chunk: NSData?, addToFront: Bool) -> Bool {
     let state = stream._state
     
     if chunk == nil {
         state.reading = false
         onEofChunk(stream)
-    } else if chunk!.characters.count > 0 {
-        let chunkBuf = Buffer(data: chunk!, length: chunk!.characters.count)
+    } else if chunk!.length > 0 {
+        let chunkBuf = Buffer(data: UnsafePointer<Int8>(chunk!.bytes), length: chunk!.length)
         
         if !addToFront {
             state.reading = false
