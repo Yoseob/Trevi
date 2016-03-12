@@ -58,60 +58,16 @@ public class HttpParser{
                 onHeaderInfo(data , true)
                 self.totalLength = length - readTotalSize
                 
-                if self.totalLength == 0 {
-                    return false
-                }else{
+                if self.totalLength != 0 {
                     let body = NSData(bytes: pointer+2, length: self.totalLength)
                     onBodyData(body)
-                    return false
                 }
+                return false
             }
             
             onHeaderInfo(data , false)
             return true
         }
-        
-        
-//        var itr = p
-//        var startByte = itr
-//        
-//        let CR: Int8 = 13
-//        let LF: Int8 = 10
-//        
-//        var pre: Int8 = 0
-//        var crt: Int8 = 0
-//        var index = 0
-//        
-//        var readLength = 0
-//        for _ in 0..<length {
-//            
-//            crt = itr.memory
-//            itr = itr.successor()
-//            index += 1
-//            readLength += 1
-//            if pre == CR && crt == LF {
-//                
-//                let data = NSData(bytes: startByte, length: index-2)
-//                if index == 2 {
-//                    onHeaderInfo(String(data: data, encoding: NSASCIIStringEncoding)! , true)
-//                    self.totalLength = length - readLength
-//                    
-//                    if self.totalLength == 0 {
-//                        return
-//                    }else{
-//                        let body = NSData(bytes: startByte+index, length: self.totalLength)
-//                        return onBodyData(body)
-//                    }
-//                }
-//                
-//                onHeaderInfo(String(data: data, encoding: NSASCIIStringEncoding)! , false)
-//                
-//                index = 0
-//                startByte = itr
-//    
-//            }
-//            pre = crt
-//        }
     }
     
     public func execute(data: NSData, length: Int){
@@ -151,7 +107,6 @@ public class HttpParser{
                 }
                 
                 headerCount += 1
-                
             } , onBodyData: { body in
 
                 self.onBody!(body)
@@ -166,9 +121,9 @@ public class HttpParser{
         }else{
 
             if self.contentLength > 0 {
-                
                 self.totalLength += length
                 onBody!(data)
+                
                 if self.totalLength >= self.contentLength{
                     self.onBodyComplete!()
                     reset()
