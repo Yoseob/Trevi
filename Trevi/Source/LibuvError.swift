@@ -9,6 +9,9 @@
 import Libuv
 import Foundation
 
+/**
+ Libuv system error log.
+ */
 public class LibuvError : ErrorType {
     
     public static func printState( location : String, error : Int32 ) {

@@ -9,7 +9,9 @@
 import Libuv
 import Foundation
 
-
+/**
+ Provides a threadpool on Tcp.onConnection and Stream.onRead events.
+ */
 public class Work {
     
     public let workRequest : uv_work_ptr
@@ -36,6 +38,10 @@ extension Work {
         var handle : uv_stream_ptr
         var status : Int32
     }
+    
+    
+    // Not implemented on Trevi.
+    // Consider using between Thread and Process server model.
     
     public static var onConnection : uv_connection_cb = { (handle, status) in
         

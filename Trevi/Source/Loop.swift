@@ -8,6 +8,10 @@
 
 import Libuv
 
+
+/**
+ Libuv Loop bindings.
+ */
 public class Loop {
     
     public let loopHandle : uv_loop_ptr
@@ -29,10 +33,15 @@ public class Loop {
 
 extension Loop {
     
+    // Closes all internal loop resources and the loop will be terminated
     public static func close(handle : uv_loop_ptr) {
         
         uv_loop_close(handle)
+        
+//        Should handle a signal error on FileSystem writeStream.
+//        Handle.close(uv_handle_ptr(handle))
     }
+    
     
     public static func run(handle : uv_loop_ptr = uv_default_loop(), mode : uv_run_mode) {
         
@@ -43,6 +52,7 @@ extension Loop {
         }
     }
     
+    
     public static func active(handle : uv_loop_ptr) {
         let error = uv_loop_alive(handle)
         
@@ -51,9 +61,11 @@ extension Loop {
         }
     }
     
+    
     public static func getFD(handle : uv_loop_ptr)->Int32 {
         return uv_backend_fd(handle)
     }
+    
     
     public static func walk(handle : uv_loop_ptr) {
         

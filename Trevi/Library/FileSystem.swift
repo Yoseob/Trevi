@@ -9,7 +9,10 @@
 import Libuv
 import Foundation
 
-
+/**
+Filesystem library for Trevi and Trevi developers.
+Only provides File readable, writable stream module yet.
+ */
 public class FileSystem {
     
     public struct Options {
@@ -19,6 +22,8 @@ public class FileSystem {
     }
     
     
+    // Close the File descriptor on system and all libuv handle events.
+    // Also, dealloc all memory associated with the handle.
     public static func close(handle : uv_handle_ptr) {
         
         let info = UnsafeMutablePointer<FSInfo>(handle.memory.data)
@@ -32,7 +37,6 @@ public class FileSystem {
     
     
     // Should be inherited from StreamReadable
-    
     public class ReadStream {
         
         public let loop : Loop
@@ -81,6 +85,8 @@ public class FileSystem {
         }
         
         
+        // Set ReadStream pipe onClose event.
+        // It should be called before readstart.
         public func onClose(callback : ((handle : uv_handle_ptr)->Void)) {
             
             self.pipe.event.onClose = { (handle) in
@@ -90,7 +96,8 @@ public class FileSystem {
             }
         }
         
-        
+        // Set ReadStream pipe onRead event and start loop.
+        // Other events associated with this pipe handle should be set before call this function.
         public func readStart(callback : ((error : Int32, data : NSData)->Void)) {
             
             self.pipe.event.onRead = { (handle, data) in
@@ -100,6 +107,7 @@ public class FileSystem {
                 
                 callback(error : 0, data : data)
                 
+                // Close readStream when there are no more data to read.
                 if info.memory.toRead <= 0 {
                     Handle.close(uv_handle_ptr(handle))
                 }
@@ -110,6 +118,8 @@ public class FileSystem {
         }
         
         
+        // Pipe data directly to writeStream.
+        // Close readStream and writeStream after finish read data.
         public func pipeStream(writeStream : WriteStream) {
             
             self.onClose() { (handle) in
