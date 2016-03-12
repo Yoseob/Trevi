@@ -47,6 +47,7 @@
 		DF732EE71C799737000B12E8 /* libuv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF732EDF1C799737000B12E8 /* libuv.a */; };
 		DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E181C8814BF0032F31C /* NetEchoServer.swift */; };
 		DF826E1D1C881A900032F31C /* FileServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF826E1C1C881A900032F31C /* FileServer.swift */; };
+		DF8460201C94B226001DB976 /* FSBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF84601F1C94B226001DB976 /* FSBase.swift */; };
 		DF9233E91C8C50B000D87A29 /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9233E81C8C50B000D87A29 /* FileSystem.swift */; };
 		DF92C97E1C946D61007E693E /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF92C97D1C946D61007E693E /* Poll.swift */; };
 		DFBDF7DB1C91B0470043F36D /* LibuvError.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBDF7DA1C91B0470043F36D /* LibuvError.swift */; };
@@ -169,6 +170,7 @@
 		DF732EF21C79B4DD000B12E8 /* Loop.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loop.swift; sourceTree = "<group>"; };
 		DF826E181C8814BF0032F31C /* NetEchoServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetEchoServer.swift; path = Test/NetEchoServer.swift; sourceTree = "<group>"; };
 		DF826E1C1C881A900032F31C /* FileServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileServer.swift; path = Test/FileServer.swift; sourceTree = "<group>"; };
+		DF84601F1C94B226001DB976 /* FSBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FSBase.swift; sourceTree = "<group>"; };
 		DF9233E81C8C50B000D87A29 /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 		DF92C97D1C946D61007E693E /* Poll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		DFBDF7DA1C91B0470043F36D /* LibuvError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LibuvError.swift; path = Trevi/Source/LibuvError.swift; sourceTree = SOURCE_ROOT; };
@@ -263,6 +265,7 @@
 				235441571C79800300E90A97 /* Tcp.swift */,
 				DF3D4EE01C85F77D00DF2DE1 /* Pipe.swift */,
 				235441501C79800300E90A97 /* Async.swift */,
+				DF84601F1C94B226001DB976 /* FSBase.swift */,
 				DF732EF01C799E65000B12E8 /* Timer.swift */,
 				235441541C79800300E90A97 /* LibuvUtility.swift */,
 				DFBDF7DA1C91B0470043F36D /* LibuvError.swift */,
@@ -569,6 +572,7 @@
 				DFD970B91C8739A300E39995 /* StreamWritable.swift in Sources */,
 				DFD970BF1C8739A700E39995 /* Stream.swift in Sources */,
 				DF92C97E1C946D61007E693E /* Poll.swift in Sources */,
+				DF8460201C94B226001DB976 /* FSBase.swift in Sources */,
 				DFD970C31C8739A700E39995 /* Timer.swift in Sources */,
 				DFD970B61C8739A300E39995 /* HttpProtocol.swift in Sources */,
 				DF826E191C8814BF0032F31C /* NetEchoServer.swift in Sources */,
