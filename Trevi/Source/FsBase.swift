@@ -107,8 +107,14 @@ extension FSBase {
         uv_fs_write(uv_default_loop(), request, fd, buffer, 1, -1, afterWrite)
     }
     
-    public static func unlink(loop : uv_loop_ptr = uv_default_loop(), request : uv_fs_ptr, path : String) {
-        let error = uv_fs_unlink(loop, request, path, FSBase.afterUnlink)
+    public static func unlink(loop : uv_loop_ptr = uv_default_loop(), request : uv_fs_ptr!, path : String) {
+        var fsRequest : uv_fs_ptr = request
+        
+        if request == nil {
+            fsRequest = uv_fs_ptr.alloc(1)
+        }
+        
+        let error = uv_fs_unlink(loop, fsRequest, path, FSBase.afterUnlink)
         
         if error == 0 {
             // Should handle error
@@ -116,8 +122,14 @@ extension FSBase {
         }
     }
     
-    public static func makeDirectory(loop : uv_loop_ptr = uv_default_loop(), request : uv_fs_ptr, path : String, mode : Int32 = 0o666) {
-        let error = uv_fs_mkdir(loop, request, path, mode, FSBase.afterMakeDirectory)
+    public static func makeDirectory(loop : uv_loop_ptr = uv_default_loop(), request : uv_fs_ptr!, path : String, mode : Int32 = 0o666) {
+        var fsRequest : uv_fs_ptr = request
+        
+        if request == nil {
+            fsRequest = uv_fs_ptr.alloc(1)
+        }
+        
+        let error = uv_fs_mkdir(loop, fsRequest, path, mode, FSBase.afterMakeDirectory)
         
         if error == 0 {
             // Should handle error
@@ -198,10 +210,10 @@ extension FSBase {
     }
     
     public static var afterUnlink : uv_fs_cb = { request in
-        
+        request.dealloc(1)
     }
     
     public static var afterMakeDirectory : uv_fs_cb = { request in
-        
+        request.dealloc(1)
     }
 }
