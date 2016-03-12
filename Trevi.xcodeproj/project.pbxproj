@@ -34,6 +34,7 @@
 		23A5FAB51C8888B100F68B78 /* ServerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB41C8888B100F68B78 /* ServerResponse.swift */; };
 		23A5FAB71C8888D600F68B78 /* IncomingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */; };
 		23A5FAB91C88891400F68B78 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23A5FAB81C88891400F68B78 /* HttpServer.swift */; };
+		23CFA0C61C93AB99003DDB6B /* favicon.ico in Resources */ = {isa = PBXBuildFile; fileRef = 23CFA0C51C93AB99003DDB6B /* favicon.ico */; };
 		906E50CE1C122541005937A8 /* Trevi.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 239411D31C0C2DA3001B9B07 /* Trevi.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ACD8697D1C88DAE100260C87 /* sky.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 23973D601C25AB3B00FBB8E7 /* sky.jpeg */; };
 		ACD8697E1C88DAE100260C87 /* style.css in Resources */ = {isa = PBXBuildFile; fileRef = 90BEEE651C2F5155009A8DA8 /* style.css */; };
@@ -149,6 +150,7 @@
 		23A5FAB41C8888B100F68B78 /* ServerResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerResponse.swift; sourceTree = "<group>"; };
 		23A5FAB61C8888D600F68B78 /* IncomingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IncomingMessage.swift; sourceTree = "<group>"; };
 		23A5FAB81C88891400F68B78 /* HttpServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
+		23CFA0C51C93AB99003DDB6B /* favicon.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = favicon.ico; sourceTree = "<group>"; };
 		23D2F39A1C1DA4A000F0C784 /* helloworld.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = helloworld.ssp; sourceTree = "<group>"; };
 		906E50B01C11DB9A005937A8 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = ../Utility/File.swift; sourceTree = "<group>"; };
 		90BEEE5F1C259FD7009A8DA8 /* index.ssp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.ssp; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 		23D2F3941C1DA4A000F0C784 /* public */ = {
 			isa = PBXGroup;
 			children = (
+				23CFA0C51C93AB99003DDB6B /* favicon.ico */,
 				23973D601C25AB3B00FBB8E7 /* sky.jpeg */,
 				90BEEE651C2F5155009A8DA8 /* style.css */,
 			);
@@ -519,6 +522,7 @@
 				ACD8697E1C88DAE100260C87 /* style.css in Resources */,
 				ACD8697F1C88DAE100260C87 /* helloworld.ssp in Resources */,
 				ACD869801C88DAE100260C87 /* index.ssp in Resources */,
+				23CFA0C61C93AB99003DDB6B /* favicon.ico in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

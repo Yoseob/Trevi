@@ -7,8 +7,7 @@
 //
 
 import Foundation
-
-
+import Trevi
 
 public class ServerResponse: OutgoingMessage{
     //for Lime
@@ -41,7 +40,7 @@ public class ServerResponse: OutgoingMessage{
     private var _bodyData: NSData! {
         didSet{
             self._hasbody = true
-            header[Content_Type] = ""
+//            header[Content_Type] = ""
         }
     }
     
@@ -106,6 +105,7 @@ public class ServerResponse: OutgoingMessage{
     
     //will move outgoingMessage
     public func write(data: NSData, encoding: String! = nil, type: String! = ""){
+    
         _bodyData = data
         if let t = type{
             header[Content_Type] = t

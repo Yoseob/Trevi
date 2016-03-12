@@ -139,6 +139,7 @@ public class HttpParser{
     }
 }
 
+
 public func readLine(p:UnsafePointer<Int8> , length: Int, line: (UnsafePointer<Int8>, String!, Int, Int)->(Bool)){
     var itr = p
     var startByte = itr
@@ -151,7 +152,7 @@ public func readLine(p:UnsafePointer<Int8> , length: Int, line: (UnsafePointer<I
     var index = 0
     var lineStr: String! = nil
     var readLength = 0
-
+    
     var isContinue: Bool = false
     
     for _ in 0..<length {
