@@ -10,8 +10,7 @@ import Foundation
 import Trevi
 
 /*
-
-    This custom modules, routing and each of the middleware to allow the absence of a working class.
+    For Trevi users, allow routing and to apply middlewares without difficulty.
 */
 
 public class Lime : Routable {
@@ -79,29 +78,39 @@ public class Lime : Routable {
     }
 }
 
+// Needed to activate lime in the Trevi Fountain.
 extension Lime: ApplicationProtocol {
     public func createApplication() -> Any {
         return self.handle
     }
 }
 
-public class LimeInit {
-}
 
+
+// For Lime extension ServerResponse
 extension ServerResponse {
+    
+    // Lime recommend using that send rather than using write
     public func send(data: String, encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
-        end()
+        endReuqstAndClean()
     }
     
     public func send(data: NSData, encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
-        end()
+        endReuqstAndClean()
     }
     
     public func send(data: [String : String], encoding: String! = nil, type: String! = ""){
         write(data, encoding: encoding, type: type)
+        endReuqstAndClean()
+    }
+    
+    private func endReuqstAndClean(){
         end()
+        for file in self.req.files.values{
+
+        }
     }
     
     public func render(path: String, args: [String:String]? = nil) {

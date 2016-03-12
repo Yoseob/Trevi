@@ -88,6 +88,7 @@ public class ServerResponse: OutgoingMessage{
         }
     
         self._end(result)
+        
         onFinished?(self)
     }
     

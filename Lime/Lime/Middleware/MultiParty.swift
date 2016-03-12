@@ -168,7 +168,7 @@ public class MultiParty: Middleware {
             req.body = [String:String]()
         }
         if req.files == nil {
-            req.files = [String:AnyObject]()
+            req.files = [String:File]()
         }
 
         if let contentLength = req.header[Content_Length]{
@@ -282,13 +282,15 @@ public class MultiParty: Middleware {
                     }else{
                         if cursor != 0 {
                             fileSize += cursor
+                            if fileBufferBeginIndex == -1 {
+                                fileSize = 0
+                                writefile(NSData(bytes: boundary, length: cursor), file: file)
+                            }
                             cursor = 0
                         }
                         if fileBufferBeginIndex == -1 {
                             fileBufferBeginIndex = dataIndex
-                            if dataIndex == 1 && fileSize == 1{
-                                fileSize = 0
-                            }
+
                         }
                         fileSize += 1
                     }
@@ -297,7 +299,6 @@ public class MultiParty: Middleware {
                             fileSize -= 2
                             state = .CheckBoundary
                         }
-                    
                         
                         writefile(data.subdataWithRange(NSRange(location: fileBufferBeginIndex, length: fileSize)), file: file)
                         cursor = 0
@@ -385,6 +386,7 @@ public class MultiParty: Middleware {
         }
         
         
+        
         // End of Body Data
         func onend(){
             self.totalReadLength = 0
@@ -416,8 +418,7 @@ public class MultiParty: Middleware {
         guard data.length() > 0 else{
             return ""
         }
-        
-        
+    
         var index = 0
         for utfString in data.utf8 {
             if utfString == 13 {

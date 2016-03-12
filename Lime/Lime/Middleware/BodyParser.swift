@@ -24,6 +24,7 @@ struct ParserdData {
 /*
     This class is the middleware as one of the most important
     Consisting of many ways is easily allows us to write the user body.
+    Now Support Json, Text, urlencoded parser
 */
 
 
