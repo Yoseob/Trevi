@@ -283,6 +283,12 @@ public class MultiParty: Middleware {
                             fileSize -= 2
                             state = .CheckBoundary
                         }
+                        
+                        
+                        guard fileBufferBeginIndex != fileSize else {
+                            print("Invalid ContentType")
+                            return
+                        }
                     
                         writefile(data.subdataWithRange(NSRange(location: fileBufferBeginIndex, length: fileSize)), file: file)
                         cursor = 0
